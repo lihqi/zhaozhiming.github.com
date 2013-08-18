@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Zhaozhiming's Blog]]></title>
-  <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: code | Zhaozhiming's Blog]]></title>
+  <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
   <updated>2013-08-18T21:42:17+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
@@ -14,15 +14,6 @@
 
   
   <entry>
-    <title type="html"><![CDATA[first test blog]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2013/08/18/first-test-blog/"/>
-    <updated>2013-08-18T09:11:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2013/08/18/first-test-blog</id>
-    <content type="html"><![CDATA[
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[在junit中添加fail--有test失败即build failed]]></title>
     <link href="http://zhaozhiming.github.io/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/"/>
     <updated>2012-02-24T11:28:00+08:00</updated>
@@ -31,7 +22,7 @@
 
 <p>  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
 
-<figure class='code'><figcaption><span>demo - build.xml </span></figcaption>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo &ndash; build.xml </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -43,21 +34,26 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
 </pre></td><td class='code'><pre><code class='xml'><span class='line'>　　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;runCompileTest&quot;</span><span class="nt">&gt;</span>
 </span><span class='line'>　　　　<span class="nt">&lt;junit</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;junit.failure&quot;</span><span class="nt">&gt;</span>
 </span><span class='line'>　　　　　　<span class="c">&lt;!-- some code here--&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
 </span><span class='line'>　　　　    <span class="nt">&lt;condition&gt;</span>
 </span><span class='line'>　　　　        <span class="nt">&lt;isset</span> <span class="na">property=</span><span class="s">&quot;junit.failure&quot;</span> <span class="nt">/&gt;</span>
 </span><span class='line'>　　　　    <span class="nt">&lt;/condition&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
+</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>/target<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
