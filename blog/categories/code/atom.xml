@@ -4,14 +4,35 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-19T21:37:45+08:00</updated>
+  <updated>2013-08-19T21:58:00+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
-    
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ant里面神奇的fork]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/03/14/the-magical-fork-keyword-in-ant/"/>
+    <updated>2012-03-14T10:51:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/03/14/the-magical-fork-keyword-in-ant</id>
+    <content type="html"><![CDATA[<p>最近两天一直在处理ant运行java程序的一个问题，用IDE直接运行类里面的main函数一切正常，但用ant跑该函数就报错误，错误的原因是运行ant任务时调用的是AntClasloader，而IDE里面调用的是jvm里面的classloader。</p>
+
+<p>如何使ant直接调用jvm的classloader呢？尝试过了很多办法都不行，最后在不经意间设置了fork=true这个属性，结果运行正常了。</p>
+
+<p>在网上查了下fork的资料，ant官方定义是：<br/>
+<blockquote><p>if enabled triggers the class execution in another VM</p></blockquote></p>
+
+<p>Ant默认行为是调用运行Ant本身的JVM，然而如果你想要单独地调用编译器，则需要设置fork属性为true。<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;java</span> <span class="na">fork=</span><span class="s">&quot;true&quot;</span> <span class="na">classname=</span><span class="s">&quot;xxx&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>以后发现在IDE里面可以运行成功，但在ant里面不能跑成功的，可以加上fork这个属性，这样一般就都可以通过了：）</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在ant编译java文件时产生debug信息]]></title>

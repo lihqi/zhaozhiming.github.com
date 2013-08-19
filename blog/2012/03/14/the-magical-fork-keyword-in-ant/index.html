@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>在ant编译java文件时产生debug信息 - Hacker and Geeker's Way</title>
+  <title>ant里面神奇的fork - Hacker and Geeker's Way</title>
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。 如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示： ant file - build.xml 1
-&lt;javac ... &hellip;">
+  <meta name="description" content="最近两天一直在处理ant运行java程序的一个问题，用IDE直接运行类里面的main函数一切正常，但用ant跑该函数就报错误，错误的原因是运行ant任务时调用的是AntClasloader，而IDE里面调用的是jvm里面的classloader。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file">
+  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/03/14/the-magical-fork-keyword-in-ant">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -68,7 +67,7 @@
   
   <header>
     
-      <h1 class="entry-title">在ant编译java文件时产生debug信息</h1>
+      <h1 class="entry-title">Ant里面神奇的fork</h1>
     
     
       <p class="meta">
@@ -84,7 +83,7 @@
   
 
 
-<time datetime="2012-03-06T17:41:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+<time datetime="2012-03-14T10:51:00+08:00" pubdate data-updated="true">Mar 14<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,37 +92,25 @@
   </header>
 
 
-<div class="entry-content"><p>使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。</p>
+<div class="entry-content"><p>最近两天一直在处理ant运行java程序的一个问题，用IDE直接运行类里面的main函数一切正常，但用ant跑该函数就报错误，错误的原因是运行ant任务时调用的是AntClasloader，而IDE里面调用的是jvm里面的classloader。</p>
 
-<p>如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示：</p>
+<p>如何使ant直接调用jvm的classloader呢？尝试过了很多办法都不行，最后在不经意间设置了fork=true这个属性，结果运行正常了。</p>
 
-<figure class='code'><figcaption><span>ant file - build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;javac</span> <span class="err">...</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span> <span class="na">debuglevel=</span><span class="s">&quot;lines, vars, source&quot;</span><span class="nt">&gt;</span>
+<p>在网上查了下fork的资料，ant官方定义是：</p>
+
+<blockquote><p>if enabled triggers the class execution in another VM</p></blockquote>
+
+
+<p></p>
+
+<p>Ant默认行为是调用运行Ant本身的JVM，然而如果你想要单独地调用编译器，则需要设置fork属性为true。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;java</span> <span class="na">fork=</span><span class="s">&quot;true&quot;</span> <span class="na">classname=</span><span class="s">&quot;xxx&quot;</span> <span class="nt">/&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>ant的官方文档：</p>
-
-<table>
-<thead>
-<tr>
-<th> debug       </th>
-<th>  Indicates whether source should be compiled with debug information; defaults to off. If set to off, -g:none will be passed on the command line for compilers that support it (for other compilers, no command line argument will be used). If set to true, the value of the debuglevel attribute determines the command line argument.  </th>
-<th> No  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>debuglevel</td>
-<td>  Keyword list to be appended to the -g command-line switch. This will be ignored by all implementations except modern, classic(ver >= 1.2) and jikes. Legal values are none or a comma-separated list of the following keywords: lines, vars, and source. If debuglevel is not specified, by default, nothing will be appended to -g. If debug is not turned on, this attribute will be ignored. </td>
-<td>  </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
+<p>以后发现在IDE里面可以运行成功，但在ant里面不能跑成功的，可以加上fork这个属性，这样一般就都可以通过了：）</p>
 </div>
 
 
@@ -146,7 +133,7 @@
   
 
 
-<time datetime="2012-03-06T17:41:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+<time datetime="2012-03-14T10:51:00+08:00" pubdate data-updated="true">Mar 14<span>th</span>, 2012</time>
       
 
 <span class="categories">
@@ -167,10 +154,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/03/02/some-problems-when-use-mockito/" title="Previous Post: 使用Mockito时遇到的一些问题">&laquo; 使用Mockito时遇到的一些问题</a>
+        <a class="basic-alignment left" href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/" title="Previous Post: 在ant编译java文件时产生debug信息">&laquo; 在ant编译java文件时产生debug信息</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/" title="Next Post: ant里面神奇的fork">ant里面神奇的fork &raquo;</a>
       
     </p>
   </footer>
@@ -275,8 +260,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/';
-        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/';
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/03/14/the-magical-fork-keyword-in-ant/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/03/14/the-magical-fork-keyword-in-ant/';
         var disqus_script = 'embed.js';
       
     (function () {
