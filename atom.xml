@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-19T21:58:00+08:00</updated>
+  <updated>2013-08-20T06:42:37+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,37 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在ant中将依赖jar包一并打包的方法]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/03/16/put-the-depend-jar-together-in-a-jar-with-ant/"/>
+    <updated>2012-03-16T11:10:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/03/16/put-the-depend-jar-together-in-a-jar-with-ant</id>
+    <content type="html"><![CDATA[<p>一般jar包里面是不包含jar文件的，如果自己的类有依赖其他jar包，可以通过ant命令将这些jar包解析，然后和自己的class文件打在一起，命令如下：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>        <span class="nt">&lt;jar</span> <span class="na">basedir=</span><span class="s">&quot;${build.class}&quot;</span> <span class="na">destfile=</span><span class="s">&quot;${build.out}/myjar.jar&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;manifest&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;Main-Class&quot;</span> <span class="na">value=</span><span class="s">&quot;Main&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/manifest&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;zipfileset</span> <span class="na">excludes=</span><span class="s">&quot;META-INF/*.SF&quot;</span> <span class="na">src=</span><span class="s">&quot;${project.lib}/1.jar&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;zipfileset</span> <span class="na">excludes=</span><span class="s">&quot;META-INF/*.SF&quot;</span> <span class="na">src=</span><span class="s">&quot;${project.lib}/2.jar&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jar&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>执行之后，依赖jar包就会解压到要打包的jar文件里面，只要依赖包里面的class和自己的class没有冲突，一般是没有问题的。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ant里面神奇的fork]]></title>
