@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: code - Hacker and Geeker's Way</title>
+  <title>在ant编译java文件时产生debug信息 - Hacker and Geeker's Way</title>
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="Category: code">
+  <meta name="description" content="使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。 如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示： ant file - build.xml 1
+&lt;javac ... &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zhaozhiming.github.ioblog/categories/code">
+  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -63,64 +64,121 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Code</h1>
+    
+      <h1 class="entry-title">在ant编译java文件时产生debug信息</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T17:41:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。</p>
 
-  
-  <h2>2012</h2>
+<p>如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示：</p>
 
-<article>
-  
-<h1><a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/">在ant编译java文件时产生debug信息</a></h1>
-<time datetime="2012-03-06T17:41:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>06</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
-</footer>
+<figure class='code'><figcaption><span>ant file - build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;javac</span> <span class="err">...</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span> <span class="na">debuglevel=</span><span class="s">&quot;lines, vars, source&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<p>ant的官方文档：</p>
+
+<table>
+<thead>
+<tr>
+<th> debug       </th>
+<th>  Indicates whether source should be compiled with debug information; defaults to off. If set to off, -g:none will be passed on the command line for compilers that support it (for other compilers, no command line argument will be used). If set to true, the value of the debuglevel attribute determines the command line argument.  </th>
+<th> No  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>debuglevel</td>
+<td>  Keyword list to be appended to the -g command-line switch. This will be ignored by all implementations except modern, classic(ver >= 1.2) and jikes. Legal values are none or a comma-separated list of the following keywords: lines, vars, and source. If debuglevel is not specified, by default, nothing will be appended to -g. If debug is not turned on, this attribute will be ignored. </td>
+<td>  </td>
+</tr>
+</tbody>
+</table>
 
 
-
-<article>
-  
-<h1><a href="/blog/2012/03/02/some-problems-when-use-mockito/">使用Mockito时遇到的一些问题</a></h1>
-<time datetime="2012-03-02T17:44:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>02</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/">在junit中添加fail--有test失败即build failed</a></h1>
-<time datetime="2012-02-24T11:28:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>24</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
-</footer>
-
-
-</article>
-
+<p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">赵芝明</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T17:41:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/code/'>code</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/02/some-problems-when-use-mockito/" title="Previous Post: 使用Mockito时遇到的一些问题">&laquo; 使用Mockito时遇到的一些问题</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -210,7 +268,10 @@
       var disqus_shortname = 'zhaozhimingsblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

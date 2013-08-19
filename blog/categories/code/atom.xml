@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-19T21:10:51+08:00</updated>
+  <updated>2013-08-19T21:37:45+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在ant编译java文件时产生debug信息]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/"/>
+    <updated>2012-03-06T17:41:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file</id>
+    <content type="html"><![CDATA[<p>使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。</p>
+
+<p>如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>ant file &ndash; build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;javac</span> <span class="err">...</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span> <span class="na">debuglevel=</span><span class="s">&quot;lines, vars, source&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>ant的官方文档：</p>
+
+<table>
+<thead>
+<tr>
+<th> debug       </th>
+<th>  Indicates whether source should be compiled with debug information; defaults to off. If set to off, -g:none will be passed on the command line for compilers that support it (for other compilers, no command line argument will be used). If set to true, the value of the debuglevel attribute determines the command line argument.  </th>
+<th> No  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>debuglevel</td>
+<td>  Keyword list to be appended to the -g command-line switch. This will be ignored by all implementations except modern, classic(ver >= 1.2) and jikes. Legal values are none or a comma-separated list of the following keywords: lines, vars, and source. If debuglevel is not specified, by default, nothing will be appended to -g. If debug is not turned on, this attribute will be ignored. </td>
+<td>  </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用Mockito时遇到的一些问题]]></title>
