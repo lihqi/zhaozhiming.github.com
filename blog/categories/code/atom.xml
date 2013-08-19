@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-20T06:42:37+08:00</updated>
+  <updated>2013-08-20T07:11:05+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java通过class文件得到所在jar包]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/"/>
+    <updated>2012-03-16T18:04:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar</id>
+    <content type="html"><![CDATA[<p>今天遇到一个问题，需要通过知道的class文件得到该文件所在的jar包，试过很多办法都不行，最后在网上找到了一个解决办法，如下：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="n">XXX</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getProtectionDomain</span><span class="o">().</span><span class="na">getCodeSource</span><span class="o">().</span><span class="na">getLocation</span><span class="o">().</span><span class="na">getFile</span><span class="o">();</span>
+</span><span class='line'><span class="n">File</span> <span class="n">jarFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">path</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>其中的XXX指已经知道的类名，然后通过后面的方法可以直接获取到JAR包，具体这些方法是干嘛的，下来研究后再补充。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在ant中将依赖jar包一并打包的方法]]></title>
@@ -179,50 +196,6 @@
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>很奇怪，在用ant跑单元测试的时候，这个测试类的错误不是在这个类的测试报告里体现，而是出现在另外一个类的测试报告里，而且直接在IDE里面运行junit不会报错。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在junit中添加fail--有test失败即build failed]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/"/>
-    <updated>2012-02-24T11:28:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed</id>
-    <content type="html"><![CDATA[<p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
-
-<p>  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo &ndash; build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>　　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;runCompileTest&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;junit</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;junit.failure&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　　　<span class="c">&lt;!-- some code here--&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;condition&gt;</span>
-</span><span class='line'>　　　　        <span class="nt">&lt;isset</span> <span class="na">property=</span><span class="s">&quot;junit.failure&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;/condition&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>/target<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
