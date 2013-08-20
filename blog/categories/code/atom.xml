@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-20T21:18:38+08:00</updated>
+  <updated>2013-08-20T22:00:16+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,388 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[for循环重复代码的重构]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/06/16/refactor-code-in-loop-block/"/>
+    <updated>2012-06-16T16:39:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/06/16/refactor-code-in-loop-block</id>
+    <content type="html"><![CDATA[<p><strong>DRY（don&rsquo;t repeat yourself）</strong>，重复往往是代码腐烂的开始，我们一般的处理手法是将重复的代码提取成一个方法，然后用新方法替换掉原来的代码。</p>
+
+<p>但是对于for循环里面的重复代码要如何处理呢？比如有下面2个方法：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>A.class </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kt">boolean</span> <span class="n">methodA</span><span class="o">(</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">string</span><span class="o">.</span><span class="na">startWith</span><span class="o">(</span><span class="s">&quot;A&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">methodB</span><span class="o">(</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">string</span><span class="o">.</span><span class="na">endWith</span><span class="o">(</span><span class="s">&quot;B&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>2个方法极其相似，唯一不同的地方只有 if 里面的判断条件。要如何去除这里的重复呢？提取for里面的代码？虽然能去除一部分，但for这个循环体的代码不能一起去掉，而且要是for里面的代码复杂一点，这个方法就不适用了。我今天想介绍自己最近用的比较多的一种重构手法：<strong>用模板方法去除for循环的重复代码。</strong></p>
+
+<p>模板方法大家都知道，我可以先建1个抽象类和2个子类要代替这2个方法，但在java1.5+以后，我们可以用enum（枚举）来轻易实现模板方法。重构后的代码如下：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>For.class </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">enum</span> <span class="n">For</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="n">METHOD_A</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">match</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;A&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">},</span> <span class="n">METHOD_B</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">match</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="na">endsWith</span><span class="o">(</span><span class="s">&quot;B&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">method</span><span class="o">(</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span><span class="o">(</span><span class="n">match</span><span class="o">(</span><span class="n">string</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kd">abstract</span> <span class="kt">boolean</span> <span class="nf">match</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这里将相同的代码写成一个公共方法，不同的代码提取成一个抽象方法，让子类去具体实现。这样就实现了相同代码和不同代码的分离了。由于使用了enum，使得我们的创建类的代价为最小，只需一个enum类就搞定整个模板方法。</p>
+
+<p>这里只是抛砖引玉，我相信肯定其他人一定还有更好的方法，希望和大家一起共同探讨。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[javascript几种创建对象的方法]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/05/23/some-ways-of-create-object-in-javascript/"/>
+    <updated>2012-05-23T14:50:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/05/23/some-ways-of-create-object-in-javascript</id>
+    <content type="html"><![CDATA[<h2>1.工厂方法</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">createPerson</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+</span><span class='line'><span class="nx">person</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">person</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="nx">person</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+优点：创建相同实例只有一处代码。<br/>
+缺点：不知道对象原型。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="nx">createPerson</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">zhang</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;,</span> <span class="mi">20</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="nx">createPerson</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">li</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;,</span> <span class="mi">30</span><span class="p">);</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//false</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//false</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>2.构造函数</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">this</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age:&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+优点：可以知道实例原型。<br/>
+缺点：方法不是同一个方法实例。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">zhang</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;,</span> <span class="mi">20</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">li</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;,</span> <span class="mi">30</span><span class="p">);</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: zhang age:20</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: li age:30&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">==</span> <span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">);</span> <span class="c1">//false</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>3.原型方法</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">()</span> <span class="p">{}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">zhang</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;;</span>
+</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+优点：共享方法实例对象。<br/>
+缺点：每个实例需要定义非方法属性。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">person2</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">li</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;;</span>
+</span><span class='line'><span class="nx">person2</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: zhang age:20</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: li age:30&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">==</span> <span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">);</span> <span class="c1">//true</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>4.构造函数和原型的组合方法</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'><span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+优点：非方法属性在构造函数中定义，方法属性则在原型中定义。</p>
+
+<p><strong>总结：最后一种方法是比较好的创建对象的方式，综合了前面3种方式的优点。每个实例对象都有自己实例属性的一份副本，但同时共享着方法的引用，最大限度节省了内存。</strong></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[location对象的页面跳转方法介绍]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/05/22/javascript-location-object-redirect-methods/"/>
+    <updated>2012-05-22T16:18:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/05/22/javascript-location-object-redirect-methods</id>
+    <content type="html"><![CDATA[<p>JavaScript中使用location对象可以通过很多种方式改变浏览器的位置。最常用的方法应该是下面几种：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="err">　　</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="o">&gt;</span><span class="nx">http</span><span class="o">:</span><span class="c1">//www.google.com&lt;/a&gt;&amp;rdquo;;</span>
+</span><span class='line'><span class="err">　　</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="o">&gt;</span><span class="nx">http</span><span class="o">:</span><span class="c1">//www.google.com&lt;/a&gt;&amp;rdquo;;</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">location</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="o">&gt;</span><span class="nx">http</span><span class="o">:</span><span class="c1">//www.google.com&lt;/a&gt;&amp;rdquo;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>其实前面2种方式是调用第3种方式去实现的，这样就可以在浏览器中打开一个新的URL并在历史记录中生成一条记录，因此用户可以通过“后退”按钮回到前一个页面。如果想禁止这种后退行为，可以使用replace()方法。该方法只接受一个参数，即URL，然后会跳转到该URL，但不会在历史记录中生成记录。这样用户不能回到前一页了。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">location</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>关于页面跳转还有一个reload方法，作用是重新加载当前页面。如果调用该方法时不带参数，页面会以最有效的方式加载页面，也就是说，如果浏览器有该页面的缓存，则会从缓存里面加载该页面。如果不想从缓存中重新加载页面，需要传入true参数，即绕开浏览器缓存，强制从服务器去获取页面数据。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">();</span> <span class="c1">//相当浏览器的F5刷新，有可能从缓存中加载</span>
+</span><span class='line'>  <span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span> <span class="c1">//相当于Ctrl+F5，从服务器中加载</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>下面列出location.reload()方法的具体解释：</p>
+
+<p><blockquote><p>The reload() method of the Location object reloads the document that is currently displayed in the window of the Location object. When called with no arguments, or with the argument false, it uses the If-Modified-SinceHTTP header to determine whether the document has changed on the web server. If it has, it reloads the document from the server, and if not, it reloads the document from the cache. This is is the same action that occurs when the user clicks on Navigator&rsquo;s Reload button.</p></blockquote></p>
+
+<p>location对象的reload方法会重新加载当前页面。当没有传入参数或传入false参数时，会用 If-Modified-SinceHTTP header 去判断页面在web服务器上是否有改变。如果改变了，则从服务器加载，如果没有改变，则从缓存中加载。这与用户点击导航栏刷新按钮的行为相同。</p>
+
+<p><blockquote><p>When reload() is called with the argument true, then it will always bypass the cache and reload the document from the server, regardless of the last-modified time of the document. This is the same action that occurs when the user shift-clicks on Navigator&rsquo;s Reload button.</p></blockquote></p>
+
+<p>当调用reload方法时传入参数true，会始终绕开缓存而从服务器上加载页面，不管页面有没有改变。这与用户按住shift并点击导航栏刷新按钮的行为相同。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用Array类处理基本数组对象]]></title>
@@ -205,150 +587,6 @@
 <p>最后如果是同个类的test case，则依照TestClass里面test case的顺序从上往下执行。</p>
 
 <p>Junit Test case 的执行顺序有时候比较重要，可能一些test case会依赖与其他test case产生的结果才能执行，这个时候把要先执行的类按照上面的规则放在前面即可保证整个测试执行正确。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[jenkins的2个问题]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/05/21/2-problems-when-update-jenkins/"/>
-    <updated>2012-05-21T15:52:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/05/21/2-problems-when-update-jenkins</id>
-    <content type="html"><![CDATA[<p>最近CI服务器从老版本的hudson升级为jenkins，遇到了2个问题，记录一下：</p>
-
-<p><strong>1.升级为jenkins后，junit report里面显示的test case数量为原来的两倍，每个test case跑了2遍。</strong></p>
-
-<p>在job设置的junit文件路径提示这样写：'myproject/target/test-reports/*.xml'，老的hudson版本只会读取TEST-*.xml文件，而新的jenkins不仅会读取所有TEST-*.xml，还会读取TESTS-TestSuites.xml文件，而这个文件是包含了前面的Test-*.xml里面的test case的，所以会显示为两倍。</p>
-
-<p>解决方案是:junit文件路径这样写：'myproject/target/test-reports/TEST-*.xml'，这样就不会包含TESTS-TestSuites.xml文件了。</p>
-
-<p>官网上已经有人建议job配置的提示要改一下，但不知道jenkins以后会在哪个版本改（也有可能不会改:(）。</p>
-
-<p><strong>2.jenkins没有在build之前清空工作区的选项。</strong></p>
-
-<p>老的hudson版本的job设置里Advanced Project Options下有个选项是Clean workspace before build，即在build之前清空workspace里面的内容，而jenkins里面没有这个选项。</p>
-
-<p>那如何实现在build前情况workspace呢？<br/>
-可以在Source Code Management里面进行配置，一般的版本管理工具（git, svn）都可以配置Check-out Strategy，例如SVN， 选择Always check out a fresh copy，这个策略的意思是:</p>
-
-<p><blockquote><p>Delete everything first, then perform &ldquo;svn checkout&rdquo;. While this takes time to execute, it ensures that the workspace is in the pristine state.</p></blockquote></p>
-
-<p>这样就实现了build前清空workspace的效果了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[安装win7和ubuntu双系统]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/"/>
-    <updated>2012-04-16T16:53:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer</id>
-    <content type="html"><![CDATA[<p>最近买了新的笔记本电脑，发现新买的电脑上面安装的是win7用户版，在网上查了一下这个版本的win7是功能最少的。。。另外又发现偌大的500G硬盘居然只给分成2个区，每个250。。。各种不爽，于是决定格式化硬盘重新安装系统。</p>
-
-<p><strong>1.安装win7</strong></p>
-
-<p>在网上找了下win7的iso映像，有各种版本，说是旗舰版的win7功能是比较多比较好的。另外目前的cpu都是64位的，所以我打算安装64位的系统，64位系统和32位最大区别是可以支持4G以上的内存，刚好我买电脑的时候加了根内存条，现在总内存是6G，所以64位旗舰版的win7最满足我的需求了：）</p>
-
-<p>我下载的是青苹果的一个iso镜像，下载下来之后刻录成启动光盘，然后用光盘启动系统，发现里面只有winPE选项有用，其他选项都是废的。。。进入PE后，用里面的工具重新分了下区，然后用ghost安装了win7。这个版本的镜像里面没有offic软件，没办法只好上网找了office2007，找到一个石油学院的office iso镜像，兼容win7 64位，又免序列号的。安装成功之后将C盘系统用ghost克隆了一个备份保存，win7安装完成。</p>
-
-<p><strong>2.安装ubuntu</strong></p>
-
-<p>开始我安装的是ubuntu11，用的是以前的安装盘，这里纠结了一下是用wubi装还是正规安装，网上说是wubi安装属体验系统，功能可能不全，最后用ubuntu的启动光盘正常安装了ubuntu11。</p>
-
-<p>安装ubuntu时，开始有3个选项，一是跟win7一起安装，一个是替代wiin7，一个是自定义。看了网上攻略我选择了自定义，选择自定义时要自己划分ubuntu分区。我划分了3个，一个是主分区，这个分区相当与windows的系统C盘，大小10G，挂载点“/”。第二个是交换空间，相当是win7的虚拟内存空间，我划分了4G。最后一个是home区，这个相当与windows系统的其他分区（比如D盘，E盘。。。)，我划分了20个G，挂载点是“/home"。</p>
-
-<p>安装完后重启系统，就可以看到ubuntu的启动引导菜单了。如果你想将win7放在菜单首位，可以进入ubuntu系统修改/boot/grub/grub.cfg文件，将里面的win7菜单移到ubuntu菜单前面就可以了。</p>
-
-<p><strong>3.重装ubuntu</strong></p>
-
-<p>后来发现ubuntu11上网网速极慢，查了很多都不知道是哪里出问题，就重新下载了ubuntu12，安装过程与上面一样。安装完成之后重启电脑发现ubuntu引导目录不见了，要重新做ubuntu的菜单引导。</p>
-
-<p>先用ubuntu的启动光盘进入试用版ubuntu，然后打开终端，输入下面命令查询ubuntu的安装区，我的是sda9。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo fdisk -l
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>然后创建了一个临时目录，这个目录是为了后面mount ubuntu启动分区用的，命令如下：</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>mkdir /media/tmpdir
-</span><span class='line'>mount  /dev/sda8  /media/tmpdir
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>接下来是最重要的一步，输入命令下面命令：</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo grub-install &amp;mdash;root-directory<span class="o">=</span>/media/tmpdir /dev/sda
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>注意，这里就是sda，后面不要写成sda9，如果显示no error report，则表示基本成功了。然后保存重启系统，会发现ubuntu的菜单已经有了，但是看起来比较乱，版本信息也不是安装的系统版本信息，所以接下来进入ubuntu系统，打开终端，输入：</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo update-grub2
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>完了之后再次重启系统就会发现ubuntu正常的启动引导菜单了。如果想把win放在前面，就照之前说的方法改下ubuntu的配置文件就OK了。</p>
-
-<p>就这样折腾了一个星期，最后终于把系统都装好了，好累。。。不过也学到了很多系统知识。下次再装系统就轻车熟路了：）</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[junit4与junt3并存时产生的问题]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/"/>
-    <updated>2012-04-16T15:54:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time</id>
-    <content type="html"><![CDATA[<p>目前的项目里用junit写单元测试，使用的是junit4，由于大部分开发之前使用的都是junit3，对junit4还不是很熟悉，所以出现了junit3和4混合使用的情况，导致发生了一些问题，这里列举一下。</p>
-
-<p><strong>1.测试类继承了TestCase，方法名是test开头，加Ignore标签，这时Ignore标签失效。错误代码示例：</strong></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Test</span>
-</span><span class='line'><span class="nd">@Ignore</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">testMyMethod</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// some code</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
-在junit3里，测试类必须继承TestCase，方法必须是以test开头；而在junit4里面，无需继承TestCase类，方法名也不需要test开头，只需要在每个方法前加上@Test标签即可。如果是继承TestCase，方法名以test开头，则junit会认为是junt3的写法，而使得junit4的标签失效。</p>
-
-<p><strong>2.测试类继承了TestCase，方法前加上@Test标签，方法名不以test开头，该方法不会被junit执行。</strong></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Test</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_test_my_method</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// some code</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>  <br/>
-用于使用了@Test标签，则方法名可以不需以test开头，但该测试类由于继承了TestCase，所以默认是使用了junit3的契约，所以方法名必须以test开头，否则junit不认，即使是加上了@Test标签。</p>
 ]]></content>
   </entry>
   

@@ -9,8 +9,9 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。 如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示： ant file - build.xml 1
-&lt;javac ... &hellip;">
+  <meta name="description" content="今天遇到一个问题，需要通过知道的class文件得到该文件所在的jar包，试过很多办法都不行，最后在网上找到了一个解决办法，如下： demo.java 1
+2
+String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,170 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/">Java通过class文件得到所在jar包</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T18:04:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天遇到一个问题，需要通过知道的class文件得到该文件所在的jar包，试过很多办法都不行，最后在网上找到了一个解决办法，如下：</p>
+
+<figure class='code'><figcaption><span>demo.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="n">XXX</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getProtectionDomain</span><span class="o">().</span><span class="na">getCodeSource</span><span class="o">().</span><span class="na">getLocation</span><span class="o">().</span><span class="na">getFile</span><span class="o">();</span>
+</span><span class='line'><span class="n">File</span> <span class="n">jarFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">path</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中的XXX指已经知道的类名，然后通过后面的方法可以直接获取到JAR包，具体这些方法是干嘛的，下来研究后再补充。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/16/put-the-depend-jar-together-in-a-jar-with-ant/">在ant中将依赖jar包一并打包的方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T11:10:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/16/put-the-depend-jar-together-in-a-jar-with-ant/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一般jar包里面是不包含jar文件的，如果自己的类有依赖其他jar包，可以通过ant命令将这些jar包解析，然后和自己的class文件打在一起，命令如下：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>        <span class="nt">&lt;jar</span> <span class="na">basedir=</span><span class="s">&quot;${build.class}&quot;</span> <span class="na">destfile=</span><span class="s">&quot;${build.out}/myjar.jar&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;manifest&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;Main-Class&quot;</span> <span class="na">value=</span><span class="s">&quot;Main&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/manifest&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;zipfileset</span> <span class="na">excludes=</span><span class="s">&quot;META-INF/*.SF&quot;</span> <span class="na">src=</span><span class="s">&quot;${project.lib}/1.jar&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;zipfileset</span> <span class="na">excludes=</span><span class="s">&quot;META-INF/*.SF&quot;</span> <span class="na">src=</span><span class="s">&quot;${project.lib}/2.jar&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jar&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>执行之后，依赖jar包就会解压到要打包的jar文件里面，只要依赖包里面的class和自己的class没有冲突，一般是没有问题的。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/">Ant里面神奇的fork</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-14T10:51:00+08:00" pubdate data-updated="true">Mar 14<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近两天一直在处理ant运行java程序的一个问题，用IDE直接运行类里面的main函数一切正常，但用ant跑该函数就报错误，错误的原因是运行ant任务时调用的是AntClasloader，而IDE里面调用的是jvm里面的classloader。</p>
+
+<p>如何使ant直接调用jvm的classloader呢？尝试过了很多办法都不行，最后在不经意间设置了fork=true这个属性，结果运行正常了。</p>
+
+<p>在网上查了下fork的资料，ant官方定义是：</p>
+
+<blockquote><p>if enabled triggers the class execution in another VM</p></blockquote>
+
+
+<p></p>
+
+<p>Ant默认行为是调用运行Ant本身的JVM，然而如果你想要单独地调用编译器，则需要设置fork属性为true。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;java</span> <span class="na">fork=</span><span class="s">&quot;true&quot;</span> <span class="na">classname=</span><span class="s">&quot;xxx&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以后发现在IDE里面可以运行成功，但在ant里面不能跑成功的，可以加上fork这个属性，这样一般就都可以通过了：）</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -314,23 +479,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/06/16/refactor-code-in-loop-block/">For循环重复代码的重构</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/23/some-ways-of-create-object-in-javascript/">Javascript几种创建对象的方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/javascript-location-object-redirect-methods/">Location对象的页面跳转方法介绍</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/05/22/use-array-deal-with-base-type-in-java/">使用Array类处理基本数组对象</a>
       </li>
     
       <li class="post">
         <a href="/blog/2012/05/21/the-execute-order-of-junit-test-case/">junit里面Test Case的执行顺序</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/21/2-problems-when-update-jenkins/">Jenkins的2个问题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/">安装win7和ubuntu双系统</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/">Junit4与junt3并存时产生的问题</a>
       </li>
     
   </ul>
@@ -343,11 +508,11 @@
 <a style="font-size: 90%" href="/tags/bat/">bat</a>
 <a style="font-size: 90%" href="/tags/emma/">emma</a>
 <a style="font-size: 189%" href="/tags/java/">java</a>
+<a style="font-size: 133%" href="/tags/javascript/">javascript</a>
 <a style="font-size: 158%" href="/tags/jenkins/">jenkins</a>
 <a style="font-size: 175%" href="/tags/junit/">junit</a>
 <a style="font-size: 90%" href="/tags/mockito/">mockito</a>
-<a style="font-size: 90%" href="/tags/ubuntu/">ubuntu</a>
-<a style="font-size: 90%" href="/tags/windows/">windows</a>
+<a style="font-size: 90%" href="/tags/refactor/">refactor</a>
 
   </ul>
 </section>
