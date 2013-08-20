@@ -9,7 +9,10 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="最近买了新的笔记本电脑，发现新买的电脑上面安装的是win7用户版，在网上查了一下这个版本的win7是功能最少的。。。另外又发现偌大的500G硬盘居然只给分成2个区，每个250。。。各种不爽，于是决定格式化硬盘重新安装系统。 1.安装win7 在网上找了下win7的iso映像，有各种版本， &hellip;">
+  <meta name="description" content="java里面的Arrays类有个asList方法，参数是1或多个Object对象，如果传入一个Object数组，则可以将该数组转化为List，但如果传入的是一个基本类型的数据（int,long,short 等），则无法将数组转换成正确的list，测试代码如下： Main.java 1
+2
+3
+4 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +67,293 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/22/use-array-deal-with-base-type-in-java/">使用Array类处理基本数组对象</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-22T14:35:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/22/use-array-deal-with-base-type-in-java/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>java里面的Arrays类有个asList方法，参数是1或多个Object对象，如果传入一个Object数组，则可以将该数组转化为List，但如果传入的是一个基本类型的数据（int,long,short 等），则无法将数组转换成正确的list，测试代码如下：</p>
+
+<figure class='code'><figcaption><span>Main.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">[]&gt;</span> <span class="n">ints</span> <span class="o">=</span> <span class="n">asList</span><span class="o">(</span><span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">});</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ints</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>  <span class="c1">//1</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="n">asList</span><span class="o">(</span><span class="k">new</span> <span class="n">Integer</span><span class="o">[]{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">});</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">integers</span><span class="o">.</span><span class="na">size</span><span class="o">());</span> <span class="c1">//2</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>asList会将整个基本类型数组作为一个Object对象放到list里面，所以第一个List的size只有1。</p>
+
+<p>如何将基本类型数组装换为一个list呢？最简单暴力的方法就是遍历整个基本类型数组，再逐一往list里面添加。但这种方法不适用所有基本类型，需要为每种基本类型写一个方法。</p>
+
+<figure class='code'><figcaption><span>Main.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">arrayToList</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">ints</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">intList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">anInt</span> <span class="o">:</span> <span class="n">ints</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">intList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">anInt</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">intList</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="nf">arrayToList</span><span class="o">(</span><span class="n">Long</span><span class="o">[]</span> <span class="n">longs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">longList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">long</span> <span class="n">anLong</span> <span class="o">:</span> <span class="n">longs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">longList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">anLong</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">longList</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">　　</span><span class="o">.....</span><span class="na">other</span> <span class="n">arrayToList</span> <span class="n">method</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重复代码会很多是吧，如何消除呢？下面就是帖子的重点了，利用Array类进行操作。</p>
+
+<p>Array类有几个方法比较常用：</p>
+
+<ul>
+<li>public static int getLength(java.lang.Object array)：获取数组对象的长度。</li>
+<li>public static java.lang.Object get(java.lang.Object array, int index)：根据下标获取数组对象的元素。</li>
+<li>public static void set(java.lang.Object array, int index, java.lang.Object value)：根据下标插入数组对象元素。</li>
+</ul>
+
+
+<p>于是上面那些方法就可以用一个方法搞定了，如下：</p>
+
+<figure class='code'><figcaption><span>Main.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">ints</span> <span class="o">=</span> <span class="o">{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">long</span><span class="o">[]</span> <span class="n">longs</span> <span class="o">=</span> <span class="o">{</span><span class="mi">1L</span><span class="o">,</span> <span class="mi">2L</span><span class="o">,</span> <span class="mi">3L</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">char</span><span class="o">[]</span> <span class="n">chars</span> <span class="o">=</span> <span class="o">{</span><span class="sc">&#39;a&#39;</span><span class="o">,</span> <span class="sc">&#39;b&#39;</span><span class="o">,</span> <span class="sc">&#39;c&#39;</span><span class="o">,</span> <span class="sc">&#39;d&#39;</span><span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrayToList</span><span class="o">(</span><span class="n">ints</span><span class="o">).</span><span class="na">size</span><span class="o">());</span> <span class="c1">//2</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrayToList</span><span class="o">(</span><span class="n">longs</span><span class="o">).</span><span class="na">size</span><span class="o">());</span> <span class="c1">//3</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrayToList</span><span class="o">(</span><span class="n">chars</span><span class="o">).</span><span class="na">size</span><span class="o">());</span> <span class="c1">//4</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="nf">arrayToList</span><span class="o">(</span><span class="n">Object</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="na">getLength</span><span class="o">(</span><span class="n">array</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Array</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">i</span><span class="o">));</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">list</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/21/the-execute-order-of-junit-test-case/">junit里面Test Case的执行顺序</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-21T16:02:00+08:00" pubdate data-updated="true">May 21<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/21/the-execute-order-of-junit-test-case/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这里讨论的是junit在ant运行的情况，其他build工具应该也适用，但具体没试验过。</p>
+
+<p>首先运行junit时是按照脚本中文件夹的顺序执行，如下脚本会先执行test1目录下的测试，其实是test2目录的，最后是test3目录的。</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test1.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test2.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test3.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'><span class="nt">&lt;/batchtest&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其次在同一个目录下，test case 的运行顺序是根据包名的顺序来执行的。比如：a.a.a这个包名里面的test case会比a.a.b这个包名的test case先跑。</p>
+
+<p>再次如果是同一个目录，且在同一个包名下的，会根据类名的顺序来执行test case。比如：a.a.a.A.java会比a.a.a.B.java先执行。</p>
+
+<p>最后如果是同个类的test case，则依照TestClass里面test case的顺序从上往下执行。</p>
+
+<p>Junit Test case 的执行顺序有时候比较重要，可能一些test case会依赖与其他test case产生的结果才能执行，这个时候把要先执行的类按照上面的规则放在前面即可保证整个测试执行正确。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/21/2-problems-when-update-jenkins/">Jenkins的2个问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-21T15:52:00+08:00" pubdate data-updated="true">May 21<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/21/2-problems-when-update-jenkins/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近CI服务器从老版本的hudson升级为jenkins，遇到了2个问题，记录一下：</p>
+
+<p><strong>1.升级为jenkins后，junit report里面显示的test case数量为原来的两倍，每个test case跑了2遍。</strong></p>
+
+<p>在job设置的junit文件路径提示这样写：&#8217;myproject/target/test-reports/*.xml&#8217;，老的hudson版本只会读取TEST-*.xml文件，而新的jenkins不仅会读取所有TEST-*.xml，还会读取TESTS-TestSuites.xml文件，而这个文件是包含了前面的Test-*.xml里面的test case的，所以会显示为两倍。</p>
+
+<p>解决方案是:junit文件路径这样写：&#8217;myproject/target/test-reports/TEST-*.xml&#8217;，这样就不会包含TESTS-TestSuites.xml文件了。</p>
+
+<p>官网上已经有人建议job配置的提示要改一下，但不知道jenkins以后会在哪个版本改（也有可能不会改:(）。</p>
+
+<p><strong>2.jenkins没有在build之前清空工作区的选项。</strong></p>
+
+<p>老的hudson版本的job设置里Advanced Project Options下有个选项是Clean workspace before build，即在build之前清空workspace里面的内容，而jenkins里面没有这个选项。</p>
+
+<p>那如何实现在build前情况workspace呢？<br/>
+可以在Source Code Management里面进行配置，一般的版本管理工具（git, svn）都可以配置Check-out Strategy，例如SVN， 选择Always check out a fresh copy，这个策略的意思是:</p>
+
+<blockquote><p>Delete everything first, then perform &#8220;svn checkout&#8221;. While this takes time to execute, it ensures that the workspace is in the pristine state.</p></blockquote>
+
+
+<p></p>
+
+<p>这样就实现了build前清空workspace的效果了。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -552,223 +842,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/">在ant编译java文件时产生debug信息</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-06T17:41:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。</p>
-
-<p>如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示：</p>
-
-<figure class='code'><figcaption><span>ant file - build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;javac</span> <span class="err">...</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span> <span class="na">debuglevel=</span><span class="s">&quot;lines, vars, source&quot;</span><span class="nt">&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ant的官方文档：</p>
-
-<table>
-<thead>
-<tr>
-<th> debug       </th>
-<th>  Indicates whether source should be compiled with debug information; defaults to off. If set to off, -g:none will be passed on the command line for compilers that support it (for other compilers, no command line argument will be used). If set to true, the value of the debuglevel attribute determines the command line argument.  </th>
-<th> No  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>debuglevel</td>
-<td>  Keyword list to be appended to the -g command-line switch. This will be ignored by all implementations except modern, classic(ver >= 1.2) and jikes. Legal values are none or a comma-separated list of the following keywords: lines, vars, and source. If debuglevel is not specified, by default, nothing will be appended to -g. If debug is not turned on, this attribute will be ignored. </td>
-<td>  </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/02/some-problems-when-use-mockito/">使用Mockito时遇到的一些问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-02T17:44:00+08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/02/some-problems-when-use-mockito/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近在使用Mockito时遇到了几个比较tricking的问题，在这里记录一下。</p>
-
-<p>1.如果方法的参数或者返回类型是泛型通配符相关的（如&lt;?>，&lt;? extends XXX>），不管你定义的对象类型是否正确匹配，用any(match)方法时都会编译出错。</p>
-
-<p>解决办法：修改方法的参数类型，去掉泛型通配符。我遇到的相关代码去掉通配符之后也是运行正常的，如果去掉后运行不正常，可能需要寻找其他解决办法，具体没有研究。</p>
-
-<p>2.mock对象的方法有多个参数，如果对第一个参数使用any()方法匹配，则后面的所有参数都需要使用any匹配，而不能使用真实对象作为参数。</p>
-
-<figure class='code'><figcaption><span>error info - test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">This</span> <span class="n">exception</span> <span class="n">may</span> <span class="n">occur</span> <span class="k">if</span> <span class="n">matchers</span> <span class="n">are</span> <span class="n">combined</span> <span class="n">with</span> <span class="n">raw</span> <span class="nl">values:</span>
-</span><span class='line'>    <span class="c1">//incorrect:</span>
-</span><span class='line'>    <span class="n">someMethod</span><span class="o">(</span><span class="n">anyObject</span><span class="o">(),</span> <span class="s">&quot;raw String&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="n">When</span> <span class="n">using</span> <span class="n">matchers</span><span class="o">,</span> <span class="n">all</span> <span class="n">arguments</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">provided</span> <span class="n">by</span> <span class="n">matchers</span><span class="o">.</span>
-</span><span class='line'><span class="n">For</span> <span class="nl">example:</span>
-</span><span class='line'>    <span class="c1">//correct:</span>
-</span><span class='line'>    <span class="n">someMethod</span><span class="o">(</span><span class="n">anyObject</span><span class="o">(),</span> <span class="n">eq</span><span class="o">(</span><span class="s">&quot;String by matcher&quot;</span><span class="o">));</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3.在setUp方法里面进行方法mock，直接在IDE里面运行junit成功，但用ant运行则会报错，其实这是另外一个测试类里面verify方法使用错误，如下：</p>
-
-<figure class='code'><figcaption><span>code - test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="c1">//错误</span>
-</span><span class='line'>    <span class="n">verify</span><span class="o">(</span><span class="n">packageBuildContext</span><span class="o">.</span><span class="na">getPackageBuilder</span><span class="o">());</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//正确</span>
-</span><span class='line'>    <span class="n">verify</span><span class="o">(</span><span class="n">packageBuildContext</span><span class="o">).</span><span class="na">getPackageBuilder</span><span class="o">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>很奇怪，在用ant跑单元测试的时候，这个测试类的错误不是在这个类的测试报告里体现，而是出现在另外一个类的测试报告里，而且直接在IDE里面运行junit不会报错。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/">在junit中添加fail&#8211;有test失败即build Failed</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-24T11:28:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
-
-<p>  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
-
-<figure class='code'><figcaption><span>demo - build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>　　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;runCompileTest&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;junit</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;junit.failure&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　　　<span class="c">&lt;!-- some code here--&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;</span>
-</span><span class='line'>
-</span><span class='line'>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;condition&gt;</span>
-</span><span class='line'>　　　　        <span class="nt">&lt;isset</span> <span class="na">property=</span><span class="s">&quot;junit.failure&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;/condition&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -798,23 +874,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/05/22/use-array-deal-with-base-type-in-java/">使用Array类处理基本数组对象</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/21/the-execute-order-of-junit-test-case/">junit里面Test Case的执行顺序</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/21/2-problems-when-update-jenkins/">Jenkins的2个问题</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/">安装win7和ubuntu双系统</a>
       </li>
     
       <li class="post">
         <a href="/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/">Junit4与junt3并存时产生的问题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/03/27/some-problems-in-emma/">使用emma时遇到的一些问题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/">Bat脚本:通过端口号查找进程号</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/">Java通过class文件得到所在jar包</a>
       </li>
     
   </ul>
@@ -826,9 +902,9 @@
 <a style="font-size: 90%" href="/tags/auto-deploy/">auto-deploy</a>
 <a style="font-size: 90%" href="/tags/bat/">bat</a>
 <a style="font-size: 90%" href="/tags/emma/">emma</a>
-<a style="font-size: 183%" href="/tags/java/">java</a>
-<a style="font-size: 136%" href="/tags/jenkins/">jenkins</a>
-<a style="font-size: 164%" href="/tags/junit/">junit</a>
+<a style="font-size: 189%" href="/tags/java/">java</a>
+<a style="font-size: 158%" href="/tags/jenkins/">jenkins</a>
+<a style="font-size: 175%" href="/tags/junit/">junit</a>
 <a style="font-size: 90%" href="/tags/mockito/">mockito</a>
 <a style="font-size: 90%" href="/tags/ubuntu/">ubuntu</a>
 <a style="font-size: 90%" href="/tags/windows/">windows</a>

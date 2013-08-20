@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: junit | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/junit/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-20T20:52:37+08:00</updated>
+  <updated>2013-08-20T21:18:38+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,56 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[junit里面Test case的执行顺序]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/05/21/the-execute-order-of-junit-test-case/"/>
+    <updated>2012-05-21T16:02:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/05/21/the-execute-order-of-junit-test-case</id>
+    <content type="html"><![CDATA[<p>这里讨论的是junit在ant运行的情况，其他build工具应该也适用，但具体没试验过。</p>
+
+<p>首先运行junit时是按照脚本中文件夹的顺序执行，如下脚本会先执行test1目录下的测试，其实是test2目录的，最后是test3目录的。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>fileset dir=&quot;${test1.dir}&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>include name=&quot;**/*Test.java&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/fileset<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>fileset dir=&quot;${test2.dir}&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>include name=&quot;**/*Test.java&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/fileset<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>fileset dir=&quot;${test3.dir}&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>include name=&quot;**/*Test.java&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/fileset<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/batchtest&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>其次在同一个目录下，test case 的运行顺序是根据包名的顺序来执行的。比如：a.a.a这个包名里面的test case会比a.a.b这个包名的test case先跑。</p>
+
+<p>再次如果是同一个目录，且在同一个包名下的，会根据类名的顺序来执行test case。比如：a.a.a.A.java会比a.a.a.B.java先执行。</p>
+
+<p>最后如果是同个类的test case，则依照TestClass里面test case的顺序从上往下执行。</p>
+
+<p>Junit Test case 的执行顺序有时候比较重要，可能一些test case会依赖与其他test case产生的结果才能执行，这个时候把要先执行的类按照上面的规则放在前面即可保证整个测试执行正确。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[junit4与junt3并存时产生的问题]]></title>

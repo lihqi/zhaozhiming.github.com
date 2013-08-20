@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>使用Mockito时遇到的一些问题 - Hacker and Geeker's Way</title>
+  <title>Hacker and Geeker's Way</title>
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="最近在使用Mockito时遇到了几个比较tricking的问题，在这里记录一下。 1.如果方法的参数或者返回类型是泛型通配符相关的（如&lt;?>，&lt;? extends XXX>），不管你定义的对象类型是否正确匹配，用any(match)方法时都会编译出错。 解决办法：修改方法的参数类型， &hellip;">
+  <meta name="description" content="使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。 如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示： ant file - build.xml 1
+&lt;javac ... &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/03/02/some-problems-when-use-mockito">
+  <link rel="canonical" href="http://zhaozhiming.github.io/blog/page/2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -62,12 +63,83 @@
 </nav> -->
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">使用Mockito时遇到的一些问题</h1>
+      <h1 class="entry-title"><a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/">在ant编译java文件时产生debug信息</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T17:41:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。</p>
+
+<p>如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示：</p>
+
+<figure class='code'><figcaption><span>ant file - build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;javac</span> <span class="err">...</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span> <span class="na">debuglevel=</span><span class="s">&quot;lines, vars, source&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ant的官方文档：</p>
+
+<table>
+<thead>
+<tr>
+<th> debug       </th>
+<th>  Indicates whether source should be compiled with debug information; defaults to off. If set to off, -g:none will be passed on the command line for compilers that support it (for other compilers, no command line argument will be used). If set to true, the value of the debuglevel attribute determines the command line argument.  </th>
+<th> No  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>debuglevel</td>
+<td>  Keyword list to be appended to the -g command-line switch. This will be ignored by all implementations except modern, classic(ver >= 1.2) and jikes. Legal values are none or a comma-separated list of the following keywords: lines, vars, and source. If debuglevel is not specified, by default, nothing will be appended to -g. If debug is not turned on, this attribute will be ignored. </td>
+<td>  </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/02/some-problems-when-use-mockito/">使用Mockito时遇到的一些问题</a></h1>
     
     
       <p class="meta">
@@ -85,14 +157,14 @@
 
 <time datetime="2012-03-02T17:44:00+08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2012</time>
         
-         | <a href="#disqus_thread">Comments</a>
+         | <a href="/blog/2012/03/02/some-problems-when-use-mockito/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>最近在使用Mockito时遇到了几个比较tricking的问题，在这里记录一下。</p>
+  <div class="entry-content"><p>最近在使用Mockito时遇到了几个比较tricking的问题，在这里记录一下。</p>
 
 <p>1.如果方法的参数或者返回类型是泛型通配符相关的（如&lt;?>，&lt;? extends XXX>），不管你定义的对象类型是否正确匹配，用any(match)方法时都会编译出错。</p>
 
@@ -136,74 +208,88 @@
 
 <p>很奇怪，在用ant跑单元测试的时候，这个测试类的错误不是在这个类的测试报告里体现，而是出现在另外一个类的测试报告里，而且直接在IDE里面运行junit不会报错。</p>
 </div>
+  
+  
 
 
-  <footer>
-    <p class="meta">
+    </article>
+  
+  
+    <article>
       
-  
-
-<span class="byline author vcard">Posted by <span class="fn">赵芝明</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-02T17:44:00+08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/code/'>code</a>
-  
-</span>
-
-
-      
-
-<span class="tags">
-  
-    <a class='tag' href='/tags/java/'>java</a>, <a class='tag' href='/tags/junit/'>junit</a>, <a class='tag' href='/tags/mockito/'>mockito</a>
-  
-</span>
-
-
-    </p>
+  <header>
     
-      <div class="sharing">
-  
-  
-  
-</div>
-
+      <h1 class="entry-title"><a href="/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/">在junit中添加fail&#8211;有test失败即build Failed</a></h1>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/" title="Previous Post: 在junit中添加fail--有test失败即build failed">&laquo; 在junit中添加fail--有test失败即build failed</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/" title="Next Post: 在ant编译java文件时产生debug信息">在ant编译java文件时产生debug信息 &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
+    
+      <p class="meta">
+        
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-24T11:28:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
+
+<p>  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
+
+<figure class='code'><figcaption><span>demo - build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;runCompileTest&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;junit</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;junit.failure&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>　　　　　　<span class="c">&lt;!-- some code here--&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;</span>
+</span><span class='line'>
+</span><span class='line'>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>　　　　    <span class="nt">&lt;condition&gt;</span>
+</span><span class='line'>　　　　        <span class="nt">&lt;isset</span> <span class="na">property=</span><span class="s">&quot;junit.failure&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>　　　　    <span class="nt">&lt;/condition&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 </div>
-  </section>
+  
+  
 
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   
     <section>
@@ -269,7 +355,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/zhaozhiming">@zhaozhiming</a> on GitHub
@@ -299,7 +385,6 @@
   
 </aside>
 
-
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -314,10 +399,7 @@
       var disqus_shortname = 'zhaozhimingsblog';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/03/02/some-problems-when-use-mockito/';
-        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/03/02/some-problems-when-use-mockito/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

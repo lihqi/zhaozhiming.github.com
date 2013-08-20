@@ -5,11 +5,21 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Tag: windows - Hacker and Geeker's Way</title>
+  <title>junit里面Test case的执行顺序 - Hacker and Geeker's Way</title>
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="Tag: windows">
+  <meta name="description" content="这里讨论的是junit在ant运行的情况，其他build工具应该也适用，但具体没试验过。 首先运行junit时是按照脚本中文件夹的顺序执行，如下脚本会先执行test1目录下的测试，其实是test2目录的，最后是test3目录的。 build.xml 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +28,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zhaozhiming.github.iotags/windows">
+  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/05/21/the-execute-order-of-junit-test-case">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -63,42 +73,138 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Tag: Windows</h1>
+    
+      <h1 class="entry-title">junit里面Test Case的执行顺序</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-21T16:02:00+08:00" pubdate data-updated="true">May 21<span>st</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="tag">
 
 
+<div class="entry-content"><p>这里讨论的是junit在ant运行的情况，其他build工具应该也适用，但具体没试验过。</p>
 
-  
-  <h2>2012</h2>
+<p>首先运行junit时是按照脚本中文件夹的顺序执行，如下脚本会先执行test1目录下的测试，其实是test2目录的，最后是test3目录的。</p>
 
-<article>
-  
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test1.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test2.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test3.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'><span class="nt">&lt;/batchtest&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<h1><a href="/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/">安装win7和ubuntu双系统</a></h1>
-<time datetime="2012-04-16T16:53:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>16</span> <span class='year'>2012</span></time>
 
-<footer>
+<p>其次在同一个目录下，test case 的运行顺序是根据包名的顺序来执行的。比如：a.a.a这个包名里面的test case会比a.a.b这个包名的test case先跑。</p>
 
-  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
+<p>再次如果是同一个目录，且在同一个包名下的，会根据类名的顺序来执行test case。比如：a.a.a.A.java会比a.a.a.B.java先执行。</p>
 
+<p>最后如果是同个类的test case，则依照TestClass里面test case的顺序从上往下执行。</p>
 
-  <span class="tags">tagged with <a class='tag' href='/tags/ubuntu/'>ubuntu</a>, <a class='tag' href='/tags/windows/'>windows</a></span>
-
-</footer>
-
-
-</article>
-
+<p>Junit Test case 的执行顺序有时候比较重要，可能一些test case会依赖与其他test case产生的结果才能执行，这个时候把要先执行的类按照上面的规则放在前面即可保证整个测试执行正确。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">赵芝明</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-21T16:02:00+08:00" pubdate data-updated="true">May 21<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/code/'>code</a>
+  
+</span>
+
+
+      
+
+<span class="tags">
+  
+    <a class='tag' href='/tags/ant/'>ant</a>, <a class='tag' href='/tags/junit/'>junit</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/21/2-problems-when-update-jenkins/" title="Previous Post: jenkins的2个问题">&laquo; jenkins的2个问题</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/22/use-array-deal-with-base-type-in-java/" title="Next Post: 使用Array类处理基本数组对象">使用Array类处理基本数组对象 &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -212,7 +318,10 @@
       var disqus_shortname = 'zhaozhimingsblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/05/21/the-execute-order-of-junit-test-case/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/05/21/the-execute-order-of-junit-test-case/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

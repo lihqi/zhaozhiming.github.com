@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-20T20:52:37+08:00</updated>
+  <updated>2013-08-20T21:18:38+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,206 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Array类处理基本数组对象]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/05/22/use-array-deal-with-base-type-in-java/"/>
+    <updated>2012-05-22T14:35:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/05/22/use-array-deal-with-base-type-in-java</id>
+    <content type="html"><![CDATA[<p>java里面的Arrays类有个asList方法，参数是1或多个Object对象，如果传入一个Object数组，则可以将该数组转化为List，但如果传入的是一个基本类型的数据（int,long,short 等），则无法将数组转换成正确的list，测试代码如下：</p>
+
+<figure class='code'><figcaption><span>Main.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">[]&gt;</span> <span class="n">ints</span> <span class="o">=</span> <span class="n">asList</span><span class="o">(</span><span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">});</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ints</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>  <span class="c1">//1</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="n">asList</span><span class="o">(</span><span class="k">new</span> <span class="n">Integer</span><span class="o">[]{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">});</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">integers</span><span class="o">.</span><span class="na">size</span><span class="o">());</span> <span class="c1">//2</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>asList会将整个基本类型数组作为一个Object对象放到list里面，所以第一个List的size只有1。</p>
+
+<p>如何将基本类型数组装换为一个list呢？最简单暴力的方法就是遍历整个基本类型数组，再逐一往list里面添加。但这种方法不适用所有基本类型，需要为每种基本类型写一个方法。</p>
+
+<figure class='code'><figcaption><span>Main.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">arrayToList</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">ints</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">intList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">anInt</span> <span class="o">:</span> <span class="n">ints</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">intList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">anInt</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">intList</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="nf">arrayToList</span><span class="o">(</span><span class="n">Long</span><span class="o">[]</span> <span class="n">longs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">longList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">long</span> <span class="n">anLong</span> <span class="o">:</span> <span class="n">longs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">longList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">anLong</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">longList</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">　　</span><span class="o">.....</span><span class="na">other</span> <span class="n">arrayToList</span> <span class="n">method</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重复代码会很多是吧，如何消除呢？下面就是帖子的重点了，利用Array类进行操作。</p>
+
+<p>Array类有几个方法比较常用：</p>
+
+<ul>
+<li>public static int getLength(java.lang.Object array)：获取数组对象的长度。</li>
+<li>public static java.lang.Object get(java.lang.Object array, int index)：根据下标获取数组对象的元素。</li>
+<li>public static void set(java.lang.Object array, int index, java.lang.Object value)：根据下标插入数组对象元素。</li>
+</ul>
+
+
+<p>于是上面那些方法就可以用一个方法搞定了，如下：</p>
+
+<figure class='code'><figcaption><span>Main.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">ints</span> <span class="o">=</span> <span class="o">{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">long</span><span class="o">[]</span> <span class="n">longs</span> <span class="o">=</span> <span class="o">{</span><span class="mi">1L</span><span class="o">,</span> <span class="mi">2L</span><span class="o">,</span> <span class="mi">3L</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">char</span><span class="o">[]</span> <span class="n">chars</span> <span class="o">=</span> <span class="o">{</span><span class="sc">&#39;a&#39;</span><span class="o">,</span> <span class="sc">&#39;b&#39;</span><span class="o">,</span> <span class="sc">&#39;c&#39;</span><span class="o">,</span> <span class="sc">&#39;d&#39;</span><span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrayToList</span><span class="o">(</span><span class="n">ints</span><span class="o">).</span><span class="na">size</span><span class="o">());</span> <span class="c1">//2</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrayToList</span><span class="o">(</span><span class="n">longs</span><span class="o">).</span><span class="na">size</span><span class="o">());</span> <span class="c1">//3</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrayToList</span><span class="o">(</span><span class="n">chars</span><span class="o">).</span><span class="na">size</span><span class="o">());</span> <span class="c1">//4</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="nf">arrayToList</span><span class="o">(</span><span class="n">Object</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="na">getLength</span><span class="o">(</span><span class="n">array</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Array</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">i</span><span class="o">));</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">list</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[junit里面Test case的执行顺序]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/05/21/the-execute-order-of-junit-test-case/"/>
+    <updated>2012-05-21T16:02:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/05/21/the-execute-order-of-junit-test-case</id>
+    <content type="html"><![CDATA[<p>这里讨论的是junit在ant运行的情况，其他build工具应该也适用，但具体没试验过。</p>
+
+<p>首先运行junit时是按照脚本中文件夹的顺序执行，如下脚本会先执行test1目录下的测试，其实是test2目录的，最后是test3目录的。</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test1.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test2.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test3.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'><span class="nt">&lt;/batchtest&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其次在同一个目录下，test case 的运行顺序是根据包名的顺序来执行的。比如：a.a.a这个包名里面的test case会比a.a.b这个包名的test case先跑。</p>
+
+<p>再次如果是同一个目录，且在同一个包名下的，会根据类名的顺序来执行test case。比如：a.a.a.A.java会比a.a.a.B.java先执行。</p>
+
+<p>最后如果是同个类的test case，则依照TestClass里面test case的顺序从上往下执行。</p>
+
+<p>Junit Test case 的执行顺序有时候比较重要，可能一些test case会依赖与其他test case产生的结果才能执行，这个时候把要先执行的类按照上面的规则放在前面即可保证整个测试执行正确。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[jenkins的2个问题]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/05/21/2-problems-when-update-jenkins/"/>
+    <updated>2012-05-21T15:52:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/05/21/2-problems-when-update-jenkins</id>
+    <content type="html"><![CDATA[<p>最近CI服务器从老版本的hudson升级为jenkins，遇到了2个问题，记录一下：</p>
+
+<p><strong>1.升级为jenkins后，junit report里面显示的test case数量为原来的两倍，每个test case跑了2遍。</strong></p>
+
+<p>在job设置的junit文件路径提示这样写：&#8217;myproject/target/test-reports/*.xml&#8217;，老的hudson版本只会读取TEST-*.xml文件，而新的jenkins不仅会读取所有TEST-*.xml，还会读取TESTS-TestSuites.xml文件，而这个文件是包含了前面的Test-*.xml里面的test case的，所以会显示为两倍。</p>
+
+<p>解决方案是:junit文件路径这样写：&#8217;myproject/target/test-reports/TEST-*.xml&#8217;，这样就不会包含TESTS-TestSuites.xml文件了。</p>
+
+<p>官网上已经有人建议job配置的提示要改一下，但不知道jenkins以后会在哪个版本改（也有可能不会改:(）。</p>
+
+<p><strong>2.jenkins没有在build之前清空工作区的选项。</strong></p>
+
+<p>老的hudson版本的job设置里Advanced Project Options下有个选项是Clean workspace before build，即在build之前清空workspace里面的内容，而jenkins里面没有这个选项。</p>
+
+<p>那如何实现在build前情况workspace呢？<br/>
+可以在Source Code Management里面进行配置，一般的版本管理工具（git, svn）都可以配置Check-out Strategy，例如SVN， 选择Always check out a fresh copy，这个策略的意思是:</p>
+
+<blockquote><p>Delete everything first, then perform &#8220;svn checkout&#8221;. While this takes time to execute, it ensures that the workspace is in the pristine state.</p></blockquote>
+
+
+<p></p>
+
+<p>这样就实现了build前清空workspace的效果了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[安装win7和ubuntu双系统]]></title>

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: jenkins | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/jenkins/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-20T20:52:37+08:00</updated>
+  <updated>2013-08-20T21:18:38+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[jenkins的2个问题]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/05/21/2-problems-when-update-jenkins/"/>
+    <updated>2012-05-21T15:52:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/05/21/2-problems-when-update-jenkins</id>
+    <content type="html"><![CDATA[<p>最近CI服务器从老版本的hudson升级为jenkins，遇到了2个问题，记录一下：</p>
+
+<p><strong>1.升级为jenkins后，junit report里面显示的test case数量为原来的两倍，每个test case跑了2遍。</strong></p>
+
+<p>在job设置的junit文件路径提示这样写：'myproject/target/test-reports/*.xml'，老的hudson版本只会读取TEST-*.xml文件，而新的jenkins不仅会读取所有TEST-*.xml，还会读取TESTS-TestSuites.xml文件，而这个文件是包含了前面的Test-*.xml里面的test case的，所以会显示为两倍。</p>
+
+<p>解决方案是:junit文件路径这样写：'myproject/target/test-reports/TEST-*.xml'，这样就不会包含TESTS-TestSuites.xml文件了。</p>
+
+<p>官网上已经有人建议job配置的提示要改一下，但不知道jenkins以后会在哪个版本改（也有可能不会改:(）。</p>
+
+<p><strong>2.jenkins没有在build之前清空工作区的选项。</strong></p>
+
+<p>老的hudson版本的job设置里Advanced Project Options下有个选项是Clean workspace before build，即在build之前清空workspace里面的内容，而jenkins里面没有这个选项。</p>
+
+<p>那如何实现在build前情况workspace呢？<br/>
+可以在Source Code Management里面进行配置，一般的版本管理工具（git, svn）都可以配置Check-out Strategy，例如SVN， 选择Always check out a fresh copy，这个策略的意思是:</p>
+
+<p><blockquote><p>Delete everything first, then perform &ldquo;svn checkout&rdquo;. While this takes time to execute, it ensures that the workspace is in the pristine state.</p></blockquote></p>
+
+<p>这样就实现了build前清空workspace的效果了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用emma时遇到的一些问题]]></title>
