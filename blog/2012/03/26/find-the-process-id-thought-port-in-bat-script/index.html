@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Tag: java - Hacker and Geeker's Way</title>
+  <title>bat脚本:通过端口号查找进程号 - Hacker and Geeker's Way</title>
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="Tag: java">
+  <meta name="description" content="最近在用jenkins做自动化web部署，web服务器是tomcat。 遇到了这样一个问题：在服务器上执行tomcat的shutdown.bat命令可以正常关机，但用jenkins执行shutdown.bat命令时却经常关闭不了，从而导致重启时报错。后来想到了杀进程的办法来关闭tomcat服务器， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zhaozhiming.github.iotags/java">
+  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -63,82 +63,125 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Tag: Java</h1>
+    
+      <h1 class="entry-title">Bat脚本:通过端口号查找进程号</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-26T22:51:00+08:00" pubdate data-updated="true">Mar 26<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="tag">
 
 
+<div class="entry-content"><p>最近在用jenkins做自动化web部署，web服务器是tomcat。</p>
 
-  
-  <h2>2012</h2>
+<p>遇到了这样一个问题：在服务器上执行tomcat的shutdown.bat命令可以正常关机，但用jenkins执行shutdown.bat命令时却经常关闭不了，从而导致重启时报错。后来想到了杀进程的办法来关闭tomcat服务器，但是要怎样才能查到tomcat进程并杀掉呢？</p>
 
-<article>
-  
+<p>下面是通过端口号查找进程的命令：</p>
 
-<h1><a href="/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/">Java通过class文件得到所在jar包</a></h1>
-<time datetime="2012-03-16T18:04:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>16</span> <span class='year'>2012</span></time>
-
-<footer>
-
-  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bat'><span class='line'>netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span> <span class="n">//我的tomcat端口给我改成8888了。</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-  <span class="tags">tagged with <a class='tag' href='/tags/ant/'>ant</a>, <a class='tag' href='/tags/java/'>java</a></span>
+<p>查出来的结果好像这样：TCP    0.0.0.0:8888           0.0.0.0:0              LISTENING       1844<br/>
+其中最后一项是进程号（PID），要怎么取到PID并杀掉进程呢？</p>
 
-</footer>
+<p>可以使用for语句来操作，for默认是以空格或tab为分割，即上面的结果会分割成5个部分，而pid正好是第5部分的内容，所以命令可以这样写：</p>
 
-
-</article>
-
-
-
-<article>
-  
-
-<h1><a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/">在ant编译java文件时产生debug信息</a></h1>
-<time datetime="2012-03-06T17:41:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>06</span> <span class='year'>2012</span></time>
-
-<footer>
-
-  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bat'><span class='line'><span class="k">for</span> <span class="n">/f</span> <span class="s2">&quot;tokens=5&quot;</span> <span class="nv">%%i</span> in (<span class="s2">&quot;netstat -ano | findstr 8888&quot;</span>) <span class="k">do</span> taskkill <span class="n">/f</span> <span class="n">/pid</span> <span class="nv">%%i</span> <span class="n">/t</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-  <span class="tags">tagged with <a class='tag' href='/tags/ant/'>ant</a>, <a class='tag' href='/tags/java/'>java</a></span>
+<p>taskkill命令是杀进程的，/f表示强制进行，/t表示将其子进程一并杀掉。</p>
 
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-
-<h1><a href="/blog/2012/03/02/some-problems-when-use-mockito/">使用Mockito时遇到的一些问题</a></h1>
-<time datetime="2012-03-02T17:44:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>02</span> <span class='year'>2012</span></time>
-
-<footer>
-
-  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
-
-
-  <span class="tags">tagged with <a class='tag' href='/tags/java/'>java</a>, <a class='tag' href='/tags/junit/'>junit</a>, <a class='tag' href='/tags/mockito/'>mockito</a></span>
-
-</footer>
-
-
-</article>
-
+<p>这样就不怕tomcat服务关不掉了，重启也正常了，自动化部署成功。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">赵芝明</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-26T22:51:00+08:00" pubdate data-updated="true">Mar 26<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/code/'>code</a>
+  
+</span>
+
+
+      
+
+<span class="tags">
+  
+    <a class='tag' href='/tags/auto-deploy/'>auto-deploy</a>, <a class='tag' href='/tags/bat/'>bat</a>, <a class='tag' href='/tags/jenkins/'>jenkins</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/" title="Previous Post: Java通过class文件得到所在jar包">&laquo; Java通过class文件得到所在jar包</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/27/some-problems-in-emma/" title="Next Post: 使用emma时遇到的一些问题">使用emma时遇到的一些问题 &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -250,7 +293,10 @@
       var disqus_shortname = 'zhaozhimingsblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: bat | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/tags/bat/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2013-08-20T20:29:27+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[bat脚本:通过端口号查找进程号]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/"/>
+    <updated>2012-03-26T22:51:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script</id>
+    <content type="html"><![CDATA[<p>最近在用jenkins做自动化web部署，web服务器是tomcat。</p>
+
+<p>遇到了这样一个问题：在服务器上执行tomcat的shutdown.bat命令可以正常关机，但用jenkins执行shutdown.bat命令时却经常关闭不了，从而导致重启时报错。后来想到了杀进程的办法来关闭tomcat服务器，但是要怎样才能查到tomcat进程并杀掉呢？</p>
+
+<p>下面是通过端口号查找进程的命令：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bat'><span class='line'>netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span> <span class="n">//我的tomcat端口给我改成8888了。</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>查出来的结果好像这样：TCP    0.0.0.0:8888           0.0.0.0:0              LISTENING       1844<br/>
+其中最后一项是进程号（PID），要怎么取到PID并杀掉进程呢？</p>
+
+<p>可以使用for语句来操作，for默认是以空格或tab为分割，即上面的结果会分割成5个部分，而pid正好是第5部分的内容，所以命令可以这样写：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bat'><span class='line'><span class="k">for</span> <span class="n">/f</span> &amp;ldquo;tokens<span class="o">=</span><span class="m">5</span>&amp;rdquo; <span class="nv">%%i</span> in (&amp;ldquo;netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span>&amp;rdquo;) <span class="k">do</span> taskkill <span class="n">/f</span> <span class="n">/pid</span> <span class="nv">%%i</span> <span class="n">/t</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>taskkill命令是杀进程的，/f表示强制进行，/t表示将其子进程一并杀掉。</p>
+
+<p>这样就不怕tomcat服务关不掉了，重启也正常了，自动化部署成功。</p>
+]]></content>
+  </entry>
+  
+</feed>

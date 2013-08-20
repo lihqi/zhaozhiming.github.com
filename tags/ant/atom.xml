@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ant | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/ant/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-20T20:01:08+08:00</updated>
+  <updated>2013-08-20T20:29:27+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,50 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用emma时遇到的一些问题]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/03/27/some-problems-in-emma/"/>
+    <updated>2012-03-27T22:05:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/03/27/some-problems-in-emma</id>
+    <content type="html"><![CDATA[<p>今天在用使用emma的过程中遇到了几个问题，记录一下.</p>
+
+<p><strong>1.跑junit过程中没办法产生coverage data文件，导致最后没办法出emma报告，上官网查了一下原因如下：</strong>  <br/>
+<blockquote><p>I have instrumented my classes but am not getting any coverage data&hellip; <br/><br/>This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.</p></blockquote>
+意思是emma会根据工程里面的class文件产生自己的instrumented class，junit在跑单元测试的时候，classpath要把定义emma的class文件路径放在项目class文件路径前面，才能产生coverage data文件。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;junit</span> <span class="err">...</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${emma.classes.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${project.classes.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'><span class="ni">&amp;hellip;</span>
+</span><span class='line'><span class="nt">&lt;/junit&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>2.emma的示例代码里面，report的sourcepath属性只有一个src路径，如果项目里面有多个src路径同时要进行覆盖率检查的话，则需要这样写：</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;report</span> <span class="na">sourcepath=</span><span class="s">&quot;${src1};${src2};${src3}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="ni">&amp;hellip;</span>
+</span><span class='line'><span class="nt">&lt;/report&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+不同的src路径用操作系统的classpath分隔符或逗号隔开，比如window用分号隔开，官网是这样解释的：<br/>
+<blockquote><p>sourcepath : An optional source path to use for report generation (a path-like structure). It is interpreted as a list of directories (separated by the OS-specific classpath separator or comma) containing .java source files. The local path names within each directory should reflect class package names. (Currently, only the HTML report generator uses this data, and only atmethod report depth.)</p></blockquote></p>
+
+<p><strong>3.jenkins的emma插件可以显示覆盖率的趋势，已经包，类，方法的覆盖率情况，但不支持链接显示代码源文件，看了下jenkins的官网，有人已经对插件提了这样一个需求，但回复说无法实现，说明如下：</strong>  <br/>
+<blockquote><p>This was an obvious feature and so I tried to do this, but the problem is that the HTML file names and anchors that EMMA puts are just random numbers. So Hudson cannot link to the appropriate portion of those HTML files.</p></p><p><p>I also thought about generating those reports by myself in Hudson, but EMMA doesn&rsquo;t leave the line-by-line coverage information in XML file either.</p></p><p><p>So that leaves me no choice but to parse emma&rsquo;s data file directly. So this is bit involving.　　</p></blockquote></p>
+
+<p>意思是说emma的html源文件是用随机数字命名，所以在xml文件中无法链接这些html源文件，emma没有修复这个问题，插件作者也无法完成这个需求:(</p>
+
+<p>我的解决方案是用doc link插件在jenkins页面上直接链接coverage.html文件。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java通过class文件得到所在jar包]]></title>
@@ -124,50 +168,6 @@
 
 
 <p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在junit中添加fail--有test失败即build failed]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/"/>
-    <updated>2012-02-24T11:28:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed</id>
-    <content type="html"><![CDATA[<p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
-
-<p>  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo &ndash; build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>　　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;runCompileTest&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;junit</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;junit.failure&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　　　<span class="c">&lt;!-- some code here--&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;condition&gt;</span>
-</span><span class='line'>　　　　        <span class="nt">&lt;isset</span> <span class="na">property=</span><span class="s">&quot;junit.failure&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;/condition&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>/target<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
