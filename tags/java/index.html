@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Java通过class文件得到所在jar包 - Hacker and Geeker's Way</title>
+  <title>Tag: java - Hacker and Geeker's Way</title>
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="今天遇到一个问题，需要通过知道的class文件得到该文件所在的jar包，试过很多办法都不行，最后在网上找到了一个解决办法，如下： demo.java 1
-2
-String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
+  <meta name="description" content="Tag: java">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar">
+  <link rel="canonical" href="http://zhaozhiming.github.iotags/java">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -65,110 +63,82 @@ String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">Java通过class文件得到所在jar包</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-16T18:04:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
-        
-         | <a href="#disqus_thread">Comments</a>
-        
-      </p>
+    <h1 class="entry-title">Tag: Java</h1>
     
   </header>
-
-
-<div class="entry-content"><p>今天遇到一个问题，需要通过知道的class文件得到该文件所在的jar包，试过很多办法都不行，最后在网上找到了一个解决办法，如下：</p>
-
-<figure class='code'><figcaption><span>demo.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="n">XXX</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getProtectionDomain</span><span class="o">().</span><span class="na">getCodeSource</span><span class="o">().</span><span class="na">getLocation</span><span class="o">().</span><span class="na">getFile</span><span class="o">();</span>
-</span><span class='line'><span class="n">File</span> <span class="n">jarFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">path</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中的XXX指已经知道的类名，然后通过后面的方法可以直接获取到JAR包，具体这些方法是干嘛的，下来研究后再补充。</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">赵芝明</span></span>
-
-      
-
-
-
-
-
+  <div id="blog-archives" class="tag">
 
 
 
   
+  <h2>2012</h2>
 
-
-<time datetime="2012-03-16T18:04:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
-      
-
-<span class="categories">
+<article>
   
-    <a class='category' href='/blog/categories/code/'>code</a>
-  
-</span>
+
+<h1><a href="/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/">Java通过class文件得到所在jar包</a></h1>
+<time datetime="2012-03-16T18:04:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>16</span> <span class='year'>2012</span></time>
+
+<footer>
+
+  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
 
 
-      
+  <span class="tags">tagged with <a class='tag' href='/tags/ant/'>ant</a>, <a class='tag' href='/tags/java/'>java</a></span>
 
-<span class="tags">
-  
-    <a class='tag' href='/tags/ant/'>ant</a>, <a class='tag' href='/tags/java/'>java</a>
-  
-</span>
+</footer>
 
 
-    </p>
-    
-      <div class="sharing">
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012/03/16/put-the-depend-jar-together-in-a-jar-with-ant/" title="Previous Post: 在ant中将依赖jar包一并打包的方法">&laquo; 在ant中将依赖jar包一并打包的方法</a>
-      
-      
-    </p>
-  </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+<article>
+  
+
+<h1><a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/">在ant编译java文件时产生debug信息</a></h1>
+<time datetime="2012-03-06T17:41:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>06</span> <span class='year'>2012</span></time>
+
+<footer>
+
+  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
+
+
+  <span class="tags">tagged with <a class='tag' href='/tags/ant/'>ant</a>, <a class='tag' href='/tags/java/'>java</a></span>
+
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+
+<h1><a href="/blog/2012/03/02/some-problems-when-use-mockito/">使用Mockito时遇到的一些问题</a></h1>
+<time datetime="2012-03-02T17:44:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>02</span> <span class='year'>2012</span></time>
+
+<footer>
+
+  <span class="categories">posted in <a class='category' href='/blog/categories/code/'>code</a></span>
+
+
+  <span class="tags">tagged with <a class='tag' href='/tags/java/'>java</a>, <a class='tag' href='/tags/junit/'>junit</a>, <a class='tag' href='/tags/mockito/'>mockito</a></span>
+
+</footer>
+
+
+</article>
+
 </div>
-  </section>
+
+  
+</article>
 
 </div>
 
@@ -276,10 +246,7 @@ String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
       var disqus_shortname = 'zhaozhimingsblog';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/';
-        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
