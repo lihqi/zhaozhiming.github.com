@@ -9,16 +9,7 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="DRY（don&rsquo;t repeat yourself），重复往往是代码腐烂的开始，我们一般的处理手法是将重复的代码提取成一个方法，然后用新方法替换掉原来的代码。 但是对于for循环里面的重复代码要如何处理呢？比如有下面2个方法： A.class 1
-2
-3
-4
-5
-6
-7
-8
-9
-10 &hellip;">
+  <meta name="description" content="译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：这里 很多年前，我在一次Goole面试被问到，如何在web应用中提供更好的用户体验。浮现在我脑海里的第一个想法是，通过比&lt;input type="file"& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +64,376 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/">在JavaScript中进行文件处理，第一部分：基础</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-08T16:26:00+08:00" pubdate data-updated="true">Jul 8<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/08/working-with-files-in-javascript-part-1/">这里</a></strong></p>
+
+<hr />
+
+<p>很多年前，我在一次Goole面试被问到，如何在web应用中提供更好的用户体验。浮现在我脑海里的第一个想法是，通过比<code>&lt;input type="file"&gt;</code>标签更好的方式来进行文件操作。虽然web发展一路高歌猛进，但自从该标签引进以来，我们操作文件的方式就一直使用它而从来没有改变过。幸运的是，有了HTML5和相关API，我们在最新版本的浏览器上可以有更多的方式进行文件操作（iOS 仍然不支持File的API）。</p>
+
+<h2>File 类型</h2>
+
+<p>File类型在File的API[1]中有详细定义，是一个文件的抽象表征。每个File实例有如下几个属性：</p>
+
+<ul>
+<li>name &ndash; 文件名</li>
+<li>size &ndash; 文件的二进制大小</li>
+<li>type &ndash; 文件的MIME类型</li>
+</ul>
+
+
+<p>一个File对象是在不直接访问文件内容的情况下，给你文件的基本信息。这一点很重要，因为从磁盘上读取文件内容，视乎文件的大小，如果文件很大，可能会在读取上等待很长时间。File对象只是一个文件的引用，和获取文件内容是两个独立的过程。</p>
+
+<h2>获取文件引用</h2>
+
+<p>基于安全的考虑，访问用户文件是严格禁止的，你不希望在加载某个页面时页面自动扫描你的硬盘然后把你的文件罗列出来吧？你访问用户电脑上的文件时要经过他们的许可，在想象中会弹出授权窗口给用户进行确认，但当用户通过页面上载东西时，实际上已经授权页面可以一直访问文件，所以不会弹出那些杂乱无章的授权窗口。</p>
+
+<p>当你使用<code>&lt;input type="file"&gt;</code>标签时，你已经授权web页面（或者服务器）去访问该文件，通过<code>&lt;input type="file"&gt;</code>标签去检索到文件对象。</p>
+
+<p>HTML5为所有<code>&lt;input type="file"&gt;</code>标签定义了一个文件集属性FileList，是一个类型数据类型的的数据结构，包含了每一个被选中的文件（HTML5允许多文件选择操作）。所以无论何时，你都可以使用以下代码来访问用户选择的文件。</p>
+
+<figure class='code'><figcaption><span>demo.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;file&quot;</span> <span class="na">id=</span><span class="s">&quot;your-files&quot;</span> <span class="na">multiple</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;script&gt;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">control</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;your-files&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">control</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// When the control has changed, there are new files </span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">files</span> <span class="o">=</span> <span class="nx">control</span><span class="p">.</span><span class="nx">files</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">files</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Filename: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Type: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">type</span><span class="p">);</span>
+</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Size: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">size</span> <span class="o">+</span> <span class="s2">&quot; bytes&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这段代码监听了文件操作的change事件，一旦change事件触发，表示选中的文件已经发生改变，然后程序会迭代输出每个File对象的信息。记住，始终是通过javascript来访问文件的属性，所以不会有读取文件内容的动作。</p>
+
+<h2>拖拽文件</h2>
+
+<p>在表单中进行文件访问，需要用户先浏览查询再选中所需的文件。幸运的是，HTML5的拖拽功能[2]给用户提供了另外一种方式去授权需要访问的文件：通过简单的将文件从本地拖拽到浏览器。要实现这个功能你只需监听2个事件。</p>
+
+<p>为了读取从某些区域拖拽到浏览器的文件，你需要监听dragover和drop事件，并取消它们原有的默认行为。做这些是为了告诉浏览器无需处理，你可以直接处理这些动作，例如，打开一个图像文件。</p>
+
+<figure class='code'><figcaption><span>demo.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;your-files&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;script&gt;</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">target</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;your-files&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">target</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;dragover&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+</span><span class='line'><span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">target</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;drop&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// cancel default actions</span>
+</span><span class='line'>    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">files</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">files</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">len</span> <span class="o">=</span> <span class="nx">files</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Filename: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Type: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">type</span><span class="p">);</span>
+</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Size: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">size</span> <span class="o">+</span> <span class="s2">&quot; bytes&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>event.dataTransfer.files是另外一个文件集合对象，你可以从中获取文件信息。这段代码的功能等同于你手工选择打开一个文件。</p>
+
+<h2>Ajax文件上传</h2>
+
+<p>一旦你有了一个文件的引用，你可能会做一些非常酷的事情，比如用Ajax上传文件。由于XMLHttpRequest Level 2[3]的FormData对象，使得这完全有可能。这个对象表示一个HTML表单，并且允许你在里面通过append方法来添加键值对数据，然后提交到服务器。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">();</span>
+</span><span class='line'><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Nicholas&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>FormData的伟大之处在于它可以直接添加一个文件对象，从而有效地模仿表单的文件上传。你所需要做的仅仅是添加一个File引用，并且指定一个文件名，剩下的由浏览器全部搞定。例如：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// create a form with a couple of values</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">();</span>
+</span><span class='line'><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Nicholas&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;photo&quot;</span><span class="p">,</span> <span class="nx">control</span><span class="p">.</span><span class="nx">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// send via XHR - look ma, no headers being set!</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+</span><span class='line'><span class="nx">xhr</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Upload complete.&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/entrypoint&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+</span><span class='line'><span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">form</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一旦FormData对象被传递到send方法，适当的HTTP头将会为你设置好。你不需要担心使用文件的表单如何设置正确的编码格式，服务器会将其当作一个常规的HTML表单来提交，然后读取“photo&#8221;键的文件数据和“name&#8221;键的文本数据。这让你在写后台代码时可以很自由，很容易的处理表单数据，不管是传统HTML表单还是Ajax表单形式。</p>
+
+<p>所有这些都可以在最新版本的浏览器上工作，包括IE10。</p>
+
+<hr />
+
+<h4>下集预告</h4>
+
+<p>你现在知道两种在浏览器中访问文件信息的方法，一种是通过文件上传操作，一种是通过本地的拖拽操作。未来可能有其他的方法，但现在你只需要了解这两种就好了。当然，读取文件信息只是问题的一部分，下一步是如何读取文件的内容，这将在第二部分做讲解。</p>
+
+<h4>相关链接：</h4>
+
+<ol>
+<li><a href="http://dev.w3.org/2006/webapi/FileAPI/">File API specification (editor’s draft)</a></li>
+<li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dnd.html#dnd">HTML5 Drag and Drop</a></li>
+<li><a href="http://www.w3.org/TR/XMLHttpRequest/">XMLHttpRequest Level 2</a></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/19/the-way-for-read-coverage-report-in-jenkins/">Jenkins无法读取覆盖率报告的解决方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-19T16:01:00+08:00" pubdate data-updated="true">Jun 19<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/19/the-way-for-read-coverage-report-in-jenkins/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>报错信息如下：</p>
+
+<figure class='code'><figcaption><span>log </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>coverage-report:
+</span><span class='line'>
+</span><span class='line'>[mkdir] Created dir: D:\JK\workspace\d9_rm3_engine_dev1.0.0_cud\view\rmv3_engine\engine_j2ee\doc\coveragereport
+</span><span class='line'>
+</span><span class='line'>[cobertura-report] Cobertura 1.9.4.1 - GNU GPL License (NO WARRANTY) - See COPYRIGHT file
+</span><span class='line'>
+</span><span class='line'>[cobertura-report] Cobertura: Loaded information on 114 classes.
+</span><span class='line'>
+</span><span class='line'>[cobertura-report] Report time: 913ms
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 1 minute 44 seconds
+</span><span class='line'>
+</span><span class='line'>Publishing Cobertura coverage report...
+</span><span class='line'>
+</span><span class='line'>No coverage results were found using the pattern &#39;view/rmv3_engine/engine_j2ee/doc/coveragereport/coverage.xml&#39; relative to &#39;D:\JK\workspace\d9_rm3_engine_dev1.0.0_cud\view&#39;.  Did you enter a pattern relative to the correct directory?  Did you generate the XML report(s) for Cobertura?
+</span><span class='line'>
+</span><span class='line'>Build step &#39;Publish Cobertura Coverage Report&#39; changed build result to FAILURE
+</span><span class='line'>
+</span><span class='line'>Recording test results
+</span><span class='line'>
+</span><span class='line'>Finished: FAILURE
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>覆盖率报告已经生成，在工作区也可以找到，路径是：&#8217;view/rmv3_engine/engine_j2ee/doc/coveragereport/coverage.xml&#8217;，但jenkins对于这个路径似乎不认，以前用svn的时候可以找到，改成CC后就找不到了。</p>
+
+<p>解决方法：job配置里面将覆盖率的路径设置为：/coverage.xml 就可以了。很奇怪的一个问题。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/">Sonar在ant工程中读取单元测试和覆盖率报告</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-17T08:30:00+08:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>虽然sonar支持ant工程的构建，但目前最大的不足是无法在分析过程中产生单元测试和覆盖率报告，这样在sonar面板上覆盖率板块就始终没有数据。但幸运的是，sonar可以读取已经生成好的报告，让报告的内容显示在sonar的覆盖率面板上。</p>
+
+<p>首先需要配置sonar.dynamicAnalysis属性，这个属性有3个值，分别是true, false和reuseReports，默认值是true，即进行动态分析，但只对maven工程有效，要想读取外部的报告，需要将值设置为reuseReports。</p>
+
+<p>然后是单元测试报告的路径设置，对应的属性是sonar.surefire.reportsPath，value为junit报告的文件夹路径，这个路径下有junit生成的那些TEST-*.xml文件。</p>
+
+<p>最后是覆盖率报告的路径设置，这个要看是用什么覆盖率工具。sonar有3种覆盖率工具的设置属性，分别是<em>jacoco，cobertura和clover</em>。像我们工程用的是cobertura，对应的属性名为<em>sonar.cobertura.reportPath</em>，其他2种分别是<em>sonar.jacoco.reportPath</em>和<em>sonar.clover.reportPath</em>。属性值和单元测试的略为不同，单元测试属性是指向文件夹，覆盖率是指向具体的覆盖率文件，比如cobertura的覆盖率文件是coverage.xml，则value应该写成“yourReportDir/coverage.xml&#8221;。</p>
+
+<p>配置完后重新进行sonar分析即可看到覆盖率报告成产生了。下面是具体代码：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.dynamicAnalysis&quot;</span> <span class="na">value=</span><span class="s">&quot;reuseReports&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="c">&lt;!--unnit test--&gt;</span>
+</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.surefire.reportsPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/unitTestReportDir&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="c">&lt;!--coverage--&gt;</span>
+</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.cobertura.reportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/coverage.xml&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -886,239 +1247,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/">Junit4与junt3并存时产生的问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-16T15:54:00+08:00" pubdate data-updated="true">Apr 16<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>目前的项目里用junit写单元测试，使用的是junit4，由于大部分开发之前使用的都是junit3，对junit4还不是很熟悉，所以出现了junit3和4混合使用的情况，导致发生了一些问题，这里列举一下。</p>
-
-<p><strong>1.测试类继承了TestCase，方法名是test开头，加Ignore标签，这时Ignore标签失效。错误代码示例：</strong></p>
-
-<figure class='code'><figcaption><span>test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="nd">@Ignore</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testMyMethod</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// some code</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在junit3里，测试类必须继承TestCase，方法必须是以test开头；而在junit4里面，无需继承TestCase类，方法名也不需要test开头，只需要在每个方法前加上@Test标签即可。如果是继承TestCase，方法名以test开头，则junit会认为是junt3的写法，而使得junit4的标签失效。</p>
-
-<p><strong>2.测试类继承了TestCase，方法前加上@Test标签，方法名不以test开头，该方法不会被junit执行。</strong></p>
-
-<figure class='code'><figcaption><span>test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_test_my_method</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// some code</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>用于使用了@Test标签，则方法名可以不需以test开头，但该测试类由于继承了TestCase，所以默认是使用了junit3的契约，所以方法名必须以test开头，否则junit不认，即使是加上了@Test标签。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/27/some-problems-in-emma/">使用emma时遇到的一些问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-27T22:05:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/27/some-problems-in-emma/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今天在用使用emma的过程中遇到了几个问题，记录一下.</p>
-
-<p><strong>1.跑junit过程中没办法产生coverage data文件，导致最后没办法出emma报告，上官网查了一下原因如下：</strong></p>
-
-<blockquote><p>I have instrumented my classes but am not getting any coverage data&#8230;   <br/>This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.</p></blockquote>
-
-
-<p>
-意思是emma会根据工程里面的class文件产生自己的instrumented class，junit在跑单元测试的时候，classpath要把定义emma的class文件路径放在项目class文件路径前面，才能产生coverage data文件。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;junit</span> <span class="err">...</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${emma.classes.dir}&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${project.classes.dir}&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>...
-</span><span class='line'><span class="nt">&lt;/junit&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>2.emma的示例代码里面，report的sourcepath属性只有一个src路径，如果项目里面有多个src路径同时要进行覆盖率检查的话，则需要这样写：</strong></p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;report</span> <span class="na">sourcepath=</span><span class="s">&quot;${src1};${src2};${src3}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   ...
-</span><span class='line'><span class="nt">&lt;/report&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>不同的src路径用操作系统的classpath分隔符或逗号隔开，比如window用分号隔开，官网是这样解释的：</p>
-
-<blockquote><p>sourcepath : An optional source path to use for report generation (a path-like structure). It is interpreted as a list of directories (separated by the OS-specific classpath separator or comma) containing .java source files. The local path names within each directory should reflect class package names. (Currently, only the HTML report generator uses this data, and only atmethod report depth.)</p></blockquote>
-
-
-<p></p>
-
-<p><strong>3.jenkins的emma插件可以显示覆盖率的趋势，已经包，类，方法的覆盖率情况，但不支持链接显示代码源文件，看了下jenkins的官网，有人已经对插件提了这样一个需求，但回复说无法实现，说明如下：</strong></p>
-
-<blockquote><p>This was an obvious feature and so I tried to do this, but the problem is that the HTML file names and anchors that EMMA puts are just random numbers. So Hudson cannot link to the appropriate portion of those HTML files.</p><p>I also thought about generating those reports by myself in Hudson, but EMMA doesn&#8217;t leave the line-by-line coverage information in XML file either.</p><p>So that leaves me no choice but to parse emma&#8217;s data file directly. So this is bit involving.　　</p></blockquote>
-
-
-<p></p>
-
-<p>意思是说emma的html源文件是用随机数字命名，所以在xml文件中无法链接这些html源文件，emma没有修复这个问题，插件作者也无法完成这个需求:(</p>
-
-<p>我的解决方案是用doc link插件在jenkins页面上直接链接coverage.html文件。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/">Bat脚本:通过端口号查找进程号</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-26T22:51:00+08:00" pubdate data-updated="true">Mar 26<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近在用jenkins做自动化web部署，web服务器是tomcat。</p>
-
-<p>遇到了这样一个问题：在服务器上执行tomcat的shutdown.bat命令可以正常关机，但用jenkins执行shutdown.bat命令时却经常关闭不了，从而导致重启时报错。后来想到了杀进程的办法来关闭tomcat服务器，但是要怎样才能查到tomcat进程并杀掉呢？</p>
-
-<p>下面是通过端口号查找进程的命令：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bat'><span class='line'>netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span> <span class="n">//我的tomcat端口给我改成8888了。</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>查出来的结果好像这样：TCP    0.0.0.0:8888           0.0.0.0:0              LISTENING       1844<br/>
-其中最后一项是进程号（PID），要怎么取到PID并杀掉进程呢？</p>
-
-<p>可以使用for语句来操作，for默认是以空格或tab为分割，即上面的结果会分割成5个部分，而pid正好是第5部分的内容，所以命令可以这样写：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bat'><span class='line'><span class="k">for</span> <span class="n">/f</span> <span class="s2">&quot;tokens=5&quot;</span> <span class="nv">%%i</span> in (<span class="s2">&quot;netstat -ano | findstr 8888&quot;</span>) <span class="k">do</span> taskkill <span class="n">/f</span> <span class="n">/pid</span> <span class="nv">%%i</span> <span class="n">/t</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>taskkill命令是杀进程的，/f表示强制进行，/t表示将其子进程一并杀掉。</p>
-
-<p>这样就不怕tomcat服务关不掉了，重启也正常了，自动化部署成功。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1151,23 +1279,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/">在JavaScript中进行文件处理，第一部分：基础</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/19/the-way-for-read-coverage-report-in-jenkins/">Jenkins无法读取覆盖率报告的解决方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/">Sonar在ant工程中读取单元测试和覆盖率报告</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/16/refactor-code-in-loop-block/">For循环重复代码的重构</a>
       </li>
     
       <li class="post">
         <a href="/blog/2012/05/23/some-ways-of-create-object-in-javascript/">Javascript几种创建对象的方法</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/22/javascript-location-object-redirect-methods/">Location对象的页面跳转方法介绍</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/22/use-array-deal-with-base-type-in-java/">使用Array类处理基本数组对象</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/21/the-execute-order-of-junit-test-case/">junit里面Test Case的执行顺序</a>
       </li>
     
   </ul>
@@ -1178,13 +1306,13 @@
 	<a style="font-size: 210%" href="/tags/ant/">ant</a>
 <a style="font-size: 90%" href="/tags/auto-deploy/">auto-deploy</a>
 <a style="font-size: 90%" href="/tags/bat/">bat</a>
-<a style="font-size: 90%" href="/tags/emma/">emma</a>
-<a style="font-size: 189%" href="/tags/java/">java</a>
-<a style="font-size: 133%" href="/tags/javascript/">javascript</a>
-<a style="font-size: 158%" href="/tags/jenkins/">jenkins</a>
-<a style="font-size: 175%" href="/tags/junit/">junit</a>
+<a style="font-size: 183%" href="/tags/java/">java</a>
+<a style="font-size: 153%" href="/tags/javascript/">javascript</a>
+<a style="font-size: 170%" href="/tags/jenkins/">jenkins</a>
+<a style="font-size: 170%" href="/tags/junit/">junit</a>
 <a style="font-size: 90%" href="/tags/mockito/">mockito</a>
 <a style="font-size: 90%" href="/tags/refactor/">refactor</a>
+<a style="font-size: 90%" href="/tags/sonar/">sonar</a>
 
   </ul>
 </section>

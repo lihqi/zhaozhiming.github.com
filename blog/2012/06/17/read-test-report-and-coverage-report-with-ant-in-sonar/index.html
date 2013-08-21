@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>安装win7和ubuntu双系统 - Hacker and Geeker's Way</title>
+  <title>sonar在ant工程中读取单元测试和覆盖率报告 - Hacker and Geeker's Way</title>
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="最近买了新的笔记本电脑，发现新买的电脑上面安装的是win7用户版，在网上查了一下这个版本的win7是功能最少的。。。另外又发现偌大的500G硬盘居然只给分成2个区，每个250。。。各种不爽，于是决定格式化硬盘重新安装系统。 1.安装win7 在网上找了下win7的iso映像，有各种版本， &hellip;">
+  <meta name="description" content="虽然sonar支持ant工程的构建，但目前最大的不足是无法在分析过程中产生单元测试和覆盖率报告，这样在sonar面板上覆盖率板块就始终没有数据。但幸运的是，sonar可以读取已经生成好的报告，让报告的内容显示在sonar的覆盖率面板上。 首先需要配置sonar.dynamicAnalysis属性， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer">
+  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -67,7 +67,7 @@
   
   <header>
     
-      <h1 class="entry-title">安装win7和ubuntu双系统</h1>
+      <h1 class="entry-title">Sonar在ant工程中读取单元测试和覆盖率报告</h1>
     
     
       <p class="meta">
@@ -83,7 +83,7 @@
   
 
 
-<time datetime="2012-04-16T16:53:00+08:00" pubdate data-updated="true">Apr 16<span>th</span>, 2012</time>
+<time datetime="2012-06-17T08:30:00+08:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -92,59 +92,31 @@
   </header>
 
 
-<div class="entry-content"><p>最近买了新的笔记本电脑，发现新买的电脑上面安装的是win7用户版，在网上查了一下这个版本的win7是功能最少的。。。另外又发现偌大的500G硬盘居然只给分成2个区，每个250。。。各种不爽，于是决定格式化硬盘重新安装系统。</p>
+<div class="entry-content"><p>虽然sonar支持ant工程的构建，但目前最大的不足是无法在分析过程中产生单元测试和覆盖率报告，这样在sonar面板上覆盖率板块就始终没有数据。但幸运的是，sonar可以读取已经生成好的报告，让报告的内容显示在sonar的覆盖率面板上。</p>
 
-<p><strong>1.安装win7</strong></p>
+<p>首先需要配置sonar.dynamicAnalysis属性，这个属性有3个值，分别是true, false和reuseReports，默认值是true，即进行动态分析，但只对maven工程有效，要想读取外部的报告，需要将值设置为reuseReports。</p>
 
-<p>在网上找了下win7的iso映像，有各种版本，说是旗舰版的win7功能是比较多比较好的。另外目前的cpu都是64位的，所以我打算安装64位的系统，64位系统和32位最大区别是可以支持4G以上的内存，刚好我买电脑的时候加了根内存条，现在总内存是6G，所以64位旗舰版的win7最满足我的需求了：）</p>
+<p>然后是单元测试报告的路径设置，对应的属性是sonar.surefire.reportsPath，value为junit报告的文件夹路径，这个路径下有junit生成的那些TEST-*.xml文件。</p>
 
-<p>我下载的是青苹果的一个iso镜像，下载下来之后刻录成启动光盘，然后用光盘启动系统，发现里面只有winPE选项有用，其他选项都是废的。。。进入PE后，用里面的工具重新分了下区，然后用ghost安装了win7。这个版本的镜像里面没有offic软件，没办法只好上网找了office2007，找到一个石油学院的office iso镜像，兼容win7 64位，又免序列号的。安装成功之后将C盘系统用ghost克隆了一个备份保存，win7安装完成。</p>
+<p>最后是覆盖率报告的路径设置，这个要看是用什么覆盖率工具。sonar有3种覆盖率工具的设置属性，分别是<em>jacoco，cobertura和clover</em>。像我们工程用的是cobertura，对应的属性名为<em>sonar.cobertura.reportPath</em>，其他2种分别是<em>sonar.jacoco.reportPath</em>和<em>sonar.clover.reportPath</em>。属性值和单元测试的略为不同，单元测试属性是指向文件夹，覆盖率是指向具体的覆盖率文件，比如cobertura的覆盖率文件是coverage.xml，则value应该写成“yourReportDir/coverage.xml&#8221;。</p>
 
-<p><strong>2.安装ubuntu</strong></p>
+<p>配置完后重新进行sonar分析即可看到覆盖率报告成产生了。下面是具体代码：</p>
 
-<p>开始我安装的是ubuntu11，用的是以前的安装盘，这里纠结了一下是用wubi装还是正规安装，网上说是wubi安装属体验系统，功能可能不全，最后用ubuntu的启动光盘正常安装了ubuntu11。</p>
-
-<p>安装ubuntu时，开始有3个选项，一是跟win7一起安装，一个是替代wiin7，一个是自定义。看了网上攻略我选择了自定义，选择自定义时要自己划分ubuntu分区。我划分了3个，一个是主分区，这个分区相当与windows的系统C盘，大小10G，挂载点“/”。第二个是交换空间，相当是win7的虚拟内存空间，我划分了4G。最后一个是home区，这个相当与windows系统的其他分区（比如D盘，E盘。。。)，我划分了20个G，挂载点是“/home&#8221;。</p>
-
-<p>安装完后重启系统，就可以看到ubuntu的启动引导菜单了。如果你想将win7放在菜单首位，可以进入ubuntu系统修改/boot/grub/grub.cfg文件，将里面的win7菜单移到ubuntu菜单前面就可以了。</p>
-
-<p><strong>3.重装ubuntu</strong></p>
-
-<p>后来发现ubuntu11上网网速极慢，查了很多都不知道是哪里出问题，就重新下载了ubuntu12，安装过程与上面一样。安装完成之后重启电脑发现ubuntu引导目录不见了，要重新做ubuntu的菜单引导。</p>
-
-<p>先用ubuntu的启动光盘进入试用版ubuntu，然后打开终端，输入下面命令查询ubuntu的安装区，我的是sda9。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo fdisk -l
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后创建了一个临时目录，这个目录是为了后面mount ubuntu启动分区用的，命令如下：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>mkdir /media/tmpdir
-</span><span class='line'>mount  /dev/sda8  /media/tmpdir
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.dynamicAnalysis&quot;</span> <span class="na">value=</span><span class="s">&quot;reuseReports&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="c">&lt;!--unnit test--&gt;</span>
+</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.surefire.reportsPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/unitTestReportDir&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="c">&lt;!--coverage--&gt;</span>
+</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.cobertura.reportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/coverage.xml&quot;</span> <span class="nt">/&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>接下来是最重要的一步，输入命令下面命令：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo grub-install --root-directory<span class="o">=</span>/media/tmpdir /dev/sda
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意，这里就是sda，后面不要写成sda9，如果显示no error report，则表示基本成功了。然后保存重启系统，会发现ubuntu的菜单已经有了，但是看起来比较乱，版本信息也不是安装的系统版本信息，所以接下来进入ubuntu系统，打开终端，输入：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo update-grub2
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>完了之后再次重启系统就会发现ubuntu正常的启动引导菜单了。如果想把win放在前面，就照之前说的方法改下ubuntu的配置文件就OK了。</p>
-
-<p>就这样折腾了一个星期，最后终于把系统都装好了，好累。。。不过也学到了很多系统知识。下次再装系统就轻车熟路了：）</p>
 </div>
 
 
@@ -167,7 +139,7 @@
   
 
 
-<time datetime="2012-04-16T16:53:00+08:00" pubdate data-updated="true">Apr 16<span>th</span>, 2012</time>
+<time datetime="2012-06-17T08:30:00+08:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
       
 
 <span class="categories">
@@ -181,7 +153,7 @@
 
 <span class="tags">
   
-    <a class='tag' href='/tags/ubuntu/'>ubuntu</a>, <a class='tag' href='/tags/windows/'>windows</a>
+    <a class='tag' href='/tags/ant/'>ant</a>, <a class='tag' href='/tags/sonar/'>sonar</a>
   
 </span>
 
@@ -197,10 +169,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/" title="Previous Post: junit4与junt3并存时产生的问题">&laquo; junit4与junt3并存时产生的问题</a>
+        <a class="basic-alignment left" href="/blog/2012/06/16/refactor-code-in-loop-block/" title="Previous Post: for循环重复代码的重构">&laquo; for循环重复代码的重构</a>
       
       
-        <a class="basic-alignment right" href="/blog/2012/05/21/2-problems-when-update-jenkins/" title="Next Post: jenkins的2个问题">jenkins的2个问题 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2012/06/19/the-way-for-read-coverage-report-in-jenkins/" title="Next Post: jenkins无法读取覆盖率报告的解决方法">jenkins无法读取覆盖率报告的解决方法 &raquo;</a>
       
     </p>
   </footer>
@@ -325,8 +297,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/';
-        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/';
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/';
         var disqus_script = 'embed.js';
       
     (function () {

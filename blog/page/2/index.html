@@ -9,9 +9,7 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="今天遇到一个问题，需要通过知道的class文件得到该文件所在的jar包，试过很多办法都不行，最后在网上找到了一个解决办法，如下： demo.java 1
-2
-String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
+  <meta name="description" content="目前的项目里用junit写单元测试，使用的是junit4，由于大部分开发之前使用的都是junit3，对junit4还不是很熟悉，所以出现了junit3和4混合使用的情况，导致发生了一些问题，这里列举一下。 1.测试类继承了TestCase，方法名是test开头，加Ignore标签， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +64,239 @@ String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/">Junit4与junt3并存时产生的问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-16T15:54:00+08:00" pubdate data-updated="true">Apr 16<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>目前的项目里用junit写单元测试，使用的是junit4，由于大部分开发之前使用的都是junit3，对junit4还不是很熟悉，所以出现了junit3和4混合使用的情况，导致发生了一些问题，这里列举一下。</p>
+
+<p><strong>1.测试类继承了TestCase，方法名是test开头，加Ignore标签，这时Ignore标签失效。错误代码示例：</strong></p>
+
+<figure class='code'><figcaption><span>test.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="nd">@Ignore</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testMyMethod</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// some code</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在junit3里，测试类必须继承TestCase，方法必须是以test开头；而在junit4里面，无需继承TestCase类，方法名也不需要test开头，只需要在每个方法前加上@Test标签即可。如果是继承TestCase，方法名以test开头，则junit会认为是junt3的写法，而使得junit4的标签失效。</p>
+
+<p><strong>2.测试类继承了TestCase，方法前加上@Test标签，方法名不以test开头，该方法不会被junit执行。</strong></p>
+
+<figure class='code'><figcaption><span>test.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_test_my_method</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// some code</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用于使用了@Test标签，则方法名可以不需以test开头，但该测试类由于继承了TestCase，所以默认是使用了junit3的契约，所以方法名必须以test开头，否则junit不认，即使是加上了@Test标签。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/27/some-problems-in-emma/">使用emma时遇到的一些问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-27T22:05:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/27/some-problems-in-emma/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天在用使用emma的过程中遇到了几个问题，记录一下.</p>
+
+<p><strong>1.跑junit过程中没办法产生coverage data文件，导致最后没办法出emma报告，上官网查了一下原因如下：</strong></p>
+
+<blockquote><p>I have instrumented my classes but am not getting any coverage data&#8230;   <br/>This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.</p></blockquote>
+
+
+<p>
+意思是emma会根据工程里面的class文件产生自己的instrumented class，junit在跑单元测试的时候，classpath要把定义emma的class文件路径放在项目class文件路径前面，才能产生coverage data文件。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;junit</span> <span class="err">...</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${emma.classes.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${project.classes.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>...
+</span><span class='line'><span class="nt">&lt;/junit&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>2.emma的示例代码里面，report的sourcepath属性只有一个src路径，如果项目里面有多个src路径同时要进行覆盖率检查的话，则需要这样写：</strong></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;report</span> <span class="na">sourcepath=</span><span class="s">&quot;${src1};${src2};${src3}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   ...
+</span><span class='line'><span class="nt">&lt;/report&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>不同的src路径用操作系统的classpath分隔符或逗号隔开，比如window用分号隔开，官网是这样解释的：</p>
+
+<blockquote><p>sourcepath : An optional source path to use for report generation (a path-like structure). It is interpreted as a list of directories (separated by the OS-specific classpath separator or comma) containing .java source files. The local path names within each directory should reflect class package names. (Currently, only the HTML report generator uses this data, and only atmethod report depth.)</p></blockquote>
+
+
+<p></p>
+
+<p><strong>3.jenkins的emma插件可以显示覆盖率的趋势，已经包，类，方法的覆盖率情况，但不支持链接显示代码源文件，看了下jenkins的官网，有人已经对插件提了这样一个需求，但回复说无法实现，说明如下：</strong></p>
+
+<blockquote><p>This was an obvious feature and so I tried to do this, but the problem is that the HTML file names and anchors that EMMA puts are just random numbers. So Hudson cannot link to the appropriate portion of those HTML files.</p><p>I also thought about generating those reports by myself in Hudson, but EMMA doesn&#8217;t leave the line-by-line coverage information in XML file either.</p><p>So that leaves me no choice but to parse emma&#8217;s data file directly. So this is bit involving.　　</p></blockquote>
+
+
+<p></p>
+
+<p>意思是说emma的html源文件是用随机数字命名，所以在xml文件中无法链接这些html源文件，emma没有修复这个问题，插件作者也无法完成这个需求:(</p>
+
+<p>我的解决方案是用doc link插件在jenkins页面上直接链接coverage.html文件。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/">Bat脚本:通过端口号查找进程号</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-26T22:51:00+08:00" pubdate data-updated="true">Mar 26<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近在用jenkins做自动化web部署，web服务器是tomcat。</p>
+
+<p>遇到了这样一个问题：在服务器上执行tomcat的shutdown.bat命令可以正常关机，但用jenkins执行shutdown.bat命令时却经常关闭不了，从而导致重启时报错。后来想到了杀进程的办法来关闭tomcat服务器，但是要怎样才能查到tomcat进程并杀掉呢？</p>
+
+<p>下面是通过端口号查找进程的命令：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bat'><span class='line'>netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span> <span class="n">//我的tomcat端口给我改成8888了。</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查出来的结果好像这样：TCP    0.0.0.0:8888           0.0.0.0:0              LISTENING       1844<br/>
+其中最后一项是进程号（PID），要怎么取到PID并杀掉进程呢？</p>
+
+<p>可以使用for语句来操作，for默认是以空格或tab为分割，即上面的结果会分割成5个部分，而pid正好是第5部分的内容，所以命令可以这样写：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bat'><span class='line'><span class="k">for</span> <span class="n">/f</span> <span class="s2">&quot;tokens=5&quot;</span> <span class="nv">%%i</span> in (<span class="s2">&quot;netstat -ano | findstr 8888&quot;</span>) <span class="k">do</span> taskkill <span class="n">/f</span> <span class="n">/pid</span> <span class="nv">%%i</span> <span class="n">/t</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>taskkill命令是杀进程的，/f表示强制进行，/t表示将其子进程一并杀掉。</p>
+
+<p>这样就不怕tomcat服务关不掉了，重启也正常了，自动化部署成功。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -479,23 +710,23 @@ String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/">在JavaScript中进行文件处理，第一部分：基础</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/19/the-way-for-read-coverage-report-in-jenkins/">Jenkins无法读取覆盖率报告的解决方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/">Sonar在ant工程中读取单元测试和覆盖率报告</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/16/refactor-code-in-loop-block/">For循环重复代码的重构</a>
       </li>
     
       <li class="post">
         <a href="/blog/2012/05/23/some-ways-of-create-object-in-javascript/">Javascript几种创建对象的方法</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/22/javascript-location-object-redirect-methods/">Location对象的页面跳转方法介绍</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/22/use-array-deal-with-base-type-in-java/">使用Array类处理基本数组对象</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/21/the-execute-order-of-junit-test-case/">junit里面Test Case的执行顺序</a>
       </li>
     
   </ul>
@@ -506,13 +737,13 @@ String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
 	<a style="font-size: 210%" href="/tags/ant/">ant</a>
 <a style="font-size: 90%" href="/tags/auto-deploy/">auto-deploy</a>
 <a style="font-size: 90%" href="/tags/bat/">bat</a>
-<a style="font-size: 90%" href="/tags/emma/">emma</a>
-<a style="font-size: 189%" href="/tags/java/">java</a>
-<a style="font-size: 133%" href="/tags/javascript/">javascript</a>
-<a style="font-size: 158%" href="/tags/jenkins/">jenkins</a>
-<a style="font-size: 175%" href="/tags/junit/">junit</a>
+<a style="font-size: 183%" href="/tags/java/">java</a>
+<a style="font-size: 153%" href="/tags/javascript/">javascript</a>
+<a style="font-size: 170%" href="/tags/jenkins/">jenkins</a>
+<a style="font-size: 170%" href="/tags/junit/">junit</a>
 <a style="font-size: 90%" href="/tags/mockito/">mockito</a>
 <a style="font-size: 90%" href="/tags/refactor/">refactor</a>
+<a style="font-size: 90%" href="/tags/sonar/">sonar</a>
 
   </ul>
 </section>
