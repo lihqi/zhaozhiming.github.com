@@ -9,14 +9,9 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="一般jar包里面是不包含jar文件的，如果自己的类有依赖其他jar包，可以通过ant命令将这些jar包解析，然后和自己的class文件打在一起，命令如下： build.xml 1
+  <meta name="description" content="今天遇到一个问题，需要通过知道的class文件得到该文件所在的jar包，试过很多办法都不行，最后在网上找到了一个解决办法，如下： demo.java 1
 2
-3
-4
-5
-6
-7
-8 &lt;jar basedir=&quot;${build.class}&quot; &hellip;">
+String path = XXX.class.getProtectionDomain().getCodeSource(). &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +66,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/">Java通过class文件得到所在jar包</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T18:04:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/16/java-get-the-jar-file-by-the-class-file-of-jar/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天遇到一个问题，需要通过知道的class文件得到该文件所在的jar包，试过很多办法都不行，最后在网上找到了一个解决办法，如下：</p>
+
+<figure class='code'><figcaption><span>demo.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="n">XXX</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getProtectionDomain</span><span class="o">().</span><span class="na">getCodeSource</span><span class="o">().</span><span class="na">getLocation</span><span class="o">().</span><span class="na">getFile</span><span class="o">();</span>
+</span><span class='line'><span class="n">File</span> <span class="n">jarFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">path</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中的XXX指已经知道的类名，然后通过后面的方法可以直接获取到JAR包，具体这些方法是干嘛的，下来研究后再补充。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -436,6 +479,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/">持续集成一天一美元</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/08/06/read-toyota-product-method/">读《丰田生产方式》——联系敏捷开发的思考</a>
       </li>
     
@@ -449,10 +496,6 @@
     
       <li class="post">
         <a href="/blog/2012/07/30/working-with-files-in-javascript-part-4/">在JavaScript中进行文件处理，第四部分：对象URLs</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/23/working-with-files-in-javascript-part-3/">在JavaScript中进行文件处理，第三部分：处理事件和错误</a>
       </li>
     
   </ul>
