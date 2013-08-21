@@ -9,10 +9,18 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="java里面的Arrays类有个asList方法，参数是1或多个Object对象，如果传入一个Object数组，则可以将该数组转化为List，但如果传入的是一个基本类型的数据（int,long,short 等），则无法将数组转换成正确的list，测试代码如下： Main.java 1
+  <meta name="description" content="1.工厂方法 demo.js 1
 2
 3
-4 &hellip;">
+4
+5
+6
+7
+8
+9
+10
+11
+function createPerson(name, age) { var person = new Object(); person.name = name; person.age = age; person. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +75,303 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/23/some-ways-of-create-object-in-javascript/">Javascript几种创建对象的方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-23T14:50:00+08:00" pubdate data-updated="true">May 23<span>rd</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/23/some-ways-of-create-object-in-javascript/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1.工厂方法</h2>
+
+<figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">createPerson</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+</span><span class='line'>    <span class="nx">person</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">person</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">person</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>优点：创建相同实例只有一处代码。<br/>
+缺点：不知道对象原型。</p>
+
+<figure class='code'><figcaption><span>test.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="nx">createPerson</span><span class="p">(</span><span class="s2">&quot;zhang&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="nx">createPerson</span><span class="p">(</span><span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//false</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2.构造函数</h2>
+
+<figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age:&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>优点：可以知道实例原型。<br/>
+缺点：方法不是同一个方法实例。</p>
+
+<figure class='code'><figcaption><span>test.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s2">&quot;zhang&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: zhang age:20</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: li age:30</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">==</span> <span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">);</span> <span class="c1">//false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3.原型方法</h2>
+
+<figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">()</span> <span class="p">{}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;zhang&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>优点：共享方法实例对象。<br/>
+缺点：每个实例需要定义非方法属性。</p>
+
+<figure class='code'><figcaption><span>test.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">person2</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;li&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">person2</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: zhang age:20</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: li age:30</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">==</span> <span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">);</span> <span class="c1">//true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4.构造函数和原型的组合方法</h2>
+
+<figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>优点：非方法属性在构造函数中定义，方法属性则在原型中定义。</p>
+
+<p><strong>总结：最后一种方法是比较好的创建对象的方式，综合了前面3种方式的优点。每个实例对象都有自己实例属性的一份副本，但同时共享着方法的引用，最大限度节省了内存。</strong></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/22/javascript-location-object-redirect-methods/">Location对象的页面跳转方法介绍</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-22T16:18:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/22/javascript-location-object-redirect-methods/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>JavaScript中使用location对象可以通过很多种方式改变浏览器的位置。最常用的方法应该是下面几种：</p>
+
+<figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="err">　　</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="s2">&quot;http://www.google.com&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">&quot;http://www.google.com&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">location</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其实前面2种方式是调用第3种方式去实现的，这样就可以在浏览器中打开一个新的URL并在历史记录中生成一条记录，因此用户可以通过“后退”按钮回到前一个页面。如果想禁止这种后退行为，可以使用replace()方法。该方法只接受一个参数，即URL，然后会跳转到该URL，但不会在历史记录中生成记录。这样用户不能回到前一页了。</p>
+
+<figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>    <span class="nx">location</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>关于页面跳转还有一个reload方法，作用是重新加载当前页面。如果调用该方法时不带参数，页面会以最有效的方式加载页面，也就是说，如果浏览器有该页面的缓存，则会从缓存里面加载该页面。如果不想从缓存中重新加载页面，需要传入true参数，即绕开浏览器缓存，强制从服务器去获取页面数据。</p>
+
+<figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">();</span> <span class="c1">//相当浏览器的F5刷新，有可能从缓存中加载</span>
+</span><span class='line'>  <span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span> <span class="c1">//相当于Ctrl+F5，从服务器中加载</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面列出location.reload()方法的具体解释：</p>
+
+<blockquote><p>The reload() method of the Location object reloads the document that is currently displayed in the window of the Location object. When called with no arguments, or with the argument false, it uses the If-Modified-SinceHTTP header to determine whether the document has changed on the web server. If it has, it reloads the document from the server, and if not, it reloads the document from the cache. This is is the same action that occurs when the user clicks on Navigator&#8217;s Reload button.</p></blockquote>
+
+
+<p></p>
+
+<p>location对象的reload方法会重新加载当前页面。当没有传入参数或传入false参数时，会用 If-Modified-SinceHTTP header 去判断页面在web服务器上是否有改变。如果改变了，则从服务器加载，如果没有改变，则从缓存中加载。这与用户点击导航栏刷新按钮的行为相同。</p>
+
+<blockquote><p>When reload() is called with the argument true, then it will always bypass the cache and reload the document from the server, regardless of the last-modified time of the document. This is the same action that occurs when the user shift-clicks on Navigator&#8217;s Reload button.</p></blockquote>
+
+
+<p></p>
+
+<p>当调用reload方法时传入参数true，会始终绕开缓存而从服务器上加载页面，不管页面有没有改变。这与用户按住shift并点击导航栏刷新按钮的行为相同。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -726,122 +1031,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/16/put-the-depend-jar-together-in-a-jar-with-ant/">在ant中将依赖jar包一并打包的方法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-16T11:10:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/16/put-the-depend-jar-together-in-a-jar-with-ant/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>一般jar包里面是不包含jar文件的，如果自己的类有依赖其他jar包，可以通过ant命令将这些jar包解析，然后和自己的class文件打在一起，命令如下：</p>
-
-<figure class='code'><figcaption><span>build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>        <span class="nt">&lt;jar</span> <span class="na">basedir=</span><span class="s">&quot;${build.class}&quot;</span> <span class="na">destfile=</span><span class="s">&quot;${build.out}/myjar.jar&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;manifest&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;Main-Class&quot;</span> <span class="na">value=</span><span class="s">&quot;Main&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/manifest&gt;</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="nt">&lt;zipfileset</span> <span class="na">excludes=</span><span class="s">&quot;META-INF/*.SF&quot;</span> <span class="na">src=</span><span class="s">&quot;${project.lib}/1.jar&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;zipfileset</span> <span class="na">excludes=</span><span class="s">&quot;META-INF/*.SF&quot;</span> <span class="na">src=</span><span class="s">&quot;${project.lib}/2.jar&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/jar&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>执行之后，依赖jar包就会解压到要打包的jar文件里面，只要依赖包里面的class和自己的class没有冲突，一般是没有问题的。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/">Ant里面神奇的fork</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-14T10:51:00+08:00" pubdate data-updated="true">Mar 14<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近两天一直在处理ant运行java程序的一个问题，用IDE直接运行类里面的main函数一切正常，但用ant跑该函数就报错误，错误的原因是运行ant任务时调用的是AntClasloader，而IDE里面调用的是jvm里面的classloader。</p>
-
-<p>如何使ant直接调用jvm的classloader呢？尝试过了很多办法都不行，最后在不经意间设置了fork=true这个属性，结果运行正常了。</p>
-
-<p>在网上查了下fork的资料，ant官方定义是：</p>
-
-<blockquote><p>if enabled triggers the class execution in another VM</p></blockquote>
-
-
-<p></p>
-
-<p>Ant默认行为是调用运行Ant本身的JVM，然而如果你想要单独地调用编译器，则需要设置fork属性为true。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;java</span> <span class="na">fork=</span><span class="s">&quot;true&quot;</span> <span class="na">classname=</span><span class="s">&quot;xxx&quot;</span> <span class="nt">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以后发现在IDE里面可以运行成功，但在ant里面不能跑成功的，可以加上fork这个属性，这样一般就都可以通过了：）</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -876,6 +1065,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/08/06/read-toyota-product-method/">读《丰田生产方式》——联系敏捷开发的思考</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/">《Agile Web Development With Rails》读后感&#8211;rails基于web设计的best Practices</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/">在JavaScript中进行文件处理，第五部分：Blobs</a>
       </li>
     
@@ -887,28 +1084,20 @@
         <a href="/blog/2012/07/23/working-with-files-in-javascript-part-3/">在JavaScript中进行文件处理，第三部分：处理事件和错误</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012/07/16/working-with-files-in-javascript-part-2/">在JavaScript中进行文件处理，第二部分：文件读取</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/">在JavaScript中进行文件处理，第一部分：基础</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
 	<a style="font-size: 210%" href="/tags/ant/">ant</a>
-<a style="font-size: 90%" href="/tags/auto-deploy/">auto-deploy</a>
-<a style="font-size: 90%" href="/tags/bat/">bat</a>
 <a style="font-size: 183%" href="/tags/java/">java</a>
 <a style="font-size: 202%" href="/tags/javascript/">javascript</a>
 <a style="font-size: 170%" href="/tags/jenkins/">jenkins</a>
 <a style="font-size: 170%" href="/tags/junit/">junit</a>
 <a style="font-size: 90%" href="/tags/mockito/">mockito</a>
+<a style="font-size: 90%" href="/tags/rails/">rails</a>
 <a style="font-size: 90%" href="/tags/refactor/">refactor</a>
+<a style="font-size: 90%" href="/tags/ruby/">ruby</a>
 <a style="font-size: 90%" href="/tags/sonar/">sonar</a>
 
   </ul>

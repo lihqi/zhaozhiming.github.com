@@ -9,7 +9,7 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：这里 到目前为止，这个系列的帖子集中在和这些文件交互——用户指定的文件和通过File对象访问的文件。File对象实际上是Blob的一个特殊版本， &hellip;">
+  <meta name="description" content="平时工作和同事讨论敏捷，曾多次听到丰田的精益思想，说是很多敏捷的想法都是从丰田的精益思想中得来的，后来在Kent Beck的《解析极限编程》里看到有这样一本书是讲丰田的精益思想的，找来看了一下，发现书中讲的一些思想或者实践和敏捷开发很相似，下面我就讲讲我对于丰田生产方式和敏捷开发的一些联系。 一、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +64,181 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/06/read-toyota-product-method/">读《丰田生产方式》——联系敏捷开发的思考</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-06T10:16:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/06/read-toyota-product-method/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>平时工作和同事讨论敏捷，曾多次听到丰田的精益思想，说是很多敏捷的想法都是从丰田的精益思想中得来的，后来在Kent Beck的《解析极限编程》里看到有这样一本书是讲丰田的精益思想的，找来看了一下，发现书中讲的一些思想或者实践和敏捷开发很相似，下面我就讲讲我对于丰田生产方式和敏捷开发的一些联系。</p>
+
+<h2>一、逆向思维，由生产的最后一道工序为起点，从后往前推进。</h2>
+
+<p>丰田生产方式的两大支柱是准时化和自动化。准时化（Just In Time）是指通过流水作业装配一辆汽车的过程中，所需零部件在需要的时刻，以需要的数量，不多不少的送到生产线的旁边。如何达到这种不多不少的状态呢？丰田的做法是由生产的最后一道工序为起点，从后往前推进。这样以最后要生产的汽车数量，就可以推测所需的零部件各是多少，从而达到降低浪费的目的。</p>
+
+<p>在敏捷开发中，我们如何做到准时化？从相关的敏捷实践来看，测试驱动开发（TDD）就是达到这一目的的过程。先从原始需求上面得到一个个的Story，Story规定了需求的入口和出口，然后再驱动出测试案例，最后由测试案例驱动出产品代码，这样就能保证产品代码的功能是包括了原始需求所要求的功能，但又避免产生过渡设计。这个也是减少浪费的一种过程。</p>
+
+<h2>二、每个工人都有一根警报线，在生产过程中发现产品有问题，随时拉线让整个生产线停止，等待解决问题后再恢复生产。</h2>
+
+<p>丰田生产方式的另外一个支柱是自动化。丰田使用了很多自动化机器，但自动化的标准不是简单的去使用机器，而是实现人的自动化。丰田几乎所有的机器设备都装有自动停止装置，平时机器自动运转的时候用不到人，如果生产过程中发现问题，人会去停止机器，然后修复问题，重新启动机器。如果在生产过程中发现问题没有及时停止生产，那就可能生产出大量的残次品，这些残次品无法装配到汽车上，是一种很大的浪费。</p>
+
+<p>在敏捷开发中，持续集成体现的就是这种自动化思想。在持续集成的过程中，一旦发现问题（比如单元测试跑失败了），服务器就会马上停止构建，并通知相关的开发人员进行问题修复，等问题修复完成后，再重新进行构建。这样每当问题出现，我们就可以以最小的代价找到问题的根源，然后修复它。如果等问题遗留到后面的测试阶段或者生产阶段，再去找问题的根源，所需的代价就要大的多得多。</p>
+
+<p>光有持续集成的服务器还不行，服务器不会自己去编译、测试、部署，所有这些行为都需要人去开发出相应的脚本，然后在服务器上运行，这就是所谓的“人的自动化”。开发人员应该将所有可以自动化的东西都做成自动化，让单元测试自动化，集成测试自动化，部署自动化，总之一个目的，减少浪费，这也是丰田生产一直追求的目标之一。</p>
+
+<h2>三、看板</h2>
+
+<p>看板在丰田生产中是一种工具，在生产中起到一个传递情报和指令的作用。</p>
+
+<p>敏捷开发很好的运用了看板。有过敏捷开发经验的同学应该知道，敏捷中的看板就是整天摆在你跟前的那块白板，白板上将开发过程分成好几个阶段，每个阶段上面贴着该阶段下的开发任务，通过白板可以随时了解项目的进展。</p>
+
+<h2>其他思想和实践</h2>
+
+<p>除了和敏捷开发有这些联系外，丰田生产方式还有一些思想和实践适合软件开发。</p>
+
+<h4>一人掌握多种技能，每个人都是多面手。</h4>
+
+<p>由于历史和文化的原因，美国的的制度是，车工始终是车工，焊工永远是焊工；日本的制度是，工人既能操作车床，也能开钻床，而且能焊接，能够学会和掌握多种技能。</p>
+
+<p>两种制度孰优孰劣很难确定，但个人认为，在软件开发高速发展的今天，开发人员应该要有更高的要求。开发人员所掌握的技能不仅仅是会编写产品代码，还要会写单元测试，会部署，会搭建环境等等。比如在缺少测试人员的情况下，开发人员可以自己测试，依靠开发的编程技能可以写出更好的测试代码。要能够快速学会和掌握多种技能。</p>
+
+<h4>反复问5个为什么</h4>
+
+<p>比如一台机器不转动了，你就要问：</p>
+
+<ol>
+<li>为什么机器停了？——“因为超负荷，保险丝断了。”</li>
+<li>“为什么超负荷了呢？”——“因为轴承部分的润滑不够。&#8221;</li>
+<li>&ldquo;为什么润滑不够？”——“因为润滑泵吸不上油来。”</li>
+<li>“为什么吸不上油来呢？”——“因为油泵轴磨损，松动了。”</li>
+<li>“为什么磨损了呢？”——因为没有安装过滤器，混进了铁屑。”</li>
+</ol>
+
+
+<p>通过问5个为什么就可以知道需要安装过滤器了。如果问题问的不彻底，可能是加上润滑油，或者换上油泵轴了事，这样等过了一段时间后问题还是会出现。丰田生产方式可以说是丰田人反复问5个为什么才创造出来的。</p>
+
+<h4>拥抱小团队，不要大块头</h4>
+
+<p>团队合作高于一切，由于合作或其他种种原因，人少的团队反而容易取胜。小船容易转舵，大船步履阑珊，小团队的灵活性更强，这也符合敏捷开发的原则——要做到简洁。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/">《Agile Web Development With Rails》读后感&#8211;rails基于web设计的best Practices</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T18:18:00+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近看完《Agile Web Development with Rails》一书，受益匪浅。书中先是用一个简单的web应用带你进入Rails的世界，然后在你大致熟悉之后，再带你了解Rails的一些细节，比如ActiveRecord，ActiveController等。最让我觉得Rails美的是其中的一些best practices，这些都可以很好地借鉴到平时的开发中去。下面我简单举几个在Rails中我认为比较好的一些best practies。</p>
+
+<h3>数据库迁移</h3>
+
+<p>在Rails中，SQL脚本可以通过命令来生成，生成的脚本以时间戳加意图命名，比如创建表的SQL脚本文件可能是“20120529151027_create_products.rb&#8221;，加时间戳可以让人一眼就知道脚本的执行顺序，实际上Rails在也是根据时间戳来执行脚本的。创建完脚本后只要简单的执行&#8221;rake db:migrate&#8221;命令即可完成脚本的执行，在Rails中会有脚本执行的记录，已经执行过的脚本不会重复执行。另外，在每个SQL脚本中，不仅有执行的操作，还有回滚的操作。比如：</p>
+
+<figure class='code'><figcaption><span>demo.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AddPriceToLineItem</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Migration</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
+</span><span class='line'>    <span class="err">　　</span><span class="n">add_column</span> <span class="ss">:line_items</span><span class="p">,</span> <span class="ss">:price</span><span class="p">,</span> <span class="ss">:decimal</span><span class="p">,</span> <span class="ss">:precision</span> <span class="o">=&gt;</span> <span class="mi">8</span><span class="p">,</span> <span class="ss">:scale</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:default</span> <span class="o">=&gt;</span> <span class="mi">0</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="err">　　</span><span class="n">say_with_time</span> <span class="s2">&quot;Updating prices...&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="err">　　</span><span class="no">LineItem</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="ss">:all</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">lineitem</span><span class="o">|</span>
+</span><span class='line'>        <span class="err">　　</span><span class="n">lineitem</span><span class="o">.</span><span class="n">update_attribute</span> <span class="ss">:price</span><span class="p">,</span> <span class="n">lineitem</span><span class="o">.</span><span class="n">product</span><span class="o">.</span><span class="n">price</span>
+</span><span class='line'>         <span class="k">end</span>
+</span><span class='line'>    <span class="err">　　</span><span class="k">end</span>
+</span><span class='line'>  <span class="err">　</span><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">down</span>
+</span><span class='line'>    <span class="err">　　</span><span class="n">remove_column</span> <span class="ss">:line_items</span><span class="p">,</span> <span class="ss">:price</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里的up方法是正常执行时的操作，down方法则是回滚时所做的操作。如果发现执行的脚本有问题，简单地执行“rake db:rollback&#8221;即可回退到脚本执行前的状态。</p>
+
+<h3>Convention over Configuration</h3>
+
+<p>在上面创建的脚本中可以看到，Rails的表名都是复数形式，因为Rails认为每张表都会存放很多个同一类型的数据，因此是复数，这种清晰的命名规范不仅体现在数据库，还有其他很多地方。比如，model的文件名都是单数形式存在，controller都是以复数形式存在。Rails将MVC各模块连接起来就是通过COC约定，举个简单例子，product的model文件是product.rb，controller文件是products_controller.rb，而view文件则是放在对应的product文件夹里面，每个view文件名以action方法名开头，这样在写代码的时候就可以不用具体指定要发送给哪个controller，给哪个model存储数据，让哪个页面显示数据，只要你遵守了COC约定，Rails会帮你跳转到最合适的地方。</p>
+
+<h3>分层的页面布局</h3>
+
+<p>在书中的例子，作者会建议你将页面分成一个个小的局部文件。实际上Rails也是推荐你这么做的，局部文件只需以下划线开头，Rails就会帮你识别出来。小的页面文件结构简单，容易维护，比如有显示列标题的页面，其中嵌套显示具体行内容的页面，其中再嵌套分页页面文件。对比平时在工作里遇到的一个个硕大无比的jsp文件，rails的页面文件让人有了进入世外桃源的感觉。</p>
+
+<p>Rails还有其他很多的best practices，这里只是简单的介绍。Rails框架集中了很多开发中遇到的常见问题的解决方案，而且是一些最佳的解决方案，像集中了很多经验丰富的大师智慧一样，使用Rails并学习其中的best practices，能让你在web开发上少走很多弯路。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1243,303 +1418,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/23/some-ways-of-create-object-in-javascript/">Javascript几种创建对象的方法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-23T14:50:00+08:00" pubdate data-updated="true">May 23<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/23/some-ways-of-create-object-in-javascript/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>1.工厂方法</h2>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">createPerson</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
-</span><span class='line'>    <span class="nx">person</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-</span><span class='line'>    <span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nx">person</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">person</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>优点：创建相同实例只有一处代码。<br/>
-缺点：不知道对象原型。</p>
-
-<figure class='code'><figcaption><span>test.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="nx">createPerson</span><span class="p">(</span><span class="s2">&quot;zhang&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="nx">createPerson</span><span class="p">(</span><span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//false</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>2.构造函数</h2>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age:&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>优点：可以知道实例原型。<br/>
-缺点：方法不是同一个方法实例。</p>
-
-<figure class='code'><figcaption><span>test.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s2">&quot;zhang&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: zhang age:20</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: li age:30</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">==</span> <span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">);</span> <span class="c1">//false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>3.原型方法</h2>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">()</span> <span class="p">{}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;zhang&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>优点：共享方法实例对象。<br/>
-缺点：每个实例需要定义非方法属性。</p>
-
-<figure class='code'><figcaption><span>test.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">person2</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;li&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="nx">person2</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: zhang age:20</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: li age:30</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">==</span> <span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">);</span> <span class="c1">//true</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>4.构造函数和原型的组合方法</h2>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>优点：非方法属性在构造函数中定义，方法属性则在原型中定义。</p>
-
-<p><strong>总结：最后一种方法是比较好的创建对象的方式，综合了前面3种方式的优点。每个实例对象都有自己实例属性的一份副本，但同时共享着方法的引用，最大限度节省了内存。</strong></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/22/javascript-location-object-redirect-methods/">Location对象的页面跳转方法介绍</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-22T16:18:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/22/javascript-location-object-redirect-methods/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>JavaScript中使用location对象可以通过很多种方式改变浏览器的位置。最常用的方法应该是下面几种：</p>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="err">　　</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="s2">&quot;http://www.google.com&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="err">　　</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">&quot;http://www.google.com&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="err">　　</span><span class="nx">location</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其实前面2种方式是调用第3种方式去实现的，这样就可以在浏览器中打开一个新的URL并在历史记录中生成一条记录，因此用户可以通过“后退”按钮回到前一个页面。如果想禁止这种后退行为，可以使用replace()方法。该方法只接受一个参数，即URL，然后会跳转到该URL，但不会在历史记录中生成记录。这样用户不能回到前一页了。</p>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'>    <span class="nx">location</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>关于页面跳转还有一个reload方法，作用是重新加载当前页面。如果调用该方法时不带参数，页面会以最有效的方式加载页面，也就是说，如果浏览器有该页面的缓存，则会从缓存里面加载该页面。如果不想从缓存中重新加载页面，需要传入true参数，即绕开浏览器缓存，强制从服务器去获取页面数据。</p>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">();</span> <span class="c1">//相当浏览器的F5刷新，有可能从缓存中加载</span>
-</span><span class='line'>  <span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span> <span class="c1">//相当于Ctrl+F5，从服务器中加载</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>下面列出location.reload()方法的具体解释：</p>
-
-<blockquote><p>The reload() method of the Location object reloads the document that is currently displayed in the window of the Location object. When called with no arguments, or with the argument false, it uses the If-Modified-SinceHTTP header to determine whether the document has changed on the web server. If it has, it reloads the document from the server, and if not, it reloads the document from the cache. This is is the same action that occurs when the user clicks on Navigator&#8217;s Reload button.</p></blockquote>
-
-
-<p></p>
-
-<p>location对象的reload方法会重新加载当前页面。当没有传入参数或传入false参数时，会用 If-Modified-SinceHTTP header 去判断页面在web服务器上是否有改变。如果改变了，则从服务器加载，如果没有改变，则从缓存中加载。这与用户点击导航栏刷新按钮的行为相同。</p>
-
-<blockquote><p>When reload() is called with the argument true, then it will always bypass the cache and reload the document from the server, regardless of the last-modified time of the document. This is the same action that occurs when the user shift-clicks on Navigator&#8217;s Reload button.</p></blockquote>
-
-
-<p></p>
-
-<p>当调用reload方法时传入参数true，会始终绕开缓存而从服务器上加载页面，不管页面有没有改变。这与用户按住shift并点击导航栏刷新按钮的行为相同。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1572,6 +1450,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/08/06/read-toyota-product-method/">读《丰田生产方式》——联系敏捷开发的思考</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/">《Agile Web Development With Rails》读后感&#8211;rails基于web设计的best Practices</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/">在JavaScript中进行文件处理，第五部分：Blobs</a>
       </li>
     
@@ -1583,28 +1469,20 @@
         <a href="/blog/2012/07/23/working-with-files-in-javascript-part-3/">在JavaScript中进行文件处理，第三部分：处理事件和错误</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012/07/16/working-with-files-in-javascript-part-2/">在JavaScript中进行文件处理，第二部分：文件读取</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/">在JavaScript中进行文件处理，第一部分：基础</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
 	<a style="font-size: 210%" href="/tags/ant/">ant</a>
-<a style="font-size: 90%" href="/tags/auto-deploy/">auto-deploy</a>
-<a style="font-size: 90%" href="/tags/bat/">bat</a>
 <a style="font-size: 183%" href="/tags/java/">java</a>
 <a style="font-size: 202%" href="/tags/javascript/">javascript</a>
 <a style="font-size: 170%" href="/tags/jenkins/">jenkins</a>
 <a style="font-size: 170%" href="/tags/junit/">junit</a>
 <a style="font-size: 90%" href="/tags/mockito/">mockito</a>
+<a style="font-size: 90%" href="/tags/rails/">rails</a>
 <a style="font-size: 90%" href="/tags/refactor/">refactor</a>
+<a style="font-size: 90%" href="/tags/ruby/">ruby</a>
 <a style="font-size: 90%" href="/tags/sonar/">sonar</a>
 
   </ul>
