@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>在jenkins和sonar中集成jacoco(一)--使用jacoco收集单元测试的覆盖率 - Hacker and Geeker's Way</title>
+  <meta name="author" content="赵芝明">
+
+  
+  <meta name="description" content="之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。 用jacoco来实现单元测试的覆盖率比较简单 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zhaozhiming.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">在jenkins和sonar中集成jacoco(一)--使用jacoco收集单元测试的覆盖率</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-29T14:45:00+08:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>  之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
+
+<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.jacoco.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/jacoco/ant/antlib.xml&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;classpath</span> <span class="na">path=</span><span class="s">&quot;${basedir}/jacoco_lib/jacocoant.jar&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/taskdef&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里要引入jacoco的jar包jacocoant.jar，增加了这个命令之后，将原有的单元测试任务用 jacoco:coverage包括起来，实例代码如下：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;test_compile&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:coverage</span> <span class="na">destfile=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;junit</span> <span class="na">fork=</span><span class="s">&quot;true&quot;</span> <span class="na">forkmode=</span><span class="s">&quot;once&quot;</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;unit.test.failure&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;classpath&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;pathelement</span> <span class="na">location=</span><span class="s">&quot;${build.class}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${build.lib.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/classpath&gt;</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="nt">&lt;formatter</span> <span class="na">type=</span><span class="s">&quot;xml&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${src.test.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/batchtest&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/junit&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:coverage&gt;</span>
+</span><span class='line'>　　　　<span class="c">&lt;!-- 其他内容 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>jacoco:coverage的destfile参数是指生成的覆盖率文件路径，不写默认文件名为jacoco.exec。另外在forkmode这个参数设置为once，可以提高你的单元测试的执行效率。</p>
+
+<p>这样跑完单元测试后，就会在指定路径下生成覆盖率文件ut.exec（或默认的jacoco.exec，在工程根目录下）。</p>
+
+<p>如果要在本地生成jacoco的覆盖率报告，可以增加如下任务：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;jacocoReport&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;delete</span> <span class="na">dir=</span><span class="s">&quot;${basedir}/jacoco&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${result.jacoco.report.dir}/ut&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:report&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executiondata&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;file</span> <span class="na">file=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executiondata&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;structure</span> <span class="na">name=</span><span class="s">&quot;jacoco_demo&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;classfiles&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${build.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/classfiles&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;sourcefiles</span> <span class="na">encoding=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${src.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/sourcefiles&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/structure&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;html</span> <span class="na">destdir=</span><span class="s">&quot;${result.jacoco.report.dir}/ut&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:report&gt;</span>
+</span><span class='line'><span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>生成覆盖率报告需要覆盖率文件（exec）、源码、编译后的class文件。这里导出的格式是html，还有xml和cvs 2种格式可以导出，具体参考<a href="http://www.eclemma.org/jacoco/trunk/doc/ant.html#report">jacoco:report</a>。<br/>
+注意，这里的class文件和exec文件必须用同一个jvm执行，如果是用JVM A来编译class文件，然后用JVM B来生成覆盖率文件，生成出来的报告覆盖率会为0%。<strong>这一点对生成集成测试的覆盖率特别重要。</strong></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">赵芝明</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-29T14:45:00+08:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/code/'>code</a>
+  
+</span>
+
+
+      
+
+<span class="tags">
+  
+    <a class='tag' href='/tags/jacoco/'>jacoco</a>, <a class='tag' href='/tags/jenkins/'>jenkins</a>, <a class='tag' href='/tags/sonar/'>sonar</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/" title="Previous Post: 持续集成一天一美元">&laquo; 持续集成一天一美元</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/" title="Next Post: 在jenkins和sonar中集成jacoco(二)--在jenkins中生成jacoco覆盖率报告">在jenkins和sonar中集成jacoco(二)--在jenkins中生成jacoco覆盖率报告 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://zhaozhiming.github.io" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://zhaozhiming.github.io/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:kingzzm1982@sina.com" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://zhaozhiming.github.io/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+    <h1>新浪微博</h1>
+    <ul id="weibo">
+    	<li>
+    		<iframe width="100%" height="100" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=0&isWeibo=0&isFans=0&uid=2497707964&verifier=553ef0af&dpc=1"></iframe>
+      	</li>
+    </ul>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/">在jenkins和sonar中集成jacoco(四)--在sonar中集成jacoco</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/">在jenkins和sonar中集成jacoco(三)--使用jacoco收集集成测试的覆盖率</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/">在jenkins和sonar中集成jacoco(二)--在jenkins中生成jacoco覆盖率报告</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">在jenkins和sonar中集成jacoco(一)--使用jacoco收集单元测试的覆盖率</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/">持续集成一天一美元</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+	<a style="font-size: 210%" href="/tags/ant/">ant</a>
+<a style="font-size: 170%" href="/tags/jacoco/">jacoco</a>
+<a style="font-size: 183%" href="/tags/java/">java</a>
+<a style="font-size: 202%" href="/tags/javascript/">javascript</a>
+<a style="font-size: 210%" href="/tags/jenkins/">jenkins</a>
+<a style="font-size: 170%" href="/tags/junit/">junit</a>
+<a style="font-size: 90%" href="/tags/rails/">rails</a>
+<a style="font-size: 90%" href="/tags/refactor/">refactor</a>
+<a style="font-size: 90%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 183%" href="/tags/sonar/">sonar</a>
+
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/zhaozhiming">@zhaozhiming</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'zhaozhiming',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - 赵芝明 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'zhaozhimingsblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

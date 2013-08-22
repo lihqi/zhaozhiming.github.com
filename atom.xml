@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-21T20:31:28+08:00</updated>
+  <updated>2013-08-22T08:04:20+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,307 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在jenkins和sonar中集成jacoco(四)--在sonar中集成jacoco]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/"/>
+    <updated>2012-12-02T14:46:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4</id>
+    <content type="html"><![CDATA[<p>首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.sonar.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/sonar/ant/antlib.xml&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;classpath</span> <span class="na">path=</span><span class="s">&quot;${env.SONAR-ANT-TASK.JAR}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/taskdef&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;sonar&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;sonar:sonar</span> <span class="na">key=</span><span class="s">&quot;${sonar.project.key}&quot;</span> <span class="na">version=</span><span class="s">&quot;${sonar.project.version}&quot;</span> <span class="na">xmlns:sonar=</span><span class="s">&quot;antlib:org.sonar.ant&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;sources&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${src.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/sources&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.projectName&quot;</span> <span class="na">value=</span><span class="s">&quot;jacoco_demo&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.sourceEncoding&quot;</span> <span class="na">value=</span><span class="s">&quot;UTF-8&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.dynamicAnalysis&quot;</span> <span class="na">value=</span><span class="s">&quot;reuseReports&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.surefire.reportsPath&quot;</span> <span class="na">value=</span><span class="s">&quot;${junit.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.core.codeCoveragePlugin&quot;</span> <span class="na">value=</span><span class="s">&quot;jacoco&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.jacoco.reportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.jacoco.itReportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;${basedir}/uat.exec&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;tests&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${src.test.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/tests&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;binaries&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${build.src.class}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${build.test.class}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/binaries&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;libraries&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${build.lib.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/libraries&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/sonar:sonar&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参数解释：</p>
+
+<ul>
+<li>sonar.dynamicAnalysis是指单元测试报告的生成方式，值为reuseReports是指给出生成好的单元测试报告路径。</li>
+<li>sonar.surefire.reportsPath是指单元测试报告的路径。</li>
+<li>sonar.core.codeCoveragePlugin是覆盖率插件，有jacoco,cobetura等。</li>
+<li>sonar.jacoco.reportPath是单元测试覆盖率文件的路径。</li>
+<li>sonar.jacoco.itReportPath是集成测试覆盖率文件的路径。</li>
+</ul>
+
+
+<p>更多参数可以参考这里：<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Unit+Tests">单元测试</a>，<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Integration+Tests">集成测试</a><br/>
+在sonar 3.3的版本会自动将单元测试和集成测试的覆盖率合并，最后附上sonar上的覆盖率显示：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/2012112914305954.png"><br/>
+<img src="http://zhaozhiming.github.io/images/2012112914311753.png"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在jenkins和sonar中集成jacoco(三)--使用jacoco收集集成测试的覆盖率]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/"/>
+    <updated>2012-12-01T14:45:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3</id>
+    <content type="html"><![CDATA[<p>我们系统使用weblogic做服务器，集成测试框架使用的是junit+selenium。</p>
+
+<p>首先，要把jacoco的jacocoagent.jar包放到部署应用的服务器上，接着在系统服务的JAVA_OPTIONS 后面添加如下参数：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>-javaagent:<span class="o">[</span>yourpath/<span class="o">]</span>jacocoagent.jar<span class="o">=</span><span class="nv">includes</span><span class="o">=</span>com.xxx.xxx.*,output<span class="o">=</span>tcpserver,address<span class="o">=</span>xxx.xxx.xxx.xxx,port<span class="o">=</span>xxxxx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参数解释：</p>
+
+<ol>
+<li>前面的yourpath是放jacocoagent.jar文件的目录路径；</li>
+<li>includes是指要收集哪些类（注意不要关写包名，最后要写.*)，不写的话默认是*，会收集应用服务上所有的类，包括服务器和其他中间件的类，一般要过滤；</li>
+<li>output有4个值，分别是file,tcpserver,tcpclient,mbean，默认是file。使用file的方式只有在停掉应用服务的时候才能产生覆盖率文件，而使用tcpserver的方式可以在不停止应用服务的情况下下载覆盖率文件，后面会介绍如何使用dump方法来得到覆盖率文件。</li>
+<li>address是ip， port是端口，这是使用tcpserver方式需要的2个参数，也是后面dump方法要用到的。（这里的address我只能使用服务器的ip，如果使用其他ip，服务启动时会报错。）</li>
+</ol>
+
+
+<p>更多参数可以参考<a href="http://www.eclemma.org/jacoco/trunk/doc/agent.html">java agent</a>。<br/>
+配置完应用服务的JAVA_OPTIONS之后，启动服务器，然后可以开始跑你的集成测试，跑完之后，实际上jacocoagent已经将覆盖率数据记录下来了，我们可以使用下面的ant任务来dump出覆盖率文件：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　 <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;downloadUatCoverageData&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:dump</span> <span class="na">address=</span><span class="s">&quot;xxx.xxx.xxx.xxx&quot;</span> <span class="na">port=</span><span class="s">&quot;xxxx&quot;</span> <span class="na">reset=</span><span class="s">&quot;true&quot;</span> <span class="na">destfile=</span><span class="s">&quot;${basedir}/uat.exec&quot;</span> <span class="na">append=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里的address和port是刚才在JAVA_OPTIONS里面写的address和port的值，destfile是指生成的覆盖率文件路径。</p>
+
+<p><strong>注意，这里虽然得到了集成测试的覆盖率文件，但是需要应用服务器上的类文件才能产出相应的覆盖率报告，如果类文件是其他JVM编译的，产出的报告覆盖率是0%。</strong></p>
+
+<p>有2种方法可以得到覆盖率文件所需的class文件：</p>
+
+<ol>
+<li>将应用服务部署的包（ear或war或jar）包下载下来之后解压，即可得到对应的class文件；</li>
+<li>在前面做单元测试之后，可以将class文件打成一个zip包，然后上传到服务器，最后在需要的时候去服务器上取。</li>
+</ol>
+
+
+<p>得到集成测试的覆盖率文件之后，结合之前取到的单元测试覆盖率文件，我们可以将2个文件合并，得到综合的覆盖率文件，命令如下：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;mergeCoverage&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:merge</span> <span class="na">destfile=</span><span class="s">&quot;merged.exec&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${basedir}&quot;</span> <span class="na">includes=</span><span class="s">&quot;*.exec&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:merge&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在jenkins和sonar中集成jacoco(二)--在jenkins中生成jacoco覆盖率报告]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/"/>
+    <updated>2012-11-30T14:45:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2</id>
+    <content type="html"><![CDATA[<p>先要在jenkins上安装jacoco的插件，安装完成之后在job的配置项中可以增加这个选项：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/2012112911555041.png"><br/>
+<img src="http://zhaozhiming.github.io/images/2012112911561356.png"></p>
+
+<p>第一个录入框是你的覆盖率文件（exec），第二个是class文件目录，第三个是源代码文件目录。</p>
+
+<p>配置好了之后进行构建，构建完成之后job首页就会出现覆盖率的趋势图，鼠标点击趋势图可以看到覆盖率详情，包括具体覆盖率数据和源码的覆盖率情况：</p>
+
+<p>趋势图<br/>
+<img src="http://zhaozhiming.github.io/images/2012112911373757.png" title="趋势图" ></p>
+
+<p>覆盖率详情  <br/>
+<img src="http://zhaozhiming.github.io/images/2012112911394918.png" title="覆盖率详情" ></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在jenkins和sonar中集成jacoco(一)--使用jacoco收集单元测试的覆盖率]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/"/>
+    <updated>2012-11-29T14:45:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1</id>
+    <content type="html"><![CDATA[<p>  之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
+
+<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.jacoco.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/jacoco/ant/antlib.xml&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;classpath</span> <span class="na">path=</span><span class="s">&quot;${basedir}/jacoco_lib/jacocoant.jar&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/taskdef&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里要引入jacoco的jar包jacocoant.jar，增加了这个命令之后，将原有的单元测试任务用 jacoco:coverage包括起来，实例代码如下：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;test_compile&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:coverage</span> <span class="na">destfile=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;junit</span> <span class="na">fork=</span><span class="s">&quot;true&quot;</span> <span class="na">forkmode=</span><span class="s">&quot;once&quot;</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;unit.test.failure&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;classpath&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;pathelement</span> <span class="na">location=</span><span class="s">&quot;${build.class}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${build.lib.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/classpath&gt;</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="nt">&lt;formatter</span> <span class="na">type=</span><span class="s">&quot;xml&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${src.test.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/batchtest&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/junit&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:coverage&gt;</span>
+</span><span class='line'>　　　　<span class="c">&lt;!-- 其他内容 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>jacoco:coverage的destfile参数是指生成的覆盖率文件路径，不写默认文件名为jacoco.exec。另外在forkmode这个参数设置为once，可以提高你的单元测试的执行效率。</p>
+
+<p>这样跑完单元测试后，就会在指定路径下生成覆盖率文件ut.exec（或默认的jacoco.exec，在工程根目录下）。</p>
+
+<p>如果要在本地生成jacoco的覆盖率报告，可以增加如下任务：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;jacocoReport&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;delete</span> <span class="na">dir=</span><span class="s">&quot;${basedir}/jacoco&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${result.jacoco.report.dir}/ut&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:report&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executiondata&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;file</span> <span class="na">file=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executiondata&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;structure</span> <span class="na">name=</span><span class="s">&quot;jacoco_demo&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;classfiles&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${build.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/classfiles&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;sourcefiles</span> <span class="na">encoding=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${src.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/sourcefiles&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/structure&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;html</span> <span class="na">destdir=</span><span class="s">&quot;${result.jacoco.report.dir}/ut&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:report&gt;</span>
+</span><span class='line'><span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>生成覆盖率报告需要覆盖率文件（exec）、源码、编译后的class文件。这里导出的格式是html，还有xml和cvs 2种格式可以导出，具体参考<a href="http://www.eclemma.org/jacoco/trunk/doc/ant.html#report">jacoco:report</a>。<br/>
+注意，这里的class文件和exec文件必须用同一个jvm执行，如果是用JVM A来编译class文件，然后用JVM B来生成覆盖率文件，生成出来的报告覆盖率会为0%。<strong>这一点对生成集成测试的覆盖率特别重要。</strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[持续集成一天一美元]]></title>
@@ -1645,213 +1946,6 @@ F 让铃铛响起来。（其他人会为你鼓掌，或以其他方式为你高
 <p></p>
 
 <p>这样就实现了build前清空workspace的效果了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[安装win7和ubuntu双系统]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/"/>
-    <updated>2012-04-16T16:53:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer</id>
-    <content type="html"><![CDATA[<p>最近买了新的笔记本电脑，发现新买的电脑上面安装的是win7用户版，在网上查了一下这个版本的win7是功能最少的。。。另外又发现偌大的500G硬盘居然只给分成2个区，每个250。。。各种不爽，于是决定格式化硬盘重新安装系统。</p>
-
-<p><strong>1.安装win7</strong></p>
-
-<p>在网上找了下win7的iso映像，有各种版本，说是旗舰版的win7功能是比较多比较好的。另外目前的cpu都是64位的，所以我打算安装64位的系统，64位系统和32位最大区别是可以支持4G以上的内存，刚好我买电脑的时候加了根内存条，现在总内存是6G，所以64位旗舰版的win7最满足我的需求了：）</p>
-
-<p>我下载的是青苹果的一个iso镜像，下载下来之后刻录成启动光盘，然后用光盘启动系统，发现里面只有winPE选项有用，其他选项都是废的。。。进入PE后，用里面的工具重新分了下区，然后用ghost安装了win7。这个版本的镜像里面没有offic软件，没办法只好上网找了office2007，找到一个石油学院的office iso镜像，兼容win7 64位，又免序列号的。安装成功之后将C盘系统用ghost克隆了一个备份保存，win7安装完成。</p>
-
-<p><strong>2.安装ubuntu</strong></p>
-
-<p>开始我安装的是ubuntu11，用的是以前的安装盘，这里纠结了一下是用wubi装还是正规安装，网上说是wubi安装属体验系统，功能可能不全，最后用ubuntu的启动光盘正常安装了ubuntu11。</p>
-
-<p>安装ubuntu时，开始有3个选项，一是跟win7一起安装，一个是替代wiin7，一个是自定义。看了网上攻略我选择了自定义，选择自定义时要自己划分ubuntu分区。我划分了3个，一个是主分区，这个分区相当与windows的系统C盘，大小10G，挂载点“/”。第二个是交换空间，相当是win7的虚拟内存空间，我划分了4G。最后一个是home区，这个相当与windows系统的其他分区（比如D盘，E盘。。。)，我划分了20个G，挂载点是“/home&#8221;。</p>
-
-<p>安装完后重启系统，就可以看到ubuntu的启动引导菜单了。如果你想将win7放在菜单首位，可以进入ubuntu系统修改/boot/grub/grub.cfg文件，将里面的win7菜单移到ubuntu菜单前面就可以了。</p>
-
-<p><strong>3.重装ubuntu</strong></p>
-
-<p>后来发现ubuntu11上网网速极慢，查了很多都不知道是哪里出问题，就重新下载了ubuntu12，安装过程与上面一样。安装完成之后重启电脑发现ubuntu引导目录不见了，要重新做ubuntu的菜单引导。</p>
-
-<p>先用ubuntu的启动光盘进入试用版ubuntu，然后打开终端，输入下面命令查询ubuntu的安装区，我的是sda9。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo fdisk -l
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后创建了一个临时目录，这个目录是为了后面mount ubuntu启动分区用的，命令如下：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>mkdir /media/tmpdir
-</span><span class='line'>mount  /dev/sda8  /media/tmpdir
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>接下来是最重要的一步，输入命令下面命令：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo grub-install --root-directory<span class="o">=</span>/media/tmpdir /dev/sda
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意，这里就是sda，后面不要写成sda9，如果显示no error report，则表示基本成功了。然后保存重启系统，会发现ubuntu的菜单已经有了，但是看起来比较乱，版本信息也不是安装的系统版本信息，所以接下来进入ubuntu系统，打开终端，输入：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo update-grub2
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>完了之后再次重启系统就会发现ubuntu正常的启动引导菜单了。如果想把win放在前面，就照之前说的方法改下ubuntu的配置文件就OK了。</p>
-
-<p>就这样折腾了一个星期，最后终于把系统都装好了，好累。。。不过也学到了很多系统知识。下次再装系统就轻车熟路了：）</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[junit4与junt3并存时产生的问题]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/"/>
-    <updated>2012-04-16T15:54:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time</id>
-    <content type="html"><![CDATA[<p>目前的项目里用junit写单元测试，使用的是junit4，由于大部分开发之前使用的都是junit3，对junit4还不是很熟悉，所以出现了junit3和4混合使用的情况，导致发生了一些问题，这里列举一下。</p>
-
-<p><strong>1.测试类继承了TestCase，方法名是test开头，加Ignore标签，这时Ignore标签失效。错误代码示例：</strong></p>
-
-<figure class='code'><figcaption><span>test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="nd">@Ignore</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testMyMethod</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// some code</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在junit3里，测试类必须继承TestCase，方法必须是以test开头；而在junit4里面，无需继承TestCase类，方法名也不需要test开头，只需要在每个方法前加上@Test标签即可。如果是继承TestCase，方法名以test开头，则junit会认为是junt3的写法，而使得junit4的标签失效。</p>
-
-<p><strong>2.测试类继承了TestCase，方法前加上@Test标签，方法名不以test开头，该方法不会被junit执行。</strong></p>
-
-<figure class='code'><figcaption><span>test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_test_my_method</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// some code</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>用于使用了@Test标签，则方法名可以不需以test开头，但该测试类由于继承了TestCase，所以默认是使用了junit3的契约，所以方法名必须以test开头，否则junit不认，即使是加上了@Test标签。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用emma时遇到的一些问题]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/03/27/some-problems-in-emma/"/>
-    <updated>2012-03-27T22:05:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/03/27/some-problems-in-emma</id>
-    <content type="html"><![CDATA[<p>今天在用使用emma的过程中遇到了几个问题，记录一下.</p>
-
-<p><strong>1.跑junit过程中没办法产生coverage data文件，导致最后没办法出emma报告，上官网查了一下原因如下：</strong></p>
-
-<blockquote><p>I have instrumented my classes but am not getting any coverage data&#8230;   <br/>This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.</p></blockquote>
-
-
-<p>
-意思是emma会根据工程里面的class文件产生自己的instrumented class，junit在跑单元测试的时候，classpath要把定义emma的class文件路径放在项目class文件路径前面，才能产生coverage data文件。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;junit</span> <span class="err">...</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${emma.classes.dir}&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${project.classes.dir}&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>...
-</span><span class='line'><span class="nt">&lt;/junit&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>2.emma的示例代码里面，report的sourcepath属性只有一个src路径，如果项目里面有多个src路径同时要进行覆盖率检查的话，则需要这样写：</strong></p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;report</span> <span class="na">sourcepath=</span><span class="s">&quot;${src1};${src2};${src3}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   ...
-</span><span class='line'><span class="nt">&lt;/report&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>不同的src路径用操作系统的classpath分隔符或逗号隔开，比如window用分号隔开，官网是这样解释的：</p>
-
-<blockquote><p>sourcepath : An optional source path to use for report generation (a path-like structure). It is interpreted as a list of directories (separated by the OS-specific classpath separator or comma) containing .java source files. The local path names within each directory should reflect class package names. (Currently, only the HTML report generator uses this data, and only atmethod report depth.)</p></blockquote>
-
-
-<p></p>
-
-<p><strong>3.jenkins的emma插件可以显示覆盖率的趋势，已经包，类，方法的覆盖率情况，但不支持链接显示代码源文件，看了下jenkins的官网，有人已经对插件提了这样一个需求，但回复说无法实现，说明如下：</strong></p>
-
-<blockquote><p>This was an obvious feature and so I tried to do this, but the problem is that the HTML file names and anchors that EMMA puts are just random numbers. So Hudson cannot link to the appropriate portion of those HTML files.</p><p>I also thought about generating those reports by myself in Hudson, but EMMA doesn&#8217;t leave the line-by-line coverage information in XML file either.</p><p>So that leaves me no choice but to parse emma&#8217;s data file directly. So this is bit involving.　　</p></blockquote>
-
-
-<p></p>
-
-<p>意思是说emma的html源文件是用随机数字命名，所以在xml文件中无法链接这些html源文件，emma没有修复这个问题，插件作者也无法完成这个需求:(</p>
-
-<p>我的解决方案是用doc link插件在jenkins页面上直接链接coverage.html文件。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[bat脚本:通过端口号查找进程号]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/"/>
-    <updated>2012-03-26T22:51:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script</id>
-    <content type="html"><![CDATA[<p>最近在用jenkins做自动化web部署，web服务器是tomcat。</p>
-
-<p>遇到了这样一个问题：在服务器上执行tomcat的shutdown.bat命令可以正常关机，但用jenkins执行shutdown.bat命令时却经常关闭不了，从而导致重启时报错。后来想到了杀进程的办法来关闭tomcat服务器，但是要怎样才能查到tomcat进程并杀掉呢？</p>
-
-<p>下面是通过端口号查找进程的命令：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bat'><span class='line'>netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span> <span class="n">//我的tomcat端口给我改成8888了。</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>查出来的结果好像这样：TCP    0.0.0.0:8888           0.0.0.0:0              LISTENING       1844<br/>
-其中最后一项是进程号（PID），要怎么取到PID并杀掉进程呢？</p>
-
-<p>可以使用for语句来操作，for默认是以空格或tab为分割，即上面的结果会分割成5个部分，而pid正好是第5部分的内容，所以命令可以这样写：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bat'><span class='line'><span class="k">for</span> <span class="n">/f</span> <span class="s2">&quot;tokens=5&quot;</span> <span class="nv">%%i</span> in (<span class="s2">&quot;netstat -ano | findstr 8888&quot;</span>) <span class="k">do</span> taskkill <span class="n">/f</span> <span class="n">/pid</span> <span class="nv">%%i</span> <span class="n">/t</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>taskkill命令是杀进程的，/f表示强制进行，/t表示将其子进程一并杀掉。</p>
-
-<p>这样就不怕tomcat服务关不掉了，重启也正常了，自动化部署成功。</p>
 ]]></content>
   </entry>
   

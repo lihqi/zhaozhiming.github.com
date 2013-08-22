@@ -9,8 +9,33 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="原文：http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html
-有一种持续集成，比使用像CruiseControl这样的构建服务来的更容易更便宜。实际上，它是如此简单，你可以从现在开始做这件事， &hellip;">
+  <meta name="description" content="首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令： build.xml 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +90,423 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/">在jenkins和sonar中集成jacoco(四)&#8211;在sonar中集成jacoco</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-02T14:46:00+08:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2012</time>
+        
+         | <a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.sonar.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/sonar/ant/antlib.xml&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;classpath</span> <span class="na">path=</span><span class="s">&quot;${env.SONAR-ANT-TASK.JAR}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/taskdef&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;sonar&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;sonar:sonar</span> <span class="na">key=</span><span class="s">&quot;${sonar.project.key}&quot;</span> <span class="na">version=</span><span class="s">&quot;${sonar.project.version}&quot;</span> <span class="na">xmlns:sonar=</span><span class="s">&quot;antlib:org.sonar.ant&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;sources&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${src.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/sources&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.projectName&quot;</span> <span class="na">value=</span><span class="s">&quot;jacoco_demo&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.sourceEncoding&quot;</span> <span class="na">value=</span><span class="s">&quot;UTF-8&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.dynamicAnalysis&quot;</span> <span class="na">value=</span><span class="s">&quot;reuseReports&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.surefire.reportsPath&quot;</span> <span class="na">value=</span><span class="s">&quot;${junit.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.core.codeCoveragePlugin&quot;</span> <span class="na">value=</span><span class="s">&quot;jacoco&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.jacoco.reportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.jacoco.itReportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;${basedir}/uat.exec&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;tests&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${src.test.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/tests&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;binaries&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${build.src.class}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${build.test.class}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/binaries&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;libraries&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${build.lib.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/libraries&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/sonar:sonar&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参数解释：</p>
+
+<ul>
+<li>sonar.dynamicAnalysis是指单元测试报告的生成方式，值为reuseReports是指给出生成好的单元测试报告路径。</li>
+<li>sonar.surefire.reportsPath是指单元测试报告的路径。</li>
+<li>sonar.core.codeCoveragePlugin是覆盖率插件，有jacoco,cobetura等。</li>
+<li>sonar.jacoco.reportPath是单元测试覆盖率文件的路径。</li>
+<li>sonar.jacoco.itReportPath是集成测试覆盖率文件的路径。</li>
+</ul>
+
+
+<p>更多参数可以参考这里：<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Unit+Tests">单元测试</a>，<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Integration+Tests">集成测试</a><br/>
+在sonar 3.3的版本会自动将单元测试和集成测试的覆盖率合并，最后附上sonar上的覆盖率显示：</p>
+
+<p><img src="/images/2012112914305954.png"><br/>
+<img src="/images/2012112914311753.png"></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/">在jenkins和sonar中集成jacoco(三)&#8211;使用jacoco收集集成测试的覆盖率</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-01T14:45:00+08:00" pubdate data-updated="true">Dec 1<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们系统使用weblogic做服务器，集成测试框架使用的是junit+selenium。</p>
+
+<p>首先，要把jacoco的jacocoagent.jar包放到部署应用的服务器上，接着在系统服务的JAVA_OPTIONS 后面添加如下参数：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>-javaagent:<span class="o">[</span>yourpath/<span class="o">]</span>jacocoagent.jar<span class="o">=</span><span class="nv">includes</span><span class="o">=</span>com.xxx.xxx.*,output<span class="o">=</span>tcpserver,address<span class="o">=</span>xxx.xxx.xxx.xxx,port<span class="o">=</span>xxxxx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参数解释：</p>
+
+<ol>
+<li>前面的yourpath是放jacocoagent.jar文件的目录路径；</li>
+<li>includes是指要收集哪些类（注意不要关写包名，最后要写.*)，不写的话默认是*，会收集应用服务上所有的类，包括服务器和其他中间件的类，一般要过滤；</li>
+<li>output有4个值，分别是file,tcpserver,tcpclient,mbean，默认是file。使用file的方式只有在停掉应用服务的时候才能产生覆盖率文件，而使用tcpserver的方式可以在不停止应用服务的情况下下载覆盖率文件，后面会介绍如何使用dump方法来得到覆盖率文件。</li>
+<li>address是ip， port是端口，这是使用tcpserver方式需要的2个参数，也是后面dump方法要用到的。（这里的address我只能使用服务器的ip，如果使用其他ip，服务启动时会报错。）</li>
+</ol>
+
+
+<p>更多参数可以参考<a href="http://www.eclemma.org/jacoco/trunk/doc/agent.html">java agent</a>。<br/>
+配置完应用服务的JAVA_OPTIONS之后，启动服务器，然后可以开始跑你的集成测试，跑完之后，实际上jacocoagent已经将覆盖率数据记录下来了，我们可以使用下面的ant任务来dump出覆盖率文件：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　 <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;downloadUatCoverageData&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:dump</span> <span class="na">address=</span><span class="s">&quot;xxx.xxx.xxx.xxx&quot;</span> <span class="na">port=</span><span class="s">&quot;xxxx&quot;</span> <span class="na">reset=</span><span class="s">&quot;true&quot;</span> <span class="na">destfile=</span><span class="s">&quot;${basedir}/uat.exec&quot;</span> <span class="na">append=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里的address和port是刚才在JAVA_OPTIONS里面写的address和port的值，destfile是指生成的覆盖率文件路径。</p>
+
+<p><strong>注意，这里虽然得到了集成测试的覆盖率文件，但是需要应用服务器上的类文件才能产出相应的覆盖率报告，如果类文件是其他JVM编译的，产出的报告覆盖率是0%。</strong></p>
+
+<p>有2种方法可以得到覆盖率文件所需的class文件：</p>
+
+<ol>
+<li>将应用服务部署的包（ear或war或jar）包下载下来之后解压，即可得到对应的class文件；</li>
+<li>在前面做单元测试之后，可以将class文件打成一个zip包，然后上传到服务器，最后在需要的时候去服务器上取。</li>
+</ol>
+
+
+<p>得到集成测试的覆盖率文件之后，结合之前取到的单元测试覆盖率文件，我们可以将2个文件合并，得到综合的覆盖率文件，命令如下：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;mergeCoverage&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:merge</span> <span class="na">destfile=</span><span class="s">&quot;merged.exec&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${basedir}&quot;</span> <span class="na">includes=</span><span class="s">&quot;*.exec&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:merge&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/">在jenkins和sonar中集成jacoco(二)&#8211;在jenkins中生成jacoco覆盖率报告</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-30T14:45:00+08:00" pubdate data-updated="true">Nov 30<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>先要在jenkins上安装jacoco的插件，安装完成之后在job的配置项中可以增加这个选项：</p>
+
+<p><img src="/images/2012112911555041.png"><br/>
+<img src="/images/2012112911561356.png"></p>
+
+<p>第一个录入框是你的覆盖率文件（exec），第二个是class文件目录，第三个是源代码文件目录。</p>
+
+<p>配置好了之后进行构建，构建完成之后job首页就会出现覆盖率的趋势图，鼠标点击趋势图可以看到覆盖率详情，包括具体覆盖率数据和源码的覆盖率情况：</p>
+
+<p>趋势图<br/>
+<img src="/images/2012112911373757.png" title="趋势图" ></p>
+
+<p>覆盖率详情  <br/>
+<img src="/images/2012112911394918.png" title="覆盖率详情" ></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">在jenkins和sonar中集成jacoco(一)&#8211;使用jacoco收集单元测试的覆盖率</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-29T14:45:00+08:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>  之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
+
+<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.jacoco.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/jacoco/ant/antlib.xml&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;classpath</span> <span class="na">path=</span><span class="s">&quot;${basedir}/jacoco_lib/jacocoant.jar&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/taskdef&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里要引入jacoco的jar包jacocoant.jar，增加了这个命令之后，将原有的单元测试任务用 jacoco:coverage包括起来，实例代码如下：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;test_compile&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:coverage</span> <span class="na">destfile=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;junit</span> <span class="na">fork=</span><span class="s">&quot;true&quot;</span> <span class="na">forkmode=</span><span class="s">&quot;once&quot;</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;unit.test.failure&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;classpath&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;pathelement</span> <span class="na">location=</span><span class="s">&quot;${build.class}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${build.lib.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/classpath&gt;</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="nt">&lt;formatter</span> <span class="na">type=</span><span class="s">&quot;xml&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${src.test.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/batchtest&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/junit&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:coverage&gt;</span>
+</span><span class='line'>　　　　<span class="c">&lt;!-- 其他内容 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>jacoco:coverage的destfile参数是指生成的覆盖率文件路径，不写默认文件名为jacoco.exec。另外在forkmode这个参数设置为once，可以提高你的单元测试的执行效率。</p>
+
+<p>这样跑完单元测试后，就会在指定路径下生成覆盖率文件ut.exec（或默认的jacoco.exec，在工程根目录下）。</p>
+
+<p>如果要在本地生成jacoco的覆盖率报告，可以增加如下任务：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;jacocoReport&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;delete</span> <span class="na">dir=</span><span class="s">&quot;${basedir}/jacoco&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${result.jacoco.report.dir}/ut&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:report&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executiondata&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;file</span> <span class="na">file=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executiondata&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;structure</span> <span class="na">name=</span><span class="s">&quot;jacoco_demo&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;classfiles&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${build.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/classfiles&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;sourcefiles</span> <span class="na">encoding=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${src.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/sourcefiles&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/structure&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;html</span> <span class="na">destdir=</span><span class="s">&quot;${result.jacoco.report.dir}/ut&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:report&gt;</span>
+</span><span class='line'><span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>生成覆盖率报告需要覆盖率文件（exec）、源码、编译后的class文件。这里导出的格式是html，还有xml和cvs 2种格式可以导出，具体参考<a href="http://www.eclemma.org/jacoco/trunk/doc/ant.html#report">jacoco:report</a>。<br/>
+注意，这里的class文件和exec文件必须用同一个jvm执行，如果是用JVM A来编译class文件，然后用JVM B来生成覆盖率文件，生成出来的报告覆盖率会为0%。<strong>这一点对生成集成测试的覆盖率特别重要。</strong></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -884,565 +1326,6 @@ F 让铃铛响起来。（其他人会为你鼓掌，或以其他方式为你高
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/16/working-with-files-in-javascript-part-2/">在JavaScript中进行文件处理，第二部分：文件读取</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-16T10:09:00+08:00" pubdate data-updated="true">Jul 16<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/07/16/working-with-files-in-javascript-part-2/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/15/working-with-files-in-javascript-part-2/">这里</a></strong></p>
-
-<hr />
-
-<p>在我的前一篇blog中，我介绍了在JavaScript中如何使用文件，具体重点放在如何获得File对象。只有当用户通过上传或者拖拽的方式上传了文件，这些对象才拥有文件的元数据。一旦你有了这些文件，下一步就是从这些文件中读取数据。</p>
-
-<h2>FileReader 类型</h2>
-
-<p>FileReader类型有一个单一的工作，就是从一个文件中读取数据并存储在一个JavaScript变量中。它的API有意设计得与XMLHttpRequest相同，因为它们都是从一个外部资源（浏览器之外）加载数据。读操作是异步的，这样不会使浏览器堵塞。</p>
-
-<p>FileReader可以创建多种格式来表示文件的数据，而当读取文件时返回的格式是必须的。读取操作是通过调用下面任一方法来完成的：</p>
-
-<ul>
-<li>readAsText() – 使用纯文本的形式返回文件内容</li>
-<li>readAsBinaryString() – 使用加密二进制数据字符串的形式来返回文件内容（该方法已废弃，请使用readAsArrayBuffer()代替）</li>
-<li>readAsArrayBuffer() – 使用ArrayBuffer的形式来返回文件内容（对二进制数据比如图像文件有用）</li>
-<li>readAsDataURL() – 使用数据URL的形式返回文件内容</li>
-</ul>
-
-
-<p>像XHR对象的send方法会发起一个Http请求一样，上面的每个方法都会启动一个文件读取。就这一点来说，在开始读取之前，你必须监听load事件，event.target.result总是返回读取的结果。例如：</p>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
-</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;File contents: &quot;</span> <span class="o">+</span> <span class="nx">contents</span><span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;File could not be read! Code &quot;</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在这个例子中，我们简单地读取文件内容，并将内容以纯文本的形式输出到console。当文件被成功读取时会调用onload操作，而因为某些原因无法读取时会调用onerror操作。在事件处理器中可以通过event.target来获得FileReader实例，而且它推荐这样使用，而不是直接使用reader变量。result属性包含读取成功时的文件内容和读取失败时的错误信息。</p>
-
-<h2>读取数据URI</h2>
-
-<p>你可以用差不多的方法来将文件读取为一个数据URI，数据的URI（有时也叫数据URL）是个有趣的选项，比如你想要显示从磁盘上读取的图像文件，你可以用下面的代码这样做：</p>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
-</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">dataUri</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">img</span>     <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nx">img</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">dataUri</span><span class="p">;</span>
-</span><span class='line'>    <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">img</span><span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;File could not be read! Code &quot;</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsDataURL</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这段代码简单地在页面上插入一个从磁盘上读取来的图像文件。因为这个数据URI包含了图像的所有数据，所以它可以被直接传给图像的src属性，并显示在页面上。你可以交替地加载图像和将其绘制到一个<code>&lt;canvas&gt;</code>上：</p>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
-</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">dataUri</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">context</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;mycanvas&quot;</span><span class="p">).</span><span class="nx">getContext</span><span class="p">(</span><span class="s2">&quot;2d&quot;</span><span class="p">),</span>
-</span><span class='line'>        <span class="nx">img</span>     <span class="o">=</span> <span class="k">new</span> <span class="nx">Image</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// wait until the image has been fully processed</span>
-</span><span class='line'>    <span class="nx">img</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">context</span><span class="p">.</span><span class="nx">drawImage</span><span class="p">(</span><span class="nx">img</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'>    <span class="nx">img</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">dataUri</span><span class="p">;</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;File could not be read! Code &quot;</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsDataURL</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这段代码将图像数据加载到一个新的Image对象，并将其绘制到一个画布上（宽度和长度都指定为100）。</p>
-
-<p>数据URI一般用来做这个，但能用在任何类型的文件上。将文件读取为一个数据URI最普遍的用法是在web页面中快速显示文件内容。</p>
-
-<h2>读取ArrayBuffers</h2>
-
-<p>ArrayBuffer类型<em>[1]</em>最初是作为WebGL的一部分被引进的。一个Arraybuffer代表一个有限的字节数，可以用来存储任意大小的数字。读取一个ArrayBuffer数据的方式需要一个特定的视图，比如Int8Array是将其中的字节处理为一个有符号的8位整数集合，而Float32Array是将其中的字节处理为一个32位浮点数的集合。这些称为类型数组<em>[2]</em>，这样可以强制你工作在一个特定的数字类型上，而不是包含任意类型的数据（像传统的数组）。</p>
-
-<p>当处理二进制文件时你可以优先使用ArrayBuffer，这样对数据可以有更细粒度的控制。要解释关于ArrayBuffer的所有ins和outs已经超出本篇blog的范围，你只需要知道在你需要的时候可以很容易地将一个文件读取为一个ArrayBuffer就可以了。你可以直接传一个ArrayBuffer到一个XHR对象的send()方法，发送原始数据到服务器（你会在服务器的请求中读取这个数据去重建文件），只要你的浏览器完全支持XMLHttpRequest Level 2<em>[3]</em>（大部分最新的浏览器，包括IE10和Opera12都支持）。</p>
-
-<hr />
-
-<h4>下集预告</h4>
-
-<p>使用FileReader读取文件数据相当简单。如果你知道怎么使用XMLHttpRequest, 那么你肯定知道怎么从文件中读取数据。在这个系列的下一章，你将学到更多有关如何使用FileReader事件和理解更多潜在错误的内容。</p>
-
-<h4>相关链接</h4>
-
-<ol>
-<li><a href="https://developer.mozilla.org/en/JavaScript_typed_arrays/ArrayBuffer">ArrayBuffer</a></li>
-<li><a href="http://www.khronos.org/registry/typedarray/specs/latest/">Typed Array Specification</a></li>
-<li><a href="http://www.w3.org/TR/XMLHttpRequest/">XMLHttpRequest Level 2</a></li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/">在JavaScript中进行文件处理，第一部分：基础</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-08T16:26:00+08:00" pubdate data-updated="true">Jul 8<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/08/working-with-files-in-javascript-part-1/">这里</a></strong></p>
-
-<hr />
-
-<p>很多年前，我在一次Goole面试被问到，如何在web应用中提供更好的用户体验。浮现在我脑海里的第一个想法是，通过比<code>&lt;input type="file"&gt;</code>标签更好的方式来进行文件操作。虽然web发展一路高歌猛进，但自从该标签引进以来，我们操作文件的方式就一直使用它而从来没有改变过。幸运的是，有了HTML5和相关API，我们在最新版本的浏览器上可以有更多的方式进行文件操作（iOS 仍然不支持File的API）。</p>
-
-<h2>File 类型</h2>
-
-<p>File类型在File的API<em>[1]</em>中有详细定义，是一个文件的抽象表征。每个File实例有如下几个属性：</p>
-
-<ul>
-<li>name &ndash; 文件名</li>
-<li>size &ndash; 文件的二进制大小</li>
-<li>type &ndash; 文件的MIME类型</li>
-</ul>
-
-
-<p>一个File对象是在不直接访问文件内容的情况下，给你文件的基本信息。这一点很重要，因为从磁盘上读取文件内容，视乎文件的大小，如果文件很大，可能会在读取上等待很长时间。File对象只是一个文件的引用，和获取文件内容是两个独立的过程。</p>
-
-<h2>获取文件引用</h2>
-
-<p>基于安全的考虑，访问用户文件是严格禁止的，你不希望在加载某个页面时页面自动扫描你的硬盘然后把你的文件罗列出来吧？你访问用户电脑上的文件时要经过他们的许可，在想象中会弹出授权窗口给用户进行确认，但当用户通过页面上载东西时，实际上已经授权页面可以一直访问文件，所以不会弹出那些杂乱无章的授权窗口。</p>
-
-<p>当你使用<code>&lt;input type="file"&gt;</code>标签时，你已经授权web页面（或者服务器）去访问该文件，通过<code>&lt;input type="file"&gt;</code>标签去检索到文件对象。</p>
-
-<p>HTML5为所有<code>&lt;input type="file"&gt;</code>标签定义了一个文件集属性FileList，是一个类型数据类型的的数据结构，包含了每一个被选中的文件（HTML5允许多文件选择操作）。所以无论何时，你都可以使用以下代码来访问用户选择的文件。</p>
-
-<figure class='code'><figcaption><span>demo.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;file&quot;</span> <span class="na">id=</span><span class="s">&quot;your-files&quot;</span> <span class="na">multiple</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;script&gt;</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">control</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;your-files&quot;</span><span class="p">);</span>
-</span><span class='line'>    <span class="nx">control</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// When the control has changed, there are new files </span>
-</span><span class='line'>        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">files</span> <span class="o">=</span> <span class="nx">control</span><span class="p">.</span><span class="nx">files</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">files</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-</span><span class='line'>        <span class="k">for</span> <span class="p">(;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Filename: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">);</span>
-</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Type: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">type</span><span class="p">);</span>
-</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Size: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">size</span> <span class="o">+</span> <span class="s2">&quot; bytes&quot;</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
-</span><span class='line'><span class="nt">&lt;/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这段代码监听了文件操作的change事件，一旦change事件触发，表示选中的文件已经发生改变，然后程序会迭代输出每个File对象的信息。记住，始终是通过javascript来访问文件的属性，所以不会有读取文件内容的动作。</p>
-
-<h2>拖拽文件</h2>
-
-<p>在表单中进行文件访问，需要用户先浏览查询再选中所需的文件。幸运的是，HTML5的拖拽功能<em>[2]</em>给用户提供了另外一种方式去授权需要访问的文件：通过简单的将文件从本地拖拽到浏览器。要实现这个功能你只需监听2个事件。</p>
-
-<p>为了读取从某些区域拖拽到浏览器的文件，你需要监听dragover和drop事件，并取消它们原有的默认行为。做这些是为了告诉浏览器无需处理，你可以直接处理这些动作，例如，打开一个图像文件。</p>
-
-<figure class='code'><figcaption><span>demo.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;your-files&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;script&gt;</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">target</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;your-files&quot;</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">target</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;dragover&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
-</span><span class='line'><span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">target</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;drop&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// cancel default actions</span>
-</span><span class='line'>    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">files</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">files</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">len</span> <span class="o">=</span> <span class="nx">files</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">for</span> <span class="p">(;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Filename: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">);</span>
-</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Type: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">type</span><span class="p">);</span>
-</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Size: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">size</span> <span class="o">+</span> <span class="s2">&quot; bytes&quot;</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
-</span><span class='line'><span class="nt">&lt;/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>event.dataTransfer.files是另外一个文件集合对象，你可以从中获取文件信息。这段代码的功能等同于你手工选择打开一个文件。</p>
-
-<h2>Ajax文件上传</h2>
-
-<p>一旦你有了一个文件的引用，你可能会做一些非常酷的事情，比如用Ajax上传文件。由于XMLHttpRequest Level 2<em>[3]</em>的FormData对象，使得这完全有可能。这个对象表示一个HTML表单，并且允许你在里面通过append方法来添加键值对数据，然后提交到服务器。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">();</span>
-</span><span class='line'><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Nicholas&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>FormData的伟大之处在于它可以直接添加一个文件对象，从而有效地模仿表单的文件上传。你所需要做的仅仅是添加一个File引用，并且指定一个文件名，剩下的由浏览器全部搞定。例如：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// create a form with a couple of values</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">();</span>
-</span><span class='line'><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Nicholas&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;photo&quot;</span><span class="p">,</span> <span class="nx">control</span><span class="p">.</span><span class="nx">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// send via XHR - look ma, no headers being set!</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
-</span><span class='line'><span class="nx">xhr</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Upload complete.&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'><span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;/entrypoint&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-</span><span class='line'><span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">form</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>一旦FormData对象被传递到send方法，适当的HTTP头将会为你设置好。你不需要担心使用文件的表单如何设置正确的编码格式，服务器会将其当作一个常规的HTML表单来提交，然后读取“photo&#8221;键的文件数据和“name&#8221;键的文本数据。这让你在写后台代码时可以很自由，很容易的处理表单数据，不管是传统HTML表单还是Ajax表单形式。</p>
-
-<p>所有这些都可以在最新版本的浏览器上工作，包括IE10。</p>
-
-<hr />
-
-<h4>下集预告</h4>
-
-<p>你现在知道两种在浏览器中访问文件信息的方法，一种是通过文件上传操作，一种是通过本地的拖拽操作。未来可能有其他的方法，但现在你只需要了解这两种就好了。当然，读取文件信息只是问题的一部分，下一步是如何读取文件的内容，这将在第二部分做讲解。</p>
-
-<h4>相关链接：</h4>
-
-<ol>
-<li><a href="http://dev.w3.org/2006/webapi/FileAPI/">File API specification (editor’s draft)</a></li>
-<li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dnd.html#dnd">HTML5 Drag and Drop</a></li>
-<li><a href="http://www.w3.org/TR/XMLHttpRequest/">XMLHttpRequest Level 2</a></li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/19/the-way-for-read-coverage-report-in-jenkins/">Jenkins无法读取覆盖率报告的解决方法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-19T16:01:00+08:00" pubdate data-updated="true">Jun 19<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/06/19/the-way-for-read-coverage-report-in-jenkins/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>报错信息如下：</p>
-
-<figure class='code'><figcaption><span>log </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>coverage-report:
-</span><span class='line'>
-</span><span class='line'>[mkdir] Created dir: D:\JK\workspace\d9_rm3_engine_dev1.0.0_cud\view\rmv3_engine\engine_j2ee\doc\coveragereport
-</span><span class='line'>
-</span><span class='line'>[cobertura-report] Cobertura 1.9.4.1 - GNU GPL License (NO WARRANTY) - See COPYRIGHT file
-</span><span class='line'>
-</span><span class='line'>[cobertura-report] Cobertura: Loaded information on 114 classes.
-</span><span class='line'>
-</span><span class='line'>[cobertura-report] Report time: 913ms
-</span><span class='line'>
-</span><span class='line'>BUILD SUCCESSFUL
-</span><span class='line'>
-</span><span class='line'>Total time: 1 minute 44 seconds
-</span><span class='line'>
-</span><span class='line'>Publishing Cobertura coverage report...
-</span><span class='line'>
-</span><span class='line'>No coverage results were found using the pattern &#39;view/rmv3_engine/engine_j2ee/doc/coveragereport/coverage.xml&#39; relative to &#39;D:\JK\workspace\d9_rm3_engine_dev1.0.0_cud\view&#39;.  Did you enter a pattern relative to the correct directory?  Did you generate the XML report(s) for Cobertura?
-</span><span class='line'>
-</span><span class='line'>Build step &#39;Publish Cobertura Coverage Report&#39; changed build result to FAILURE
-</span><span class='line'>
-</span><span class='line'>Recording test results
-</span><span class='line'>
-</span><span class='line'>Finished: FAILURE
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>覆盖率报告已经生成，在工作区也可以找到，路径是：&#8217;view/rmv3_engine/engine_j2ee/doc/coveragereport/coverage.xml&#8217;，但jenkins对于这个路径似乎不认，以前用svn的时候可以找到，改成CC后就找不到了。</p>
-
-<p>解决方法：job配置里面将覆盖率的路径设置为：/coverage.xml 就可以了。很奇怪的一个问题。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/">Sonar在ant工程中读取单元测试和覆盖率报告</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-17T08:30:00+08:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>虽然sonar支持ant工程的构建，但目前最大的不足是无法在分析过程中产生单元测试和覆盖率报告，这样在sonar面板上覆盖率板块就始终没有数据。但幸运的是，sonar可以读取已经生成好的报告，让报告的内容显示在sonar的覆盖率面板上。</p>
-
-<p>首先需要配置sonar.dynamicAnalysis属性，这个属性有3个值，分别是true, false和reuseReports，默认值是true，即进行动态分析，但只对maven工程有效，要想读取外部的报告，需要将值设置为reuseReports。</p>
-
-<p>然后是单元测试报告的路径设置，对应的属性是sonar.surefire.reportsPath，value为junit报告的文件夹路径，这个路径下有junit生成的那些TEST-*.xml文件。</p>
-
-<p>最后是覆盖率报告的路径设置，这个要看是用什么覆盖率工具。sonar有3种覆盖率工具的设置属性，分别是<em>jacoco，cobertura和clover</em>。像我们工程用的是cobertura，对应的属性名为<em>sonar.cobertura.reportPath</em>，其他2种分别是<em>sonar.jacoco.reportPath</em>和<em>sonar.clover.reportPath</em>。属性值和单元测试的略为不同，单元测试属性是指向文件夹，覆盖率是指向具体的覆盖率文件，比如cobertura的覆盖率文件是coverage.xml，则value应该写成“yourReportDir/coverage.xml&#8221;。</p>
-
-<p>配置完后重新进行sonar分析即可看到覆盖率报告成产生了。下面是具体代码：</p>
-
-<figure class='code'><figcaption><span>build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.dynamicAnalysis&quot;</span> <span class="na">value=</span><span class="s">&quot;reuseReports&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'><span class="c">&lt;!--unnit test--&gt;</span>
-</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.surefire.reportsPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/unitTestReportDir&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'><span class="c">&lt;!--coverage--&gt;</span>
-</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.cobertura.reportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/coverage.xml&quot;</span> <span class="nt">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1475,23 +1358,23 @@ F 让铃铛响起来。（其他人会为你鼓掌，或以其他方式为你高
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/">在jenkins和sonar中集成jacoco(四)&#8211;在sonar中集成jacoco</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/">在jenkins和sonar中集成jacoco(三)&#8211;使用jacoco收集集成测试的覆盖率</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/">在jenkins和sonar中集成jacoco(二)&#8211;在jenkins中生成jacoco覆盖率报告</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">在jenkins和sonar中集成jacoco(一)&#8211;使用jacoco收集单元测试的覆盖率</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/">持续集成一天一美元</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/06/read-toyota-product-method/">读《丰田生产方式》——联系敏捷开发的思考</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/">《Agile Web Development With Rails》读后感&#8211;rails基于web设计的best Practices</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/">在JavaScript中进行文件处理，第五部分：Blobs</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/30/working-with-files-in-javascript-part-4/">在JavaScript中进行文件处理，第四部分：对象URLs</a>
       </li>
     
   </ul>
@@ -1500,15 +1383,15 @@ F 让铃铛响起来。（其他人会为你鼓掌，或以其他方式为你高
   <h1>Tags</h1>
   <ul class="tag-cloud">
 	<a style="font-size: 210%" href="/tags/ant/">ant</a>
+<a style="font-size: 170%" href="/tags/jacoco/">jacoco</a>
 <a style="font-size: 183%" href="/tags/java/">java</a>
 <a style="font-size: 202%" href="/tags/javascript/">javascript</a>
-<a style="font-size: 170%" href="/tags/jenkins/">jenkins</a>
+<a style="font-size: 210%" href="/tags/jenkins/">jenkins</a>
 <a style="font-size: 170%" href="/tags/junit/">junit</a>
-<a style="font-size: 90%" href="/tags/mockito/">mockito</a>
 <a style="font-size: 90%" href="/tags/rails/">rails</a>
 <a style="font-size: 90%" href="/tags/refactor/">refactor</a>
 <a style="font-size: 90%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 90%" href="/tags/sonar/">sonar</a>
+<a style="font-size: 183%" href="/tags/sonar/">sonar</a>
 
   </ul>
 </section>
