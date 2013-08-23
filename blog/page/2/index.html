@@ -9,7 +9,7 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：这里 在我的前一篇blog中，我介绍了在JavaScript中如何使用文件，具体重点放在如何获得File对象。只有当用户通过上传或者拖拽的方式上传了文件， &hellip;">
+  <meta name="description" content="之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。 用jacoco来实现单元测试的覆盖率比较简单 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +64,969 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">在jenkins和sonar中集成jacoco(一)&#8211;使用jacoco收集单元测试的覆盖率</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-29T14:45:00+08:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>  之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
+
+<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.jacoco.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/jacoco/ant/antlib.xml&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;classpath</span> <span class="na">path=</span><span class="s">&quot;${basedir}/jacoco_lib/jacocoant.jar&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/taskdef&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里要引入jacoco的jar包jacocoant.jar，增加了这个命令之后，将原有的单元测试任务用 jacoco:coverage包括起来，实例代码如下：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;test_compile&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:coverage</span> <span class="na">destfile=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;junit</span> <span class="na">fork=</span><span class="s">&quot;true&quot;</span> <span class="na">forkmode=</span><span class="s">&quot;once&quot;</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;unit.test.failure&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;classpath&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;pathelement</span> <span class="na">location=</span><span class="s">&quot;${build.class}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${build.lib.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/classpath&gt;</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="nt">&lt;formatter</span> <span class="na">type=</span><span class="s">&quot;xml&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${src.test.dir}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;/fileset&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/batchtest&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/junit&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:coverage&gt;</span>
+</span><span class='line'>　　　　<span class="c">&lt;!-- 其他内容 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>jacoco:coverage的destfile参数是指生成的覆盖率文件路径，不写默认文件名为jacoco.exec。另外在forkmode这个参数设置为once，可以提高你的单元测试的执行效率。</p>
+
+<p>这样跑完单元测试后，就会在指定路径下生成覆盖率文件ut.exec（或默认的jacoco.exec，在工程根目录下）。</p>
+
+<p>如果要在本地生成jacoco的覆盖率报告，可以增加如下任务：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;jacocoReport&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;delete</span> <span class="na">dir=</span><span class="s">&quot;${basedir}/jacoco&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${result.jacoco.report.dir}/ut&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:report&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executiondata&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;file</span> <span class="na">file=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executiondata&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;structure</span> <span class="na">name=</span><span class="s">&quot;jacoco_demo&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;classfiles&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${build.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/classfiles&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;sourcefiles</span> <span class="na">encoding=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${src.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/sourcefiles&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/structure&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;html</span> <span class="na">destdir=</span><span class="s">&quot;${result.jacoco.report.dir}/ut&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:report&gt;</span>
+</span><span class='line'><span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>生成覆盖率报告需要覆盖率文件（exec）、源码、编译后的class文件。这里导出的格式是html，还有xml和cvs 2种格式可以导出，具体参考<a href="http://www.eclemma.org/jacoco/trunk/doc/ant.html#report">jacoco:report</a>。<br/>
+注意，这里的class文件和exec文件必须用同一个jvm执行，如果是用JVM A来编译class文件，然后用JVM B来生成覆盖率文件，生成出来的报告覆盖率会为0%。<strong>这一点对生成集成测试的覆盖率特别重要。</strong></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/">持续集成一天一美元</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-17T21:53:00+08:00" pubdate data-updated="true">Sep 17<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文：<a href="http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html">http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html</a>
+有一种持续集成，比使用像CruiseControl这样的构建服务来的更容易更便宜。实际上，它是如此简单，你可以从现在开始做这件事，不用为你还没有构建服务而感到不舒服。</p>
+
+<p>（肮脏的小秘密？我将要告诉你的是比使用CruiseControl更好的东西!）</p>
+
+<h3>第一步：找一台老的电脑</h3>
+
+<p>找一台你以前用来做开发的电脑，不要太老&hellip;它需要用来跑构建程序。找一个没用的显示器和一个废弃的角落，把它连接起来，放一张破旧的椅子在前面，不需要太舒适&hellip;你不会想这里坐太久。</p>
+
+<h3>第二步：找一只橡皮鸡(<em>不是真的鸡</em>)</h3>
+
+<p><img src="http://www.jamesshore.com/Blog/usbchicken.jpg"><br/>
+<em>我的办公室，大概在2001年</em></p>
+
+<p>你如果想要也可以使用其他东西，比如毛绒绒的玩具。玩具要搞笑、没有菱角，这样你用力把它扔向某人时不会不小心伤害到别人的眼睛（特别是你误中他人的时候）。如果你没有合适的东西，不要让这一步搁置你的下一步行动。即兴创作，有趣就行。</p>
+
+<p>我想<a href="http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sprite/www/Origami/crane_gif.html">这个</a>有助于即兴创作，但我做不来，所以你不会也没关系。</p>
+
+<h3>第三步：买一个桌铃</h3>
+
+<p>那种你轻拍就会发出“叮”的铃铛。不要因为你没有一个桌铃就停止做持续集成，可以后面再做这一步。现在你已经有开始的势头了。旧电脑，就绪。插线，就绪。搞笑玩具，就绪。你离开始做持续集成已经越来越近了（如果你真的没钱，你可以完全跳过这一步（译者注：指桌铃））。</p>
+
+<h3>第四步：让你的构建自动化</h3>
+
+<p>噢！这是最难的一步。好消息是CruiseControl 的好处之一就是可以使你的构建自动化。更好的消息是你接下来要做的持续集成，可以做的事情比CruiseControl的自动化构建要多，并且我将帮你获得所有的这些好处。但你还是需要让你的构建自动化。</p>
+
+<p>好吧，这个很难，我知道。如果你已经依赖你的IDE为你构建，让构建自动化可能意味着要做很多的工作。现在，你可能要创建一个批处理文件来跑你的IDE并要求它来构建。程序运行的时间太长不是件好事，所以还是回来做正确的事情吧。</p>
+
+<p>如果你已经有了自动化检查的单元测试，比如JUnit/NUnit 测试，也将它们放到构建里面。</p>
+
+<p>在你继续之前，走向那台旧电脑（见第一步），然后确认你的版本库中的最新代码可以成功构建。没有使用任何版本控制工具？额&hellip;好吧&hellip;放下键盘然后离开电脑。现在，跟我读：“原谅我，老天爷，我错了。我又一次没有使用版本控制来编程。我会马上下载TortoiseSvn（译者注：现在当然是git了），安装使用它。从今以后我不会再犯了。”谢谢。</p>
+
+<p>如果一个干净运行的自动化构建超过10分钟，那么请停下来。你还没为持续集成做好准备，你需要加速你的构建。你可以做接下来的步骤，或者你可以使用CruiseControl，但真正的持续集成现在还不属于你。</p>
+
+<h3>第五步：洗脑</h3>
+
+<p>这在列表中绝对，毫无疑问，100%是最重要的一步。让你团队中的所有开发人员一起去到一个房间。</p>
+
+<p>如果有人问，不，这不是开会。你将要在5分钟内完成某件事情。有用，简短，所以这不是一个会议。</p>
+
+<p>现在，在保证没有动用武力胁迫的情况下，让每个人都同意下面的话：</p>
+
+<blockquote><p>“从现在开始，我们版本库中的代码将一直构建成功并且可以跑过所有测试。”</p></blockquote>
+
+
+<p>如果有人抱怨这个太难了，让他们知道，通过持续集成来做这个很简单。额，应该说更简单。如果他们仍然认为这太难了，可以委婉地提醒他们的工作，你知道，构建软件。</p>
+
+<p>噢，太残酷了，还是不要说的好。啊，我刚失去了10个粉丝，呀，又一个，11个。</p>
+
+<p>实际上，“每个人都同意这是个好主意”的部分真的非常重要。你看，能够一直依赖你的软件构建，是持续集成的革命性部分。想象一下如果你知道你刚从版本库上下下来的代码可以工作，你的生活会变得多轻松。</p>
+
+<p>让我来讲一个小故事。我维护开源软件的一块叫NUnitAsp。去年，我开了一门课来专门将它。在讲课期间，有人要求增加一个NUnitAsp没有的功能。我看了下代码发现很容易就可以增加。所以我做了修改（花了几分钟）。然后我跑我的构建，96秒后有个新的发布文件，然后把它拿出来。真实的故事，我们甚至有一个编程奖品，我们叫它“找bug得杯具”（我们人很好，即使没有找到bug的人我们也给他杯具）。</p>
+
+<p>好了，你的持续集成可能还没到那一步。你需要像我的那个项目一样有很好的自动化测试来构建和发布。所以让我来讲另外一个故事。在另外一个项目，没有那么成功，我们所有人在代码的不同部分上工作。虽然我们每天都很小心的检入代码，但我们没有构建整个工程或跑测试。（测试？我们没有任何自动化测试。）六个月以后，我们尝试去集成，但没有东西可以组装在一起。我们花费了一个星期才让程序跑起来。我甚至不想描述在这个过程中有多少个bug了。持续集成，即使没有好的测试，也意味着你将再次不会面对这种噩梦了。</p>
+
+<p>我讨厌试图去说服人们相信这是个好主意。我告诉你要刷牙了吗？但你还是会每天做。这个对你有好处。不想做？那就不要做！不是我的问题。</p>
+
+<p>12&hellip;13&hellip;14，15，16&hellip;妹的。（译者注：指粉丝流失）</p>
+
+<p>不然怎样，如果没有让每个人都同意这样做，那么这个过程将不会有效。你还能指望什么？</p>
+
+<h3>第六步：启动！</h3>
+
+<p>在<a href="http://jamesshore.com/Blog/Continuous-Integration-Checklist.html">这里</a>看到可打印的清单。
+你已经准备好了！让我们浏览一下预启动清单：</p>
+
+<ol>
+<li>构建电脑？就绪。</li>
+<li>搞笑玩具？就绪。</li>
+<li>烦人的闹铃？可选。</li>
+<li>自动构建？就绪。</li>
+<li>团队同意？就绪。</li>
+</ol>
+
+
+<p>现在，让我们开始吧！</p>
+
+<p>首先，每天至少检入代码2次。这是“持续”的部分。当你熟练以后，你将每1~2个小时检入一次。</p>
+
+<p>在获取版本库的最新代码之前，看下有没有人手里有橡皮鸡。如果有，先等他们把代码检入。</p>
+
+<p>当你检入时，遵循以下步骤：</p>
+
+<p>A 在本地跑构建/测试脚本，确认100%通过。 <br/>
+B 把橡皮鸡从它原来的地方拿过来。如果橡皮鸡不在原地，找一下看在谁那里，然后一直烦着他们直到他们检入代码。<br/>
+C 从版本库下载最新代码然后再次运行构建脚本。如果没有运行成功，你知道刚下的代码有问题。发发牢骚抱怨一下，然后找到最后检入代码的那个人帮你解决问题。解决问题后重新开始。<br/>
+D 检入你的代码。<br/>
+E 走向那台破旧的构建电脑，从版本库获取最新代码，再次运行构建脚本。如果没有运行成功，将你检入的代码还原。没成功的原因，可能是你安装了一些新的软件，或者修改了一个环境变量，或者设置注册表环境，或者忘记添加文件到版本库，或者其他原因。不管怎样，你需要在你的电脑上修复这个问题然后重新试一次。你可以暂时保留橡皮鸡，但如果其他人需要你要还回去（然后重新开始）。<br/>
+F 让铃铛响起来。（其他人会为你鼓掌，或以其他方式为你高兴。）把橡皮鸡放回去，你已经做完了。</p>
+
+<p>顺便说一下，当步骤E失败了，你可能会冒险在构建机器上直接修复问题，但如果你这样做了，下一个可怜的家伙下载了最新代码后将会构建失败。</p>
+
+<p>最后，但并非最不重要：保持你的构建时间在10分钟之内，少于5分钟更好。如果运行时间太长，这个过程将不再是一件愉快的事情而是痛苦的开始。而且一般来说快速构建对你有好处，不管怎样，因为速度慢的构建往往意味着测试方法的缺陷。</p>
+
+<h3>为什么比 CruiseControl 好？</h3>
+
+<ol>
+<li>代码在版本控制中总是周期性地可以构建和通过测试。</li>
+<li>如果出错了，你知道问题出在哪里。要么是你的代码（在步骤A失败了），要么是其他人的代码（在步骤C失败了），或者是环境改变了（在步骤E失败了）。反正你可以找到原因，让修复问题更简单。</li>
+<li>当其他人没有等CruiseControl 跑完构建就跑去吃午饭时，你不用再去修复其他人引起的构建失败。</li>
+<li>你会让构建运行的时间保持简短（长时间运行的构建会让你痛苦），这意味着测试写得更好，使设计更佳。</li>
+</ol>
+
+
+<h3>高级课程</h3>
+
+<p>一旦你让基础设施工作起来了，你可以继续真正完善你的持续集成的使用。一个可选的做法是让你的构建独立起来，换句话说，你构建所需的所有东西就只是你的源控制，一旦你得到代码了，你就可以断开网络连接去构建。这个好处是让你的构建更可信，允许你轻易地去构建老版本。这也有助于找出数据库配置和迁移的错误。</p>
+
+<p>真正给力的测试也是一个好的选择。如果你真的拥有给力的测试，那么你可以盖着帽子好好休息了。</p>
+
+<p>我同样喜欢让我的构建脚本来构建一个安装包。人们经常从他们的测试和集成过程中拿掉安装程序，然后忍受花费额外时间来构建一个安装包。这是快速构建带来的众多好处之一，让你做这件事情更容易，虽然自动测试安装程序是一件痛苦的事情。</p>
+
+<p>嗯&hellip;我讨厌承认&hellip;安装CruiseControl 也是一个好主意，等你从高级课程毕业了再接触比较好。而现在，你已经真正做到熟悉（持续集成）基础（团队同意，快速测试，永不破坏的构建），你已经不大可能回到坏实践中去了。</p>
+
+<p>最后祝你好运！别忘了给我一美元。</p>
+
+<p><em>相关材料：</em></p>
+
+<ul>
+<li><a href="http://www.martinfowler.com/articles/continuousIntegration.html">Continuous Integration</a> (Martin Fowler)</li>
+<li><a href="http://jamesshore.com/Blog/Red-Green-Refactor.html">Red-Green-Refactor</a> (James Shore)</li>
+<li><a href="http://jamesshore.com/Blog/Continuous-Integration-is-an-Attitude.html">Continuous Integration is an Attitude, Not a Tool</a> (James Shore)</li>
+<li><a href="http://blogs.msdn.com/mswanson/articles/169058.aspx">Automated Continuous Integration and the Ambient Orb</a> (Michael Swanson)</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/06/read-toyota-product-method/">读《丰田生产方式》——联系敏捷开发的思考</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-06T10:16:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/06/read-toyota-product-method/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>平时工作和同事讨论敏捷，曾多次听到丰田的精益思想，说是很多敏捷的想法都是从丰田的精益思想中得来的，后来在Kent Beck的《解析极限编程》里看到有这样一本书是讲丰田的精益思想的，找来看了一下，发现书中讲的一些思想或者实践和敏捷开发很相似，下面我就讲讲我对于丰田生产方式和敏捷开发的一些联系。</p>
+
+<h2>一、逆向思维，由生产的最后一道工序为起点，从后往前推进。</h2>
+
+<p>丰田生产方式的两大支柱是准时化和自动化。准时化（Just In Time）是指通过流水作业装配一辆汽车的过程中，所需零部件在需要的时刻，以需要的数量，不多不少的送到生产线的旁边。如何达到这种不多不少的状态呢？丰田的做法是由生产的最后一道工序为起点，从后往前推进。这样以最后要生产的汽车数量，就可以推测所需的零部件各是多少，从而达到降低浪费的目的。</p>
+
+<p>在敏捷开发中，我们如何做到准时化？从相关的敏捷实践来看，测试驱动开发（TDD）就是达到这一目的的过程。先从原始需求上面得到一个个的Story，Story规定了需求的入口和出口，然后再驱动出测试案例，最后由测试案例驱动出产品代码，这样就能保证产品代码的功能是包括了原始需求所要求的功能，但又避免产生过渡设计。这个也是减少浪费的一种过程。</p>
+
+<h2>二、每个工人都有一根警报线，在生产过程中发现产品有问题，随时拉线让整个生产线停止，等待解决问题后再恢复生产。</h2>
+
+<p>丰田生产方式的另外一个支柱是自动化。丰田使用了很多自动化机器，但自动化的标准不是简单的去使用机器，而是实现人的自动化。丰田几乎所有的机器设备都装有自动停止装置，平时机器自动运转的时候用不到人，如果生产过程中发现问题，人会去停止机器，然后修复问题，重新启动机器。如果在生产过程中发现问题没有及时停止生产，那就可能生产出大量的残次品，这些残次品无法装配到汽车上，是一种很大的浪费。</p>
+
+<p>在敏捷开发中，持续集成体现的就是这种自动化思想。在持续集成的过程中，一旦发现问题（比如单元测试跑失败了），服务器就会马上停止构建，并通知相关的开发人员进行问题修复，等问题修复完成后，再重新进行构建。这样每当问题出现，我们就可以以最小的代价找到问题的根源，然后修复它。如果等问题遗留到后面的测试阶段或者生产阶段，再去找问题的根源，所需的代价就要大的多得多。</p>
+
+<p>光有持续集成的服务器还不行，服务器不会自己去编译、测试、部署，所有这些行为都需要人去开发出相应的脚本，然后在服务器上运行，这就是所谓的“人的自动化”。开发人员应该将所有可以自动化的东西都做成自动化，让单元测试自动化，集成测试自动化，部署自动化，总之一个目的，减少浪费，这也是丰田生产一直追求的目标之一。</p>
+
+<h2>三、看板</h2>
+
+<p>看板在丰田生产中是一种工具，在生产中起到一个传递情报和指令的作用。</p>
+
+<p>敏捷开发很好的运用了看板。有过敏捷开发经验的同学应该知道，敏捷中的看板就是整天摆在你跟前的那块白板，白板上将开发过程分成好几个阶段，每个阶段上面贴着该阶段下的开发任务，通过白板可以随时了解项目的进展。</p>
+
+<h2>其他思想和实践</h2>
+
+<p>除了和敏捷开发有这些联系外，丰田生产方式还有一些思想和实践适合软件开发。</p>
+
+<h4>一人掌握多种技能，每个人都是多面手。</h4>
+
+<p>由于历史和文化的原因，美国的的制度是，车工始终是车工，焊工永远是焊工；日本的制度是，工人既能操作车床，也能开钻床，而且能焊接，能够学会和掌握多种技能。</p>
+
+<p>两种制度孰优孰劣很难确定，但个人认为，在软件开发高速发展的今天，开发人员应该要有更高的要求。开发人员所掌握的技能不仅仅是会编写产品代码，还要会写单元测试，会部署，会搭建环境等等。比如在缺少测试人员的情况下，开发人员可以自己测试，依靠开发的编程技能可以写出更好的测试代码。要能够快速学会和掌握多种技能。</p>
+
+<h4>反复问5个为什么</h4>
+
+<p>比如一台机器不转动了，你就要问：</p>
+
+<ol>
+<li>为什么机器停了？——“因为超负荷，保险丝断了。”</li>
+<li>“为什么超负荷了呢？”——“因为轴承部分的润滑不够。&#8221;</li>
+<li>&ldquo;为什么润滑不够？”——“因为润滑泵吸不上油来。”</li>
+<li>“为什么吸不上油来呢？”——“因为油泵轴磨损，松动了。”</li>
+<li>“为什么磨损了呢？”——因为没有安装过滤器，混进了铁屑。”</li>
+</ol>
+
+
+<p>通过问5个为什么就可以知道需要安装过滤器了。如果问题问的不彻底，可能是加上润滑油，或者换上油泵轴了事，这样等过了一段时间后问题还是会出现。丰田生产方式可以说是丰田人反复问5个为什么才创造出来的。</p>
+
+<h4>拥抱小团队，不要大块头</h4>
+
+<p>团队合作高于一切，由于合作或其他种种原因，人少的团队反而容易取胜。小船容易转舵，大船步履阑珊，小团队的灵活性更强，这也符合敏捷开发的原则——要做到简洁。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/">《Agile Web Development With Rails》读后感&#8211;rails基于web设计的best Practices</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T18:18:00+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近看完《Agile Web Development with Rails》一书，受益匪浅。书中先是用一个简单的web应用带你进入Rails的世界，然后在你大致熟悉之后，再带你了解Rails的一些细节，比如ActiveRecord，ActiveController等。最让我觉得Rails美的是其中的一些best practices，这些都可以很好地借鉴到平时的开发中去。下面我简单举几个在Rails中我认为比较好的一些best practies。</p>
+
+<h3>数据库迁移</h3>
+
+<p>在Rails中，SQL脚本可以通过命令来生成，生成的脚本以时间戳加意图命名，比如创建表的SQL脚本文件可能是“20120529151027_create_products.rb&#8221;，加时间戳可以让人一眼就知道脚本的执行顺序，实际上Rails在也是根据时间戳来执行脚本的。创建完脚本后只要简单的执行&#8221;rake db:migrate&#8221;命令即可完成脚本的执行，在Rails中会有脚本执行的记录，已经执行过的脚本不会重复执行。另外，在每个SQL脚本中，不仅有执行的操作，还有回滚的操作。比如：</p>
+
+<figure class='code'><figcaption><span>demo.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AddPriceToLineItem</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Migration</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
+</span><span class='line'>    <span class="err">　　</span><span class="n">add_column</span> <span class="ss">:line_items</span><span class="p">,</span> <span class="ss">:price</span><span class="p">,</span> <span class="ss">:decimal</span><span class="p">,</span> <span class="ss">:precision</span> <span class="o">=&gt;</span> <span class="mi">8</span><span class="p">,</span> <span class="ss">:scale</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:default</span> <span class="o">=&gt;</span> <span class="mi">0</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="err">　　</span><span class="n">say_with_time</span> <span class="s2">&quot;Updating prices...&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="err">　　</span><span class="no">LineItem</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="ss">:all</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">lineitem</span><span class="o">|</span>
+</span><span class='line'>        <span class="err">　　</span><span class="n">lineitem</span><span class="o">.</span><span class="n">update_attribute</span> <span class="ss">:price</span><span class="p">,</span> <span class="n">lineitem</span><span class="o">.</span><span class="n">product</span><span class="o">.</span><span class="n">price</span>
+</span><span class='line'>         <span class="k">end</span>
+</span><span class='line'>    <span class="err">　　</span><span class="k">end</span>
+</span><span class='line'>  <span class="err">　</span><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">down</span>
+</span><span class='line'>    <span class="err">　　</span><span class="n">remove_column</span> <span class="ss">:line_items</span><span class="p">,</span> <span class="ss">:price</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里的up方法是正常执行时的操作，down方法则是回滚时所做的操作。如果发现执行的脚本有问题，简单地执行“rake db:rollback&#8221;即可回退到脚本执行前的状态。</p>
+
+<h3>Convention over Configuration</h3>
+
+<p>在上面创建的脚本中可以看到，Rails的表名都是复数形式，因为Rails认为每张表都会存放很多个同一类型的数据，因此是复数，这种清晰的命名规范不仅体现在数据库，还有其他很多地方。比如，model的文件名都是单数形式存在，controller都是以复数形式存在。Rails将MVC各模块连接起来就是通过COC约定，举个简单例子，product的model文件是product.rb，controller文件是products_controller.rb，而view文件则是放在对应的product文件夹里面，每个view文件名以action方法名开头，这样在写代码的时候就可以不用具体指定要发送给哪个controller，给哪个model存储数据，让哪个页面显示数据，只要你遵守了COC约定，Rails会帮你跳转到最合适的地方。</p>
+
+<h3>分层的页面布局</h3>
+
+<p>在书中的例子，作者会建议你将页面分成一个个小的局部文件。实际上Rails也是推荐你这么做的，局部文件只需以下划线开头，Rails就会帮你识别出来。小的页面文件结构简单，容易维护，比如有显示列标题的页面，其中嵌套显示具体行内容的页面，其中再嵌套分页页面文件。对比平时在工作里遇到的一个个硕大无比的jsp文件，rails的页面文件让人有了进入世外桃源的感觉。</p>
+
+<p>Rails还有其他很多的best practices，这里只是简单的介绍。Rails框架集中了很多开发中遇到的常见问题的解决方案，而且是一些最佳的解决方案，像集中了很多经验丰富的大师智慧一样，使用Rails并学习其中的best practices，能让你在web开发上少走很多弯路。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/">在JavaScript中进行文件处理，第五部分：Blobs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-01T17:28:00+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/31/working-with-files-in-javascript-part-5-Blobs">这里</a></strong></p>
+
+<hr />
+
+<p>到目前为止，这个系列的帖子集中在和这些文件交互——用户指定的文件和通过File对象访问的文件。File对象实际上是Blob的一个特殊版本，表示一块块的二进制数据。Blob对象继承了File对象的size和type属性。</p>
+
+<p>在大部分情况下，Blobs和Files可以用在同一个地方。例如，你可以使用一个FileReader从一个Blob中读取数据，并且你可以在一个Blob中使用URL.createObjectURL()方法来创建一个对象URL。</p>
+
+<h2>slice</h2>
+
+<p>使用Blobs的一件有趣的事情是可以基于另外一个Blob的小部分来创建一个新的Blob。由于每个Blob代表的是数据的内存地址，而不是数据本身，所以你可以快速创建一个指向其他Blob子部分数据的Blob对象。这可以通过使用slice()方法来做到。</p>
+
+<p>你可能对类似slice()的方法比较熟悉，可以用来处理字符串和数组，还有Blob。这个方法接收3个参数：起始字节的下标，结束字节的下标，还有一个可选且适用于Blob的MIME类型。如果MIME类型没有指定，新的Blob跟原始的BLob对象有相同的MIME类型。</p>
+
+<p>浏览器对slice()的支持还不是很普遍，只有Firefox通过mozSlice()和webkitSlice()来支持它（其他浏览器现在都不支持）。这里有一个例子：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">sliceBlob</span><span class="p">(</span><span class="nx">blob</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span> <span class="o">||</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">type</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">blob</span><span class="p">.</span><span class="nx">mozSlice</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">return</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">mozSlice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">type</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">blob</span><span class="p">.</span><span class="nx">webkitSlice</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">return</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">webkitSlice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span> <span class="nx">type</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;This doesn&#39;t work!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>比如，你可以使用这个函数将一个大文件拆分成一块块然后进行上传。每一个新产生的Blob都和原始的文件互不相干，即使每个blob的数据有重叠的部分。网络相册的工程师们使用blob分割来读取照片的可交换图片文件信息，这些照片是正在上传<em>[1]</em>的而不是已经上传到了服务器。当文件被选择的时候，上传文件和从照片中读取可交换图片文件信息，这2个动作在网络相册上传页面是同时开始的。这就允许在文件上传的时候，可以同时预览已经上传的部分数据的图像。</p>
+
+<h2>创建Blobs的老方法</h2>
+
+<p>ile对象在浏览器中开始出现后不久，开发人员意识到Blob对象是如此强大，以致想不通过用户交互就可以直接创建它们。毕竟，任何数据都可以放在Blob里面，而不一定要绑定一个文件。浏览器可以快速的创建BlobBuilder，这个对象类型的唯一目的就是将数据封装在一个Blob对象里面。这是一个非标准类型并且已经在Firefox（像MozBlobBuilder），IE10（像MSBlobBuilder）和Chrome（像WebKitBlobBuilder）中实现。</p>
+
+<p>BlobBuilder通过创建一个实例，然后调用append()方法紧跟一个字符串、ArrayBuffer或者Blob来工作。一旦这些数据都被添加之后，你可以调用getBlob()并传递一个可选的MIME类型参数来使用Blob。这有个例子：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlobBuilder</span><span class="p">();</span>
+</span><span class='line'><span class="nx">builder</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">blob</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">getBlob</span><span class="p">(</span><span class="s2">&quot;text/plain&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>为数据的任意片段创建URLs的能力是非常强大的，允许你在浏览器中动态的创建链接到文件的对象。例如，你可以使用一个Blob来创建一个web worker，而不需要为web worker指定文件。这项技术写在Web Workers<em>[2]</em>的基础里：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// Prefixed in Webkit, Chrome 12, and FF6: window.WebKitBlobBuilder, window.MozBlobBuilder </span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">bb</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlobBuilder</span><span class="p">();</span>
+</span><span class='line'><span class="nx">bb</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;onmessage = function(e) { </span>
+</span><span class='line'><span class="s2">　　postMessage(&#39;msg from worker&#39;); </span>
+</span><span class='line'><span class="s2">}&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// Obtain a blob URL reference to our worker &#39;file&#39;. </span>
+</span><span class='line'><span class="c1">// Note: window.webkitURL.createObjectURL() in Chrome 10+. </span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">blobURL</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">bb</span><span class="p">.</span><span class="nx">getBlob</span><span class="p">());</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">worker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Worker</span><span class="p">(</span><span class="nx">blobURL</span><span class="p">);</span>
+</span><span class='line'><span class="nx">worker</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="c1">// e.data == &#39;msg from worker&#39; </span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">worker</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">();</span>
+</span><span class='line'><span class="c1">// Start the worker.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这段代码创建了一个简单的脚本，然后创建一个对象URL。将对象URL赋予一个web worker来代替一个脚本URL。</p>
+
+<p>你可以任意次调用append()来创建Blob的内容。</p>
+
+<h2>创建Blobs的新方式</h2>
+
+<p>因为开发人员一直呼吁可以有一种方式来直接创建Blob对象，然后浏览器出现了BlobBuilder，它决定添加一个Blob构造器。这个构造器现在是规范的一部分，将是未来创建Blob对象的一种方式。</p>
+
+<p>这个构造器接收2个参数。第一个参数是一个分配了Blob块的数组。数据的元素跟传入BlobBuilder的append()方法的值相同，可以是任意数量的字符串，Blobs和ArrayBuffers。第二个参数是一个包含了新创建的Blob属性的对象。当前有2个属性已经定义：类型——指定Blob的MIME类型；endings——值分别是“transparent”（默认值）和“native”。这里有个例子：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">blob</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Blob</span><span class="p">([</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">],</span> <span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span> <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>像你看到的一样，这比使用BlobBuilder更加简单。Chrome的nightly builds版本和未来的Firefox 13将支持Blob构造器。其他浏览器还没有宣布实现该构造器的计划，尽管如此，现在它是File API<em>[3]</em>标准的一部分，期望以后会被普遍支持。</p>
+
+<h2>总结</h2>
+
+<p>这是“在JavaScript中进行文件处理”这一系列的最后一部分。我希望你了解到，File API非常强大，在web应用中开辟了很多全新的方式来处理文件。当用户需要上传文件时你不再需要坚持使用文件上传框，现在你可以在客户端读取文件，为客户端操作开辟了多种可能性。你可以在上传文件之前重置图片的大小（使用FileReader和<code>&lt;canvas&gt;</code>）；你可以单纯在浏览器里创建一个文本编辑器；你可以分隔大文件进行逐步上载。可能性不是无穷无尽的，但也很接近无穷尽了。</p>
+
+<h4>引用</h4>
+
+<ol>
+<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fcode.flickr.com/blog/2012/06/01/parsing-exif-client-side-using-javascript-2/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg">Parsing Exif client-side using JavaScript</a> by Flickr Team</li>
+<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fwww.html5rocks.com/en/tutorials/workers/basics/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg">The Basics of Web Workers</a> by Eric Bidelman</li>
+<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fdev.w3.org/2006/webapi/FileAPI/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg&amp;whp=3AconstructorBlob">File API</a> – Blob Constructor</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/30/working-with-files-in-javascript-part-4/">在JavaScript中进行文件处理，第四部分：对象URLs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-30T22:17:00+08:00" pubdate data-updated="true">Jul 30<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/07/30/working-with-files-in-javascript-part-4/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/31/working-with-files-in-javascript-part-4-object-urls">这里</a></strong></p>
+
+<hr />
+
+<p>学习到这里，你已经了解在传统方式中如何使用文件，你可以上传文件到服务端，可以从磁盘上读取文件，这些都是最常见的文件处理方式。但是，有一种全新的文件处理方式可以简化这些常见的任务，这就是使用对象URLs。</p>
+
+<h2>什么是对象URL？</h2>
+
+<p>对象URLs是磁盘上的文件地址。比如说，你想要将用户系统的一个图像文件显示到web页面，服务端无需要知道这个文件，所以也不需要上传它。如果你只是想要加载文件到页面，你可以像之前的帖子说的一样，获取一个File对象引用，将数据读取为一个数据URI，然后将数据URI分配到一个<code>&lt;img&gt;</code>元素。但想一想这里面的浪费，图像已经在磁盘上存在，为什么还要将图像读取为另外一种形式呢？如果你创建一个对象URL，你可以将其分配给<code>&lt;img&gt;</code>，这样就可以直接访问本地文件。</p>
+
+<h2>它如何工作？</h2>
+
+<p>File API<em>[1]</em>定义了一个全局对象叫URL，它有2个方法。第一个是createObjectURL()，接受一个File对象作为参数，返回一个对象URL，作用是告诉浏览器创建并且管理一个本地文件的URL。第二个方法是revokeObjectURL()，作用是告诉浏览器去销毁作为参数传入的URL，有效的释放内存。当然，一旦web页面被卸载了，则所有对象URLs都会被注销，当不再需要它们的时候，这是释放它们内存的一个好机会。</p>
+
+<p>File API对URL对象的支持不像其他部分那么好，在我写这篇文章的时候，IE10和Firefox9+支持一个全局URL对象。Chrome支持它的webkitURL形式，Safari和Opera不支持。</p>
+
+<h2>例子</h2>
+
+<p>如果你没有读取图片文件的数据，你怎么显示这个图片呢？假设你已经提供给用户文件选择的方式，并且现在有这个文件对象的引用并赋给了一个变量file。你可以如下使用：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">URL</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">URL</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">webkitURL</span><span class="p">,</span> <span class="nx">imageUrl</span><span class="p">,</span> <span class="nx">image</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nx">URL</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">imageUrl</span> <span class="o">=</span> <span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">image</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">image</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">imageUrl</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">};</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">image</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">imageUrl</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">image</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个例子创建了一个本地URL变量，标准化浏览器的实现（即无论是何种浏览器都可以得到）。如果URL存在，程序将创建一个文件对象URL并将其存储在变量imageUrl，然后创建一个新的<img>元素，将imageUrl传入该元素的onloade事件处理方法，该方法将注销对象URL（一分钟内）。然后，src属性被分配了一个对象URL并将元素添加到页面。</p>
+
+<p>当图片加载的时候为什么要注销对象URL呢？在图片加载完之后，该URL就不再需要了，除非你想要在另外一个元素里面复用它。在这个例子中，图片被加载到一个单独的元素中，并且一旦图片完成加载，该URL就不再起任何作用，这是释放任何与其关联的内存的绝佳时刻。</p>
+
+<h2>安全和注意事项</h2>
+
+<p>乍一看，这种能力有点恐怖。实际上你是通过一个URL直接从用户机器上加载一个文件，这种方式当然存在安全隐患。URL本身其实不是一个大的安全问题，因为URL是通过浏览器动态分配的，在其他电脑上不会起作用。那跨网点会怎么样呢？</p>
+
+<p>File API 不允许在不同网点使用对象URLs。当一个对象URL被创建，它就紧跟着执行JavaScript脚本的页面网点，所以你不能跨www.wrox.com和p2p.wrox.com两个不同网点使用同一个对象URL（会发生错误）。但是，如果两个页面都是来自www.wrox.com，比如其中一个页面嵌套在另外一个页面的iframe里，这样就可以共享对象URLs。</p>
+
+<p>对象URLs只存在于文档创建它们的时候。当文档被卸载，所有对象URLs都会被注销。所以，在客户端存储对象URLs以便以后使用是没有意义的，它们在页面卸载之后就没有用了。</p>
+
+<p>你可以在浏览器中任何一个发起get请求的地方使用对象URLs，其中包括图片，脚本，web worker，样式表，音频，视频。浏览器执行post请求时使用不了对象URL。</p>
+
+<hr />
+
+<h4>下集预告</h4>
+
+<p>创建直接链接到本地文件的URL是一种很强的能力。对比读取一个本地文件到JavaScript然后在页面上显示，你可以简单地创建一个URL并在页面指定它，后者大大简化了本地文件在页面中的使用情况。尽管如此，JavaScript处理文件有趣的地方才刚刚开始。在下一篇blog，你将学习到一些有趣的方式来处理文件数据。</p>
+
+<h4>相关链接</h4>
+
+<ol>
+<li><a href="http://www.w3.org/TR/FileAPI/">File API</a></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/23/working-with-files-in-javascript-part-3/">在JavaScript中进行文件处理，第三部分：处理事件和错误</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-23T21:46:00+08:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2012</time>
+        
+         | <a href="/blog/2012/07/23/working-with-files-in-javascript-part-3/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/22/working-with-files-in-javascript-part-3/">这里</a></strong></p>
+
+<hr />
+
+<p>FileReader对象用来读取浏览器可以访问的文件的内容。在我前一篇blog中，你学习到了如何使用FileReader对象轻松读取文件，并将文件内容转换为各种形式。FileReader在很多方面和XMLHttpRequest非常相似。</p>
+
+<h2>进度事件</h2>
+
+<p>progress事件变得如此普遍，以致实际上它们写在一个独立的规范<em>[1]</em>里面。这些事件设计用来表示数据传输的进度。这些传输不只发生在从服务器端请求数据的时候，而且也发生在从磁盘上请求数据的时候，这都是FileReader可以做的。</p>
+
+<p>这里有6个进度事件：</p>
+
+<ul>
+<li>loadstart – 表示加载数据的进度开始，这个事件总是首先被触发。</li>
+<li>progress – 在加载数据过程中多次被触发，可以访问中间的数据。</li>
+<li>error – 当加载失败时触发。</li>
+<li>abort &ndash; 当通过调用abort()取消数据加载时触发（在XMLHttpRequest和FileReader上都可使用）。</li>
+<li>load &ndash; 只有当所有数据被成功读取后才触发。</li>
+<li>loadend &ndash; 当对象停止传输数据时触发。在error，abort和load后始终被触发。</li>
+</ul>
+
+
+<p>error和load事件我们在前一篇blog已经讨论了。其他事件让你更好地控制在数据传输。</p>
+
+<h2>跟踪进度</h2>
+
+<p>当你想要跟踪一个文件读取的进度，你可以使用progress事件。这个事件对象包含了3个属性来监控数据的传输：</p>
+
+<ul>
+<li>lengthComputable &ndash; 一个布尔值，表示浏览器是否能侦测数据的完整大小。</li>
+<li>loaded &ndash; 已经读取的数据字节数大小。</li>
+<li>total &ndash; 所要读取的数据字节数总大小</li>
+</ul>
+
+
+<p>这些数据是为了生成一个使用了progress事件数据的进度条。例如，你可以使用HTML5<code>&lt;progress&gt;</code>元素来监控文件的读取进度。你可以像下面的代码一样让你的进度条和实际数据相关联：</p>
+
+<figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">(),</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">progressNode</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;my-progress&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onprogress</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span> <span class="err">　　</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">lengthComputable</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">total</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">loaded</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onloadend</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
+</span><span class='line'><span class="err">　　　　</span> <span class="nx">error</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;File could not be read! Code &quot;</span> <span class="o">+</span> <span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Contents: &quot;</span> <span class="o">+</span> <span class="nx">contents</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这与Gmail用拖拽方式进行文件上传的方法相似，拖拽一个文件到email后你可以立即看到一个进度条。这个进度条表示有多少文件已经被传输到服务器。</p>
+
+<h2>错误处理</h2>
+
+<p>即使你已经在读取一个本地文件，但仍然有可能读取失败。在File API规范<em>[2]</em>中定义了4种错误类型：</p>
+
+<ul>
+<li>NotFoundError – 找不到该文件。　　</li>
+<li>SecurityError – 文件或者读取操作可能包含某些危险。浏览器有一些补救措施来处理这种情况，但一般来讲，如果加载到浏览器的文件有危险或者浏览器被限制了不能有太多的读取动作，你将会看到这个错误。　　</li>
+<li>NotReadableError – 文件存在但不可读，大部分情况可能是权限问题。　　</li>
+<li>EncodingError – 主要当尝试将文件内容读取为一个数据URI并且数据URI结果的长度超过浏览器可支持的最大长度时，会抛出这个错误。</li>
+</ul>
+
+
+<p>当读取文件发生错误时，上述的4个错误类型之一会被实例化，并分配到FileReader对象的error属性上。至少，规范上是这样写的。实际上，浏览器是通过一个FileError对象来实现的，FileError对象有一个code属性，表示当前发生的错误类型。每个错误类型通过一个数字常量来表示：</p>
+
+<ul>
+<li>FileError.NOT_FOUND_ERR对应找不到该文件错误。</li>
+<li>FileError.SECURITY_ERR对应安全错误。</li>
+<li>FileError.NOT_READABLE_ERR对应不可读错误。</li>
+<li>FileError.ENCODING_ERR对应编码错误。</li>
+<li>FileError.ABORT_ERR当没有读取进度时调用abort()方法。</li>
+</ul>
+
+
+<p>你可以在error或者loadend事件中测试错误类型：</p>
+
+<figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onloadend</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">error</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">switch</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">ENCODING_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Encoding error!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">NOT_FOUND_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;File not found!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">NOT_READABLE_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;File could not be read!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">SECURITY_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Security issue with file!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">default</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;I have no idea what&#39;s wrong!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　　　</span><span class="p">}</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Contents: &quot;</span> <span class="o">+</span> <span class="nx">contents</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<h4>下集预告</h4>
+
+<p>FileReader是一个全面的对象，有着非常多的功能，并且和XMLHttpRequest很相似。在学习了这3篇blog之后，你现在应该可以使用JavaScript来读取文件数据，如果需要的话，还可以将数据发送回给服务器。尽管如此，File API的功能和内容比我们在这个系列里讨论的东西要多得多，在下一章你将学习到一个强大全新的功能设计来处理文件。</p>
+
+<h4>相关链接</h4>
+
+<ol>
+<li><a href="http://www.w3.org/TR/progress-events/">Progress Events</a></li>
+<li><a href="http://www.w3.org/TR/FileAPI/">File API</a></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -562,790 +1525,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/">Sonar在ant工程中读取单元测试和覆盖率报告</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-17T08:30:00+08:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/06/17/read-test-report-and-coverage-report-with-ant-in-sonar/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>虽然sonar支持ant工程的构建，但目前最大的不足是无法在分析过程中产生单元测试和覆盖率报告，这样在sonar面板上覆盖率板块就始终没有数据。但幸运的是，sonar可以读取已经生成好的报告，让报告的内容显示在sonar的覆盖率面板上。</p>
-
-<p>首先需要配置sonar.dynamicAnalysis属性，这个属性有3个值，分别是true, false和reuseReports，默认值是true，即进行动态分析，但只对maven工程有效，要想读取外部的报告，需要将值设置为reuseReports。</p>
-
-<p>然后是单元测试报告的路径设置，对应的属性是sonar.surefire.reportsPath，value为junit报告的文件夹路径，这个路径下有junit生成的那些TEST-*.xml文件。</p>
-
-<p>最后是覆盖率报告的路径设置，这个要看是用什么覆盖率工具。sonar有3种覆盖率工具的设置属性，分别是<em>jacoco，cobertura和clover</em>。像我们工程用的是cobertura，对应的属性名为<em>sonar.cobertura.reportPath</em>，其他2种分别是<em>sonar.jacoco.reportPath</em>和<em>sonar.clover.reportPath</em>。属性值和单元测试的略为不同，单元测试属性是指向文件夹，覆盖率是指向具体的覆盖率文件，比如cobertura的覆盖率文件是coverage.xml，则value应该写成“yourReportDir/coverage.xml&#8221;。</p>
-
-<p>配置完后重新进行sonar分析即可看到覆盖率报告成产生了。下面是具体代码：</p>
-
-<figure class='code'><figcaption><span>build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.dynamicAnalysis&quot;</span> <span class="na">value=</span><span class="s">&quot;reuseReports&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'><span class="c">&lt;!--unnit test--&gt;</span>
-</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.surefire.reportsPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/unitTestReportDir&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'><span class="c">&lt;!--coverage--&gt;</span>
-</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.cobertura.reportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/coverage.xml&quot;</span> <span class="nt">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/16/refactor-code-in-loop-block/">For循环重复代码的重构</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-16T16:39:00+08:00" pubdate data-updated="true">Jun 16<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/06/16/refactor-code-in-loop-block/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>DRY（don&rsquo;t repeat yourself）</strong>，重复往往是代码腐烂的开始，我们一般的处理手法是将重复的代码提取成一个方法，然后用新方法替换掉原来的代码。</p>
-
-<p>但是对于for循环里面的重复代码要如何处理呢？比如有下面2个方法：</p>
-
-<figure class='code'><figcaption><span>A.class </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">methodA</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">string</span><span class="o">.</span><span class="na">startWith</span><span class="o">(</span><span class="s">&quot;A&quot;</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">methodB</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">string</span><span class="o">.</span><span class="na">endWith</span><span class="o">(</span><span class="s">&quot;B&quot;</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2个方法极其相似，唯一不同的地方只有 if 里面的判断条件。要如何去除这里的重复呢？提取for里面的代码？虽然能去除一部分，但for这个循环体的代码不能一起去掉，而且要是for里面的代码复杂一点，这个方法就不适用了。我今天想介绍自己最近用的比较多的一种重构手法：<strong>用模板方法去除for循环的重复代码。</strong></p>
-
-<p>模板方法大家都知道，我可以先建1个抽象类和2个子类要代替这2个方法，但在java1.5+以后，我们可以用enum（枚举）来轻易实现模板方法。重构后的代码如下：</p>
-
-<figure class='code'><figcaption><span>For.class </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">enum</span> <span class="n">For</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">METHOD_A</span> <span class="o">{</span>
-</span><span class='line'>            <span class="nd">@Override</span>
-</span><span class='line'>            <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">match</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;A&quot;</span><span class="o">);</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">},</span> <span class="n">METHOD_B</span> <span class="o">{</span>
-</span><span class='line'>            <span class="nd">@Override</span>
-</span><span class='line'>            <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">match</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="na">endsWith</span><span class="o">(</span><span class="s">&quot;B&quot;</span><span class="o">);</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">};</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">method</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">if</span><span class="o">(</span><span class="n">match</span><span class="o">(</span><span class="n">string</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">protected</span> <span class="kd">abstract</span> <span class="kt">boolean</span> <span class="nf">match</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里将相同的代码写成一个公共方法，不同的代码提取成一个抽象方法，让子类去具体实现。这样就实现了相同代码和不同代码的分离了。由于使用了enum，使得我们的创建类的代价为最小，只需一个enum类就搞定整个模板方法。</p>
-
-<p>这里只是抛砖引玉，我相信肯定其他人一定还有更好的方法，希望和大家一起共同探讨。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/23/some-ways-of-create-object-in-javascript/">Javascript几种创建对象的方法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-23T14:50:00+08:00" pubdate data-updated="true">May 23<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/23/some-ways-of-create-object-in-javascript/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>1.工厂方法</h2>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">createPerson</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
-</span><span class='line'>    <span class="nx">person</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-</span><span class='line'>    <span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nx">person</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">person</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>优点：创建相同实例只有一处代码。<br/>
-缺点：不知道对象原型。</p>
-
-<figure class='code'><figcaption><span>test.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="nx">createPerson</span><span class="p">(</span><span class="s2">&quot;zhang&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="nx">createPerson</span><span class="p">(</span><span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//false</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>2.构造函数</h2>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age:&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>优点：可以知道实例原型。<br/>
-缺点：方法不是同一个方法实例。</p>
-
-<figure class='code'><figcaption><span>test.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s2">&quot;zhang&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: zhang age:20</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: li age:30</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">==</span> <span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">);</span> <span class="c1">//false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>3.原型方法</h2>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">()</span> <span class="p">{}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;zhang&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>优点：共享方法实例对象。<br/>
-缺点：每个实例需要定义非方法属性。</p>
-
-<figure class='code'><figcaption><span>test.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">person2</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;li&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="nx">person2</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: zhang age:20</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">());</span> <span class="c1">//name: li age:30</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person2</span> <span class="k">instanceof</span> <span class="nx">Person</span><span class="p">);</span> <span class="c1">//true</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">==</span> <span class="nx">person2</span><span class="p">.</span><span class="nx">sayHi</span><span class="p">);</span> <span class="c1">//true</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>4.构造函数和原型的组合方法</h2>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayHi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;name: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; age: &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>优点：非方法属性在构造函数中定义，方法属性则在原型中定义。</p>
-
-<p><strong>总结：最后一种方法是比较好的创建对象的方式，综合了前面3种方式的优点。每个实例对象都有自己实例属性的一份副本，但同时共享着方法的引用，最大限度节省了内存。</strong></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/22/javascript-location-object-redirect-methods/">Location对象的页面跳转方法介绍</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-22T16:18:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/22/javascript-location-object-redirect-methods/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>JavaScript中使用location对象可以通过很多种方式改变浏览器的位置。最常用的方法应该是下面几种：</p>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="err">　　</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="s2">&quot;http://www.google.com&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="err">　　</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">&quot;http://www.google.com&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="err">　　</span><span class="nx">location</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其实前面2种方式是调用第3种方式去实现的，这样就可以在浏览器中打开一个新的URL并在历史记录中生成一条记录，因此用户可以通过“后退”按钮回到前一个页面。如果想禁止这种后退行为，可以使用replace()方法。该方法只接受一个参数，即URL，然后会跳转到该URL，但不会在历史记录中生成记录。这样用户不能回到前一页了。</p>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'>    <span class="nx">location</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">&quot;http://www.google.com&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>关于页面跳转还有一个reload方法，作用是重新加载当前页面。如果调用该方法时不带参数，页面会以最有效的方式加载页面，也就是说，如果浏览器有该页面的缓存，则会从缓存里面加载该页面。如果不想从缓存中重新加载页面，需要传入true参数，即绕开浏览器缓存，强制从服务器去获取页面数据。</p>
-
-<figure class='code'><figcaption><span>demo.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">();</span> <span class="c1">//相当浏览器的F5刷新，有可能从缓存中加载</span>
-</span><span class='line'>  <span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span> <span class="c1">//相当于Ctrl+F5，从服务器中加载</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>下面列出location.reload()方法的具体解释：</p>
-
-<blockquote><p>The reload() method of the Location object reloads the document that is currently displayed in the window of the Location object. When called with no arguments, or with the argument false, it uses the If-Modified-SinceHTTP header to determine whether the document has changed on the web server. If it has, it reloads the document from the server, and if not, it reloads the document from the cache. This is is the same action that occurs when the user clicks on Navigator&#8217;s Reload button.</p></blockquote>
-
-
-<p></p>
-
-<p>location对象的reload方法会重新加载当前页面。当没有传入参数或传入false参数时，会用 If-Modified-SinceHTTP header 去判断页面在web服务器上是否有改变。如果改变了，则从服务器加载，如果没有改变，则从缓存中加载。这与用户点击导航栏刷新按钮的行为相同。</p>
-
-<blockquote><p>When reload() is called with the argument true, then it will always bypass the cache and reload the document from the server, regardless of the last-modified time of the document. This is the same action that occurs when the user shift-clicks on Navigator&#8217;s Reload button.</p></blockquote>
-
-
-<p></p>
-
-<p>当调用reload方法时传入参数true，会始终绕开缓存而从服务器上加载页面，不管页面有没有改变。这与用户按住shift并点击导航栏刷新按钮的行为相同。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/22/use-array-deal-with-base-type-in-java/">使用Array类处理基本数组对象</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-22T14:35:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/22/use-array-deal-with-base-type-in-java/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>java里面的Arrays类有个asList方法，参数是1或多个Object对象，如果传入一个Object数组，则可以将该数组转化为List，但如果传入的是一个基本类型的数据（int,long,short 等），则无法将数组转换成正确的list，测试代码如下：</p>
-
-<figure class='code'><figcaption><span>Main.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">[]&gt;</span> <span class="n">ints</span> <span class="o">=</span> <span class="n">asList</span><span class="o">(</span><span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">});</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ints</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>  <span class="c1">//1</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="n">asList</span><span class="o">(</span><span class="k">new</span> <span class="n">Integer</span><span class="o">[]{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">});</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">integers</span><span class="o">.</span><span class="na">size</span><span class="o">());</span> <span class="c1">//2</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>asList会将整个基本类型数组作为一个Object对象放到list里面，所以第一个List的size只有1。</p>
-
-<p>如何将基本类型数组装换为一个list呢？最简单暴力的方法就是遍历整个基本类型数组，再逐一往list里面添加。但这种方法不适用所有基本类型，需要为每种基本类型写一个方法。</p>
-
-<figure class='code'><figcaption><span>Main.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">arrayToList</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">ints</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">intList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
-</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">anInt</span> <span class="o">:</span> <span class="n">ints</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">intList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">anInt</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">intList</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="nf">arrayToList</span><span class="o">(</span><span class="n">Long</span><span class="o">[]</span> <span class="n">longs</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">longList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;();</span>
-</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">long</span> <span class="n">anLong</span> <span class="o">:</span> <span class="n">longs</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">longList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">anLong</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">longList</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">　　</span><span class="o">.....</span><span class="na">other</span> <span class="n">arrayToList</span> <span class="n">method</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重复代码会很多是吧，如何消除呢？下面就是帖子的重点了，利用Array类进行操作。</p>
-
-<p>Array类有几个方法比较常用：</p>
-
-<ul>
-<li>public static int getLength(java.lang.Object array)：获取数组对象的长度。</li>
-<li>public static java.lang.Object get(java.lang.Object array, int index)：根据下标获取数组对象的元素。</li>
-<li>public static void set(java.lang.Object array, int index, java.lang.Object value)：根据下标插入数组对象元素。</li>
-</ul>
-
-
-<p>于是上面那些方法就可以用一个方法搞定了，如下：</p>
-
-<figure class='code'><figcaption><span>Main.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">ints</span> <span class="o">=</span> <span class="o">{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">};</span>
-</span><span class='line'>        <span class="kt">long</span><span class="o">[]</span> <span class="n">longs</span> <span class="o">=</span> <span class="o">{</span><span class="mi">1L</span><span class="o">,</span> <span class="mi">2L</span><span class="o">,</span> <span class="mi">3L</span><span class="o">};</span>
-</span><span class='line'>        <span class="kt">char</span><span class="o">[]</span> <span class="n">chars</span> <span class="o">=</span> <span class="o">{</span><span class="sc">&#39;a&#39;</span><span class="o">,</span> <span class="sc">&#39;b&#39;</span><span class="o">,</span> <span class="sc">&#39;c&#39;</span><span class="o">,</span> <span class="sc">&#39;d&#39;</span><span class="o">};</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrayToList</span><span class="o">(</span><span class="n">ints</span><span class="o">).</span><span class="na">size</span><span class="o">());</span> <span class="c1">//2</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrayToList</span><span class="o">(</span><span class="n">longs</span><span class="o">).</span><span class="na">size</span><span class="o">());</span> <span class="c1">//3</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrayToList</span><span class="o">(</span><span class="n">chars</span><span class="o">).</span><span class="na">size</span><span class="o">());</span> <span class="c1">//4</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="nf">arrayToList</span><span class="o">(</span><span class="n">Object</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;();</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="na">getLength</span><span class="o">(</span><span class="n">array</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Array</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">i</span><span class="o">));</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">list</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/21/the-execute-order-of-junit-test-case/">junit里面Test Case的执行顺序</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-21T16:02:00+08:00" pubdate data-updated="true">May 21<span>st</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/21/the-execute-order-of-junit-test-case/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>这里讨论的是junit在ant运行的情况，其他build工具应该也适用，但具体没试验过。</p>
-
-<p>首先运行junit时是按照脚本中文件夹的顺序执行，如下脚本会先执行test1目录下的测试，其实是test2目录的，最后是test3目录的。</p>
-
-<figure class='code'><figcaption><span>build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test1.dir}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test2.dir}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${test3.dir}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;include</span> <span class="na">name=</span><span class="s">&quot;**/*Test.java&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/fileset&gt;</span>
-</span><span class='line'><span class="nt">&lt;/batchtest&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其次在同一个目录下，test case 的运行顺序是根据包名的顺序来执行的。比如：a.a.a这个包名里面的test case会比a.a.b这个包名的test case先跑。</p>
-
-<p>再次如果是同一个目录，且在同一个包名下的，会根据类名的顺序来执行test case。比如：a.a.a.A.java会比a.a.a.B.java先执行。</p>
-
-<p>最后如果是同个类的test case，则依照TestClass里面test case的顺序从上往下执行。</p>
-
-<p>Junit Test case 的执行顺序有时候比较重要，可能一些test case会依赖与其他test case产生的结果才能执行，这个时候把要先执行的类按照上面的规则放在前面即可保证整个测试执行正确。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/21/2-problems-when-update-jenkins/">Jenkins的2个问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-21T15:52:00+08:00" pubdate data-updated="true">May 21<span>st</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/21/2-problems-when-update-jenkins/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近CI服务器从老版本的hudson升级为jenkins，遇到了2个问题，记录一下：</p>
-
-<p><strong>1.升级为jenkins后，junit report里面显示的test case数量为原来的两倍，每个test case跑了2遍。</strong></p>
-
-<p>在job设置的junit文件路径提示这样写：&#8217;myproject/target/test-reports/*.xml&#8217;，老的hudson版本只会读取TEST-*.xml文件，而新的jenkins不仅会读取所有TEST-*.xml，还会读取TESTS-TestSuites.xml文件，而这个文件是包含了前面的Test-*.xml里面的test case的，所以会显示为两倍。</p>
-
-<p>解决方案是:junit文件路径这样写：&#8217;myproject/target/test-reports/TEST-*.xml&#8217;，这样就不会包含TESTS-TestSuites.xml文件了。</p>
-
-<p>官网上已经有人建议job配置的提示要改一下，但不知道jenkins以后会在哪个版本改（也有可能不会改:(）。</p>
-
-<p><strong>2.jenkins没有在build之前清空工作区的选项。</strong></p>
-
-<p>老的hudson版本的job设置里Advanced Project Options下有个选项是Clean workspace before build，即在build之前清空workspace里面的内容，而jenkins里面没有这个选项。</p>
-
-<p>那如何实现在build前情况workspace呢？<br/>
-可以在Source Code Management里面进行配置，一般的版本管理工具（git, svn）都可以配置Check-out Strategy，例如SVN， 选择Always check out a fresh copy，这个策略的意思是:</p>
-
-<blockquote><p>Delete everything first, then perform &#8220;svn checkout&#8221;. While this takes time to execute, it ensures that the workspace is in the pristine state.</p></blockquote>
-
-
-<p></p>
-
-<p>这样就实现了build前清空workspace的效果了。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1380,23 +1559,23 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/">在jenkins和sonar中集成jacoco(四)&#8211;在sonar中集成jacoco</a>
+        <a href="/blog/2013/02/04/jenkins-plugins-develop-part-4/">Jenkins插件开发（四）&#8211; 插件发布</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/">在jenkins和sonar中集成jacoco(三)&#8211;使用jacoco收集集成测试的覆盖率</a>
+        <a href="/blog/2013/02/03/jenkins-plugins-develop-part-3/">Jenkins插件开发（三）&#8211; 插件编写</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/">在jenkins和sonar中集成jacoco(二)&#8211;在jenkins中生成jacoco覆盖率报告</a>
+        <a href="/blog/2013/02/02/jenkins-plugins-develop-part-2/">Jenkins插件开发（二）&#8211; HelloWorld</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">在jenkins和sonar中集成jacoco(一)&#8211;使用jacoco收集单元测试的覆盖率</a>
+        <a href="/blog/2013/01/31/jenkins-plugins-develop-part-1/">Jenkins插件开发（一）&#8211;环境搭建</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/">持续集成一天一美元</a>
+        <a href="/blog/2012/12/20/5-type-of-singleton-pattern/">单例模式的5种形式</a>
       </li>
     
   </ul>
@@ -1404,16 +1583,16 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-	<a style="font-size: 210%" href="/tags/ant/">ant</a>
-<a style="font-size: 170%" href="/tags/jacoco/">jacoco</a>
-<a style="font-size: 183%" href="/tags/java/">java</a>
-<a style="font-size: 202%" href="/tags/javascript/">javascript</a>
+	<a style="font-size: 90%" href="/tags/idea/">Idea</a>
+<a style="font-size: 194%" href="/tags/ant/">ant</a>
+<a style="font-size: 171%" href="/tags/jacoco/">jacoco</a>
+<a style="font-size: 180%" href="/tags/java/">java</a>
+<a style="font-size: 187%" href="/tags/javascript/">javascript</a>
 <a style="font-size: 210%" href="/tags/jenkins/">jenkins</a>
-<a style="font-size: 170%" href="/tags/junit/">junit</a>
-<a style="font-size: 90%" href="/tags/rails/">rails</a>
-<a style="font-size: 90%" href="/tags/refactor/">refactor</a>
+<a style="font-size: 159%" href="/tags/junit/">junit</a>
+<a style="font-size: 145%" href="/tags/plugins/">plugins</a>
 <a style="font-size: 90%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 183%" href="/tags/sonar/">sonar</a>
+<a style="font-size: 171%" href="/tags/sonar/">sonar</a>
 
   </ul>
 </section>
