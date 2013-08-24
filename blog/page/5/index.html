@@ -1,0 +1,353 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Hacker and Geeker's Way</title>
+  <meta name="author" content="赵芝明">
+
+  
+  <meta name="description" content="最近在使用Mockito时遇到了几个比较tricking的问题，在这里记录一下。 1.如果方法的参数或者返回类型是泛型通配符相关的（如&lt;?>，&lt;? extends XXX>），不管你定义的对象类型是否正确匹配，用any(match)方法时都会编译出错。 解决办法：修改方法的参数类型， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zhaozhiming.github.io/blog/page/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zhaozhiming.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/02/some-problems-when-use-mockito/">使用Mockito时遇到的一些问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-02T17:44:00+08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/02/some-problems-when-use-mockito/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近在使用Mockito时遇到了几个比较tricking的问题，在这里记录一下。</p>
+
+<p>1.如果方法的参数或者返回类型是泛型通配符相关的（如&lt;?>，&lt;? extends XXX>），不管你定义的对象类型是否正确匹配，用any(match)方法时都会编译出错。</p>
+
+<p>解决办法：修改方法的参数类型，去掉泛型通配符。我遇到的相关代码去掉通配符之后也是运行正常的，如果去掉后运行不正常，可能需要寻找其他解决办法，具体没有研究。</p>
+
+<p>2.mock对象的方法有多个参数，如果对第一个参数使用any()方法匹配，则后面的所有参数都需要使用any匹配，而不能使用真实对象作为参数。</p>
+
+<figure class='code'><figcaption><span>error info - test.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">This</span> <span class="n">exception</span> <span class="n">may</span> <span class="n">occur</span> <span class="k">if</span> <span class="n">matchers</span> <span class="n">are</span> <span class="n">combined</span> <span class="n">with</span> <span class="n">raw</span> <span class="nl">values:</span>
+</span><span class='line'>    <span class="c1">//incorrect:</span>
+</span><span class='line'>    <span class="n">someMethod</span><span class="o">(</span><span class="n">anyObject</span><span class="o">(),</span> <span class="s">&quot;raw String&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">When</span> <span class="n">using</span> <span class="n">matchers</span><span class="o">,</span> <span class="n">all</span> <span class="n">arguments</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">provided</span> <span class="n">by</span> <span class="n">matchers</span><span class="o">.</span>
+</span><span class='line'><span class="n">For</span> <span class="nl">example:</span>
+</span><span class='line'>    <span class="c1">//correct:</span>
+</span><span class='line'>    <span class="n">someMethod</span><span class="o">(</span><span class="n">anyObject</span><span class="o">(),</span> <span class="n">eq</span><span class="o">(</span><span class="s">&quot;String by matcher&quot;</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.在setUp方法里面进行方法mock，直接在IDE里面运行junit成功，但用ant运行则会报错，其实这是另外一个测试类里面verify方法使用错误，如下：</p>
+
+<figure class='code'><figcaption><span>code - test.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="c1">//错误</span>
+</span><span class='line'>    <span class="n">verify</span><span class="o">(</span><span class="n">packageBuildContext</span><span class="o">.</span><span class="na">getPackageBuilder</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//正确</span>
+</span><span class='line'>    <span class="n">verify</span><span class="o">(</span><span class="n">packageBuildContext</span><span class="o">).</span><span class="na">getPackageBuilder</span><span class="o">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>很奇怪，在用ant跑单元测试的时候，这个测试类的错误不是在这个类的测试报告里体现，而是出现在另外一个类的测试报告里，而且直接在IDE里面运行junit不会报错。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/">在junit中添加fail&#8211;有test失败即build Failed</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-24T11:28:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
+
+<p>  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
+
+<figure class='code'><figcaption><span>demo - build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;runCompileTest&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;junit</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;junit.failure&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>　　　　　　<span class="c">&lt;!-- some code here--&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;</span>
+</span><span class='line'>
+</span><span class='line'>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>　　　　    <span class="nt">&lt;condition&gt;</span>
+</span><span class='line'>　　　　        <span class="nt">&lt;isset</span> <span class="na">property=</span><span class="s">&quot;junit.failure&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>　　　　    <span class="nt">&lt;/condition&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/4/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://zhaozhiming.github.io" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://zhaozhiming.github.io/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:kingzzm1982@sina.com" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://zhaozhiming.github.io/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+    <h1>新浪微博</h1>
+    <ul id="weibo">
+    	<li>
+    		<iframe width="100%" height="100" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=0&isWeibo=0&isFans=0&uid=2497707964&verifier=553ef0af&dpc=1"></iframe>
+      	</li>
+    </ul>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/04/facebook-engineer-culture/">Facebook的工程师文化——《打造facebook》读后感</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/20/use-sonar-create-customer-js-verify-rule-part-3/">利用Sonar定制自定义JS扫描规则（三）——SSLR JavaScript Toolkit 使用说明</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2/">利用Sonar定制自定义JS扫描规则（二）——自定义JS扫描规则</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/">利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/05/continuous-delivery/">持续交付——发布可靠软件的系统方法</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+	<a style="font-size: 125%" href="/tags/agile/">agile</a>
+<a style="font-size: 194%" href="/tags/ant/">ant</a>
+<a style="font-size: 171%" href="/tags/jacoco/">jacoco</a>
+<a style="font-size: 180%" href="/tags/java/">java</a>
+<a style="font-size: 187%" href="/tags/javascript/">javascript</a>
+<a style="font-size: 210%" href="/tags/jenkins/">jenkins</a>
+<a style="font-size: 145%" href="/tags/js/">js</a>
+<a style="font-size: 159%" href="/tags/junit/">junit</a>
+<a style="font-size: 145%" href="/tags/plugins/">plugins</a>
+<a style="font-size: 194%" href="/tags/sonar/">sonar</a>
+
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/zhaozhiming">@zhaozhiming</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'zhaozhiming',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - 赵芝明 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'zhaozhimingsblog';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

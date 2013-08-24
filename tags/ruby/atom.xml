@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ruby | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/ruby/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-08-23T07:59:30+08:00</updated>
+  <updated>2013-08-24T09:10:37+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -24,48 +24,28 @@
 
 <p>在Rails中，SQL脚本可以通过命令来生成，生成的脚本以时间戳加意图命名，比如创建表的SQL脚本文件可能是“20120529151027_create_products.rb"，加时间戳可以让人一眼就知道脚本的执行顺序，实际上Rails在也是根据时间戳来执行脚本的。创建完脚本后只要简单的执行"rake db:migrate"命令即可完成脚本的执行，在Rails中会有脚本执行的记录，已经执行过的脚本不会重复执行。另外，在每个SQL脚本中，不仅有执行的操作，还有回滚的操作。比如：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AddPriceToLineItem</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Migration</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;def self.up</span>
-</span><span class='line'><span class="sr">　　add_column :line_items, :price, :decimal, :precision =&amp;gt; 8, :scale =&amp;gt; 2, :default =&amp;gt; 0</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">　　say_with_time &quot;Updating prices...&quot; do</span>
-</span><span class='line'><span class="sr">  　　LineItem.find(:all).each do |lineitem|</span>
-</span><span class='line'><span class="sr">    　　lineitem.update_attribute :price, lineitem.product.price</span>
-</span><span class='line'><span class="sr">     end</span>
-</span><span class='line'><span class="sr">　　end</span>
-</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;  　end&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">down</span>
-</span><span class='line'><span class="err">　　</span><span class="n">remove_column</span> <span class="ss">:line_items</span><span class="p">,</span> <span class="ss">:price</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock demo.rb lang:ruby %}
+class AddPriceToLineItem &lt; ActiveRecord::Migration</p>
+
+<pre><code>def self.up
+　　add_column :line_items, :price, :decimal, :precision =&gt; 8, :scale =&gt; 2, :default =&gt; 0
+
+　　say_with_time "Updating prices..." do
+  　　LineItem.find(:all).each do |lineitem|
+    　　lineitem.update_attribute :price, lineitem.product.price
+     end
+　　end
+</code></pre>
+
+<p>  　end</p>
+
+<pre><code>def self.down
+　　remove_column :line_items, :price
+end
+</code></pre>
+
+<p>end
+{% endcodeblock %}</p>
 
 <p>这里的up方法是正常执行时的操作，down方法则是回滚时所做的操作。如果发现执行的脚本有问题，简单地执行“rake db:rollback"即可回退到脚本执行前的状态。</p>
 
