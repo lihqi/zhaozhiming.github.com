@@ -9,7 +9,20 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="最近将开发工具IDEA升级到了12.0版本，被它新的UI界面深深吸引，看下面，很酷哦~ 一、下载安装 在IDEA官网下载最近版本12.0，有免费的社区版，还有收费的无限制版，大家可以自行下载。 下载后进行安装，windows系统直接执行exe文件即可，ubuntu系统先将下载包解压， &hellip;">
+  <meta name="description" content="有过编程经验的朋友都知道设计模式中的单例模式，最近又重新看了一遍设计模式，今天将单例模式的几种形式介绍一下： 1、懒汉形式（延迟加载） Singleton.java 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+public class Singleton{ private &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +77,195 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/20/5-type-of-singleton-pattern/">单例模式的5种形式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-20T17:53:00+08:00" pubdate data-updated="true">Dec 20<span>th</span>, 2012</time>
+        
+        
+          | <a href="/blog/2012/12/20/5-type-of-singleton-pattern/#comments">Comments</a>
+         
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>有过编程经验的朋友都知道设计模式中的单例模式，最近又重新看了一遍设计模式，今天将单例模式的几种形式介绍一下：</p>
+
+<h3>1、懒汉形式（延迟加载）</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span><span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kd">static</span> <span class="n">Single</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">singleton</span><span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">singleton</span><span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个是标准的单例模式，通过newInstance里面的判断来进行延迟加载单例对象，这里加了synchronized关键字可以避免多线程问题，但会影响程序性能。</p>
+
+<h3>2、饿汉形式（贪婪加载）</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">singleton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在单例对象声明的时候就直接初始化对象，可以避免多线程问题，但是如果对象初始化比较复杂，会导致程序初始化缓慢。</p>
+
+<h3>3、双重检查加锁</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">volatile</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">singleton</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">Singleton</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">singleton</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">singleton</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个是懒汉形式的加强版，将synchronized关键字移到了newInstance方法里面，同时将singleton对象加上volatile关键字，这种方式既可以避免多线程问题，又不会降低程序的性能。但volatile关键字也有一些性能问题，不建议大量使用。</p>
+
+<h3>4、Lazy initialization holder class</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SingletonHolder</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">SingletonHolder</span><span class="o">.</span><span class="na">singleton</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里创建了一个内部静态类，通过内部类的机制使得单例对象可以延迟加载，同时内部类相当于是外部类的静态部分，所以可以通过jvm来保证其线程安全。这种形式比较推荐。</p>
+
+<h3>5、枚举</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Singleton</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">singleton</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>单因素的枚举类已经实现了单例，这种方法更加简单。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -989,162 +1191,6 @@ F 让铃铛响起来。（其他人会为你鼓掌，或以其他方式为你高
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/">在JavaScript中进行文件处理，第五部分：Blobs</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-01T17:28:00+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/31/working-with-files-in-javascript-part-5-Blobs">这里</a></strong></p>
-
-<hr />
-
-<p>到目前为止，这个系列的帖子集中在和这些文件交互——用户指定的文件和通过File对象访问的文件。File对象实际上是Blob的一个特殊版本，表示一块块的二进制数据。Blob对象继承了File对象的size和type属性。</p>
-
-<p>在大部分情况下，Blobs和Files可以用在同一个地方。例如，你可以使用一个FileReader从一个Blob中读取数据，并且你可以在一个Blob中使用URL.createObjectURL()方法来创建一个对象URL。</p>
-
-<h2>slice</h2>
-
-<p>使用Blobs的一件有趣的事情是可以基于另外一个Blob的小部分来创建一个新的Blob。由于每个Blob代表的是数据的内存地址，而不是数据本身，所以你可以快速创建一个指向其他Blob子部分数据的Blob对象。这可以通过使用slice()方法来做到。</p>
-
-<p>你可能对类似slice()的方法比较熟悉，可以用来处理字符串和数组，还有Blob。这个方法接收3个参数：起始字节的下标，结束字节的下标，还有一个可选且适用于Blob的MIME类型。如果MIME类型没有指定，新的Blob跟原始的BLob对象有相同的MIME类型。</p>
-
-<p>浏览器对slice()的支持还不是很普遍，只有Firefox通过mozSlice()和webkitSlice()来支持它（其他浏览器现在都不支持）。这里有一个例子：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">sliceBlob</span><span class="p">(</span><span class="nx">blob</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'><span class="err">　　</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span> <span class="o">||</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">type</span><span class="p">;</span>
-</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">blob</span><span class="p">.</span><span class="nx">mozSlice</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'><span class="err">　　　　</span><span class="k">return</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">mozSlice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">type</span><span class="p">);</span>
-</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">blob</span><span class="p">.</span><span class="nx">webkitSlice</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'><span class="err">　　　　</span><span class="k">return</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">webkitSlice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span> <span class="nx">type</span><span class="p">);</span>
-</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'><span class="err">　　　　</span><span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;This doesn&#39;t work!&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="err">　　</span><span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>比如，你可以使用这个函数将一个大文件拆分成一块块然后进行上传。每一个新产生的Blob都和原始的文件互不相干，即使每个blob的数据有重叠的部分。网络相册的工程师们使用blob分割来读取照片的可交换图片文件信息，这些照片是正在上传<em>[1]</em>的而不是已经上传到了服务器。当文件被选择的时候，上传文件和从照片中读取可交换图片文件信息，这2个动作在网络相册上传页面是同时开始的。这就允许在文件上传的时候，可以同时预览已经上传的部分数据的图像。</p>
-
-<h2>创建Blobs的老方法</h2>
-
-<p>ile对象在浏览器中开始出现后不久，开发人员意识到Blob对象是如此强大，以致想不通过用户交互就可以直接创建它们。毕竟，任何数据都可以放在Blob里面，而不一定要绑定一个文件。浏览器可以快速的创建BlobBuilder，这个对象类型的唯一目的就是将数据封装在一个Blob对象里面。这是一个非标准类型并且已经在Firefox（像MozBlobBuilder），IE10（像MSBlobBuilder）和Chrome（像WebKitBlobBuilder）中实现。</p>
-
-<p>BlobBuilder通过创建一个实例，然后调用append()方法紧跟一个字符串、ArrayBuffer或者Blob来工作。一旦这些数据都被添加之后，你可以调用getBlob()并传递一个可选的MIME类型参数来使用Blob。这有个例子：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlobBuilder</span><span class="p">();</span>
-</span><span class='line'><span class="nx">builder</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">blob</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">getBlob</span><span class="p">(</span><span class="s2">&quot;text/plain&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>为数据的任意片段创建URLs的能力是非常强大的，允许你在浏览器中动态的创建链接到文件的对象。例如，你可以使用一个Blob来创建一个web worker，而不需要为web worker指定文件。这项技术写在Web Workers<em>[2]</em>的基础里：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// Prefixed in Webkit, Chrome 12, and FF6: window.WebKitBlobBuilder, window.MozBlobBuilder </span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">bb</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlobBuilder</span><span class="p">();</span>
-</span><span class='line'><span class="nx">bb</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;onmessage = function(e) { </span>
-</span><span class='line'><span class="s2">　　postMessage(&#39;msg from worker&#39;); </span>
-</span><span class='line'><span class="s2">}&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="c1">// Obtain a blob URL reference to our worker &#39;file&#39;. </span>
-</span><span class='line'><span class="c1">// Note: window.webkitURL.createObjectURL() in Chrome 10+. </span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">blobURL</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">bb</span><span class="p">.</span><span class="nx">getBlob</span><span class="p">());</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">worker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Worker</span><span class="p">(</span><span class="nx">blobURL</span><span class="p">);</span>
-</span><span class='line'><span class="nx">worker</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'><span class="err">　　</span><span class="c1">// e.data == &#39;msg from worker&#39; </span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'><span class="nx">worker</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">();</span>
-</span><span class='line'><span class="c1">// Start the worker.</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这段代码创建了一个简单的脚本，然后创建一个对象URL。将对象URL赋予一个web worker来代替一个脚本URL。</p>
-
-<p>你可以任意次调用append()来创建Blob的内容。</p>
-
-<h2>创建Blobs的新方式</h2>
-
-<p>因为开发人员一直呼吁可以有一种方式来直接创建Blob对象，然后浏览器出现了BlobBuilder，它决定添加一个Blob构造器。这个构造器现在是规范的一部分，将是未来创建Blob对象的一种方式。</p>
-
-<p>这个构造器接收2个参数。第一个参数是一个分配了Blob块的数组。数据的元素跟传入BlobBuilder的append()方法的值相同，可以是任意数量的字符串，Blobs和ArrayBuffers。第二个参数是一个包含了新创建的Blob属性的对象。当前有2个属性已经定义：类型——指定Blob的MIME类型；endings——值分别是“transparent”（默认值）和“native”。这里有个例子：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">blob</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Blob</span><span class="p">([</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">],</span> <span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span> <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>像你看到的一样，这比使用BlobBuilder更加简单。Chrome的nightly builds版本和未来的Firefox 13将支持Blob构造器。其他浏览器还没有宣布实现该构造器的计划，尽管如此，现在它是File API<em>[3]</em>标准的一部分，期望以后会被普遍支持。</p>
-
-<h2>总结</h2>
-
-<p>这是“在JavaScript中进行文件处理”这一系列的最后一部分。我希望你了解到，File API非常强大，在web应用中开辟了很多全新的方式来处理文件。当用户需要上传文件时你不再需要坚持使用文件上传框，现在你可以在客户端读取文件，为客户端操作开辟了多种可能性。你可以在上传文件之前重置图片的大小（使用FileReader和<code>&lt;canvas&gt;</code>）；你可以单纯在浏览器里创建一个文本编辑器；你可以分隔大文件进行逐步上载。可能性不是无穷无尽的，但也很接近无穷尽了。</p>
-
-<h4>引用</h4>
-
-<ol>
-<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fcode.flickr.com/blog/2012/06/01/parsing-exif-client-side-using-javascript-2/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg">Parsing Exif client-side using JavaScript</a> by Flickr Team</li>
-<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fwww.html5rocks.com/en/tutorials/workers/basics/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg">The Basics of Web Workers</a> by Eric Bidelman</li>
-<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fdev.w3.org/2006/webapi/FileAPI/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg&amp;whp=3AconstructorBlob">File API</a> – Blob Constructor</li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1185,6 +1231,10 @@ F 让铃铛响起来。（其他人会为你鼓掌，或以其他方式为你高
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/05/my-octopress-setting/">我的octopress配置</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/04/facebook-engineer-culture/">Facebook的工程师文化——《打造facebook》读后感</a>
       </li>
     
@@ -1198,10 +1248,6 @@ F 让铃铛响起来。（其他人会为你鼓掌，或以其他方式为你高
     
       <li class="post">
         <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/">利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/05/continuous-delivery/">持续交付——发布可靠软件的系统方法</a>
       </li>
     
   </ul>

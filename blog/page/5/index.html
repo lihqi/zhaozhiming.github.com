@@ -9,7 +9,8 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="最近在使用Mockito时遇到了几个比较tricking的问题，在这里记录一下。 1.如果方法的参数或者返回类型是泛型通配符相关的（如&lt;?>，&lt;? extends XXX>），不管你定义的对象类型是否正确匹配，用any(match)方法时都会编译出错。 解决办法：修改方法的参数类型， &hellip;">
+  <meta name="description" content="使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。 如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示： ant file - build.xml 1
+&lt;javac ... &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +65,75 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/">在ant编译java文件时产生debug信息</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T17:41:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+        
+        
+          | <a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/#comments">Comments</a>
+         
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。</p>
+
+<p>如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示：</p>
+
+<figure class='code'><figcaption><span>ant file - build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;javac</span> <span class="err">...</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span> <span class="na">debuglevel=</span><span class="s">&quot;lines, vars, source&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ant的官方文档：</p>
+
+<table>
+<thead>
+<tr>
+<th> debug       </th>
+<th>  Indicates whether source should be compiled with debug information; defaults to off. If set to off, -g:none will be passed on the command line for compilers that support it (for other compilers, no command line argument will be used). If set to true, the value of the debuglevel attribute determines the command line argument.  </th>
+<th> No  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>debuglevel</td>
+<td>  Keyword list to be appended to the -g command-line switch. This will be ignored by all implementations except modern, classic(ver >= 1.2) and jikes. Legal values are none or a comma-separated list of the following keywords: lines, vars, and source. If debuglevel is not specified, by default, nothing will be appended to -g. If debug is not turned on, this attribute will be ignored. </td>
+<td>  </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -253,6 +323,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/05/my-octopress-setting/">我的octopress配置</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/04/facebook-engineer-culture/">Facebook的工程师文化——《打造facebook》读后感</a>
       </li>
     
@@ -266,10 +340,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/">利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/05/continuous-delivery/">持续交付——发布可靠软件的系统方法</a>
       </li>
     
   </ul>

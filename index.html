@@ -9,7 +9,7 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="在今年北京的QCon大会上听了facebook早期中国籍工程师王淮的演讲，受益匪浅，主题是如何打造高效能团队，主要介绍他在facebook的一些经历和管理上的经验分享。现在的他是一名天使投资人，投资的领域有移动互联，支付，云应用等。他还写了《打造facebook》一书， &hellip;">
+  <meta name="description" content="把blog从博客园搬到了octopress，octopress号称是“专门给黑客打造的博客（A blogging framework for hackers.)）”，octopress是使用Markdown语法，使用Markdown语法来写blog确实感觉像写代码一样， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +64,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/05/my-octopress-setting/">我的octopress配置</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-05T07:33:00+08:00" pubdate data-updated="true">Sep 5<span>th</span>, 2013</time>
+        
+        
+          | <a href="/blog/2013/09/05/my-octopress-setting/#comments">Comments</a>
+         
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>把blog从博客园搬到了octopress，octopress号称是“专门给黑客打造的博客（A blogging framework for hackers.)）”，octopress是使用Markdown语法，使用Markdown语法来写blog确实感觉像写代码一样，而且写好的blog可以本地调试好了再上传到github的服务器，就像把你的应用程序调试好了部署到服务器一样。</p>
+
+<p>我最喜欢的是octopress的代码片段，简洁清晰支持各种语言，而且可以在你的blog中嵌入不同的js框架来展示你的demo，比如jquery和angularJs。octopress支持不同的插件，还可以选择很多不同的主题，下面我也按照惯例秀秀自己的octopress配置。</p>
+
+<h3>主题</h3>
+
+<p>octopress有一个默认的主题，你当然可以使用该主题，但这样很容易和其他人的界面“撞衫”，想要让自己的octopress与众不同，就要定制自己的主题界面。在github上面可以找到octopress的第三方主题，地址是：<a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes</a>，另外还有一个网站也是专门介绍octopress主题的，地址是：<a href="http://opthemes.com/">http://opthemes.com/</a>。上面也有一些国人制作的主题界面，非常漂亮。</p>
+
+<h3>评论插件</h3>
+
+<p>原先使用的是国外的一个第三方评论插件Disqus，但由于国内外使用的习惯不同，比如国外多用facebook和twitter等帐号登录，但这些国外主要网站都被墙墙了，国内多是使用新浪微博和QQ帐号登录，所以后来换成国内的一个评论插件“多说”。这个插件可以让用户任意绑定国内主流社交应用的帐号，可以到<a href="http://duoshuo.com/">这里</a>下载。</p>
+
+<h3>标签云</h3>
+
+<p>octopress默认的只有目录（categories），没有标签（Tag），目录和标签是不一样的，每一篇p ost只能归在一个目录里面，但却可以归在多个标签中。随着post的增多，标签也会慢慢变多，标签多了之后可以将标签做成标签云，放在blog的边栏上，非常美观。想做标签云，需要使用到2个插件，<a href="https://github.com/robbyedwards/octopress-tag-pages">robbyedwards/octopress-tag-pages</a>和<a href="https://github.com/robbyedwards/octopress-tag-cloud">robbyedwards/octopress-tag-cloud</a>。具体安装步骤请参照该github上的说明。</p>
+
+<h3>同步插件</h3>
+
+<p>在github上面搭建自己的octopress博客，有个缺点是在搜索引擎中没有收录你的网站，导致别人很难在google或者百度里面找到你的文章，如果你的博客放在比较大的博客网站的话（比如博客园、博客大巴等），在各大搜索网站就可以很容易搜到你的blog。我曾经试过在每篇post上面加上“keywords&#8221;标签来记录post的关键字，希望搜索引擎可以搜录，但结果还是不行。<br/>
+在网上搜了一下，发现有人写了一个octopress插件，可以将octopress的post同步到几个比较大的博客网站，可以同步所有的post，也可以同步最近一篇post。网址如下：<a href="https://github.com/huangbowen521/octopress-syncPost">https://github.com/huangbowen521/octopress-syncPost</a>。<br/>
+上面几个是我的octopress主要插件，主题上面我还是不大满意，可能以后还会更新。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1137,195 +1196,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/20/5-type-of-singleton-pattern/">单例模式的5种形式</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-20T17:53:00+08:00" pubdate data-updated="true">Dec 20<span>th</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/12/20/5-type-of-singleton-pattern/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>有过编程经验的朋友都知道设计模式中的单例模式，最近又重新看了一遍设计模式，今天将单例模式的几种形式介绍一下：</p>
-
-<h3>1、懒汉形式（延迟加载）</h3>
-
-<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span><span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kd">static</span> <span class="n">Single</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">singleton</span><span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">singleton</span><span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这个是标准的单例模式，通过newInstance里面的判断来进行延迟加载单例对象，这里加了synchronized关键字可以避免多线程问题，但会影响程序性能。</p>
-
-<h3>2、饿汉形式（贪婪加载）</h3>
-
-<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="nf">singleton</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在单例对象声明的时候就直接初始化对象，可以避免多线程问题，但是如果对象初始化比较复杂，会导致程序初始化缓慢。</p>
-
-<h3>3、双重检查加锁</h3>
-
-<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">volatile</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">singleton</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">Singleton</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">singleton</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="n">singleton</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这个是懒汉形式的加强版，将synchronized关键字移到了newInstance方法里面，同时将singleton对象加上volatile关键字，这种方式既可以避免多线程问题，又不会降低程序的性能。但volatile关键字也有一些性能问题，不建议大量使用。</p>
-
-<h3>4、Lazy initialization holder class</h3>
-
-<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SingletonHolder</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">SingletonHolder</span><span class="o">.</span><span class="na">singleton</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里创建了一个内部静态类，通过内部类的机制使得单例对象可以延迟加载，同时内部类相当于是外部类的静态部分，所以可以通过jvm来保证其线程安全。这种形式比较推荐。</p>
-
-<h3>5、枚举</h3>
-
-<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Singleton</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">singleton</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>单因素的枚举类已经实现了单例，这种方法更加简单。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1364,6 +1234,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/05/my-octopress-setting/">我的octopress配置</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/04/facebook-engineer-culture/">Facebook的工程师文化——《打造facebook》读后感</a>
       </li>
     
@@ -1377,10 +1251,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/">利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/05/continuous-delivery/">持续交付——发布可靠软件的系统方法</a>
       </li>
     
   </ul>
