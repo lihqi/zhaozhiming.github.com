@@ -95,7 +95,11 @@
 
 <div class="entry-content"><p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
 
-<p>  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
+<!--more-->
+
+
+<p>
+  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
 
 <figure class='code'><figcaption><span>demo - build.xml </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -232,6 +236,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/21/some-books-read-lately/">Some_books_read_lately</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/05/my-octopress-setting/">我的octopress配置</a>
       </li>
     
@@ -245,10 +253,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2/">利用Sonar定制自定义JS扫描规则（二）——自定义JS扫描规则</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/">利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建</a>
       </li>
     
   </ul>

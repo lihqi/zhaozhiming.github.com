@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: bat | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/bat/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-09-20T21:09:49+08:00</updated>
+  <updated>2013-09-22T22:56:06+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -22,7 +22,11 @@
 
 <p>遇到了这样一个问题：在服务器上执行tomcat的shutdown.bat命令可以正常关机，但用jenkins执行shutdown.bat命令时却经常关闭不了，从而导致重启时报错。后来想到了杀进程的办法来关闭tomcat服务器，但是要怎样才能查到tomcat进程并杀掉呢？</p>
 
-<p>下面是通过端口号查找进程的命令：<br/>
+<!--more-->
+
+
+<p>
+下面是通过端口号查找进程的命令：<br/>
 <div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bat'><span class='line'>netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span> <span class="n">//我的tomcat端口给我改成8888了。</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>

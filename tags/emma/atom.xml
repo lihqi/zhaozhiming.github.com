@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: emma | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/emma/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-09-20T21:09:49+08:00</updated>
+  <updated>2013-09-22T22:56:06+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -20,7 +20,12 @@
     <id>http://zhaozhiming.github.io/blog/2012/03/27/some-problems-in-emma</id>
     <content type="html"><![CDATA[<p>今天在用使用emma的过程中遇到了几个问题，记录一下.</p>
 
-<p><strong>1.跑junit过程中没办法产生coverage data文件，导致最后没办法出emma报告，上官网查了一下原因如下：</strong>  <br/>
+<p><strong>1.跑junit过程中没办法产生coverage data文件，导致最后没办法出emma报告，上官网查了一下原因如下：</strong></p>
+
+<!--more-->
+
+
+<p>
 <blockquote><p>I have instrumented my classes but am not getting any coverage data&hellip; <br/><br/>This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.</p></blockquote>
 意思是emma会根据工程里面的class文件产生自己的instrumented class，junit在跑单元测试的时候，classpath要把定义emma的class文件路径放在项目class文件路径前面，才能产生coverage data文件。</p>
 

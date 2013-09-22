@@ -9,8 +9,7 @@
   <meta name="author" content="赵芝明">
 
   
-  <meta name="description" content="使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。 如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示： ant file - build.xml 1
-&lt;javac ... &hellip;">
+  <meta name="description" content="最近两天一直在处理ant运行java程序的一个问题，用IDE直接运行类里面的main函数一切正常，但用ant跑该函数就报错误，错误的原因是运行ant任务时调用的是AntClasloader，而IDE里面调用的是jvm里面的classloader。 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +70,50 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/">Ant里面神奇的fork</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-14T10:51:00+08:00" pubdate data-updated="true">Mar 14<span>th</span>, 2012</time>
+        
+        
+          | <a href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/#comments">Comments</a>
+         
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近两天一直在处理ant运行java程序的一个问题，用IDE直接运行类里面的main函数一切正常，但用ant跑该函数就报错误，错误的原因是运行ant任务时调用的是AntClasloader，而IDE里面调用的是jvm里面的classloader。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/">在ant编译java文件时产生debug信息</a></h1>
     
     
@@ -99,37 +142,12 @@
 
   <div class="entry-content"><p>使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。</p>
 
-<p>如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示：</p>
-
-<figure class='code'><figcaption><span>ant file - build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;javac</span> <span class="err">...</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span> <span class="na">debuglevel=</span><span class="s">&quot;lines, vars, source&quot;</span><span class="nt">&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ant的官方文档：</p>
-
-<table>
-<thead>
-<tr>
-<th> debug       </th>
-<th>  Indicates whether source should be compiled with debug information; defaults to off. If set to off, -g:none will be passed on the command line for compilers that support it (for other compilers, no command line argument will be used). If set to true, the value of the debuglevel attribute determines the command line argument.  </th>
-<th> No  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>debuglevel</td>
-<td>  Keyword list to be appended to the -g command-line switch. This will be ignored by all implementations except modern, classic(ver >= 1.2) and jikes. Legal values are none or a comma-separated list of the following keywords: lines, vars, and source. If debuglevel is not specified, by default, nothing will be appended to -g. If debug is not turned on, this attribute will be ignored. </td>
-<td>  </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/06/generate-debug-info-when-use-ant-compile-java-file/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -168,49 +186,12 @@
 
   <div class="entry-content"><p>最近在使用Mockito时遇到了几个比较tricking的问题，在这里记录一下。</p>
 
-<p>1.如果方法的参数或者返回类型是泛型通配符相关的（如&lt;?>，&lt;? extends XXX>），不管你定义的对象类型是否正确匹配，用any(match)方法时都会编译出错。</p>
-
-<p>解决办法：修改方法的参数类型，去掉泛型通配符。我遇到的相关代码去掉通配符之后也是运行正常的，如果去掉后运行不正常，可能需要寻找其他解决办法，具体没有研究。</p>
-
-<p>2.mock对象的方法有多个参数，如果对第一个参数使用any()方法匹配，则后面的所有参数都需要使用any匹配，而不能使用真实对象作为参数。</p>
-
-<figure class='code'><figcaption><span>error info - test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">This</span> <span class="n">exception</span> <span class="n">may</span> <span class="n">occur</span> <span class="k">if</span> <span class="n">matchers</span> <span class="n">are</span> <span class="n">combined</span> <span class="n">with</span> <span class="n">raw</span> <span class="nl">values:</span>
-</span><span class='line'>    <span class="c1">//incorrect:</span>
-</span><span class='line'>    <span class="n">someMethod</span><span class="o">(</span><span class="n">anyObject</span><span class="o">(),</span> <span class="s">&quot;raw String&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="n">When</span> <span class="n">using</span> <span class="n">matchers</span><span class="o">,</span> <span class="n">all</span> <span class="n">arguments</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">provided</span> <span class="n">by</span> <span class="n">matchers</span><span class="o">.</span>
-</span><span class='line'><span class="n">For</span> <span class="nl">example:</span>
-</span><span class='line'>    <span class="c1">//correct:</span>
-</span><span class='line'>    <span class="n">someMethod</span><span class="o">(</span><span class="n">anyObject</span><span class="o">(),</span> <span class="n">eq</span><span class="o">(</span><span class="s">&quot;String by matcher&quot;</span><span class="o">));</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3.在setUp方法里面进行方法mock，直接在IDE里面运行junit成功，但用ant运行则会报错，其实这是另外一个测试类里面verify方法使用错误，如下：</p>
-
-<figure class='code'><figcaption><span>code - test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="c1">//错误</span>
-</span><span class='line'>    <span class="n">verify</span><span class="o">(</span><span class="n">packageBuildContext</span><span class="o">.</span><span class="na">getPackageBuilder</span><span class="o">());</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//正确</span>
-</span><span class='line'>    <span class="n">verify</span><span class="o">(</span><span class="n">packageBuildContext</span><span class="o">).</span><span class="na">getPackageBuilder</span><span class="o">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>很奇怪，在用ant跑单元测试的时候，这个测试类的错误不是在这个类的测试报告里体现，而是出现在另外一个类的测试报告里，而且直接在IDE里面运行junit不会报错。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/02/some-problems-when-use-mockito/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -249,37 +230,12 @@
 
   <div class="entry-content"><p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
 
-<p>  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
-
-<figure class='code'><figcaption><span>demo - build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>　　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;runCompileTest&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;junit</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;junit.failure&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　　　<span class="c">&lt;!-- some code here--&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;</span>
-</span><span class='line'>
-</span><span class='line'>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;condition&gt;</span>
-</span><span class='line'>　　　　        <span class="nt">&lt;isset</span> <span class="na">property=</span><span class="s">&quot;junit.failure&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;/condition&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -323,6 +279,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/21/some-books-read-lately/">Some_books_read_lately</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/05/my-octopress-setting/">我的octopress配置</a>
       </li>
     
@@ -336,10 +296,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2/">利用Sonar定制自定义JS扫描规则（二）——自定义JS扫描规则</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/">利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建</a>
       </li>
     
   </ul>
@@ -404,7 +360,6 @@
 </section>
   
 </aside>
-
     </div>
   </div>
   <footer role="contentinfo"><p>

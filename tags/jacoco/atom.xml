@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: jacoco | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/jacoco/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-09-20T21:09:49+08:00</updated>
+  <updated>2013-09-22T22:56:06+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -21,6 +21,11 @@
     <content type="html"><![CDATA[<h2>覆盖率计数器</h2>
 
 <p>Jacoco使用一系列的不同的计数器来做覆盖率的度量计算。所有这些计数器都是从java的class文件中获取信息，这些class文件可以（可选）包含调试的信息在里面。即使在没有源码的情况下，这种方法也可以实时有效地对应用程序进行度量和分析。在大部分情况下，收集到的信息可以映射到源码，可视化到每一行代码的粒度。但这种方法还是有一些限制。这些class文件必须使用调试信息来编译，这样才可以计算行的覆盖率和提供出源码的高亮。但不是所有的JAVA语言的结构都可以直接编译成一致的二进制代码。在这种情况下，java 编译器会创建所谓的“合成”代码，会导致产生一些不期望得到的覆盖率结果。</p>
+
+<!--more-->
+
+
+<p></p>
 
 <h4>指令（C0 Coverage）</h4>
 
@@ -82,6 +87,9 @@
     <updated>2012-12-02T14:46:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4</id>
     <content type="html"><![CDATA[<p>首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令：</p>
+
+<!--more-->
+
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -186,7 +194,11 @@
 
 <p>首先，要把jacoco的jacocoagent.jar包放到部署应用的服务器上，接着在系统服务的JAVA_OPTIONS 后面添加如下参数：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<!--more-->
+
+
+<p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>-javaagent:<span class="o">[</span>yourpath/<span class="o">]</span>jacocoagent.jar<span class="o">=</span><span class="nv">includes</span><span class="o">=</span>com.xxx.xxx.*,output<span class="o">=</span>tcpserver,address<span class="o">=</span>xxx.xxx.xxx.xxx,port<span class="o">=</span>xxxxx
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
@@ -262,6 +274,9 @@
     <id>http://zhaozhiming.github.io/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2</id>
     <content type="html"><![CDATA[<p>先要在jenkins上安装jacoco的插件，安装完成之后在job的配置项中可以增加这个选项：</p>
 
+<!--more-->
+
+
 <p><img src="/images/2012112911555041.png"><br/>
 <img src="/images/2012112911561356.png"></p>
 
@@ -282,9 +297,13 @@
     <link href="http://zhaozhiming.github.io/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/"/>
     <updated>2012-11-29T14:45:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1</id>
-    <content type="html"><![CDATA[<p>  之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
+    <content type="html"><![CDATA[<p>之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
 
-<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
+<!--more-->
+
+
+<p>
+用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>

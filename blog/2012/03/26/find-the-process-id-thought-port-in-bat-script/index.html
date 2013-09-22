@@ -97,7 +97,11 @@
 
 <p>遇到了这样一个问题：在服务器上执行tomcat的shutdown.bat命令可以正常关机，但用jenkins执行shutdown.bat命令时却经常关闭不了，从而导致重启时报错。后来想到了杀进程的办法来关闭tomcat服务器，但是要怎样才能查到tomcat进程并杀掉呢？</p>
 
-<p>下面是通过端口号查找进程的命令：</p>
+<!--more-->
+
+
+<p>
+下面是通过端口号查找进程的命令：</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bat'><span class='line'>netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span> <span class="n">//我的tomcat端口给我改成8888了。</span>
@@ -227,6 +231,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/21/some-books-read-lately/">Some_books_read_lately</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/05/my-octopress-setting/">我的octopress配置</a>
       </li>
     
@@ -240,10 +248,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2/">利用Sonar定制自定义JS扫描规则（二）——自定义JS扫描规则</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/">利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建</a>
       </li>
     
   </ul>

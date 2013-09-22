@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: junit | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/junit/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-09-20T21:09:49+08:00</updated>
+  <updated>2013-09-22T22:56:06+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -22,7 +22,11 @@
 
 <p>首先运行junit时是按照脚本中文件夹的顺序执行，如下脚本会先执行test1目录下的测试，其实是test2目录的，最后是test3目录的。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+<!--more-->
+
+
+<p>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -70,7 +74,11 @@
     <id>http://zhaozhiming.github.io/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time</id>
     <content type="html"><![CDATA[<p>目前的项目里用junit写单元测试，使用的是junit4，由于大部分开发之前使用的都是junit3，对junit4还不是很熟悉，所以出现了junit3和4混合使用的情况，导致发生了一些问题，这里列举一下。</p>
 
-<p><strong>1.测试类继承了TestCase，方法名是test开头，加Ignore标签，这时Ignore标签失效。错误代码示例：</strong></p>
+<!--more-->
+
+
+<p>
+<strong>1.测试类继承了TestCase，方法名是test开头，加Ignore标签，这时Ignore标签失效。错误代码示例：</strong></p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test.java </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -128,6 +136,9 @@
     <updated>2012-03-02T17:44:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2012/03/02/some-problems-when-use-mockito</id>
     <content type="html"><![CDATA[<p>最近在使用Mockito时遇到了几个比较tricking的问题，在这里记录一下。</p>
+
+<!--more-->
+
 
 <p>1.如果方法的参数或者返回类型是泛型通配符相关的（如&lt;?>，&lt;? extends XXX>），不管你定义的对象类型是否正确匹配，用any(match)方法时都会编译出错。</p>
 
@@ -201,7 +212,11 @@
     <id>http://zhaozhiming.github.io/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed</id>
     <content type="html"><![CDATA[<p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
 
-<p>  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
+<!--more-->
+
+
+<p>
+  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo &ndash; build.xml </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>

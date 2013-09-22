@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: sonar | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/sonar/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-09-20T21:09:49+08:00</updated>
+  <updated>2013-09-22T22:56:06+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -19,6 +19,9 @@
     <updated>2013-05-20T11:20:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2013/05/20/use-sonar-create-customer-js-verify-rule-part-3</id>
     <content type="html"><![CDATA[<p>在上一篇blog中讲了在sonar中如何新增自定义的JS规则，这里面比较难的地方是XPath语句的编写，而要编写正确的XPath语句，首先要拿到语法的AST，下面我们就来介绍如何使用SSLR JavaScript Toolkit 工具来得到源代码的语法树。</p>
+
+<!--more-->
+
 
 <p>首先通过在<a href="http://repository.codehaus.org/org/codehaus/sonar-plugins/javascript/sslr-javascript-toolkit/1.3/sslr-javascript-toolkit-1.3.jar">这里</a>下载SSLR JavaScript Toolkit 工具，下载下来是一个jar包，在cmd窗口使用java -jar sslr-javascript-toolkit-1.3.jar打开这个工具，操作界面如下：<br/>
 <img src="/images/02073536-58b547f5394041cdb795a717087eca35.png"></p>
@@ -49,7 +52,11 @@
     <id>http://zhaozhiming.github.io/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2</id>
     <content type="html"><![CDATA[<p>在上一篇blog中，我们将sonar几个需要的环境都搭建好了，包括sonar的服务器，sonar runner，sonar的javascript插件。现在我们就来讲如何自定义JS扫描规则。</p>
 
-<p>实际上有3种方法可以自定义代码的校验规则：</p>
+<!--more-->
+
+
+<p>
+实际上有3种方法可以自定义代码的校验规则：</p>
 
 <ul>
 <li>直接在sonar的web接口中增加XPath规则；</li>
@@ -111,6 +118,9 @@
     <updated>2013-05-19T11:20:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1</id>
     <content type="html"><![CDATA[<p>接触sonar已经有段时间了，最早是在一个项目组里面听到这个框架，后来在公司持续集成活动的推动下，也逐渐学习了sonar的具体功能。sonar集成了findbugs，pmd，checkstyle各种静态代码检查工具的功能，并且可以将各种扫描结果组合成一张张漂亮的报告，功能很是强大。下面介绍一下如何使用sonar来自定义javascrpit的扫描规则。</p>
+
+<!--more-->
+
 
 <p>虽然使用过很多次sonar，但都是在别人搭好的环境上使用的，自己还没有真正搭建过，这里首先介绍一下sonar环境的搭建。</p>
 
@@ -284,6 +294,9 @@
     <id>http://zhaozhiming.github.io/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4</id>
     <content type="html"><![CDATA[<p>首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令：</p>
 
+<!--more-->
+
+
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -387,7 +400,11 @@
 
 <p>首先，要把jacoco的jacocoagent.jar包放到部署应用的服务器上，接着在系统服务的JAVA_OPTIONS 后面添加如下参数：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<!--more-->
+
+
+<p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>-javaagent:<span class="o">[</span>yourpath/<span class="o">]</span>jacocoagent.jar<span class="o">=</span><span class="nv">includes</span><span class="o">=</span>com.xxx.xxx.*,output<span class="o">=</span>tcpserver,address<span class="o">=</span>xxx.xxx.xxx.xxx,port<span class="o">=</span>xxxxx
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
