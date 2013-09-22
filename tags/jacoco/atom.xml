@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: jacoco | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/jacoco/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2013-09-22T22:56:06+08:00</updated>
+  <updated>2013-09-22T23:00:41+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -299,13 +299,13 @@
     <id>http://zhaozhiming.github.io/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1</id>
     <content type="html"><![CDATA[<p>之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
 
+<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
+
 <!--more-->
 
 
 <p>
-用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
