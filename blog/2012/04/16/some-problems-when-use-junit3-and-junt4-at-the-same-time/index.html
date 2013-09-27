@@ -1,255 +1,102 @@
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>junit4与junt3并存时产生的问题 - Hacker and Geeker's Way</title>
-  <meta name="author" content="赵芝明">
+	<meta charset="utf-8">
+	<title>junit4与junt3并存时产生的问题 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="junit4与junt3并存时产生的问题">
+	<meta name="keywords" content="junit3,junit,并存,问题">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  
-  <meta name="description" content="junit4与junt3并存时产生的问题">
-  <meta name="keywords" content="junit3,junit,并存,问题">
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
-  
-  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
 
-
-  
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+    
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-</hgroup>
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
 
 </header>
-  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:zhaozhiming.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
 
-</nav> -->
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Junit4与junt3并存时产生的问题</h1>
-    
-    
-      <p class="meta">
-        
+	<div id="toload">
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-16T15:54:00+08:00" pubdate data-updated="true">Apr 16<span>th</span>, 2012</time>
-        
-        
-          | <a href="#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><p>目前的项目里用junit写单元测试，使用的是junit4，由于大部分开发之前使用的都是junit3，对junit4还不是很熟悉，所以出现了junit3和4混合使用的情况，导致发生了一些问题，这里列举一下。</p>
-
-<!--more-->
-
-
-<p>
-<strong>1.测试类继承了TestCase，方法名是test开头，加Ignore标签，这时Ignore标签失效。错误代码示例：</strong></p>
-
-<figure class='code'><figcaption><span>test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="nd">@Ignore</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testMyMethod</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// some code</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在junit3里，测试类必须继承TestCase，方法必须是以test开头；而在junit4里面，无需继承TestCase类，方法名也不需要test开头，只需要在每个方法前加上@Test标签即可。如果是继承TestCase，方法名以test开头，则junit会认为是junt3的写法，而使得junit4的标签失效。</p>
-
-<p><strong>2.测试类继承了TestCase，方法前加上@Test标签，方法名不以test开头，该方法不会被junit执行。</strong></p>
-
-<figure class='code'><figcaption><span>test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_test_my_method</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// some code</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>用于使用了@Test标签，则方法名可以不需以test开头，但该测试类由于继承了TestCase，所以默认是使用了junit3的契约，所以方法名必须以test开头，否则junit不认，即使是加上了@Test标签。</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">赵芝明</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-16T15:54:00+08:00" pubdate data-updated="true">Apr 16<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/code/'>code</a>
-  
-</span>
-
-
-      
-
-<span class="tags">
-  
-    <a class='tag' href='/tags/java/'>java</a>, <a class='tag' href='/tags/junit/'>junit</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012/03/27/some-problems-in-emma/" title="Previous Post: 使用emma时遇到的一些问题">&laquo; 使用emma时遇到的一些问题</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/" title="Next Post: 安装win7和ubuntu双系统">安装win7和ubuntu双系统 &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"zhaozhiming"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script></div>
-  </section>
-
-</div>
-
-<aside class="sidebar">
-  
-    <section>
-  <ul id="recent_posts">
-      <li class="post">
-      <a href="http://zhaozhiming.github.io" alt="Home"><img src="/images/Home.png"></a>
-      <a href="http://zhaozhiming.github.io/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
-      <a href="mailto:kingzzm1982@sina.com" alt="E-Mail"><img src="/images/Envelope.png"></a>
-      <a href="http://zhaozhiming.github.io/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
-      </li>
-  </ul>
-</section>
-<section>
-    <h1>Follow Me</h1>
-	<ul id="followlists">
-		<li class="post">
-			<a href="http://weibo.com/u/2497707964" title="新浪微博" target="_blank"><img src="/images/social/sinaweibo.ico" /></a>
-			<a href="https://github.com/zhaozhiming" title="github" target="_blank"><img src="/images/social/github.ico" /></a>
-			<a href="http://www.linkedin.com/in/zhaozhiming" title="Linkedin" target="_blank"><img src="/images/social/linkedin.ico" /></a>
-		</li>
-	</ul>
-</section>
-
-
-
-<section>
+		<div class="side-bar">
+		  <aside class="sidebar">
+		    
+		      <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
@@ -333,29 +180,137 @@
     </li>
   </ul>
 </section>
-  
-</aside>
+		    
+		  </aside>
+		</div>
+
+		<div class="left-content">
+		    <div id="content" class="inner">
+		        <article class="post">
+	<h2 class="title">Junit4与junt3并存时产生的问题</h2>
+	<div class="entry-content"><p>目前的项目里用junit写单元测试，使用的是junit4，由于大部分开发之前使用的都是junit3，对junit4还不是很熟悉，所以出现了junit3和4混合使用的情况，导致发生了一些问题，这里列举一下。</p>
+
+<!--more-->
 
 
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - 赵芝明 -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
+<p>
+<strong>1.测试类继承了TestCase，方法名是test开头，加Ignore标签，这时Ignore标签失效。错误代码示例：</strong></p>
 
-</footer>
-  
+<figure class='code'><figcaption><span>test.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="nd">@Ignore</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testMyMethod</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// some code</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在junit3里，测试类必须继承TestCase，方法必须是以test开头；而在junit4里面，无需继承TestCase类，方法名也不需要test开头，只需要在每个方法前加上@Test标签即可。如果是继承TestCase，方法名以test开头，则junit会认为是junt3的写法，而使得junit4的标签失效。</p>
+
+<p><strong>2.测试类继承了TestCase，方法前加上@Test标签，方法名不以test开头，该方法不会被junit执行。</strong></p>
+
+<figure class='code'><figcaption><span>test.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">MyClassTest</span> <span class="kd">extends</span> <span class="n">TestCase</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_test_my_method</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// some code</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用于使用了@Test标签，则方法名可以不需以test开头，但该测试类由于继承了TestCase，所以默认是使用了junit3的契约，所以方法名必须以test开头，否则junit不认，即使是加上了@Test标签。</p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+  </section>
+
+		    </div>
+		    <footer id="footer">
+		    <div style="display:inline">
+    Copyright &copy; 2013
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+		    </footer>
+		    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
 
 
 
 
 
-
-
-
-
-
-
+		</div>
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
 </body>
 </html>

@@ -1,553 +1,102 @@
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>Hacker and Geeker's Way</title>
-  <meta name="author" content="赵芝明">
+	<meta charset="utf-8">
+	<title>Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content=" Published on: Dec 20th, 2012 Tags: code 有过编程经验的朋友都知道设计模式中的单例模式，最近又重新看了一遍设计模式，今天将单例模式的几种形式介绍一下： Read on | Comments ">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  
-  <meta name="description" content="有过编程经验的朋友都知道设计模式中的单例模式，最近又重新看了一遍设计模式，今天将单例模式的几种形式介绍一下： ">
-  
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
-  
-  <link rel="canonical" href="http://zhaozhiming.github.io/blog/page/2">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
 
-
-  
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+    
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-</hgroup>
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
 
 </header>
-  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:zhaozhiming.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
 
-</nav> -->
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/20/5-type-of-singleton-pattern/">单例模式的5种形式</a></h1>
-    
-    
-      <p class="meta">
-        
+	<div id="toload">
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-20T17:53:00+08:00" pubdate data-updated="true">Dec 20<span>th</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/12/20/5-type-of-singleton-pattern/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>有过编程经验的朋友都知道设计模式中的单例模式，最近又重新看了一遍设计模式，今天将单例模式的几种形式介绍一下：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/12/20/5-type-of-singleton-pattern/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/20/first-experience-at-idea-12/">IDEA12使用初体验</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-20T17:06:00+08:00" pubdate data-updated="true">Dec 20<span>th</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/12/20/first-experience-at-idea-12/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近将开发工具IDEA升级到了12.0版本，被它新的UI界面深深吸引，看下面，很酷哦~</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/12/20/first-experience-at-idea-12/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/07/the-elements-of-jacoco/">Jacoco的原理</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-07T19:47:00+08:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/12/07/the-elements-of-jacoco/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>覆盖率计数器</h2>
-
-<p>Jacoco使用一系列的不同的计数器来做覆盖率的度量计算。所有这些计数器都是从java的class文件中获取信息，这些class文件可以（可选）包含调试的信息在里面。即使在没有源码的情况下，这种方法也可以实时有效地对应用程序进行度量和分析。在大部分情况下，收集到的信息可以映射到源码，可视化到每一行代码的粒度。但这种方法还是有一些限制。这些class文件必须使用调试信息来编译，这样才可以计算行的覆盖率和提供出源码的高亮。但不是所有的JAVA语言的结构都可以直接编译成一致的二进制代码。在这种情况下，java 编译器会创建所谓的“合成”代码，会导致产生一些不期望得到的覆盖率结果。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/12/07/the-elements-of-jacoco/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/">在jenkins和sonar中集成jacoco(四)&#8211;在sonar中集成jacoco</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-02T14:46:00+08:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/">在jenkins和sonar中集成jacoco(三)&#8211;使用jacoco收集集成测试的覆盖率</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-01T14:45:00+08:00" pubdate data-updated="true">Dec 1<span>st</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我们系统使用weblogic做服务器，集成测试框架使用的是junit+selenium。</p>
-
-<p>首先，要把jacoco的jacocoagent.jar包放到部署应用的服务器上，接着在系统服务的JAVA_OPTIONS 后面添加如下参数：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/">在jenkins和sonar中集成jacoco(二)&#8211;在jenkins中生成jacoco覆盖率报告</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-30T14:45:00+08:00" pubdate data-updated="true">Nov 30<span>th</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>先要在jenkins上安装jacoco的插件，安装完成之后在job的配置项中可以增加这个选项：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">在jenkins和sonar中集成jacoco(一)&#8211;使用jacoco收集单元测试的覆盖率</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-29T14:45:00+08:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
-
-<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/">持续集成一天一美元</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-17T21:53:00+08:00" pubdate data-updated="true">Sep 17<span>th</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>原文：<a href="http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html">http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html</a>
-有一种持续集成，比使用像CruiseControl这样的构建服务来的更容易更便宜。实际上，它是如此简单，你可以从现在开始做这件事，不用为你还没有构建服务而感到不舒服。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/06/read-toyota-product-method/">读《丰田生产方式》——联系敏捷开发的思考</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-06T10:16:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/08/06/read-toyota-product-method/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>平时工作和同事讨论敏捷，曾多次听到丰田的精益思想，说是很多敏捷的想法都是从丰田的精益思想中得来的，后来在Kent Beck的《解析极限编程》里看到有这样一本书是讲丰田的精益思想的，找来看了一下，发现书中讲的一些思想或者实践和敏捷开发很相似，下面我就讲讲我对于丰田生产方式和敏捷开发的一些联系。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/08/06/read-toyota-product-method/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/">《Agile Web Development With Rails》读后感&#8211;rails基于web设计的best Practices</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-05T18:18:00+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time>
-        
-        
-          | <a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近看完《Agile Web Development with Rails》一书，受益匪浅。书中先是用一个简单的web应用带你进入Rails的世界，然后在你大致熟悉之后，再带你了解Rails的一些细节，比如ActiveRecord，ActiveController等。最让我觉得Rails美的是其中的一些best practices，这些都可以很好地借鉴到平时的开发中去。下面我简单举几个在Rails中我认为比较好的一些best practies。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/3/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-    <a class="next" href="/">Newer &rarr;</a>
-    
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <ul id="recent_posts">
-      <li class="post">
-      <a href="http://zhaozhiming.github.io" alt="Home"><img src="/images/Home.png"></a>
-      <a href="http://zhaozhiming.github.io/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
-      <a href="mailto:kingzzm1982@sina.com" alt="E-Mail"><img src="/images/Envelope.png"></a>
-      <a href="http://zhaozhiming.github.io/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
-      </li>
-  </ul>
-</section>
-<section>
-    <h1>Follow Me</h1>
-	<ul id="followlists">
-		<li class="post">
-			<a href="http://weibo.com/u/2497707964" title="新浪微博" target="_blank"><img src="/images/social/sinaweibo.ico" /></a>
-			<a href="https://github.com/zhaozhiming" title="github" target="_blank"><img src="/images/social/github.ico" /></a>
-			<a href="http://www.linkedin.com/in/zhaozhiming" title="Linkedin" target="_blank"><img src="/images/social/linkedin.ico" /></a>
-		</li>
-	</ul>
-</section>
-
-
-
-<section>
+		<div class="side-bar">
+		  <aside class="sidebar">
+		    
+		      <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
@@ -593,7 +142,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/zhaozhiming">@zhaozhiming</a> on GitHub
@@ -631,19 +180,117 @@
     </li>
   </ul>
 </section>
+		    
+		  </aside>
+		</div>
+
+		<div class="left-content">
+		    <div id="content" class="inner">
+		        
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/12/20/5-type-of-singleton-pattern/">
+		
+			单例模式的5种形式</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
   
-</aside>
+
+
+<time datetime="2012-12-20T17:53:00+08:00" pubdate data-updated="true">Dec 20<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - 赵芝明 -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
+		<p>有过编程经验的朋友都知道设计模式中的单例模式，最近又重新看了一遍设计模式，今天将单例模式的几种形式介绍一下：</p>
 
-</footer>
+
+		
+		<a href="/blog/2012/12/20/5-type-of-singleton-pattern/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/12/20/5-type-of-singleton-pattern/#comments">Comments</a>
+    
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/12/20/first-experience-at-idea-12/">
+		
+			IDEA12使用初体验</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
   
 
 
+<time datetime="2012-12-20T17:06:00+08:00" pubdate data-updated="true">Dec 20<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>最近将开发工具IDEA升级到了12.0版本，被它新的UI界面深深吸引，看下面，很酷哦~</p>
+
+
+		
+		<a href="/blog/2012/12/20/first-experience-at-idea-12/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/12/20/first-experience-at-idea-12/#comments">Comments</a>
+    
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/12/07/the-elements-of-jacoco/">
+		
+			Jacoco的原理</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
 
 
 
@@ -652,6 +299,404 @@
 
 
 
+  
 
+
+<time datetime="2012-12-07T19:47:00+08:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/translate/'>translate</a>
+
+
+</div>
+    </div>
+		<h2>覆盖率计数器</h2>
+
+<p>Jacoco使用一系列的不同的计数器来做覆盖率的度量计算。所有这些计数器都是从java的class文件中获取信息，这些class文件可以（可选）包含调试的信息在里面。即使在没有源码的情况下，这种方法也可以实时有效地对应用程序进行度量和分析。在大部分情况下，收集到的信息可以映射到源码，可视化到每一行代码的粒度。但这种方法还是有一些限制。这些class文件必须使用调试信息来编译，这样才可以计算行的覆盖率和提供出源码的高亮。但不是所有的JAVA语言的结构都可以直接编译成一致的二进制代码。在这种情况下，java 编译器会创建所谓的“合成”代码，会导致产生一些不期望得到的覆盖率结果。</p>
+
+
+		
+		<a href="/blog/2012/12/07/the-elements-of-jacoco/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/12/07/the-elements-of-jacoco/#comments">Comments</a>
+    
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/">
+		
+			在jenkins和sonar中集成jacoco(四)&#8211;在sonar中集成jacoco</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-02T14:46:00+08:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令：</p>
+
+
+		
+		<a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/#comments">Comments</a>
+    
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/">
+		
+			在jenkins和sonar中集成jacoco(三)&#8211;使用jacoco收集集成测试的覆盖率</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-01T14:45:00+08:00" pubdate data-updated="true">Dec 1<span>st</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>我们系统使用weblogic做服务器，集成测试框架使用的是junit+selenium。</p>
+
+<p>首先，要把jacoco的jacocoagent.jar包放到部署应用的服务器上，接着在系统服务的JAVA_OPTIONS 后面添加如下参数：</p>
+
+
+		
+		<a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/#comments">Comments</a>
+    
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/">
+		
+			在jenkins和sonar中集成jacoco(二)&#8211;在jenkins中生成jacoco覆盖率报告</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-30T14:45:00+08:00" pubdate data-updated="true">Nov 30<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>先要在jenkins上安装jacoco的插件，安装完成之后在job的配置项中可以增加这个选项：</p>
+
+
+		
+		<a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/#comments">Comments</a>
+    
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">
+		
+			在jenkins和sonar中集成jacoco(一)&#8211;使用jacoco收集单元测试的覆盖率</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-29T14:45:00+08:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
+
+<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
+
+
+		
+		<a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/#comments">Comments</a>
+    
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/">
+		
+			持续集成一天一美元</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-17T21:53:00+08:00" pubdate data-updated="true">Sep 17<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/translate/'>translate</a>
+
+
+</div>
+    </div>
+		<p>原文：<a href="http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html">http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html</a>
+有一种持续集成，比使用像CruiseControl这样的构建服务来的更容易更便宜。实际上，它是如此简单，你可以从现在开始做这件事，不用为你还没有构建服务而感到不舒服。</p>
+
+
+		
+		<a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/#comments">Comments</a>
+    
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/08/06/read-toyota-product-method/">
+		
+			读《丰田生产方式》——联系敏捷开发的思考</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-06T10:16:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/read/'>read</a>
+
+
+</div>
+    </div>
+		<p>平时工作和同事讨论敏捷，曾多次听到丰田的精益思想，说是很多敏捷的想法都是从丰田的精益思想中得来的，后来在Kent Beck的《解析极限编程》里看到有这样一本书是讲丰田的精益思想的，找来看了一下，发现书中讲的一些思想或者实践和敏捷开发很相似，下面我就讲讲我对于丰田生产方式和敏捷开发的一些联系。</p>
+
+
+		
+		<a href="/blog/2012/08/06/read-toyota-product-method/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/08/06/read-toyota-product-method/#comments">Comments</a>
+    
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/">
+		
+			《Agile Web Development With Rails》读后感&#8211;rails基于web设计的best Practices</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T18:18:00+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/read/'>read</a>
+
+
+</div>
+    </div>
+		<p>最近看完《Agile Web Development with Rails》一书，受益匪浅。书中先是用一个简单的web应用带你进入Rails的世界，然后在你大致熟悉之后，再带你了解Rails的一些细节，比如ActiveRecord，ActiveController等。最让我觉得Rails美的是其中的一些best practices，这些都可以很好地借鉴到平时的开发中去。下面我简单举几个在Rails中我认为比较好的一些best practies。</p>
+
+
+		
+		<a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/#comments">Comments</a>
+    
+</div>
+</article>
+
+<nav id="pagenavi">
+    
+        <a href="/" class="prev">Prev</a>
+    
+    
+        <a href="/blog/page/3/" class="next">Next</a>
+    
+    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
+</nav>
+		    </div>
+		    <footer id="footer">
+		    <div style="display:inline">
+    Copyright &copy; 2013
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+		    </footer>
+		    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+		</div>
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
 </body>
 </html>

@@ -1,237 +1,102 @@
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>在junit中添加fail--有test失败即build failed - Hacker and Geeker's Way</title>
-  <meta name="author" content="赵芝明">
+	<meta charset="utf-8">
+	<title>在junit中添加fail--有test失败即build failed - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="在junit中添加fail--有test失败即build failed">
+	<meta name="keywords" content="junit,ant">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  
-  <meta name="description" content="在junit中添加fail--有test失败即build failed">
-  <meta name="keywords" content="junit,ant">
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
-  
-  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/02/24/zai-junitzhong-tian-jia-fail-you-testshi-bai-ji-build-failed">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
 
-
-  
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+    
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-</hgroup>
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
 
 </header>
-  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:zhaozhiming.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
 
-</nav> -->
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">在junit中添加fail--有test失败即build Failed</h1>
-    
-    
-      <p class="meta">
-        
+	<div id="toload">
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-24T11:28:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
-        
-        
-          | <a href="#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
-
-<!--more-->
-
-
-<p>
-  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
-
-<figure class='code'><figcaption><span>demo - build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>　　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;runCompileTest&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;junit</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;junit.failure&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　　　<span class="c">&lt;!-- some code here--&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;</span>
-</span><span class='line'>
-</span><span class='line'>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;condition&gt;</span>
-</span><span class='line'>　　　　        <span class="nt">&lt;isset</span> <span class="na">property=</span><span class="s">&quot;junit.failure&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>　　　　    <span class="nt">&lt;/condition&gt;</span>
-</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">赵芝明</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-24T11:28:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/code/'>code</a>
-  
-</span>
-
-
-      
-
-<span class="tags">
-  
-    <a class='tag' href='/tags/ant/'>ant</a>, <a class='tag' href='/tags/junit/'>junit</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-      
-        <a class="basic-alignment right" href="/blog/2012/03/02/some-problems-when-use-mockito/" title="Next Post: 使用Mockito时遇到的一些问题">使用Mockito时遇到的一些问题 &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"zhaozhiming"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script></div>
-  </section>
-
-</div>
-
-<aside class="sidebar">
-  
-    <section>
-  <ul id="recent_posts">
-      <li class="post">
-      <a href="http://zhaozhiming.github.io" alt="Home"><img src="/images/Home.png"></a>
-      <a href="http://zhaozhiming.github.io/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
-      <a href="mailto:kingzzm1982@sina.com" alt="E-Mail"><img src="/images/Envelope.png"></a>
-      <a href="http://zhaozhiming.github.io/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
-      </li>
-  </ul>
-</section>
-<section>
-    <h1>Follow Me</h1>
-	<ul id="followlists">
-		<li class="post">
-			<a href="http://weibo.com/u/2497707964" title="新浪微博" target="_blank"><img src="/images/social/sinaweibo.ico" /></a>
-			<a href="https://github.com/zhaozhiming" title="github" target="_blank"><img src="/images/social/github.ico" /></a>
-			<a href="http://www.linkedin.com/in/zhaozhiming" title="Linkedin" target="_blank"><img src="/images/social/linkedin.ico" /></a>
-		</li>
-	</ul>
-</section>
-
-
-
-<section>
+		<div class="side-bar">
+		  <aside class="sidebar">
+		    
+		      <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
@@ -315,29 +180,121 @@
     </li>
   </ul>
 </section>
-  
-</aside>
+		    
+		  </aside>
+		</div>
+
+		<div class="left-content">
+		    <div id="content" class="inner">
+		        <article class="post">
+	<h2 class="title">在junit中添加fail--有test失败即build Failed</h2>
+	<div class="entry-content"><p>项目使用jenkins做持续集成，ant来构建，发现在跑junit单元测试的时候，如果有test case失败了，ci的状态是黄色的unstable，而不是红色的failed，看起来很不爽。个人觉得build只有两种状态最好，绿色stable和红色failed，黄色让人看起来很困惑，是要fix好呢还是不fix也可以呢？</p>
+
+<!--more-->
 
 
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - 赵芝明 -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
+<p>
+  在网上查到解决方案，就是在ant的build文件里面，加上这样一段：</p>
 
-</footer>
-  
+<figure class='code'><figcaption><span>demo - build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;runCompileTest&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;junit</span> <span class="na">printsummary=</span><span class="s">&quot;on&quot;</span> <span class="na">failureproperty=</span><span class="s">&quot;junit.failure&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>　　　　　　<span class="c">&lt;!-- some code here--&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;/junit&gt;</span>
+</span><span class='line'>
+</span><span class='line'>　　　　<span class="nt">&lt;fail</span> <span class="na">message=</span><span class="s">&quot;Some tests failed - Build failed&quot;</span> <span class="na">status=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>　　　　    <span class="nt">&lt;condition&gt;</span>
+</span><span class='line'>　　　　        <span class="nt">&lt;isset</span> <span class="na">property=</span><span class="s">&quot;junit.failure&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>　　　　    <span class="nt">&lt;/condition&gt;</span>
+</span><span class='line'>　　　　<span class="nt">&lt;/fail&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+  </section>
+
+		    </div>
+		    <footer id="footer">
+		    <div style="display:inline">
+    Copyright &copy; 2013
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+		    </footer>
+		    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
 
 
 
 
 
-
-
-
-
-
-
+		</div>
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
 </body>
 </html>

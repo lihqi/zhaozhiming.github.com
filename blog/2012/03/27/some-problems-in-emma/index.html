@@ -1,260 +1,102 @@
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>使用emma时遇到的一些问题 - Hacker and Geeker's Way</title>
-  <meta name="author" content="赵芝明">
+	<meta charset="utf-8">
+	<title>使用emma时遇到的一些问题 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="使用emma时遇到的一些问题">
+	<meta name="keywords" content="emma,问题">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  
-  <meta name="description" content="使用emma时遇到的一些问题">
-  <meta name="keywords" content="emma,问题">
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
-  
-  <link rel="canonical" href="http://zhaozhiming.github.io/blog/2012/03/27/some-problems-in-emma">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
 
-
-  
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+    
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-</hgroup>
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
 
 </header>
-  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:zhaozhiming.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
 
-</nav> -->
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">使用emma时遇到的一些问题</h1>
-    
-    
-      <p class="meta">
-        
+	<div id="toload">
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-27T22:05:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2012</time>
-        
-        
-          | <a href="#comments">Comments</a>
-         
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><p>今天在用使用emma的过程中遇到了几个问题，记录一下.</p>
-
-<p><strong>1.跑junit过程中没办法产生coverage data文件，导致最后没办法出emma报告，上官网查了一下原因如下：</strong></p>
-
-<!--more-->
-
-
-<p></p>
-
-<blockquote><p>I have instrumented my classes but am not getting any coverage data&#8230;   <br/>This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.</p></blockquote>
-
-
-<p>
-意思是emma会根据工程里面的class文件产生自己的instrumented class，junit在跑单元测试的时候，classpath要把定义emma的class文件路径放在项目class文件路径前面，才能产生coverage data文件。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;junit</span> <span class="err">...</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${emma.classes.dir}&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${project.classes.dir}&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>...
-</span><span class='line'><span class="nt">&lt;/junit&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>2.emma的示例代码里面，report的sourcepath属性只有一个src路径，如果项目里面有多个src路径同时要进行覆盖率检查的话，则需要这样写：</strong></p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;report</span> <span class="na">sourcepath=</span><span class="s">&quot;${src1};${src2};${src3}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   ...
-</span><span class='line'><span class="nt">&lt;/report&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>不同的src路径用操作系统的classpath分隔符或逗号隔开，比如window用分号隔开，官网是这样解释的：</p>
-
-<blockquote><p>sourcepath : An optional source path to use for report generation (a path-like structure). It is interpreted as a list of directories (separated by the OS-specific classpath separator or comma) containing .java source files. The local path names within each directory should reflect class package names. (Currently, only the HTML report generator uses this data, and only atmethod report depth.)</p></blockquote>
-
-
-<p></p>
-
-<p><strong>3.jenkins的emma插件可以显示覆盖率的趋势，已经包，类，方法的覆盖率情况，但不支持链接显示代码源文件，看了下jenkins的官网，有人已经对插件提了这样一个需求，但回复说无法实现，说明如下：</strong></p>
-
-<blockquote><p>This was an obvious feature and so I tried to do this, but the problem is that the HTML file names and anchors that EMMA puts are just random numbers. So Hudson cannot link to the appropriate portion of those HTML files.</p><p>I also thought about generating those reports by myself in Hudson, but EMMA doesn&#8217;t leave the line-by-line coverage information in XML file either.</p><p>So that leaves me no choice but to parse emma&#8217;s data file directly. So this is bit involving.　　</p></blockquote>
-
-
-<p></p>
-
-<p>意思是说emma的html源文件是用随机数字命名，所以在xml文件中无法链接这些html源文件，emma没有修复这个问题，插件作者也无法完成这个需求:(</p>
-
-<p>我的解决方案是用doc link插件在jenkins页面上直接链接coverage.html文件。</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">赵芝明</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-27T22:05:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/code/'>code</a>
-  
-</span>
-
-
-      
-
-<span class="tags">
-  
-    <a class='tag' href='/tags/ant/'>ant</a>, <a class='tag' href='/tags/emma/'>emma</a>, <a class='tag' href='/tags/jenkins/'>jenkins</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012/03/26/find-the-process-id-thought-port-in-bat-script/" title="Previous Post: bat脚本:通过端口号查找进程号">&laquo; bat脚本:通过端口号查找进程号</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012/04/16/some-problems-when-use-junit3-and-junt4-at-the-same-time/" title="Next Post: junit4与junt3并存时产生的问题">junit4与junt3并存时产生的问题 &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"zhaozhiming"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script></div>
-  </section>
-
-</div>
-
-<aside class="sidebar">
-  
-    <section>
-  <ul id="recent_posts">
-      <li class="post">
-      <a href="http://zhaozhiming.github.io" alt="Home"><img src="/images/Home.png"></a>
-      <a href="http://zhaozhiming.github.io/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
-      <a href="mailto:kingzzm1982@sina.com" alt="E-Mail"><img src="/images/Envelope.png"></a>
-      <a href="http://zhaozhiming.github.io/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
-      </li>
-  </ul>
-</section>
-<section>
-    <h1>Follow Me</h1>
-	<ul id="followlists">
-		<li class="post">
-			<a href="http://weibo.com/u/2497707964" title="新浪微博" target="_blank"><img src="/images/social/sinaweibo.ico" /></a>
-			<a href="https://github.com/zhaozhiming" title="github" target="_blank"><img src="/images/social/github.ico" /></a>
-			<a href="http://www.linkedin.com/in/zhaozhiming" title="Linkedin" target="_blank"><img src="/images/social/linkedin.ico" /></a>
-		</li>
-	</ul>
-</section>
-
-
-
-<section>
+		<div class="side-bar">
+		  <aside class="sidebar">
+		    
+		      <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
@@ -338,29 +180,142 @@
     </li>
   </ul>
 </section>
-  
-</aside>
+		    
+		  </aside>
+		</div>
+
+		<div class="left-content">
+		    <div id="content" class="inner">
+		        <article class="post">
+	<h2 class="title">使用emma时遇到的一些问题</h2>
+	<div class="entry-content"><p>今天在用使用emma的过程中遇到了几个问题，记录一下.</p>
+
+<p><strong>1.跑junit过程中没办法产生coverage data文件，导致最后没办法出emma报告，上官网查了一下原因如下：</strong></p>
+
+<!--more-->
 
 
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - 赵芝明 -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
+<p></p>
 
-</footer>
-  
+<blockquote><p>I have instrumented my classes but am not getting any coverage data&#8230;   <br/>This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.</p></blockquote>
 
 
+<p>
+意思是emma会根据工程里面的class文件产生自己的instrumented class，junit在跑单元测试的时候，classpath要把定义emma的class文件路径放在项目class文件路径前面，才能产生coverage data文件。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;junit</span> <span class="err">...</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${emma.classes.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${project.classes.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>...
+</span><span class='line'><span class="nt">&lt;/junit&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>2.emma的示例代码里面，report的sourcepath属性只有一个src路径，如果项目里面有多个src路径同时要进行覆盖率检查的话，则需要这样写：</strong></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;report</span> <span class="na">sourcepath=</span><span class="s">&quot;${src1};${src2};${src3}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   ...
+</span><span class='line'><span class="nt">&lt;/report&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>不同的src路径用操作系统的classpath分隔符或逗号隔开，比如window用分号隔开，官网是这样解释的：</p>
+
+<blockquote><p>sourcepath : An optional source path to use for report generation (a path-like structure). It is interpreted as a list of directories (separated by the OS-specific classpath separator or comma) containing .java source files. The local path names within each directory should reflect class package names. (Currently, only the HTML report generator uses this data, and only atmethod report depth.)</p></blockquote>
+
+
+<p></p>
+
+<p><strong>3.jenkins的emma插件可以显示覆盖率的趋势，已经包，类，方法的覆盖率情况，但不支持链接显示代码源文件，看了下jenkins的官网，有人已经对插件提了这样一个需求，但回复说无法实现，说明如下：</strong></p>
+
+<blockquote><p>This was an obvious feature and so I tried to do this, but the problem is that the HTML file names and anchors that EMMA puts are just random numbers. So Hudson cannot link to the appropriate portion of those HTML files.</p><p>I also thought about generating those reports by myself in Hudson, but EMMA doesn&#8217;t leave the line-by-line coverage information in XML file either.</p><p>So that leaves me no choice but to parse emma&#8217;s data file directly. So this is bit involving.　　</p></blockquote>
+
+
+<p></p>
+
+<p>意思是说emma的html源文件是用随机数字命名，所以在xml文件中无法链接这些html源文件，emma没有修复这个问题，插件作者也无法完成这个需求:(</p>
+
+<p>我的解决方案是用doc link插件在jenkins页面上直接链接coverage.html文件。</p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+  </section>
+
+		    </div>
+		    <footer id="footer">
+		    <div style="display:inline">
+    Copyright &copy; 2013
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+		    </footer>
+		    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
 
 
 
 
 
-
-
-
-
+		</div>
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
 </body>
 </html>
