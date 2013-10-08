@@ -1,0 +1,555 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>如何重构一个圈复杂度超30的类 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="如何重构一个圈复杂度超30的类">
+	<meta name="keywords" content="refactor">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">如何重构一个圈复杂度超30的类</h2>
+	<div class="entry-content"><p>下面的类是一个老系统的代码，现在放到sonar上面进行扫描，扫出来的结果发现复杂度超过了30。</p>
+
+<p>代码复杂度是指代码中的分支数量，比如有一个if分支，代码复杂度就加1，如果if中有“||”或者“&amp;&amp;”那么代码复杂度就加2，for和while同理。一般复杂度超过10的类就算是比较复杂的了，而这个类的复杂度竟然达到了30，代码的糟糕程度可见一斑，现在我们就来重构一下这个类的代码。</p>
+
+<!--more-->
+
+
+<p>原始文件在<strong><a href="https://github.com/zhaozhiming/zhaozhiming.github.com/blob/source/source/file/SomeClient(old).java">这里</a>。</strong><br/>
+重构开始吧！</p>
+
+<h2>多处String类型非空判断</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">StringUtil</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">username</span><span class="o">))</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;username can not be null&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">StringUtil</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">password</span><span class="o">))</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;password can not be null&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">udto</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;ICRUploadDTO can not be null&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来的地方替换为</span>
+</span><span class='line'><span class="n">checkStringParamEmpty</span><span class="o">(</span><span class="n">username</span><span class="o">,</span> <span class="s">&quot;username&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">checkStringParamEmpty</span><span class="o">(</span><span class="n">password</span><span class="o">,</span> <span class="s">&quot;password&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">checkStringParamEmpty</span><span class="o">(</span><span class="n">udto</span><span class="o">.</span><span class="na">getUrlPath</span><span class="o">(),</span> <span class="s">&quot;urlPath&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkStringParamEmpty</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">StringUtil</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">value</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; can not be null&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>原代码中不止这3个参数的校验，还有很多，越多参数的校验，我们重构后的复杂度就会越低。</p>
+
+<p><strong>代码复杂度变化：原来是3，修改后为1。</strong></p>
+
+<h2>多String值判断</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">(!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;0&quot;</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;1&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;2&quot;</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;3&quot;</span><span class="o">))</span>
+</span><span class='line'><span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;priority must be 0/1/2/3&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来代码替换为</span>
+</span><span class='line'><span class="n">checkValueWithinList</span><span class="o">(</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">());</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法：</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkValueWithinList</span><span class="o">(</span><span class="n">String</span> <span class="n">priority</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(!</span><span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">&quot;0&quot;</span><span class="o">,</span> <span class="s">&quot;1&quot;</span><span class="o">,</span> <span class="s">&quot;2&quot;</span><span class="o">,</span> <span class="s">&quot;3&quot;</span><span class="o">).</span><span class="na">contains</span><span class="o">(</span><span class="n">priority</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;priority must be 0/1/2/3&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是4，修改后为1。</strong></p>
+
+<h2>对list的非空判断</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">list</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;list can not be null&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来的代码替换为</span>
+</span><span class='line'><span class="n">checkValueWithinList</span><span class="o">(</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">());</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkListNoNull</span><span class="o">(</span><span class="n">List</span> <span class="n">list</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ICRClientException</span><span class="o">(</span><span class="s">&quot;list can not be null&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是2，修改后为1。</strong></p>
+
+<h2>多个catch的内容相同</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kt">int</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">code</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">executeMethod</span><span class="o">(</span><span class="n">post</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">HttpException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来的地方替换为</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">code</span> <span class="o">=</span> <span class="n">executeHttpClient</span><span class="o">(</span><span class="n">httpClient</span><span class="o">,</span> <span class="n">post</span><span class="o">);</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">int</span> <span class="nf">executeHttpClient</span><span class="o">(</span><span class="n">HttpClient</span> <span class="n">httpClient</span><span class="o">,</span> <span class="n">PostMethod</span> <span class="n">post</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">code</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">code</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">executeMethod</span><span class="o">(</span><span class="n">post</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">code</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是2，修改后为1。</strong></p>
+
+<h2>if判断结果复杂化</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">==</span> <span class="mi">200</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;ok&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">==</span> <span class="mi">500</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">code</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">post</span><span class="o">.</span><span class="na">getStatusText</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来代码替换为</span>
+</span><span class='line'><span class="k">return</span> <span class="nf">returnFinialResult</span><span class="o">(</span><span class="n">post</span><span class="o">,</span> <span class="n">code</span><span class="o">);</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">returnFinialResult</span><span class="o">(</span><span class="n">PostMethod</span> <span class="n">post</span><span class="o">,</span> <span class="kt">int</span> <span class="n">code</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">==</span> <span class="mi">500</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ICRClientException</span><span class="o">(</span><span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">());</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">200</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ICRClientException</span><span class="o">(</span><span class="n">code</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">post</span><span class="o">.</span><span class="na">getStatusText</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;ok&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是4，修改后为3。</strong></p>
+
+<h2>本地变量始终不为null</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">uploadToICR</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">,</span> <span class="n">ICRUploadDTO</span> <span class="n">udto</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">PostMethod</span> <span class="n">post</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpClient</span><span class="o">();</span>
+</span><span class='line'>  <span class="c1">//some code here</span>
+</span><span class='line'>  <span class="err">…</span>
+</span><span class='line'>  <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">post</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">post</span><span class="o">.</span><span class="na">releaseConnection</span><span class="o">();</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">httpClient</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">httpClient</span><span class="o">.</span><span class="na">getHttpConnectionManager</span><span class="o">().</span><span class="na">closeIdleConnections</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">uploadToICR</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">,</span> <span class="n">ICRUploadDTO</span> <span class="n">udto</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpClient</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">PostMethod</span> <span class="n">post</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>  <span class="c1">//some code here</span>
+</span><span class='line'>  <span class="err">…</span>
+</span><span class='line'>  <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">post</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">post</span><span class="o">.</span><span class="na">releaseConnection</span><span class="o">();</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是1，修改后为0。</strong></p>
+
+<h2>读取IO流的方法，为什么要自己实现？</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">readData</span><span class="o">(</span><span class="n">InputStream</span> <span class="n">ins</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">byte</span><span class="o">[]</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">2048</span><span class="o">];</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">byte</span> <span class="n">data</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">2048</span><span class="o">];</span>
+</span><span class='line'>    <span class="kt">byte</span><span class="o">[]</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">((</span><span class="n">len</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">2048</span><span class="o">))</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kt">int</span> <span class="n">newcount</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="n">len</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">newcount</span> <span class="o">&gt;</span> <span class="n">buf</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="kt">byte</span> <span class="n">newbuf</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">Math</span>
+</span><span class='line'>                        <span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">buf</span><span class="o">.</span><span class="na">length</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="o">,</span> <span class="n">newcount</span><span class="o">)];</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">newbuf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">buf</span> <span class="o">=</span> <span class="n">newbuf</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">buf</span><span class="o">,</span> <span class="n">count</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">count</span> <span class="o">=</span> <span class="n">newcount</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">count</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">result</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ins</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在原代码里面自己实现了一个对读取IO流字节的方法，这个可以使用apache-io或者guava的API代替：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//使用apache io API的实现：</span>
+</span><span class='line'><span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span> <span class="o">=</span> <span class="n">IOUtils</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
+</span><span class='line'><span class="c1">//使用guava API的实现：</span>
+</span><span class='line'><span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes1</span> <span class="o">=</span> <span class="n">ByteStreams</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是很多，修改后为0。</strong></p>
+
+<p>最终重构后的版本见<strong><a href="https://github.com/zhaozhiming/zhaozhiming.github.com/blob/source/source/file/SomeClient(new).java">这里</a></strong>，最后的代码复杂度从原来的30降到了3。<br/>
+代码写的比较仓促，没有写单元测试，其实最好的做法是在重构之前先写好单元测试，然后再慢慢修改原来的代码，每修改一处地方跑一遍单元测试，这样可以保证你的重构没有破坏原来的代码逻辑。</p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2013
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

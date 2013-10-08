@@ -6,7 +6,7 @@
 	<title>Hacker and Geeker's Way</title>
     <meta name="author" content="赵芝明">
     
-	<meta name="description" content=" Published on: Mar 6th, 2012 Tags: code 使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。 Read on | Comments ">
+	<meta name="description" content="Published on: Mar 14th, 2012 Tags: code 最近两天一直在处理ant运行java程序的一个问题，用IDE直接运行类里面的main函数一切正常，但用ant跑该函数就报错误，错误的原因是运行ant任务时调用的是AntClasloader， &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -102,6 +102,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/10/08/how-to-refactor-a-class-which-cyclomatic-complexity-over-30/">如何重构一个圈复杂度超30的类</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/05/my-octopress-setting/">我的octopress配置</a>
       </li>
     
@@ -117,24 +121,20 @@
         <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2/">利用Sonar定制自定义JS扫描规则（二）——自定义JS扫描规则</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/">利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-	<a style="font-size: 125%" href="/tags/agile/">agile</a>
-<a style="font-size: 194%" href="/tags/ant/">ant</a>
+	<a style="font-size: 194%" href="/tags/ant/">ant</a>
 <a style="font-size: 171%" href="/tags/jacoco/">jacoco</a>
-<a style="font-size: 180%" href="/tags/java/">java</a>
+<a style="font-size: 187%" href="/tags/java/">java</a>
 <a style="font-size: 187%" href="/tags/javascript/">javascript</a>
 <a style="font-size: 210%" href="/tags/jenkins/">jenkins</a>
 <a style="font-size: 145%" href="/tags/js/">js</a>
 <a style="font-size: 159%" href="/tags/junit/">junit</a>
 <a style="font-size: 145%" href="/tags/plugins/">plugins</a>
+<a style="font-size: 125%" href="/tags/refactor/">refactor</a>
 <a style="font-size: 194%" href="/tags/sonar/">sonar</a>
 
   </ul>
@@ -188,6 +188,52 @@
   <div class="left-content">
     <div class="left-post">
       
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/">
+		
+			Ant里面神奇的fork</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-14T10:51:00+08:00" pubdate data-updated="true">Mar 14<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>最近两天一直在处理ant运行java程序的一个问题，用IDE直接运行类里面的main函数一切正常，但用ant跑该函数就报错误，错误的原因是运行ant任务时调用的是AntClasloader，而IDE里面调用的是jvm里面的classloader。</p>
+
+
+		
+		<a href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/03/14/the-magical-fork-keyword-in-ant/#comments">Comments</a>
+    
+</div>
+</article>
       
       
           <article class="post">
