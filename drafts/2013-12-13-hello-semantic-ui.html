@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>在ant编译java文件时产生debug信息 - Hacker and Geeker's Way</title>
+	<title>用腻了bootstrap的可以试试semantic-ui - Hacker and Geeker's Way</title>
     <meta name="author" content="赵芝明">
     
-	<meta name="description" content="在ant编译java文件时产生debug信息">
-	<meta name="keywords" content="java,ant">
+	<meta name="description" content="semantic-ui">
+	<meta name="keywords" content="semantic-ui">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
@@ -101,42 +101,36 @@
 		<div id="content">
 			<div class="inner">
 	<article class="post">
-	<h2 class="title">在ant编译java文件时产生debug信息</h2>
-	<div class="entry-content"><p>使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。</p>
+	<h2 class="title">用腻了bootstrap的可以试试semantic-ui</h2>
+	<div class="entry-content"><h2>semancti-ui介绍</h2>
+
+<p>[semantic-ui][url1]是html/css框架的新贵，是继bootstrap和foundation之后的又一css神器。semantic-ui一出现在github上就受到火热的关注，一直在关注排行榜前列。semantic-ui最大的特点：充分利用CSS3动画特效，简洁实用漂亮的样式这些都是其最受欢迎的原因之一。</p>
 
 <!--more-->
 
 
-<p>
-如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示：</p>
+<p></p>
 
-<figure class='code'><figcaption><span>ant file - build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;javac</span> <span class="err">...</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span> <span class="na">debuglevel=</span><span class="s">&quot;lines, vars, source&quot;</span><span class="nt">&gt;</span>
+<h2>semantic-ui示例</h2>
+
+<p>刚刚进入到semantci-ui的网站的时候，就被它的各种控件样式吸引住了，感觉比bootstrap好看很多，又很符合当前流行的“扁平化设计”的风格,这里列一下几个看起来比较酷的控件。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui buttons&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui button&quot;</span><span class="nt">&gt;</span>Cancel<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;or&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui positive button&quot;</span><span class="nt">&gt;</span>Save<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>ant的官方文档：</p>
+<h2>semantic-ui兼容性</h2>
 
-<table>
-<thead>
-<tr>
-<th> debug       </th>
-<th>  Indicates whether source should be compiled with debug information; defaults to off. If set to off, -g:none will be passed on the command line for compilers that support it (for other compilers, no command line argument will be used). If set to true, the value of the debuglevel attribute determines the command line argument.  </th>
-<th> No  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>debuglevel</td>
-<td>  Keyword list to be appended to the -g command-line switch. This will be ignored by all implementations except modern, classic(ver >= 1.2) and jikes. Legal values are none or a comma-separated list of the following keywords: lines, vars, and source. If debuglevel is not specified, by default, nothing will be appended to -g. If debug is not turned on, this attribute will be ignored. </td>
-<td>  </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
+<p>不兼容IEb</p>
 </div>
 
 <div class="meta">

@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>在ant编译java文件时产生debug信息 - Hacker and Geeker's Way</title>
+	<title>openstack swift all in one 详细介绍（一） - Hacker and Geeker's Way</title>
     <meta name="author" content="赵芝明">
     
-	<meta name="description" content="在ant编译java文件时产生debug信息">
-	<meta name="keywords" content="java,ant">
+	<meta name="description" content="openstack swift all in one 详细介绍">
+	<meta name="keywords" content="openstack swift all in one 详细介绍">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
@@ -101,42 +101,19 @@
 		<div id="content">
 			<div class="inner">
 	<article class="post">
-	<h2 class="title">在ant编译java文件时产生debug信息</h2>
-	<div class="entry-content"><p>使用ant编译java文件时，如果没有设置debug属性，则不会产生编译信息，ant的默认设置是不打印编译信息。</p>
+	<h2 class="title">Openstack Swift All in One 详细介绍（一）</h2>
+	<div class="entry-content"><h3>swift介绍</h3>
 
-<!--more-->
+<p>最近开始研究openstack的swift，openstack是一个开源的Iaas云框架，有云计算，云存储等功能，swift是其中基于对象存储的云存储组件，下面是对swift官网all in one部署流程的一个详细介绍。swift是一个分布式的存储系统框架，在正式部署时可以分很多台机器进行部署，这里all in one是指swift所有的服务都搭建在同一台机器上的意思。</p>
 
+<h3>环境准备</h3>
 
-<p>
-如果想在编译过程中显示编译信息，需设置debug属性为true，并且设置debugLevel，如下代码所示：</p>
+<ul>
+<li>操作系统：Ubuntu12.04LTS</li>
+<li>在ubuntu系统上创建swift用户，并有root权限</li>
+<li>使用回环设备做存储</li>
+</ul>
 
-<figure class='code'><figcaption><span>ant file - build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;javac</span> <span class="err">...</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span> <span class="na">debuglevel=</span><span class="s">&quot;lines, vars, source&quot;</span><span class="nt">&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ant的官方文档：</p>
-
-<table>
-<thead>
-<tr>
-<th> debug       </th>
-<th>  Indicates whether source should be compiled with debug information; defaults to off. If set to off, -g:none will be passed on the command line for compilers that support it (for other compilers, no command line argument will be used). If set to true, the value of the debuglevel attribute determines the command line argument.  </th>
-<th> No  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>debuglevel</td>
-<td>  Keyword list to be appended to the -g command-line switch. This will be ignored by all implementations except modern, classic(ver >= 1.2) and jikes. Legal values are none or a comma-separated list of the following keywords: lines, vars, and source. If debuglevel is not specified, by default, nothing will be appended to -g. If debug is not turned on, this attribute will be ignored. </td>
-<td>  </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>这里要注意的是如果设置debug属性为true，但是没有设置debuglevel属性，编译时还是不会打印信息，因为debuglevel的默认值是none，只有单独设置为lines, vars, source或其组合才会打印出信息。</p>
 </div>
 
 <div class="meta">
