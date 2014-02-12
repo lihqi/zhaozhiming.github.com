@@ -1,0 +1,2028 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2014-02-12T22:47:33+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[《黑客》读书笔记]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/02/10/make-harker-booke-note/"/>
+    <updated>2014-02-10T21:41:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/02/10/make-harker-booke-note</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/hacker.jpg"></p>
+
+<h2>简介</h2>
+
+<p>《黑客》这本书介绍的是上世纪50～80年代的一段计算机历史，介绍第一代黑客的起源，第二代硬件黑客对世界的影响，第三代游戏黑客如何让电脑融入大众生活，类似“魔戒三部曲”一样宏伟的一部计算机编年史。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>黑客的起源</h2>
+
+<p>MIT AI实验室第九大楼是黑客的发源地，&#8221;hack&#8221;一词大概最早就是由MIT的学生提出的，原来是用来形容本校学生的一些精心策划的恶作剧，但AI实验室的黑客们对&#8221;hack&#8221;却有着极大的尊敬。一般一项技艺能称为&#8221;hack&#8221;，它必须有创新，有风格，有技术含量，AI实验室里面效率最高的人就非常骄傲的称自己为&#8221;hacker&#8221;。</p>
+
+<h2>黑客马拉松</h2>
+
+<p>熟悉Facebook的人对黑客马拉松都会有所了解，Facebook每年都会举办几场黑客马拉松编程比赛，在这些比赛中也诞生了很多伟大的产品，在《黑客》这本书里面讲到这一活动的早期雏形。在上个世纪50年代，个人电脑还没有普及，在MIT学校里面接触电脑的那一帮最早的黑客只能通过大型机编程。但是大型机就那么几台，所以喜欢编程的黑客们的上机时间非常有限，一般是一个人刚上完机，另外一个人就迫不及待地顶替他的位置编写自己的代码，甚至有些黑客觉得白天上机的时间不够，会晚上偷偷溜进实验室继续编程。虽然现在个人电脑已经很普遍了，但黑客们还是很喜欢这种长时间编程活动。</p>
+
+<h2>黑客道德与敏捷开发</h2>
+
+<p>敏捷开发中有什么？有快速迭代，代码所有制，团队自组织，了解敏捷开发的同学对此都比较清楚，而黑客道德里面也有一些很相似的共同点，我因此觉得黑客道德是敏捷开发的原型。</p>
+
+<h4>信息应该免费</h4>
+
+<p>黑客普遍认为信息应该免费共享（为什么说普遍？因为比尔盖茨不是这样认为的，他认为软件也是脑力劳动的成果，所有人应该尊重劳动成果，所以他写了那一封很著名的信——<a href="http://en.wikipedia.org/wiki/Open_Letter_to_Hobbyists">给电脑爱好者的公开信</a>），他们认为计算机（包括软件和硬件）应该公开其中的黑盒，让所有人参与到其中的开发并对其进行完善，这样计算机才能取得更大的进步。敏捷开发中的代码所有制与此观点相同，认为团队中的代码不应该为个人所有，应该所有人都有权对代码进行修改。</p>
+
+<h4>快速开发产品原型</h4>
+
+<p>在Facebook崇尚的黑客之道中，就有<code>Done is better than Perfect</code>的说法，就是说一开始不要追求产品的完美，先做出产品的原型得到市场的反馈，再慢慢根据反馈来完善产品。黑客们一直以来也是这样做的，遇到感兴趣的问题不会想太多，做了再说，快速把核心功能开发出来验证自己的想法，很多伟大的产品都源自于此。敏捷开发中的快速迭代也是类似的原理，甚至最近比较火的精益创业也是此种观点。</p>
+
+<h4>对权威挑战</h4>
+
+<p>黑客希望信息共享，能快速开发产品，对开发的效率要求是十分严格，他们对工具的追求像对完美艺术追求一样。但大部分权威机构的产品都不能满足黑客们的要求，它们笨重、不开放、设计保守。黑客们更倾向于自己开发工具，自给自足，然后开放给其他黑客一起使用，大家一起完善。这是一种对权威的挑战、蔑视，黑客与生俱来的叛逆精神。</p>
+
+<h4>优雅简洁的代码</h4>
+
+<p>在还是大型机的时代，电脑的内存和容量非常小，黑客在编程的时候需要让自己的代码尽可能的少，这样才能“塞进”机器里面运行。比如实现某个功能，如果某人只是按部就班的实现这个功能，大家可能会觉得他只是靠蛮力解决了问题，勉强算是一个程序员，但如果他使用了一种奇妙的算法，让代码量大大减少了，那么大家会觉得他是一个黑客，是一位追求完美的艺术家，比如比尔盖茨编写的4KB大小的BASIC程序就经常为黑客们所津津乐道。敏捷开发中对代码的重构推崇有加，介绍重构的资料最经典的是Martin.Flower<a href="http://book.douban.com/subject/1229923/">重构</a>一书，技术背后的思想我觉得跟这些早期黑客是一致的，要像艺术家一样对待自己的代码，追求优雅和完美，是一种对自我的超越。有个说法是，如果你看自己以前的代码觉得很烂，证明你已经进步了，看自己代码的时间间隔越短，证明你进步的越快，比如上午写完的代码，下午review时觉得太糟糕了，那恭喜你，你已经进步了。</p>
+
+<h2>防御性编程</h2>
+
+<p>最后说一下防御性编程，比较有意思。以前有一位外号叫“嘎吱船长”的黑客约翰.德拉浦，他是位天才的技术家，他喜欢的编程风格就是“防御式编程”。大部分人在修复bug时，一般都会找到出错的代码，然后改正它，而船长的改法比较特别，不修改出错的代码，而是加上另外一段代码来让程序自己发现问题后自己修复。比如下面的一段有错误的代码：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'>   <span class="k">def</span> <span class="nf">method_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>      <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span class='line'>      <span class="nb">sum</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nb">sum</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+</span><span class='line'>          <span class="c"># do something</span>
+</span><span class='line'>          <span class="o">...</span>      
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>正常人会这样改：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'>   <span class="k">def</span> <span class="nf">method_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>      <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span class='line'>      <span class="nb">sum</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nb">sum</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span> <span class="c">#一般会改这里</span>
+</span><span class='line'>          <span class="c"># do something</span>
+</span><span class='line'>          <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是船长是这样来修复：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'>   <span class="k">def</span> <span class="nf">method_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>      <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span class='line'>      <span class="nb">sum</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c">#在这里加代码...  </span>
+</span><span class='line'>      <span class="k">if</span> <span class="nb">sum</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">:</span>
+</span><span class='line'>          <span class="nb">sum</span> <span class="o">=</span> <span class="mi">5</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">if</span> <span class="nb">sum</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+</span><span class='line'>          <span class="c"># do something</span>
+</span><span class='line'>          <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>让程序完成自我救赎~~~^_^</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[用腻了bootstrap的可以试试semantic-ui]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/12/16/hello-semantic-ui/"/>
+    <updated>2013-12-16T07:16:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/12/16/hello-semantic-ui</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/semantic-ui.png"></p>
+
+<h2>semancti-ui介绍</h2>
+
+<p><a href="http://semantic-ui.com/">semantic-ui</a>是html/css框架的新贵，是继bootstrap和foundation之后的又一css神器。semantic-ui一出现在github上就受到火热的关注，一直在关注排行榜前列。semantic-ui最大的特点：充分利用CSS3动画特效，简洁实用漂亮的样式这些都是其最受欢迎的原因之一。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>扁平化设计</h2>
+
+<p>随着iOS 7的发布，扁平化设计(flat design)被更多人所熟识。什么是扁平化设计呢？在实际当中，扁平化设计一词所指的是抛弃那些已经流行多年的渐变、阴影、高光等拟真视觉效果，从而打造出一种看上去更“平”的界面。扁平风格的一个优势就在于它可以更加简单直接的将信息和事物的工作方式展示出来，减少认知障碍的产生。</p>
+
+<p>在主流的css框架bootstrap中，开始是不支持扁平化设计的（bootstrap2），但在最新的bootstrap3中，几乎所有的组件都改用了扁平化的设计，但由于设计的不好，3的版本被很多原使用bootstarp的开发所诟病。</p>
+
+<p>而semantic-ui是天生就是扁平化的设计，让人用起来更加觉得时尚、简洁。</p>
+
+<h2>响应式设计</h2>
+
+<p>什么是响应式设计？响应式Web设计(Responsive Web design)的理念是，页面的设计与开发应当根据用户行为以及设备环境(系统平台、屏幕尺寸、屏幕定向等)进行相应的响应和调整。具体的实践方式由多方面组成，包括弹性网格和布局、图片、CSS media query的使用等。无论用户正在使用笔记本还是iPad，我们的页面都应该能够自动切换分辨率、图片尺寸及相关脚本功能等，以适应不同设备;换句话说，页面应该有能力去自动响应用户的设备环境。这样，我们就可以不必为不断到来的新设备做专门的版本设计和开发了。</p>
+
+<p>在semantci-ui的官网里面是这样说的：</p>
+
+<blockquote><p>Every component is defined using em and rem so that components can be resized simply on the fly. Want a menu to get smaller on mobile? Simply have it&#8217;s font-size change using a media query.</p></blockquote>
+
+
+<p>semantic-ui的每个组件都是使用“em”和“rem&#8221;，所以组件可以在不同的显示设备上自动地调整大小。</p>
+
+<h2>semantic-ui兼容性</h2>
+
+<p><strong>支持的浏览器如下</strong></p>
+
+<ul>
+<li>Last 2 Versions FF, Chrome, IE (aka 10+)</li>
+<li>Safari 6</li>
+<li>IE 9+ (Browser prefix only)</li>
+<li>Android 4</li>
+<li>Blackberry 10</li>
+</ul>
+
+
+<p>前几天在semantic-ui的github项目里提了个问题，问<a href="https://github.com/Semantic-Org/Semantic-UI/issues/431">semantic-ui是否支持IE6～8</a>，下面有个老外来了句：Support IE6? Are you creazy?呵呵，看来在国外还是不鸟IE的偏多。</p>
+
+<p>在这里吐槽一下IE，IE可以算是浏览器界的一朵奇葩&hellip;不对，奇葩还有些褒意在里面，应该是浏览器界的一个毒瘤，一直阻碍着前端框架的发展，好在现在很多前端框架都不care IE了，比如angularjs，bootstrap等就直接只支持IE8+（不包括IE8），就连鼎鼎大名的Jquery也宣布从2.x版本开始不支持IE6～8，看来IE的淘汰是在所难免了哈。</p>
+
+<p>不过IE9以后情况还是有所好转，《Javascript高级程序设计》的作者 Nicholas C. Zakas也让大家对IE9以后的版本可以另眼相看。但不管怎么样，IE6～8的各种bug和不兼容让web前端开发举步维艰是个不争的事实，该淘汰的时候就应该淘汰。最好的做法让用户升级浏览器或改用chrome，不要在兼容性上面浪费精力。</p>
+
+<h2>semantic-ui示例</h2>
+
+<p>刚刚进入到semantci-ui的网站的时候，就被它的各种控件样式吸引住了，感觉比bootstrap好看很多，又很符合当前流行的“扁平化设计”的风格,这里列一下几个看起来比较酷的控件。</p>
+
+<h4>好看的按钮</h4>
+
+<div class="ui buttons">
+  <div class="ui button">Cancel</div>
+  <div class="or"></div>
+  <div class="ui positive button">Save</div>
+</div>
+
+
+<h4>代码如下</h4>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui buttons&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui button&quot;</span><span class="nt">&gt;</span>Cancel<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;or&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui positive button&quot;</span><span class="nt">&gt;</span>Save<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<div class="ui divider"></div>
+
+
+<p></p>
+
+<h4>好看的标签</h4>
+
+<div class="ui two column grid" style="display: block;">
+  <div class="row">
+    <div class="column">
+      <div class="ui raised segment">
+        <div class="ui ribbon label">Dogs</div>
+        <p>Pretty nice animals.</p>
+        <div class="ui teal ribbon label">Cats</div>
+        <p>Also pretty nice animals, but can prefer solitude.</p>
+        <div class="ui red ribbon label">Ogres and monsters</div>
+        <p>Never seen one as a pet before, but I imagine they&#8217;d make pretty terrible companions.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<h4>代码如下</h4>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui two column grid&quot;</span> <span class="na">style=</span><span class="s">&quot;display: block;&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;column&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui raised segment&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui ribbon label&quot;</span><span class="nt">&gt;</span>Dogs<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>Pretty nice animals.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui teal ribbon label&quot;</span><span class="nt">&gt;</span>Cats<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>Also pretty nice animals, but can prefer solitude.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui red ribbon label&quot;</span><span class="nt">&gt;</span>Ogres and monsters<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>Never seen one as a pet before, but I imagine they&#39;d make pretty terrible companions.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<div class="ui divider"></div>
+
+
+<p></p>
+
+<h4>好看的注解</h4>
+
+<div class="ui comments">
+  <div class="comment">
+    <a class="avatar">
+      <img src="http://zhaozhiming.github.io/images/post/photo2.jpg">
+    </a>
+    <div class="content">
+      <a class="author">Dog Doggington</a>
+      <div class="text">
+        I think this is a great idea and i am voting on it
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<h4>代码如下</h4>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui comments&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;comment&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;avatar&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;/images/post/photo2.jpg&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;author&quot;</span><span class="nt">&gt;</span>Dog Doggington<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;text&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        I think this is a great idea and i am voting on it
+</span><span class='line'>      <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>是不是非常酷？想使用这些很酷很炫的特性，就赶快使用semantic-ui吧～</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[类似github的框架]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/10/25/something-like-github-can-build-by-self/"/>
+    <updated>2013-10-25T07:36:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/10/25/something-like-github-can-build-by-self</id>
+    <content type="html"><![CDATA[<p>github是程序员经常上的网站，但如果是在一家苦逼不能访问外网的公司，那不能把自己的代码托管在github上绝对是一件非常痛苦的事情。如果想要在公司内网也可以用github托管自己的代码，那就要自己搭建类似github的服务器，好在类似github的框架有很多，基本上都是基于git的，可以无缝衔接github而无需额外学习其他技术。</p>
+
+<!--more-->
+
+
+<h2>github企业版</h2>
+
+<p><a href="https://enterprise.github.com/">github enterprise</a>，如果你的基金充足，github企业版绝对是你的首选。它基本上包涵了现有github网站上面的一切功能，你使用它甚至在视觉上都不会发生任何变化，界面都是和现有github一样的。而且安装十分方便，安装文件就是一个虚拟机镜像文件，只要用虚拟机加载就可以了。但刚才说了“如果你的基金充足”，说明它是要收费的，而且价格不菲，1个20人团队的license每年要5000美刀。国外有用到github企业版的公司有Bizzard（玩游戏的都知道），国内用的很少，我了解到的只有豆瓣在用，而且只用在其中一个或几个项目组（PS:豆瓣好像有自己的代码托管工具叫豆瓣Code，克隆github且增加了自己的特性）。</p>
+
+<h2>gitlab</h2>
+
+<p><a href="https://github.com/gitlabhq/gitlabhq">gitlab</a>，是用Ruby On Rails开发的一款开源代码托管框架，界面也是仿照github设计的，github用户可以快速上手，最重要的是它是一个开源的软件，这意味着你可以免费获取到软件，并将它部署到自己的机器上。但是gitlab的安装过程比较复杂，安装需要依赖以下几个工具：</p>
+
+<ul>
+<li>ruby 1.9.3+</li>
+<li>git 1.7.10+</li>
+<li>redis 2.0+</li>
+<li>MySQL or PostgreSQL</li>
+</ul>
+
+
+<p>另外gitlab的markdown文件显示功能不是很好，比如markdown中的table和嵌入html在github上面是可以正常显示，但是在gitlab上面就不行。</p>
+
+<h2>GitBucket</h2>
+
+<p><a href="https://github.com/takezoe/gitbucket">GitBucket</a>，是一个用scala写的高仿github的代码托管框架。这个框架是今年才开发的，目前功能还不是很齐全，数据库也是用的内存数据库，但是github上面的基本功能都有。它的一个最重要的特点是<strong>安装非常方便</strong>，只需要下载gitbucket最新版本的war包，然后放到随便哪个web容器（Jetty，Tomcat）就可以启起来了，想尝尝鲜的同学可以试用一下。</p>
+
+<h2>其他框架</h2>
+
+<p>下面列举一些其他类似的框架，没怎么用过不好做评价，下面的括号表示用哪种语言写的。</p>
+
+<ul>
+<li><a href="http://gitorious.org/">Gitorious</a>(Ruby)</li>
+<li><a href="http://www.indefero.net">InDefero</a>(PHP)</li>
+<li><a href="http://repo.or.cz">Girocco</a>(Perl)</li>
+<li><a href="http://eagain.net/gitweb/?p=gitosis.git">Gitosis</a>(Python)</li>
+<li><a href="http://github.com/sitaramc/gitolite">Gitolite</a>(Perl)</li>
+</ul>
+
+
+<p>这里也有一篇文章是介绍类似github框架的框架，看<a href="http://blacka.com/david/2010/09/28/hosting-your-own-git-repositories/">这里</a>。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[如何了解新技术（三）——微信公众号]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/10/24/how-to-know-new-technique-about-it-part3/"/>
+    <updated>2013-10-24T07:32:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/10/24/how-to-know-new-technique-about-it-part3</id>
+    <content type="html"><![CDATA[<p>随着微博等新兴社交工具的兴起，很多个人博客的博主都放弃了博客而去转战微博，但仍然有一些个人博客坚持了下来，在微信平台搭建了自己的公众帐号，以自身博客内容做起了自媒体。下面就介绍一下几个比较出名的公众帐号。</p>
+
+<!--more -->
+
+
+<h2>微信的公众帐号——小道消息，道哥的黑板报，MacTalk池建强等</h2>
+
+<p><a href="http://wemedia.so.com/xiaodaoxiaoxi.html">小道消息</a>，“丁香园”技术负责人冯大辉，以科技人文类的文章，IT业界的小道消息吸引读者。作者前身是在淘宝做数据库方面的工作，技术能力很强，文笔也很犀利，后出来自主创业，所以文章涵盖了作者在技术，管理和成长等各方面的独到见解。</p>
+
+<p><a href="http://taosay.net/">道哥的黑板报</a>，《白帽子讲Web安全》的作者，前淘宝（淘宝的牛人真不少啊）的高级安全专家，现在也出来自主创业。首先作者是一名黑客，而且是一名顶级黑客，手握很多未公开漏洞的人之一。文章大部分内容讲的是安全相关的东西，比如今年struts2漏洞相关的内容；还有讲一些黑客的传奇历史，比如最近介绍一名中国传奇黑客的成长史；还有其他跟技术，成长，文学相关的文章。</p>
+
+<p><a href="http://macshuo.com/">MacTalk池建强</a>，原本是介绍Mac技巧的文章，但后来慢慢变成技术和人文结合的文章，时而技术时而随笔，最近作者还将其公众帐号上面的文章整理形成一本书叫《MacTalk·人生元编程》，在各大电子阅读平台上都有售。公众帐号之间经常有互相推荐，这个帐号也是在小道消息和道哥的推荐下我才关注的，慢慢发现作者的文笔风趣，文章内容也十分有料。现在这3个公众帐号号称微信三jian客(我也不知道哪个jian&hellip;)，他们还将在最近的上海Qcon上面做演讲，有兴趣的同学可以关注他们哦。</p>
+
+<p><a href="http://www.guifabu.com/">硅发布</a>，是一个专注中国和美国科技信息、分析和观点的新媒体，在最近的中国自媒体评选中排名中国前十。</p>
+
+<p>还有之前提到的比如infoQ，36氪，极客公园等也有自己的公众帐号，其实越来越多的IT网站都慢慢创建了自己的微信公众帐号，有兴趣的同学可以自行搜索一下。</p>
+
+<h2>顺藤摸瓜</h2>
+
+<p>最近在知乎上面看到了关于读书的一些讨论，有介绍书的，有讨论读书方法的等等。</p>
+
+<p>其中有人提问如何读到好书？有人就回答道：想要读好书，就要从自己喜欢的书或作者开始，看看里面推荐的一些书和作者，这样顺藤摸瓜就可以找到很多好书，避免浪费时间去读一些垃圾书。其实了解技术的渠道也是一样的，从一个大牛开始了解，找他喜欢的书或者blog，顺藤摸瓜挨个这样找下去，就可以找到更多大牛和高质量的博客了。</p>
+
+<p>说到这里要补充一下之前讲到的关于网站的内容，其实大部分的网站和博客的收录可以使用rss阅读器来完成，之前比较出名的是Google Reader，现在Google Reader关闭了可以用<a href="http://www.feedly.com">feedly</a>来代替，而且可以完整迁移原Google Reader里面的数据。</p>
+
+<p>还有一个讨论是关于如何专注阅读的，对于程序员来讲技术书的阅读是必不可少的，但是技术书需要集中精神，不受外界干扰的阅读才能有所收获，简单分享一下讨论内容：</p>
+
+<ul>
+<li>首先要把看技术类书籍当成一件严肃的事情，不能跟看小说看杂志一样随便。</li>
+<li>其次要选择一段完整的时间来做阅读，保证中间不要被干扰。</li>
+<li>然后记录读书笔记。</li>
+<li>最后是温习，用提问题或者画思维导图的方式来回顾之前看的内容。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[如何了解新技术（二）——电子杂志]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/10/17/how-to-know-new-technique-about-it-part2/"/>
+    <updated>2013-10-17T20:45:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/10/17/how-to-know-new-technique-about-it-part2</id>
+    <content type="html"><![CDATA[<p>除了平时浏览网站外，我们还可以通过手机来了解技术资讯。这里推荐一款APP——多看阅读，这是一款很不错的阅读APP，它以精品阅读来吸引喜欢读书的朋友，虽然上面的电子书没有亚马逊的多，但他们的电子书制作十分精良，每一本书都让人爱不释手，而且完美匹配各种移动设备的尺寸&hellip;不说了，说多了就有广告嫌疑了。下面就说说多看上面的电子杂志。</p>
+
+<!--more -->
+
+
+<h2>免费的电子杂志——极客公园、码农、虎嗅等</h2>
+
+<p><a href="http://www.geekpark.net">极客公园</a>，内容和36氪相近，也是有很多质量很好的文章，介绍最新的APP或者创业公司。极客公园每个月都有一个主题，比如最近几期的智能硬件，打车应用等。还定期举办了一些活动，记得有一期邀请了很多IT大佬比如百度的李彦宏，360的周鸿祎，微信的张小龙等来做演讲，内容十分精彩。每月一期的电子杂志涵盖了这个月里面的精华文章内容，让你足不出户就可以了解最近发生的IT资讯。</p>
+
+<p><img class="right" src="http://zhaozhiming.github.io/images/post/1074.948.big.jpg">  <br/>
+<strong>码农</strong>，是图灵社区出版的一本关于程序员的电子杂志。这里面重点介绍的是技术，比如编程语言，算法，技术框架等，还有一些科技人文，比如有一期对几位国内的大牛进行访谈，介绍了他们从菜鸟蜕变到大牛的过程。因为是图灵社区出版的书，所以里面还有一些新书推荐，基本上都是关于技术类的。有点可惜的是，杂志好像不再更新了，最晚的一期是今年7月。</p>
+
+<p><a href="http://www.huxiu.com">虎嗅</a>是一个有视角的，个性化商业资讯与交流平台，核心关注对象是包括公众公司与创业型企业在内的一系列明星公司。杂志的内容和36氪，极客公园有点类似，但更偏重于商业。杂志是从去年开始的，前面几期杂志是免费的，但从最近开始杂志开始收费，每本是￥2.99。</p>
+
+<p><strong>36氪</strong>，之前讲的36氪网站，它在多看上面也有自己的电子杂志，而且是免费的。</p>
+
+<p><strong>知乎周刊</strong>，这个是最近发现的比较好玩的一个电子杂志，上面的内容来自最近一周的精彩问答（应该是根据点赞的次数来统计的），每一期都有一个主题，比如关于旅游，设计，健身等。杂志的内容虽然不是全部都和技术相关，但有时候看看这种也可以扩展自己的视野，了解了解IT以外的世界。</p>
+
+<h2>电子书和纸质书</h2>
+
+<p>顺便说下电子阅读和纸质书阅读，我现在大部分的阅读都是通过智能手机（其实也可以通过其他移动设备，比如pad，kindle等），因为手机随身携带，无论走到哪都可以阅读，只要有空闲时间也可以阅读，anywhere，anytime，非常方便。纸质书在这一点上是不能与之相比的。</p>
+
+<p>传统的纸质书长时间的专注，而现在外界干扰的东西太多了,以致我们很难长时间地阅读（比如有时候想起什么事情，或者看看网站，看看电视什么的等，也可能是我的自制力比较弱吧:(），特别是看技术类的书，如果无法专注的话，阅读的进度会非常缓慢，有时候我看一本技术书甚至要几个月的时间才看完:(。而电子书就不存在这个问题了，等车的时候可以看，等电梯的时候也可以看，一般这种碎片时间都比较短，专注相对比较容易，阅读内容可以较快吸收。</p>
+
+<p>如果在公交车上拿出一本专业书来看，别人可能会觉得你装，但如果是用手机读书的话，别人就不知道你看的是什么书了，别人或许以为你和他读的一样的YY小说呢，这样既可以避开别人的眼光又可以心安理得的读自己的书，低调奢华又不失内涵，多好。</p>
+
+<p>价格方面，电子书相比纸质书要便宜一半甚至一半以上，但电子书的数量现在还不是很多，可能是因为电子书是一种新兴的产物，还没有一种更快捷更成熟的方式来创建电子书。或者是因为传统观念还未转变过来，可能大家觉得电子书像以前的pdf一样，应该是免费的，付费去买一件虚拟的东西感觉“不划算”，没有利益就很难驱动生产。但随着接受电子书的用户越来越多，电子书的需求也会随着增多，这样在市场利益的驱动下，电子书的产量和质量也会越来越高，而纸质书将会慢慢淡出市场。</p>
+
+<p>总结电子书的优点就是：随时随地，小巧灵活，价格便宜。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[如何了解新技术（一）——网站]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/10/15/how-to-know-new-technique-about-it-part1/"/>
+    <updated>2013-10-15T21:28:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/10/15/how-to-know-new-technique-about-it-part1</id>
+    <content type="html"><![CDATA[<p>说说自己平时了解业界新技术和技术资讯的途径，其实基本上都是国内的网站，或者是中文的blog，因为自己实在懒得费精力去看英文哈。</p>
+
+<!--more -->
+
+
+<h2>大型的科技资讯网和博客网——infoQ，博客园，36氪等</h2>
+
+<p><a href="http://www.infoq.com/cn">InfoQ</a>，全球知名的IT资讯网站，在上面可以看到一些大神的访谈，前沿技术的介绍，知名网站的案例分析等，文章质量颇高(这里主要是指国内作者投稿的文章，而国外文章翻译过来的就没那么好了）。InfoQ还会定期举办QCon全球软件大会，今年5月份有幸参加了北京的QCon大会，认识到了安全专家道哥和golang国内传道者（也是go的web框架beego作者）astaxie谢，收获颇丰。。。额，跑题了。</p>
+
+<p><a href="http://www.cnblogs.com">博客园</a>，聚集了大量高质量技术博客在上面，简洁的页面，漂亮的代码嵌入页面，没有太多恼人的广告（一点广告都没有不现实，毕竟网站也是要盈利的），这些都是我喜欢的。有很多技术大牛也在上面写自己的博客，比如新浪技术大V老赵（现在他的博客不知道搬哪了-_-）等。</p>
+
+<p><a href="http://www.36kr.com">36氪</a>，是一家关注互联网创业，提供国内外最新互联网资讯的公司。这家网站提供的资讯主要是针对创业公司，创业项目，创新产品等，相对技术类的介绍比较少。其实我在PC上看浏览这个网站比较少，因为我关注了他们的电子杂志，每个月有一本（免费的，在多看阅读上有，电子杂志后面会介绍），上面收集了一个月内36氪的精华文章。</p>
+
+<p>还有其他比较有名的网站和博客，比如：</p>
+
+<p><a href="http://www.oschina.net">开源中国</a>——主要介绍开源项目，每天会介绍最新的国内和国外开源项目，定期也会举办一些线下活动。</p>
+
+<p><a href="http://coolshell.cn">酷壳</a>——原来是技术大牛陈皓搭建的个人博客，后来由于超高的博客质量以及其观点的争议性，吸引了很多技术人员的关注，并在上面投稿发表文章。</p>
+
+<p><a href="http://www.ruanyifeng.com/blog">阮一峰的网络日志</a>——IT技术名人，也是以高质量的博客内容出名。</p>
+
+<p>如果想了解国外的IT技术资讯网站，可以看看知乎<a href="http://www.zhihu.com/question/19557033">这个问题</a>的答案。</p>
+
+<p>可能有人会问，怎么没有介绍CSDN和ITeye？<br/>
+说实话，我以前还是经常上这2个网站的，但现在，我只能说“呵呵”。<br/>
+CSDN有时候开个首页要让我等半天，而且老是弹出广告让我很不爽，帖子内容也普遍低下，问题回答区基本没人（都上stackoverflow去了）。引用酷壳陈皓的话<code>CSDN算技术网站吗？</code><br/>
+ITeye呢感觉沦为菜鸟集中地，看着帖子里面夹杂着大片大片无格式的代码就觉得头晕，而且大部分帖子还是转载的。<br/>
+顺便再吐槽一下百度，前段时间酷壳的404页面写着<strong>“做环保的程序员，从不用百度开始”</strong>，百度觉得名誉遭到“贬损”，于是酷壳陈皓收到了百度的律师信。。。就我个人使用经验来说，我用百度来搜技术类的问题真的什么也搜不到，即使有也是上面那2个网站的链接，所以陈皓的告诫我觉得是对的。现在我一般是用Google加英文描述来查找我需要的答案，如果有时候出现Google访问不了的情况（再次BS一下GFW），就用Bing来搜，也能搜出跟Google差不多的答案出来。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[如何重构一个圈复杂度超30的类]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/10/08/how-to-refactor-a-class-which-cyclomatic-complexity-over-30/"/>
+    <updated>2013-10-08T20:43:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/10/08/how-to-refactor-a-class-which-cyclomatic-complexity-over-30</id>
+    <content type="html"><![CDATA[<p>下面的类是一个老系统的代码，现在放到sonar上面进行扫描，扫出来的结果发现复杂度超过了30。</p>
+
+<p>代码复杂度是指代码中的分支数量，比如有一个if分支，代码复杂度就加1，如果if中有“||”或者“&amp;&amp;”那么代码复杂度就加2，for和while同理。一般复杂度超过10的类就算是比较复杂的了，而这个类的复杂度竟然达到了30，代码的糟糕程度可见一斑，现在我们就来重构一下这个类的代码。</p>
+
+<!--more-->
+
+
+<p>原始文件在<strong><a href="https://github.com/zhaozhiming/zhaozhiming.github.com/blob/source/source/file/SomeClient(old).java">这里</a>。</strong><br/>
+重构开始吧！</p>
+
+<h2>多处String类型非空判断</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">StringUtil</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">username</span><span class="o">))</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;username can not be null&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">StringUtil</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">password</span><span class="o">))</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;password can not be null&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">udto</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;ICRUploadDTO can not be null&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来的地方替换为</span>
+</span><span class='line'><span class="n">checkStringParamEmpty</span><span class="o">(</span><span class="n">username</span><span class="o">,</span> <span class="s">&quot;username&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">checkStringParamEmpty</span><span class="o">(</span><span class="n">password</span><span class="o">,</span> <span class="s">&quot;password&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">checkStringParamEmpty</span><span class="o">(</span><span class="n">udto</span><span class="o">.</span><span class="na">getUrlPath</span><span class="o">(),</span> <span class="s">&quot;urlPath&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkStringParamEmpty</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">StringUtil</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">value</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; can not be null&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>原代码中不止这3个参数的校验，还有很多，越多参数的校验，我们重构后的复杂度就会越低。</p>
+
+<p><strong>代码复杂度变化：原来是3，修改后为1。</strong></p>
+
+<h2>多String值判断</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">(!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;0&quot;</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;1&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;2&quot;</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;3&quot;</span><span class="o">))</span>
+</span><span class='line'><span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;priority must be 0/1/2/3&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来代码替换为</span>
+</span><span class='line'><span class="n">checkValueWithinList</span><span class="o">(</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">());</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法：</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkValueWithinList</span><span class="o">(</span><span class="n">String</span> <span class="n">priority</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(!</span><span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">&quot;0&quot;</span><span class="o">,</span> <span class="s">&quot;1&quot;</span><span class="o">,</span> <span class="s">&quot;2&quot;</span><span class="o">,</span> <span class="s">&quot;3&quot;</span><span class="o">).</span><span class="na">contains</span><span class="o">(</span><span class="n">priority</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;priority must be 0/1/2/3&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是4，修改后为1。</strong></p>
+
+<h2>对list的非空判断</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">list</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;list can not be null&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来的代码替换为</span>
+</span><span class='line'><span class="n">checkValueWithinList</span><span class="o">(</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">());</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkListNoNull</span><span class="o">(</span><span class="n">List</span> <span class="n">list</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ICRClientException</span><span class="o">(</span><span class="s">&quot;list can not be null&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是2，修改后为1。</strong></p>
+
+<h2>多个catch的内容相同</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kt">int</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">code</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">executeMethod</span><span class="o">(</span><span class="n">post</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">HttpException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来的地方替换为</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">code</span> <span class="o">=</span> <span class="n">executeHttpClient</span><span class="o">(</span><span class="n">httpClient</span><span class="o">,</span> <span class="n">post</span><span class="o">);</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">int</span> <span class="nf">executeHttpClient</span><span class="o">(</span><span class="n">HttpClient</span> <span class="n">httpClient</span><span class="o">,</span> <span class="n">PostMethod</span> <span class="n">post</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">code</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">code</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">executeMethod</span><span class="o">(</span><span class="n">post</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">code</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是2，修改后为1。</strong></p>
+
+<h2>if判断结果复杂化</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">==</span> <span class="mi">200</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;ok&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">==</span> <span class="mi">500</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">code</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">post</span><span class="o">.</span><span class="na">getStatusText</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来代码替换为</span>
+</span><span class='line'><span class="k">return</span> <span class="nf">returnFinialResult</span><span class="o">(</span><span class="n">post</span><span class="o">,</span> <span class="n">code</span><span class="o">);</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="c1">//新增一个方法</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">returnFinialResult</span><span class="o">(</span><span class="n">PostMethod</span> <span class="n">post</span><span class="o">,</span> <span class="kt">int</span> <span class="n">code</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">==</span> <span class="mi">500</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ICRClientException</span><span class="o">(</span><span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">());</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">200</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ICRClientException</span><span class="o">(</span><span class="n">code</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">post</span><span class="o">.</span><span class="na">getStatusText</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;ok&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是4，修改后为3。</strong></p>
+
+<h2>本地变量始终不为null</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">uploadToICR</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">,</span> <span class="n">ICRUploadDTO</span> <span class="n">udto</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">PostMethod</span> <span class="n">post</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpClient</span><span class="o">();</span>
+</span><span class='line'>  <span class="c1">//some code here</span>
+</span><span class='line'>  <span class="err">…</span>
+</span><span class='line'>  <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">post</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">post</span><span class="o">.</span><span class="na">releaseConnection</span><span class="o">();</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">httpClient</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">httpClient</span><span class="o">.</span><span class="na">getHttpConnectionManager</span><span class="o">().</span><span class="na">closeIdleConnections</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重构之后：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">uploadToICR</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">,</span> <span class="n">ICRUploadDTO</span> <span class="n">udto</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpClient</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">PostMethod</span> <span class="n">post</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>  <span class="c1">//some code here</span>
+</span><span class='line'>  <span class="err">…</span>
+</span><span class='line'>  <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">post</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">post</span><span class="o">.</span><span class="na">releaseConnection</span><span class="o">();</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是1，修改后为0。</strong></p>
+
+<h2>读取IO流的方法，为什么要自己实现？</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">readData</span><span class="o">(</span><span class="n">InputStream</span> <span class="n">ins</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">byte</span><span class="o">[]</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">2048</span><span class="o">];</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">byte</span> <span class="n">data</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">2048</span><span class="o">];</span>
+</span><span class='line'>    <span class="kt">byte</span><span class="o">[]</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">((</span><span class="n">len</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">2048</span><span class="o">))</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kt">int</span> <span class="n">newcount</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="n">len</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">newcount</span> <span class="o">&gt;</span> <span class="n">buf</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="kt">byte</span> <span class="n">newbuf</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">Math</span>
+</span><span class='line'>                        <span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">buf</span><span class="o">.</span><span class="na">length</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="o">,</span> <span class="n">newcount</span><span class="o">)];</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">newbuf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">buf</span> <span class="o">=</span> <span class="n">newbuf</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">buf</span><span class="o">,</span> <span class="n">count</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">count</span> <span class="o">=</span> <span class="n">newcount</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">count</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">result</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ins</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在原代码里面自己实现了一个对读取IO流字节的方法，这个可以使用apache-io或者guava的API代替：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//使用apache io API的实现：</span>
+</span><span class='line'><span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span> <span class="o">=</span> <span class="n">IOUtils</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
+</span><span class='line'><span class="c1">//使用guava API的实现：</span>
+</span><span class='line'><span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes1</span> <span class="o">=</span> <span class="n">ByteStreams</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>代码复杂度变化：原来是很多，修改后为0。</strong></p>
+
+<p>最终重构后的版本见<strong><a href="https://github.com/zhaozhiming/zhaozhiming.github.com/blob/source/source/file/SomeClient(new).java">这里</a></strong>，最后的代码复杂度从原来的30降到了3。<br/>
+代码写的比较仓促，没有写单元测试，其实最好的做法是在重构之前先写好单元测试，然后再慢慢修改原来的代码，每修改一处地方跑一遍单元测试，这样可以保证你的重构没有破坏原来的代码逻辑。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[我的octopress配置]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/09/05/my-octopress-setting/"/>
+    <updated>2013-09-05T07:33:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/09/05/my-octopress-setting</id>
+    <content type="html"><![CDATA[<p>在github上用octopress搭建了自己的blog，octopress号称是“专门给黑客打造的博客（A blogging framework for
+把hackers）”，使用Markdown语法来写blog确实感觉像写代码一样，而且写好的
+把blog可以本地调试好了再上传到github的服务器，就像你的应用程序调试好了部署到服务器一样。</p>
+
+<!--more-->
+
+
+<p>
+我最喜欢的是octopress的代码片段，简洁清晰，而且支持各种语言的高亮显示，你还可以在你的blog中嵌入不同的js框架（比如jquery或angularJs），展示js代码的效果。octopress支持的插件很多，还可以选择各种主题来装饰你的blog，下面我也按照惯例秀秀自己的octopress配置。</p>
+
+<h3>主题</h3>
+
+<p>你当然可以使用octopress的默认主题，但这样很容易和其他人的界面“撞衫”，想要让自己的octopress与众不同，就要定制自己的主题界面。在github上面可以找到octopress的第三方主题，地址在<a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">这里</a>，另外还有一个网站也是专门介绍octopress主题的，地址在<a href="http://opthemes.com/">这里</a>。其中也有一些国人制作的主题界面，非常漂亮。</p>
+
+<h3>评论插件</h3>
+
+<p>原先使用的是国外的一个第三方评论插件Disqus，但由于国外多用facebook或twitter等帐号来登录这个插件，而这些网站都被我们伟大的GFW墙了，所以我选择了国内的一个同类产品——多说（其实应该是山寨Disqus的）。多说可以使用国内主流应用的帐号来登录，比如新浪微博或QQ等，可以将你blog中的评论保存到服务器上，后续不管你把blog迁移到什么地方，评论都不会消失。可以到<a href="http://duoshuo.com/">这里</a>下载。</p>
+
+<h3>标签云</h3>
+
+<p>octopress默认的只有目录（categories），没有标签（Tag），目录和标签是不一样的，每一篇blog只能归在一个目录里面，但却可以归在多个标签中。随着标签慢慢增多，可以将标签做成标签云，放在blog的边栏上，不仅非常美观，还可以看出你的blog关注方向有哪些。想做标签云，需要使用到2个插件，<a href="https://github.com/robbyedwards/octopress-tag-pages">robbyedwards/octopress-tag-pages</a>和<a href="https://github.com/robbyedwards/octopress-tag-cloud">robbyedwards/octopress-tag-cloud</a>。具体安装步骤请参照该github上的说明。</p>
+
+<h3>同步插件</h3>
+
+<p>在github上面搭建自己的octopress博客，有个缺点是在搜索引擎中没有收录你的网站，导致别人很难在google或者百度里面找到你的文章，如果你的blog放在比较大的博客网站的话（比如博客园、博客大巴等），在各大搜索网站就可以很容易搜到你的blog。我曾经试过在每篇blog上面加上“keywords&#8221;标签来记录post的关键字，希望搜索引擎可以搜录，但结果还是不行。<br/>
+在网上搜了一下，发现有人写了一个octopress插件，可以将octopress的blog同步到几个比较大的博客网站，可以同步所有的blog，也可以同步最近一篇blog。网址在<a href="https://github.com/huangbowen521/octopress-syncPost">这里</a>。<br/>
+上面几个是我的octopress主要插件，主题上面我还是不大满意，可能以后还会更新。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[facebook的工程师文化——《打造facebook》读后感]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/06/04/facebook-engineer-culture/"/>
+    <updated>2013-06-04T07:36:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/06/04/facebook-engineer-culture</id>
+    <content type="html"><![CDATA[<p>在今年北京的QCon大会上听了facebook早期中国籍工程师王淮的演讲，受益匪浅，主题是如何打造高效能团队，主要介绍他在facebook的一些经历和管理上的经验分享。现在的他是一名天使投资人，投资的领域有移动互联，支付，云应用等。他还写了《打造facebook》一书，讲了facebook的公司文化和他在其中的开发管理等经历。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h3>工具文化</h3>
+
+<p>这本书给我印象最深的一点是facebook的&#8221;工具文化&#8221;。为帮助工程师更好的进行产品开发，facebook对内部工具Tools是非常关注的。facebook极力强调，要将最好的工程师放到工具开发这一块，因为工具做好了，可以达到事半功倍的效果，所有人的效率都可以提高，而不仅仅是工程师。还有通过工具来解决流程上面的问题，比如公司在推广一些规范性的规则，传统的方法是反复强调，另一种是开发出好用的工具，将这些东西固定在工具里面，借助工具进行强制性推广。不断的更新和完善公司自己的工具，并将公司的企业文化也融入到工具之中，有时候比找到一个伟大的创意更重要。</p>
+
+<p>facebook研发的工具有很多，比如新人刚加入facebook时，需要分配自己的开发服务器，facebook就有一个工具来管理公司的开发机器。在这个工具上，你可以看到所有机器的详细信息，包括分配给什么人，什么时间分配的，机器的配置信息等。在还未申请的机器上面，只需要点击一个按钮就会帮你安装好开发服务器，非常方便和简单。对于我们开发人员来说工作主要是写代码，facebook针对代码管理业开发了很多工具。比如有一款工具是在开发人员提交代码之前对代码进行检查，如果代码不符合代码规范或者没有写测试案例，工具会发出警告并交给开发人员修改。还有一款code review的工具叫Phabricator，开发人员可以在上面针对每一行代码进行讨论，如果代码有问题，代码审查者可以提问题，或者让代码提交者修改等，只有代码明确接受后，才可以提交到服务器的代码库中。这些工具的理念是将重复性的劳动交给电脑来执行，以&#8221;Don&rsquo;t Make Me Think&#8221;的方式来推广好习惯。</p>
+
+<h3>黑客文化</h3>
+
+<p>facebook一直强调公司的黑客文化，总部基地建有&#8221;黑客广场&#8221;，公司内部随处可见的黑客标志，facebook还会定期举行黑客马拉松(Hackathon)。像Google 允许员工用工作时间的20%来做自己喜欢的东西一样，Hackathon也是facebook让员工保持创造力，避免工作枯燥而失去工作激情的一种方式，在这个过程中，也催生了很多伟大的作品，比如timeline(时间轴)，全屏照片视图等。参加Hackathon虽然是自愿的，但facebook强烈建议每个员工都去参加Hackahton，甚至有的工程师因为要安排产品上线而无法参加Hackathon，公司会调整产品的上线时间来让工程师去参加Hackathon。</p>
+
+<p>facebook的CEO 扎克伯格本身就是一个黑客，看过《社交网络》的朋友都会记得电影开始的那一段场景，扎克伯格做了一个哈佛版美女评选网站（Facemash），为了得到更多女同学的照片，他黑进了当时学生宿舍里面每个学生的电脑去获取他们同学的照片。扎克伯格想打造独一无二的企业文化和管理方式，他将公司的这种文化称之为&#8221;黑客之道&#8221;(Hacker Wiay)，他诠释说，黑客文化是一种持续改进的做事方法，黑客迅速发布小规模的更新，然后从中获取到经验，在下一次更新中更好的改进，直到产品完成（有点敏捷开发的意思）。Done is better than prefect（完成胜于完美），这是facebook对这种黑客精神的诠释。</p>
+
+<p>facebook的黑客文化还包括一种亲身实践，积极进取的精神。Code Wins Arguments（代码胜于雄辩），在facebook的产品开发过程中，经常会有一个工程师站出来说，给我2天的时间我做个demo出来，证明我的想法是可行的。facebook不会有那种长达几天的马拉松会议，工程师们会开发出产品原型来证明是否行得通，在facebook每个工程师都是顶尖的人才，他们具有这样一种快速开发的能力。</p>
+
+<p>书中除了谈到上面所讲的这些点外，还谈到了作者在facebook中的项目管理经验，适合做项目管理的同学参考借鉴，最后希望大家也喜欢facebook的黑客文化。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[利用Sonar定制自定义JS扫描规则（三）——SSLR JavaScript Toolkit 使用说明]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/05/20/use-sonar-create-customer-js-verify-rule-part-3/"/>
+    <updated>2013-05-20T11:20:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/05/20/use-sonar-create-customer-js-verify-rule-part-3</id>
+    <content type="html"><![CDATA[<p>在上一篇blog中讲了在sonar中如何新增自定义的JS规则，这里面比较难的地方是XPath语句的编写，而要编写正确的XPath语句，首先要拿到语法的AST，下面我们就来介绍如何使用SSLR JavaScript Toolkit 工具来得到源代码的语法树。</p>
+
+<!--more-->
+
+
+<p>首先通过在<a href="http://repository.codehaus.org/org/codehaus/sonar-plugins/javascript/sslr-javascript-toolkit/1.3/sslr-javascript-toolkit-1.3.jar">这里</a>下载SSLR JavaScript Toolkit 工具，下载下来是一个jar包，在cmd窗口使用java -jar sslr-javascript-toolkit-1.3.jar打开这个工具，操作界面如下：<br/>
+<img src="http://zhaozhiming.github.io/images/post/02073536-58b547f5394041cdb795a717087eca35.png"></p>
+
+<p>左上方的窗口是用来输入你的源代码，右上方的窗口是来显示你的AST，最下面的窗口是来输入你的XPath规则。</p>
+
+<p>我们现在左上方输入一些简单的javascript代码，然后点击 Parse Source Code按钮，可以得到源代码的语法树：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/02074124-ca30984af1704101962348b52d4a5f34.png"></p>
+
+<p>得到语法树后，我们也可以点击右边窗口的XML页面，得到的是语法树的XML文档。有了XML文档，就可以通过XPath轻松得到你想要的语句了。</p>
+
+<p>举个例子：比如我想得到本地变量名，即var关键字后面的变量名，可以通过XPath的语法来查询。</p>
+
+<p>在最下方的窗口输入XPath语法规则，点击Evaluate XPath按钮，如果语法正确，就会出现返回结果，并高亮选中你想要查询的代码，如下：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/02074943-45053229678b4effbec60cf2c363b076.png"></p>
+
+<p>如果语法错误，右边的窗口会给出提示，如果查询语句不正确，任何源代码都不会被选中。更多的XPath语法可以参考<a href="http://www.w3schools.com/xpath/">http://www.w3schools.com/xpath/</a>。<br/>
+总结：sonar其实很早就支持了对JS的代码校验，但是你如果想自己定制校验规则，最简单的方式就是通过sonar的web接口增加XPath规则，这个需要在XPath语法上多花点力气，如果写出来的查询语法不正确，可以多试几遍，用SSLR JavaScript Toolkit 可以很方便的调试。最后祝大家都可以在sonar上配置自己的自定义规则。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[利用Sonar定制自定义JS扫描规则（二）——自定义JS扫描规则]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2/"/>
+    <updated>2013-05-19T11:20:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2</id>
+    <content type="html"><![CDATA[<p>在上一篇blog中，我们将sonar几个需要的环境都搭建好了，包括sonar的服务器，sonar runner，sonar的javascript插件。现在我们就来讲如何自定义JS扫描规则。</p>
+
+<!--more-->
+
+
+<p>
+实际上有3种方法可以自定义代码的校验规则：</p>
+
+<ul>
+<li>直接在sonar的web接口中增加XPath规则；</li>
+<li>通过插件的功能来增加自定义规则，比如checkstyle，pmd等插件是允许自定义规则的；</li>
+<li>通过新增一个代码分析器来实现自定义规则；</li>
+</ul>
+
+
+<p>sonar官方推荐的方式是使用最简单的XPath方式来增加自定义规则，如果语言太复杂或者XPath无法查询其结构的，再使用自定义插件的方式，所以我们这里重点介绍的是使用XPath的方式。</p>
+
+<h3>使用XPath增加自定义JS规则</h3>
+
+<p>sonar为大部分流行的语言（C, C#, C++, Cobol, Flex, JavaScript, PL/I, PL/SQL, Python and VB.NET）提供了一个简洁的方式来增加代码规则。这些新增规则必须使用<a href="http://en.wikipedia.org/wiki/XPath">XPath</a>来实现，这样的话语言的每一部分都可以映射到<a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Tree</a>（AST）。对于每一种语言，SSLR Toolkit 工具提供了代码转AST的功能，该工具具体的使用在下面会介绍，这里是<a href="http://repository.codehaus.org/org/codehaus/sonar-plugins/javascript/sslr-javascript-toolkit/1.3/sslr-javascript-toolkit-1.3.jar">SSLR Javascript Toolkit</a>工具的下载。如果对XPath不熟悉，可以参考这里看一下例子<a href="http://www.w3schools.com/xpath/">http://www.w3schools.com/xpath/</a>。<br/>
+1、首先使用管理员的角色登录sonar，然后去到Settings > Quality Profile页面，选择Js规则（如下图所示）。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/02070803-9bce5fab1bf543059071fafff2ae37d8.png"></p>
+
+<p>2、接着在Coding rules页面输入查询条件，找到XPath规则：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/02070943-c9a5b7732ea6478fba266555c308fc29.png"></p>
+
+<p>3、查询结果出来后，点击Copy rule连接来新增规则：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/02071054-da90a48498234fc19d34aff75c84a104.png"></p>
+
+<p>4、按照XPath的语法编写自己的规则：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/02071436-15c170e9f4eb4f6684d95df76fe6e628.png"></p>
+
+<p>如果对XPath不熟悉，建议先学习一些XPath的语法，下面给出3个javascript xpath的规则：</p>
+
+<h5>不要使用document.write:</h5>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>//callExpression/memberExpression[count(*) = 3 and primaryExpression[@tokenValue = &quot;document&quot;] and identifierName[@tokenValue = &quot;write&quot;]]
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>if/else语句后面必须接大括号：</h5>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>//ifStatement/statement[not(block)]
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>本地变量名以XX开头：</h5>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>//functionBody//variableDeclaration/IDENTIFIER[not(starts-with(@tokenValue,&#39;zzm&#39;))]
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>5、创建好规则之后，把规则设置为active，将规则的级别调高一些就会自动变为active，然后重新跑一下规则分析，这样新增的规则就生效了。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/02072520-4308a5a558d04ded998bb54f452c71f7.png"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/"/>
+    <updated>2013-05-19T11:20:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1</id>
+    <content type="html"><![CDATA[<p>接触sonar已经有段时间了，最早是在一个项目组里面听到这个框架，后来在公司持续集成活动的推动下，也逐渐学习了sonar的具体功能。sonar集成了findbugs，pmd，checkstyle各种静态代码检查工具的功能，并且可以将各种扫描结果组合成一张张漂亮的报告，功能很是强大。下面介绍一下如何使用sonar来自定义javascrpit的扫描规则。</p>
+
+<!--more-->
+
+
+<p>虽然使用过很多次sonar，但都是在别人搭好的环境上使用的，自己还没有真正搭建过，这里首先介绍一下sonar环境的搭建。</p>
+
+<h3>sonar环境搭建</h3>
+
+<p>首先到sonar官网上下载其最新版本，我下的是3.5.1。下下来是一个zip包，直接将其解压到你想要安装的目录就好了。</p>
+
+<h4>使用H2内存数据库</h4>
+
+<p>sonar服务的启动是要有数据库来支持的，sonar本身自带了H2内存数据库，可以直接使用。在解压目录下的conf目录下，有一个sonar.properties的配置文件是来保存sonar的配置，如果你使用的是H2数据库的话，将配置文件中的下面部分代码注释去掉即可。</p>
+
+<figure class='code'><figcaption><span>sonar.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="c">#sonar.jdbc.url:                            jdbc:h2:tcp://localhost:9092/sonar</span>
+</span><span class='line'><span class="c">#sonar.jdbc.driverClassName:                org.h2.Driver</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在解压目录下的extras\database\mysql目录，有2个mysql的sql文件，其中1个是创建sonar数据库和用户的脚本，可以参照这个脚本来创建H2的sonar相关数据库和用户。</p>
+
+<h4>使用外部数据库（以mysql为例）</h4>
+
+<p>sonar官网强烈建议，如果你的产品只是学习或者练习用的demo，可以使用内存数据库，否则请使用外部数据库。sonar支持大部分主流的数据库，比如mysql，oracle，postgresql，Microsoft SQLServer。</p>
+
+<p>我们以mysql为例，首先安装mysql（安装mysql的过程就不再详细描述，网上有很多），这里要注意将数据库的字符集设置为UTF-8。安装完成之后，同样修改conf目录下的sonar.properties文件，将mysql部分的配置项打开。然后在mysql中将上面提到的那个创建sonar数据库和用户脚本施行一遍。</p>
+
+<figure class='code'><figcaption><span>sonar.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="c">#----- MySQL 5.x</span>
+</span><span class='line'><span class="c"># Comment the embedded database and uncomment the following line to use MySQL</span>
+</span><span class='line'><span class="c">#sonar.jdbc.url:                            jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8&amp;rewriteBatchedStatements=true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>启动服务</h4>
+
+<p>数据库配置完成之后，就可以来启动web服务了，去到解压目录下的bin目录，找到自己相关系统的目录，以64位windows系统为例，目录为：bin\windows-x86-64，运行该目录下的Startsonar.bat文件，如果启动没有报错的话，就可以在浏览器中输入：<code>http://localhost:9000</code>，查看sonar的主界面了。</p>
+
+<h3>安装Sonar Runner</h3>
+
+<p>上面搭建的只是sonar的服务平台，如果想用sonar来分析自己项目代码的话，可以有多种方式，比如ant、maven等，而sonar官网上推荐的是使用Sonar Runner来执行分析项目的操作。</p>
+
+<p>首先去到sonar官网下载Sonar Runner的压缩包，和sonar的压缩包一样，先解压到你要安装的目录。然后增加SONAR_RUNNER_HOME这个环境变量，变量值为你runner的解压目录，然后将$SONAR_RUNNER_HOME$/bin的加到PATH变量后面（配置过java环境变量的同学都懂的）。这样就安装完成了，打开cmd验证一下，打出sonar-runner -h，如果出现下面的提示信息，即表示你的runner安装成功了。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>usage: sonar-runner <span class="o">[</span>options<span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>Options:
+</span><span class='line'> -h,--help             Display <span class="nb">help </span>information
+</span><span class='line'> -X,--debug            Produce execution debug output
+</span><span class='line'> -D,--define &lt;arg&gt;     Define property
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>安装完runner以后，在你的项目根目录下，增加sonar-project.properties文件，内容如下：</p>
+
+<figure class='code'><figcaption><span>sonar.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="c"># required metadata</span>
+</span><span class='line'><span class="na">sonar.projectKey</span><span class="o">=</span><span class="s">my:project</span>
+</span><span class='line'><span class="na">sonar.projectName</span><span class="o">=</span><span class="s">My project</span>
+</span><span class='line'><span class="na">sonar.projectVersion</span><span class="o">=</span><span class="s">1.0</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># optional description</span>
+</span><span class='line'><span class="na">sonar.projectDescription</span><span class="o">=</span><span class="s">Fake description</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># path to source directories (required)</span>
+</span><span class='line'><span class="na">sonar.sources</span><span class="o">=</span><span class="s">srcDir1,srcDir2</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># path to test source directories (optional)</span>
+</span><span class='line'><span class="na">sonar.tests</span><span class="o">=</span><span class="s">testDir1,testDir2</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># path to project binaries (optional), for example directory of Java bytecode</span>
+</span><span class='line'><span class="na">sonar.binaries</span><span class="o">=</span><span class="s">binDir</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># optional comma-separated list of paths to libraries. Only path to JAR file is supported.</span>
+</span><span class='line'><span class="na">sonar.libraries</span><span class="o">=</span><span class="s">path/to/library/*.jar,path/to/specific/library/myLibrary.jar,parent/*/*.jar</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># The value of the property must be the key of the language.</span>
+</span><span class='line'><span class="na">sonar.language</span><span class="o">=</span><span class="s">java</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Additional parameters</span>
+</span><span class='line'><span class="na">sonar.my.property</span><span class="o">=</span><span class="s">value</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的配置项根据名字和说明大概知道是做什么用的了，填上自己项目中对应的值即可。然后打开cmd窗口，去到你的项目根目录下，执行sonar-runner命令，这样sonar就开始分析你的项目代码了，分析完成之后，在浏览器中刚才那个9000端口地址的网页中就可以看到你的项目了。</p>
+
+<h3>安装Javascript插件</h3>
+
+<p>使用管理员的角色登录sonar，根据这个路径进入更新中心：Settings > System > Update Center。在Available Plugins窗口找到javascript插件，点击其中的install按钮进行安装（如下图所示）。安装完后重启sonar服务器即可。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/01202231-c4477ac31ac3411686f1a4b98ae3ece1.png"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[持续交付——发布可靠软件的系统方法]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/03/05/continuous-delivery/"/>
+    <updated>2013-03-05T15:53:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/03/05/continuous-delivery</id>
+    <content type="html"><![CDATA[<p>断断续续看完了《持续交付——发布可靠软件的系统方法》一书，中间有几次由于事情太忙而中断，直到今天才把书读完。书的内容很精彩，大致分持续集成，测试和部署三大块，还有介绍包括软件开发、项目管理等其他内容。我下面介绍几个我印象比较深刻的内容。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h3>预测试提交（pretested commit）</h3>
+
+<p>简单来说，预测试提交就是在将代码提交到代码库之前，先在本地跑一遍持续集成上的操作，比如编译，单元测试等，保证提交的代码不会破坏基本的构建，然后再将代码提交到代码库。有一些持续集成的框架已经提供了这样的功能，可以在开发人员提交代码之后先执行基本构建，如果有问题，则通知开发人员且不会提交代码到代码库；如果没问题再提交代码到代码库，在CI上跑真正的构建。如下图所示：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/04143846-935bd06aa7d74c8cba067610a4f2143a.gif">
+<img src="http://zhaozhiming.github.io/images/post/04143855-576fc9a7738e410d8de01ee7a9212723.gif"></p>
+
+<p>这样的好处是，如果有人的提交了破坏构建的代码（比如编译不通过，单元测试失败等），没有预测试提交的话，只能等到破坏构建的人修复了代码后，其他人才能继续提交代码；而使用了预测试提交，破坏构建的提交根本不会提交到CI服务器上去，所以也就省去了等待其他人修复的时间了。</p>
+
+<p>但是预测试提交只是做简单的本地构建，其他比较复杂的比如UAT测试，性能测试等，可能不会放到预测试提交中执行，因为如果要执行这些操作的话，开发人员在本地提交要等待的时间就会比较长，从而影响开发效率。</p>
+
+<h3>部署流水线：一键部署，一键回退</h3>
+
+<p>所谓的部署流水线，就是从提交代码开始，CI服务器进行代码编译、单元测试、验收测试，然后自动化部署，接着执行集成测试，UAT测试，性能（容量）测试等操作，一般是由多个CI任务来执行，每个CI任务都有上下游关系。比如，任务A执行代码编译，单元测试操作，任务B执行自动化部署操作，任务C执行集成测试，UAT测试等操作，这3个任务间的关系是：先执行任务A，执行完了再执行任务B，最后执行任务C，像生产流水线一样，组成了这样的一个部署流水线。最后产生的结果可能是一个完成了完整测试的一个产品交付物，或是将交付物部署到了生产环境上。</p>
+
+<p>一般的持续集成只是在开发环境使用（像我目前所在的公司），而书中提到的部署流水线还包括了测试环境和类生产环境的部署。测试环境和类生产环境的部署不是由CI服务器自动触发的，而是有相关的操作人员（比如部署人员或者运营人员）通过点击相应的按钮来完成自动部署的操作，即一键化操作。这里的自动部署还可以选择产品交付物（ear、war或jar包）的某一个版本来进行部署，而不是简单的部署最新版本。</p>
+
+<p>除了一键部署，还有一键回退。如果自动部署过程中有异常问题，或者是部署到指定环境后验证出现问题，操作人员可以通过点击相应按钮进行版本回退的操作，即一键回退。同样的，回退也可以选择相应要回退的交付物版本来进行回退，而不是简单的回退到上一个版本。</p>
+
+<p>目前有一些CI工具已经支持了这些操作，比如ThoughtWorks的Go系统等。</p>
+
+<h3>蓝绿发布，无停机发布</h3>
+
+<p>无停机发布版本有很多种方法，这里只介绍蓝绿发布的方法。所谓的蓝绿发布，指的是系统的两个版本，蓝色的表示已经在生产上运行的版本，绿色表示即将发布的新版本。首先将两套版本的系统都启动起来，现有的用户请求连接的还是旧的蓝色版本，而新的绿色版本启动起来后，观察有没有启动的异常，或者其他一些异常，如果没有问题的话，再将现有的用户请求连接到新的绿色版本。对于用户来说，版本的切换是透明的，系统在发布过程中没有中断过。这样就达到了无停机发布的目的。</p>
+
+<p>如果切换到新的绿色版本后，发现有故障或者异常，可以随时切换到旧的蓝色版本，这样同样可以达到无停机回滚的目的。但是要注意的是，在使用新的绿色版本过程中发现异常需要回滚，这时用户已经使用系统而产生了一些数据，这时候需要在回滚的同时，将数据同步到旧的蓝色版本环境中，或者根据判断是否放弃这些数据。也可以在绿色版本发布后，先用小众的用户做一些操作，如果发现没有问题，再将所有用户请求切换到绿色版本中来。</p>
+
+<h3>坚持主干修改，不推荐分支操作</h3>
+
+<p>在日常的开发中，经常会遇到这样一种情况。系统的一个版本即将发布生产，这个时候只能做一些测试工作和严重Bug的修复，而新的功能需求又需要继续开发，如果在现有的代码中继续修改的话，可能会影响新版本的发布。通常在这种情况下，很多开发团队会选择在版本控制管理器上拉一个分支出来，在新的分支上做新需求的开发，而在老的分支上做系统测试和bug修复，老的分支最终会发布到生产上。</p>
+
+<p>首先说下这种做法有什么问题。新拉出来的分支最终是要合并到老的主干分支上去的，如果合并的间隔时间很长，到了合并代码的时候就会出现很多问题，甚至有些功能可能需要在老的分支上重新实现。第二个问题，新分支如何确保没有问题？如果已经有持续集成环境的话，对于新的分支就需要重新再搭建一套持续集成环境来跑每天提交的代码，增加了人力和资源的消耗。最终分支被合并到主干后，分支是要被废弃掉的，所以可以说分支的代码是一种开发上的浪费，即使它最终被合并到主干上。总的来说，分支操作跟持续集成是对立的，如果是只有一套持续集成环境，就必须频繁地合并分支代码到主干才不会有问题，但一般合并的时间都会比较长，因为要发布的主干代码要等到发布后才允许合并；如果有多套持续集成环境，又需要增加相关的人力去维护，等分支被合并到主干后，新增的持续集成环境也不需要了，这又是一种资源的浪费。</p>
+
+<p>所以推荐的做法是坚持在主干上做修改，而不是拉分支。如何在主干上做大动作的修改，而又能确保不会破坏即将发布的功能，书上介绍了很多方法，包括“提取抽象层”、将大的修改分解成多而小的修改等，后者可以让每一次提交的小修改都可以通过持续集成上面的各种测试，从而保证主干上的功能不被破坏。这样做的好处是，你始终只需要维护一套代码，不需要做额外的合并工作，不会产生合并代码后的问题，而在持续集成上始终对主干代码进行构建，一旦有问题可以马上发现，缺陷发现的越早修复的成本也就越低。</p>
+
+<h3>小结</h3>
+
+<p>此书是TW公司的人出的，是很多战斗在一线的开发人员的经验总结，也是获得 jolt 大奖的书籍。有些内容比较深，需要有多年开发经验才好理解，正在实施敏捷或者持续集成的同学可以找来看看，一定会对你的工作有所帮助的，谢谢。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[jenkins插件开发（四）-- 插件发布]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/02/04/jenkins-plugins-develop-part-4/"/>
+    <updated>2013-02-04T20:47:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/02/04/jenkins-plugins-develop-part-4</id>
+    <content type="html"><![CDATA[<p>上一篇blog介绍了插件开发中要注意的一些问题， 我们再来介绍插件开发完成后，如何上传到jenkins的插件中心（这里假设你的代码是放在github上的，使用svn或其他版本管理工具的请参考其他文章）。</p>
+
+<!--more-->
+
+
+<h3>组织授权</h3>
+
+<p>首先去到google group（被伟大的GFW和谐了，只能翻墙访问，如何翻墙不在这里讨论）的jenkins开发列表（jenkinsci-dev@googlegroups.com）里发帖告诉组织者，你开发的插件id是什么，插件功能是做什么的，还有你的github用户名是什么。组织者如果觉得没问题，就会在jenkins 的github上给你创建一个以你插件名称命名的代码库，然后在github上将你拉入jenkins的组织，这样就可以在这个代码库上添加你的插件代码了。如果你在github上已经有了自己插件的代码库，也可以将地址告诉组织者，这样他会fork你的代码库，如果是这样的话你需要在更新了你原仓库的代码后，再将jenkins仓库上的代码同步。</p>
+
+<h3>修改POM文件</h3>
+
+<p>再来是修改项目的pom文件，需要增加一些信息，这样发布的时候才可以正确显示你的插件内容。首先是你的源码控制管理配置，增加配置如下：</p>
+
+<figure class='code'><figcaption><span>pom.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;scm&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;connection&gt;</span>scm:git:ssh://github.com/jenkinsci/MYPLLUGINNAME.git<span class="nt">&lt;/connection&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;developerConnection&gt;</span>scm:git:ssh://git@github.com/jenkinsci/MYPLUGINNAME.git<span class="nt">&lt;/developerConnection&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;url&gt;</span>https://github.com/jenkinsci/MYPLUGINNAME<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/scm&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>插件的WIKI页面（后面会说明如何添加WIKI）：</p>
+
+<figure class='code'><figcaption><span>pom.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;project&gt;</span>
+</span><span class='line'>  ...
+</span><span class='line'>  <span class="nt">&lt;url&gt;</span>http://wiki.jenkins-ci.org/display/JENKINS/My+Plugin<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'><span class="nt">&lt;/project&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>还有维护人员信息：</p>
+
+<figure class='code'><figcaption><span>pom.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;project&gt;</span>
+</span><span class='line'>  ...
+</span><span class='line'>  <span class="nt">&lt;developers&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;developer&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;id&gt;</span>devguy<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;name&gt;</span>Developer Guy<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;email&gt;</span>devguy@developerguy.blah<span class="nt">&lt;/email&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/developer&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/developers&gt;</span>
+</span><span class='line'><span class="nt">&lt;/project&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>发布插件</h3>
+
+<p>最简单的方式就是执行以下命令：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'> mvn release:prepare release:perform
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果发布成功（窗口提示BUILD SUCCESS 字样）就表示你的插件已经发布到jenkins的更新中心了，不过一般要等个一到半天更新中心才会更新。</p>
+
+<p>一般第一次发布都会有一些问题，没有那么容易成功，这里再介绍一下发布过程中容易出现的问题。</p>
+
+<p><strong>插件版本没有以-SNAPSHOT 结尾。</strong>可能有些同学会将-SNAPSHOT结尾的版本号给改成一个正式的版本号，比如1.0，如果是这样的话，发布的时候就会报错。因为jenkins 插件发布的过程中会将你的预设版本号（比如 1.0-SNAPSHOT）改成一个正式的版本号 1.0，然后提交到代码仓库，在检查插件版本号的时候，如果发现不是预设版本号（以-SNAPSHOT结尾）就会报错，所以大家不用担心自己的插件版本号命名问题，在插件发布的时候，会自动帮你修正为正式版本号的。</p>
+
+<p><strong>发布出错回滚。</strong>如果在插件发布的过程中出错，重新再执行上面的命令是不行的，会报版本已存在的错误，需要先执行一下下面的命令来清除出错的发布信息。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'> mvn release:clean
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Github 无法push。</strong>发布的过程中会使用git将你的代码push到github上，有时候会报权限不允许的问题（Permission denied），那可能是你的github配置有问题，可以参考<a href="https://help.github.com/articles/generating-ssh-keys">这里</a>来设置你的SSH或者<a href="https://help.github.com/articles/error-permission-denied-publickey">这里</a>看看是否其他问题。</p>
+
+<h3>WIKI页面</h3>
+
+<p>发布好了你的插件之后呢，我们需要在jenkins的官网上添加关于你插件的WIKI，以便让使用你插件的用户知道插件的信息。</p>
+
+<p>首先要在jenkins官网上申请一个帐号，申请成功之后你就可以在插件主页上添加你的插件页面了。去到插件主页面（<a href="https://wiki.jenkins-ci.org/display/JENKINS/Plugins">https://wiki.jenkins-ci.org/display/JENKINS/Plugins</a>），点击右上角的Add链接，选择page选项，就可以进入页面编写了。<br/>
+在WIKI页面中写上你的插件名称，内容要加上下面的语句：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'> {jenkins-plugin-info:pluginId=your-artifact}
+</span><span class='line'>{excerpt}  your plugin description  {excerpt}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>your-artifact要写你的插件id，这样页面就会自动去加载插件的相关信息。excerpt里面的是你插件描述，会显示在插件主页上。</p>
+
+<p>最后是在WIKI label上加上插件的分类，比如是UI相关的插件就写plugin-UI，报告类相关的就写plugin-report，这样在插件主页上会将你的插件归到某类插件下。</p>
+
+<p>这里介绍编写WIKI的一个小窍门，可以先进入其他插件页面，然后点击右上角的Edit链接，这样就进入了页面的编辑页面，在这里就可以看到其他插件是如何编写的，参考一下再来编写自己的WIKI页面吧。</p>
+
+<h3>持续集成</h3>
+
+<p>在上传你插件代码的时候，可能你会想使用持续集成来跑你的测试案例，看看上传的代码是否有破坏原有的功能。没有问题，可以使用BuildHive@CloudBees来为你Github上的代码做持续集成。</p>
+
+<p>使用很简单，先进入这个网址<a href="https://buildhive.cloudbees.com/job/jenkinsci/">https://buildhive.cloudbees.com/job/jenkinsci/</a>，然后使用你的github帐号登录，接着勾选你想要做持续集成的github项目。这样该项目每次提交代码之后，BuildHive@CloudBees就会为你做持续集成，如果有问题的话会发邮件通知你。  <br/>
+到这里，jenkins插件开发的所有介绍已经全部结束了，之前做插件开发的时候查到一些中文资料，都是一些比较入门的内容，所以自己就想写一个比较全面的介绍，希望这一系列的文章可以帮到你，谢谢。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[jenkins插件开发（三）-- 插件编写]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/02/03/jenkins-plugins-develop-part-3/"/>
+    <updated>2013-02-03T20:18:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/02/03/jenkins-plugins-develop-part-3</id>
+    <content type="html"><![CDATA[<p>在上一篇blog 中我们介绍了如何创建我们第一个jenkins插件，在这一篇blog继续介绍在开发我们的插件过程中需要注意的一些问题。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h3>扩展点选择</h3>
+
+<p>Jenkings插件是基于扩展点来实现的，比如基于Builder这个扩展点，那这个插件的功能就是一个构建插件，类似ant-builder（使用ant来执行构建脚本）。Jenkins插件的扩展点有很多，具体可以查询<a href="https://wiki.jenkins-ci.org/display/JENKINS/Action+and+its+family+of+subtypes">这里</a>。该网页列出了Jenkins所有的扩展点，点击每个扩展点下面Implementations，会列出该扩展点对应的实现类。找到实现类的源码就可以知道具体怎么使用该扩展点了，大部分的代码在github上都可以找到。在前面创建的HelloWorld插件是一个基于Builder扩展点的插件，可以在job 配置页面的Build 中增加该插件，以后每次Job每次构建的时候就会去调用该插件了。</p>
+
+<h3>Action介绍</h3>
+
+<p>Action是插件用来在Job或Build页面增加功能的一种主要方式，是Jenkins最常用的一个扩展点。从下图中可以看出什么是Action，就是页面左边菜单栏的一个菜单项，还可以在右边的主页面显示相应的功能。</p>
+
+<p><img src="https://wiki.jenkins-ci.org/download/thumbnails/58001011/actions.png"></p>
+
+<p>每个继承了Action这个扩展点的插件都要实现3个方法，方法如下：</p>
+
+<figure class='code'><figcaption><span>Action.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Action</span> <span class="kd">extends</span> <span class="n">hudson</span><span class="o">.</span><span class="na">model</span><span class="o">.</span><span class="na">ModelObject</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span> <span class="nf">getIconFileName</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span> <span class="nf">getDisplayName</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span> <span class="nf">getUrlName</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>第一个是菜单项图片，第二个是菜单名称，第三个是菜单链接。</p>
+
+<p>Action分瞬时和持久2种，这里主要介绍的是瞬时的Action。瞬时的Action可以随时废弃，让另外一个新的Action来取代，适合一些每次构建都要执行操作的插件，但不适合需要保存持久数据的插件。</p>
+
+<p>在Jenkins官网的插件开发指南中，推荐使用Transient***ActionFactory系列的继承点， 有TransientViewActionFactory，TransientProjectActionFactory，TransientBuildActionFactory等，使用该系列的继承点，只需要简单的覆写父类的 createFor方法，就可以实现创建瞬时Action的目的，可以根据不同的需要创建Job，Build，View的Action。</p>
+
+<p>更多内容可以参考<a href="https://wiki.jenkins-ci.org/display/JENKINS/Action+and+its+family+of+subtypes">这里</a>。</p>
+
+<h3>Jelly页面</h3>
+
+<p>Jenkins插件开发中涉及到页面的开发，比如Job的配置页面，相关插件需要加上相关的配置开关，配置参数时，就需要有一个配置页面来做相应的显示。插件开发中用到的页面是Jelly页面，在第一篇blog中介绍了IDEA中关于jelly的插件，使用该插件可以更加方便 Jelly页面的编写。</p>
+
+<p>Jelly页面的简单例子就不介绍了，官网上都有，这里简单介绍一下Jelly页面相关的一些标签。与JSTL类似，Jelly也有自己的一些标签，如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;j:jelly</span>
+</span><span class='line'>   <span class="na">xmlns:j=</span><span class="s">&quot;jelly:core&quot;</span>
+</span><span class='line'>   <span class="na">xmlns:st=</span><span class="s">&quot;jelly:stapler&quot;</span>
+</span><span class='line'>   <span class="na">xmlns:d=</span><span class="s">&quot;jelly:define&quot;</span>
+</span><span class='line'>   <span class="na">xmlns:l=</span><span class="s">&quot;/lib/layout&quot;</span>
+</span><span class='line'>   <span class="na">xmlns:t=</span><span class="s">&quot;/lib/hudson&quot;</span>
+</span><span class='line'>   <span class="na">xmlns:f=</span><span class="s">&quot;/lib/form&quot;</span>
+</span><span class='line'>   <span class="na">xmlns:i=</span><span class="s">&quot;jelly:fmt&quot;</span>
+</span><span class='line'>   <span class="na">xmlns:p=</span><span class="s">&quot;/lib/hudson/project&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>比如想使用jelly:core标签，就可以在页面中直接使用 j:XX来调用标签的相关功能，其他标签同样按照这个方式来使用。其中jelly:core是常用的功能，比如设置变量，循环，判断等功能。jelly:layout是分层相关的标签，/lib/hudson是jenkins相关的功能，比如设置Job页面图标，Build页面图标等。更多标签相关的内容可以参考<a href="https://jenkins-ci.org/maven-site/jenkins-core/jelly-taglib-ref.html">这里</a>。</p>
+
+<h3>配置文件</h3>
+
+<p>Jenkins插件开发中还涉及到一类文件，就是配置文件。配置文件不仅可以在Jelly页面中使用，而且可以在Java文件中使用，不过在Java文件中使用的话需要先将配置文件编译成对应的Java文件。</p>
+
+<p><strong>如何在Jelly页面中使用配置文件？</strong>首先要在Jelly页面所在的文件夹中放置配置文件，比如 页面在这里dir/myAction.jelly，那么页面对应的配置文件就应该在dir/myAction.properties。注意，配置文件名字需要和页面名字相同，这样页面才可以找到对应的配置文件。比如有个Jelly页面如下：</p>
+
+<figure class='code'><figcaption><span>demo.jelly </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>    <span class="cp">&lt;?jelly escape-by-default=&#39;true&#39;?&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;j:jelly</span> <span class="na">xmlns:j=</span><span class="s">&quot;jelly:core&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;th&gt;</span>${\%allBuildsColumnHeader}<span class="nt">&lt;/th&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/j:jelly&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其对应的配置文件内容如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="na">allBuildsColumnHeader</span><span class="o">=</span><span class="s">mean time to repair for all history</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样配置了以后，展示Jelly 页面时就可以自动调用配置文件里面的内容了。</p>
+
+<p><strong>如何在Java文件中使用配置文件？</strong>一般插件所用的Java配置文件名称都叫做Messages.properties，文件保存在resources目录下。比如我们的插件包结构是jenkins.plugins.myplugin，那么Messages.properties文件就保存在 resources/jenkins/plugins/myplugin/目录下。</p>
+
+<p>如果Java 文件中想要使用配置文件里面的值，需要先执行mvn pacakge命令，执行之后，以上面的例子为例，在target目录下会产生generated-sources/localizer/jenkins/plugins/myplugin/Messages.java这个Java文件，如果配置文件里面有这样的一个配置项：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="na">allBuildsColumnHeader</span><span class="o">=</span><span class="s">mean time to repair for all history</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>那么Messages.java里面就会产生这样的2个方法：</p>
+
+<figure class='code'><figcaption><span>Message.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>   <span class="cm">/**</span>
+</span><span class='line'><span class="cm">     * mean time to repair for all history</span>
+</span><span class='line'><span class="cm">     * </span>
+</span><span class='line'><span class="cm">     */</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">allBuildsColumnHeader</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">holder</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;allBuildsColumnHeader&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/**</span>
+</span><span class='line'><span class="cm">     * mean time to repair for all history</span>
+</span><span class='line'><span class="cm">     * </span>
+</span><span class='line'><span class="cm">     */</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Localizable</span> <span class="nf">_allBuildsColumnHeader</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">Localizable</span><span class="o">(</span><span class="n">holder</span><span class="o">,</span> <span class="s">&quot;allBuildsColumnHeader&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样在Java文件中就可以直接调用这2个方法了，一般是调用第一个方法。</p>
+
+<p><strong>多语言配置。</strong>配置文件的文件名如果不带后缀就是内容是英语的配置文件，比如Messages.properties。如果想让你的插件可以在不同的国家语言下都显示正常的话，就需要将你的配置文件复制多份，在名字后面加上不同的后缀，然后内容换上相关语言的内容。</p>
+
+<p>比如，以上面例子为例，中文的配置文件名称就是Messages_zh_CN.properties，配置文件的页面也要换上相应的中文ASCII编码，这样就可以在中文系统环境下显示中文内容了。如何将中文转ASCII码？可以直接使用Java Home里面的native2ascii命令。</p>
+
+<h3>开发经验</h3>
+
+<p>在开发Jenkins插件的过程中自己摸索了一些方法，在这里介绍一下，以免让其他同学走弯路。<br/>
+首先是去到Jenkins的<a href="https://wiki.jenkins-ci.org/display/JENKINS/Extend+Jenkins">官网WIKI</a>。这里介绍了如何创建你的插件工程，插件扩展点，插件编码和页面如何编写等，内容比较多，但你只需要关注你需要的内容就可以了。<br/>
+光看Jenkins的WIKI是不够的，有一些页面和类的用法上面没有直接给出，那肿么办呢？很简单：看源码。在github上download下jenkins的源码（<a href="https://github.com/jenkinsci/jenkins">这里</a>），在IDE里面打开Jenkins工程，比如想要查看某个jelly页面的用法，就可以在工程中搜索所有jelly页面，看看源码中的页面是怎么写的，我们再拿过来改一下就可以了。类和扩展点不知道如何写，也可以参照这个方法，通过源码了解其他扩展点子类是如何写的，然后再写出自己的插件。<br/>
+可能在jenkins的源码中还是找不到扩展点的用法，那怎么办呢？这个时候可能就需要去参考其他插件是如何写的了，幸运的是，大部分插件的代码现在都放在了github上，我们可以通过了解其他插件来写出自己的插件。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[jenkins插件开发（二）-- HelloWorld]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/02/02/jenkins-plugins-develop-part-2/"/>
+    <updated>2013-02-02T18:35:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/02/02/jenkins-plugins-develop-part-2</id>
+    <content type="html"><![CDATA[<p>在上一篇blog中我们讲了如何搭建jenkins插件的开发环境，接下来介绍如何开发我们的插件。</p>
+
+<!--more-->
+
+
+<h3>创建HelloWorld插件</h3>
+
+<p>学习每门新语言的时候，我们都会写一个HelloWorld程序，这里介绍的是如何创建一个Jenkins的HelloWorld插件。</p>
+
+<h5>1、首先修改Maven的配置，将Maven的连接库修改为jenkins plugins的资源库，方便相关pom组件从jenkins上下载，修改的是 %USERPROFILE%/.m2/settings.xml文件。</h5>
+
+<figure class='code'><figcaption><span>settings.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;settings&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;pluginGroups&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;pluginGroup&gt;</span>org.jenkins-ci.tools<span class="nt">&lt;/pluginGroup&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/pluginGroups&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>    <span class="c">&lt;!-- Give access to Jenkins plugins --&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;id&gt;</span>jenkins<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;activation&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;activeByDefault&gt;</span>true<span class="nt">&lt;/activeByDefault&gt;</span> <span class="c">&lt;!-- change this to false, if you don&#39;t like to have it on per default --&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/activation&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;repositories&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;repository&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;id&gt;</span>repo.jenkins-ci.org<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;url&gt;</span>http://repo.jenkins-ci.org/public/<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/repository&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/repositories&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;pluginRepositories&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;pluginRepository&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;id&gt;</span>repo.jenkins-ci.org<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;url&gt;</span>http://repo.jenkins-ci.org/public/<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/pluginRepository&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/pluginRepositories&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;mirrors&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;mirror&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;id&gt;</span>repo.jenkins-ci.org<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;url&gt;</span>http://repo.jenkins-ci.org/public/<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;mirrorOf&gt;</span>m.g.o-public<span class="nt">&lt;/mirrorOf&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/mirror&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/mirrors&gt;</span>
+</span><span class='line'><span class="nt">&lt;/settings&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>2、打开CMD，进入一个想要放插件工程的目录，执行以下命令。</h5>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>mvn -U org.jenkins-ci.tools:maven-hpi-plugin:create -DgroupId<span class="o">={</span>your.gound.id<span class="o">}</span> -DartifactId<span class="o">={</span>your.plugin.id<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>命令中的 your.groud.id 和 your.plugin.id 填你插件的具体对应的值。</p>
+
+<p>your.group.id 会形成你的包结构，比如 your.group.id=abc.def.ghi，那工程下的src/main/java 目录下会产生abc.def.ghi 这样的目录。</p>
+
+<p>执行完命令后，该目录下会产生一个名称是{your.plugin.id}的目录，这个目录工程就是我们的HelloWorld插件工程。</p>
+
+<h5>3、插件打包</h5>
+
+<p>创建好工程之后，执行下面的命令可以在 target 子目录下产生一个 hpi 文件，该文件就是我们的插件文件，可以直接上传到 jenkins 的服务器。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>mvn package
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>4、启动本地服务</h5>
+
+<p>在第三步产生的 hpi 文件要上传到一个部署好的jenkins服务器才可以看到效果，我们也可以通过以下命令启动一个包含插件的本地jenkins服务。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>mvn hpi:run
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>执行完命令之后，在浏览器打开localhost:8080，就可以访问本地的Jenkins服务了，这里默认用的是 jetty6的 web 容器。</p>
+
+<h5>5、运行HelloWorld插件</h5>
+
+<p>在Job的配置页面，其中的构建子项中Add Build Step按钮，点击后下拉框中会有一个Say Hello World的选项，这个就是我们的HelloWorld 插件，选中后保存配置，进行Job构建，在构建日志中就可以看到插件的打印日志。</p>
+
+<p>这里介绍的是新建一个插件，对已有插件进行扩展不在本次讨论范围内，更多信息可以参考<a href="https://wiki.jenkins-ci.org/display/JENKINS/Plugin+tutorial">这里</a>。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[jenkins插件开发（一）--环境搭建]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/01/31/jenkins-plugins-develop-part-1/"/>
+    <updated>2013-01-31T17:42:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/01/31/jenkins-plugins-develop-part-1</id>
+    <content type="html"><![CDATA[<p>最近写了一个jenkins插件，功能比较简单，时间主要是花在对jenkins插件框架和Maven的熟悉上。jenkins插件虽然以前也接触过一点，不过现在都忘得差不多了，这个笔记权当知识点记录，顺带介绍介绍经验。</p>
+
+<!--more-->
+
+
+<p>
+首先是环境搭建，这里列一下jenkins插件开发所需工具：</p>
+
+<ul>
+<li>JDK6.0或更高</li>
+<li>构建工具&mdash;Maven</li>
+<li>IDE&mdash;IDEA或eclipse</li>
+<li>web服务器：jetty或tomcat（可选）</li>
+</ul>
+
+
+<h3>Maven</h3>
+
+<p>jenkins插件需要用到Maven这个构建工具，大家可以去Maven的官网下载：<a href="http://maven.apache.org/download.cgi">这里</a><br/>
+如何安装Maven？以windows环境为例：</p>
+
+<ol>
+<li>解压下载的zip包（比如：apache-maven-3.0.4-bin.zip）到一个指定的目录（比如：D:\apache-maven-3.0.4）；</li>
+<li>添加M2_HOME环境变量，指就是我们刚刚解压的目录（如何设置环境变量JAVA开发应该都懂得）；</li>
+<li>添加M2这个环境变量，值是%M2_HOME%/bin，并在PATH这个环境变量的值后面追加 %M2%；</li>
+<li>环境变量中确保有JAVA_HOME这个环境变量，有的话在cmd窗口可以直接用java -version打印JDK版本信息；</li>
+<li>配置完所有环境变量后，在cmd窗口打印命名mvn -v，会打印出Maven和JDK的信息，这样就表示安装Maven成功了；</li>
+</ol>
+
+
+<p>更详细的安装说明请看<a href="http://maven.apache.org/download.cgi">这里</a>。</p>
+
+<h3>IDE</h3>
+
+<p>我以前的blog还介绍过IDEA，相对于eclipse我还是比较喜欢用IDEA来开发。因为IDEA已经集成了Maven的插件，所以可以直接通过项目中的pom文件打开整个项目。在IDEA主界面右边有个maven projects的区域，打开可以看到工程的各个maven命令（图1）。</p>
+
+<p>使用IDEA还需要添加一个针对jelly页面的插件，这个插件可以对jelly文件进行语法提示和高亮显示，插件地址点击<a href="http://plugins.intellij.net/plugin/?id=1885">这里</a>，效果见图2。<br/>
+图1:<br/>
+<img src="http://zhaozhiming.github.io/images/post/29152926-97e25c38b1754deca8843030a113cb3e.png" title="图1" ></p>
+
+<p>图2:<br/>
+<img src="http://zhaozhiming.github.io/images/post/29152950-1f91f25eac354a75a44e34287f75cbba.png" title="图2" ></p>
+
+<h3>Jetty(可选)</h3>
+
+<p>其实运行插件工程的hpi:run就可以通过maven启动一个自带的Jetty6服务器，不需要额外再安装jetty服务器。但为了让我们的插件测试更接近真实环境，我们可以将做好的插件放到另外一个的Jetty服务器中，来测试插件的运行效果。</p>
+
+<ol>
+<li>去Jetty官网下载最新的Jetty包；</li>
+<li>将包解压到本地目录；</li>
+<li>将jenkins的war包放到解压目录中的webapps子文件夹中；</li>
+<li>在解压目录的contexts子目录中增加一个xml文件，文件名是jenkins.xml（内容如下）;</li>
+<li>打开CMD进入解压目录，执行java -jar start.jar命令，即可启动Jetty服务器；</li>
+<li>打开浏览器，进入localhost:8080/jenkins进入jenkins主页；</li>
+</ol>
+
+
+<figure class='code'><figcaption><span>jenkins.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;Configure</span> <span class="na">class=</span><span class="s">&quot;org.eclipse.jetty.webapp.WebAppContext&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Set</span> <span class="na">name=</span><span class="s">&quot;contextPath&quot;</span><span class="nt">&gt;</span>/jenkins<span class="nt">&lt;/Set&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Set</span> <span class="na">name=</span><span class="s">&quot;war&quot;</span><span class="nt">&gt;&lt;SystemProperty</span> <span class="na">name=</span><span class="s">&quot;jetty.home&quot;</span> <span class="na">default=</span><span class="s">&quot;.&quot;</span><span class="nt">/&gt;</span>/webapps/jenkins.war<span class="nt">&lt;/Set&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Get</span> <span class="na">name=</span><span class="s">&quot;securityHandler&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;Set</span> <span class="na">name=</span><span class="s">&quot;loginService&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;New</span> <span class="na">class=</span><span class="s">&quot;org.eclipse.jetty.security.HashLoginService&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;Set</span> <span class="na">name=</span><span class="s">&quot;name&quot;</span><span class="nt">&gt;</span>Jenkins Realm<span class="nt">&lt;/Set&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;Set</span> <span class="na">name=</span><span class="s">&quot;config&quot;</span><span class="nt">&gt;&lt;SystemProperty</span> <span class="na">name=</span><span class="s">&quot;jetty.home&quot;</span> <span class="na">default=</span><span class="s">&quot;.&quot;</span><span class="nt">/&gt;</span>/etc/realm.properties<span class="nt">&lt;/Set&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/New&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/Set&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/Get&gt;</span>
+</span><span class='line'><span class="nt">&lt;/Configure&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意：如果用hpi:run启动的服务，jenkins地址是：localhost:8080，而使用真实Jetty启动的服务，地址是：localhost:8080/jenkins。<br/>
+到这里你的jenkins插件开发环境已经搭建好了，我们在下一篇blog再继续介绍具体的插件开发，谢谢！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[单例模式的5种形式]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/12/20/5-type-of-singleton-pattern/"/>
+    <updated>2012-12-20T17:53:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/12/20/5-type-of-singleton-pattern</id>
+    <content type="html"><![CDATA[<p>有过编程经验的朋友都知道设计模式中的单例模式，最近又重新看了一遍设计模式，今天将单例模式的几种形式介绍一下：</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h3>1、懒汉形式（延迟加载）</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span><span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kd">static</span> <span class="n">Single</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">singleton</span><span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">singleton</span><span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个是标准的单例模式，通过newInstance里面的判断来进行延迟加载单例对象，这里加了synchronized关键字可以避免多线程问题，但会影响程序性能。</p>
+
+<h3>2、饿汉形式（贪婪加载）</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">singleton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在单例对象声明的时候就直接初始化对象，可以避免多线程问题，但是如果对象初始化比较复杂，会导致程序初始化缓慢。</p>
+
+<h3>3、双重检查加锁</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">volatile</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">singleton</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">Singleton</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">singleton</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">singleton</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">singleton</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个是懒汉形式的加强版，将synchronized关键字移到了newInstance方法里面，同时将singleton对象加上volatile关键字，这种方式既可以避免多线程问题，又不会降低程序的性能。但volatile关键字也有一些性能问题，不建议大量使用。</p>
+
+<h3>4、Lazy initialization holder class</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SingletonHolder</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">singleton</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">newInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">SingletonHolder</span><span class="o">.</span><span class="na">singleton</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里创建了一个内部静态类，通过内部类的机制使得单例对象可以延迟加载，同时内部类相当于是外部类的静态部分，所以可以通过jvm来保证其线程安全。这种形式比较推荐。</p>
+
+<h3>5、枚举</h3>
+
+<figure class='code'><figcaption><span>Singleton.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">enum</span> <span class="n">Singleton</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">singleton</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>单因素的枚举类已经实现了单例，这种方法更加简单。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[IDEA12使用初体验]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/12/20/first-experience-at-idea-12/"/>
+    <updated>2012-12-20T17:06:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/12/20/first-experience-at-idea-12</id>
+    <content type="html"><![CDATA[<p>最近将开发工具IDEA升级到了12.0版本，被它新的UI界面深深吸引，看下面，很酷哦~</p>
+
+<!--more-->
+
+
+<p>
+<img src="http://zhaozhiming.github.io/images/post/20164405-12c5f44041bf43af8351e3812f69cf3b.PNG"></p>
+
+<h3>一、下载安装</h3>
+
+<p>在IDEA官网下载最近版本12.0，有免费的社区版，还有收费的无限制版，大家可以自行下载。</p>
+
+<p>下载后进行安装，windows系统直接执行exe文件即可，ubuntu系统先将下载包解压，然后执行bin文件夹里面的idea.sh就可以运行了。</p>
+
+<h3>二、使用新的UI界面</h3>
+
+<p>安装完后的IDEA默认UI可不是上面那个，需要先去到setting里面设置，如下图：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/20165722-72e913a55f7e436b89b87bb1fe1d6126.PNG"></p>
+
+<ol>
+<li>点击进入setting窗口；</li>
+<li>选择Appearance；</li>
+<li>在theme里面选择Darcula，没错，新UI主题的名称就叫Darcula，设置好了保存。</li>
+</ol>
+
+
+<h3>三、正确设置中文乱码</h3>
+
+<p>使用Darcula主题的时候，发现中文变成了一堆乱码，这个问题可以也可以在setting里面解决：</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/20170004-5ac2c44f1bde48c2a842afd551cf9f3c.PNG"></p>
+
+<p>同样进入setting的Appearance页面，将Override default fonts by(not recommended) 勾选上，然后选择字体，如果觉得字体太小，还可以选择字体大小。设置以后，IDEA就可以正常使用了。</p>
+
+<p>喜欢的这个开发工具的原因是里面的重构功能非常强大，还有快捷操作也很多，可以让你少敲很多代码，很多时候一个alt + enter就可以搞定一切。希望喜欢的朋友去下来试试，用过之后你会发现比eclipse好的不是一点半点。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jacoco的原理]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/12/07/the-elements-of-jacoco/"/>
+    <updated>2012-12-07T19:47:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/12/07/the-elements-of-jacoco</id>
+    <content type="html"><![CDATA[<h2>覆盖率计数器</h2>
+
+<p>Jacoco使用一系列的不同的计数器来做覆盖率的度量计算。所有这些计数器都是从java的class文件中获取信息，这些class文件可以（可选）包含调试的信息在里面。即使在没有源码的情况下，这种方法也可以实时有效地对应用程序进行度量和分析。在大部分情况下，收集到的信息可以映射到源码，可视化到每一行代码的粒度。但这种方法还是有一些限制。这些class文件必须使用调试信息来编译，这样才可以计算行的覆盖率和提供出源码的高亮。但不是所有的JAVA语言的结构都可以直接编译成一致的二进制代码。在这种情况下，java 编译器会创建所谓的“合成”代码，会导致产生一些不期望得到的覆盖率结果。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h4>指令（C0 Coverage）</h4>
+
+<p>Jacoco最小的计数单元是单个java二进制代码指令。指令覆盖率提供了代码是否被执行的信息。这个度量完全独立源码格式，并且总是可用，即使class文件里面没有调试信息。</p>
+
+<h4>分支（C1 Coverage）</h4>
+
+<p>Jacoco也计算分支的覆盖率，包括所有的if和switch语句。这个度量计算一个方法里面的总分支数，确定执行和不执行的分支数量。分支覆盖率总是可用的，即使class文件里面没有调试信息。注意异常处理是不在分支度量里面统计的。</p>
+
+<p>如果class文件使用调试信息编译的话，产生的覆盖率可以映射到源码行并且高亮提示：</p>
+
+<ul>
+<li>没有覆盖：在这一行中没有分支被执行（红色方块）</li>
+<li>部分覆盖：这一行的分支中只有一部分被执行（黄色方块）</li>
+<li>完全覆盖：这一行的所有分支都被执行（绿色方块）</li>
+</ul>
+
+
+<h4>圈复杂度</h4>
+
+<p>Jacoco同样可以为每一个非抽象方法计算复杂度，最终计算出类、包和组的复杂度。根据由McCabe1996圈复杂度的定义是，在（线性）组合中，计算在一个方法里面所有可能路径的最小数目。所以复杂度可以作为度量单元测试是否有完全覆盖所有场景的一个依据。复杂度即使是在没有调试信息的情况下也可以计算。</p>
+
+<p>圈复杂度V（G）的正式定义是基于方法的控制流图的有向图表示：</p>
+
+<p>v(G) = E &ndash; N + 2</p>
+
+<p>E是边界的数量，N是节点的数量。Jacoco 基于下面的方程来计算复杂度，B是分支的数量，D是决策点的数量：</p>
+
+<p>v(G) = B &ndash; D + 1</p>
+
+<p>基于每个分支的被覆盖情况，Jacoco也为每个方法计算覆盖和缺失的复杂度。缺失的复杂度同样表示测试案例没有完全覆盖到这个模块。注意Jacoco不将异常处理作为分支，try/catch块也同样不增加复杂度。</p>
+
+<h4>行</h4>
+
+<p>所有的class文件使用debug信息编译之后，就可以计算行的覆盖率信息。一行源代码是否被执行，要看这一行中是否至少有一个指令被执行。</p>
+
+<p>由于实际上一行代码一般被编译成多个二进制代码指令，这样源码在高亮显示时，会显示成3种不同的状态：</p>
+
+<ul>
+<li>没有覆盖：这一行中没有指令被执行（红色背景）</li>
+<li>部分覆盖：这一行中只有一部分指令被执行（黄色背景）</li>
+<li>完全覆盖：这一行中所有指令都被覆盖（绿色背景</li>
+</ul>
+
+
+<h4>方法</h4>
+
+<p>每一个非抽象方法至少包含一个指令。一个方法是否执行取决于方法中是否有至少一个指令被执行。在Jacoco中，构造器和静态初始化同样会像方法一样统计。其中一些方法可能没有可以直接对应的源码，比如默认构造器或常量的初始化命令。</p>
+
+<h4>类</h4>
+
+<p>一个方法是否执行取决于类中是否有至少一个方法被执行。注意Jacoco认为构造器和静态初始化都是方法。Java的接口一般包含静态初始化，所以接口也同样被认为是可执行的类。</p>
+]]></content>
+  </entry>
+  
+</feed>

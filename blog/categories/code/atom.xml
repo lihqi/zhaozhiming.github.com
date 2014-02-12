@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2014-02-12T22:47:33+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[用腻了bootstrap的可以试试semantic-ui]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/12/16/hello-semantic-ui/"/>
+    <updated>2013-12-16T07:16:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/12/16/hello-semantic-ui</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/semantic-ui.png"></p>
+
+<h2>semancti-ui介绍</h2>
+
+<p><a href="http://semantic-ui.com/">semantic-ui</a>是html/css框架的新贵，是继bootstrap和foundation之后的又一css神器。semantic-ui一出现在github上就受到火热的关注，一直在关注排行榜前列。semantic-ui最大的特点：充分利用CSS3动画特效，简洁实用漂亮的样式这些都是其最受欢迎的原因之一。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>扁平化设计</h2>
+
+<p>随着iOS 7的发布，扁平化设计(flat design)被更多人所熟识。什么是扁平化设计呢？在实际当中，扁平化设计一词所指的是抛弃那些已经流行多年的渐变、阴影、高光等拟真视觉效果，从而打造出一种看上去更“平”的界面。扁平风格的一个优势就在于它可以更加简单直接的将信息和事物的工作方式展示出来，减少认知障碍的产生。</p>
+
+<p>在主流的css框架bootstrap中，开始是不支持扁平化设计的（bootstrap2），但在最新的bootstrap3中，几乎所有的组件都改用了扁平化的设计，但由于设计的不好，3的版本被很多原使用bootstarp的开发所诟病。</p>
+
+<p>而semantic-ui是天生就是扁平化的设计，让人用起来更加觉得时尚、简洁。</p>
+
+<h2>响应式设计</h2>
+
+<p>什么是响应式设计？响应式Web设计(Responsive Web design)的理念是，页面的设计与开发应当根据用户行为以及设备环境(系统平台、屏幕尺寸、屏幕定向等)进行相应的响应和调整。具体的实践方式由多方面组成，包括弹性网格和布局、图片、CSS media query的使用等。无论用户正在使用笔记本还是iPad，我们的页面都应该能够自动切换分辨率、图片尺寸及相关脚本功能等，以适应不同设备;换句话说，页面应该有能力去自动响应用户的设备环境。这样，我们就可以不必为不断到来的新设备做专门的版本设计和开发了。</p>
+
+<p>在semantci-ui的官网里面是这样说的：<br/>
+<blockquote><p>Every component is defined using em and rem so that components can be resized simply on the fly. Want a menu to get smaller on mobile? Simply have it&rsquo;s font-size change using a media query.</p></blockquote></p>
+
+<p>semantic-ui的每个组件都是使用“em”和“rem"，所以组件可以在不同的显示设备上自动地调整大小。</p>
+
+<h2>semantic-ui兼容性</h2>
+
+<p><strong>支持的浏览器如下</strong></p>
+
+<ul>
+<li>Last 2 Versions FF, Chrome, IE (aka 10+)</li>
+<li>Safari 6</li>
+<li>IE 9+ (Browser prefix only)</li>
+<li>Android 4</li>
+<li>Blackberry 10</li>
+</ul>
+
+
+<p>前几天在semantic-ui的github项目里提了个问题，问<a href="https://github.com/Semantic-Org/Semantic-UI/issues/431">semantic-ui是否支持IE6～8</a>，下面有个老外来了句：Support IE6? Are you creazy?呵呵，看来在国外还是不鸟IE的偏多。</p>
+
+<p>在这里吐槽一下IE，IE可以算是浏览器界的一朵奇葩&hellip;不对，奇葩还有些褒意在里面，应该是浏览器界的一个毒瘤，一直阻碍着前端框架的发展，好在现在很多前端框架都不care IE了，比如angularjs，bootstrap等就直接只支持IE8+（不包括IE8），就连鼎鼎大名的Jquery也宣布从2.x版本开始不支持IE6～8，看来IE的淘汰是在所难免了哈。</p>
+
+<p>不过IE9以后情况还是有所好转，《Javascript高级程序设计》的作者 Nicholas C. Zakas也让大家对IE9以后的版本可以另眼相看。但不管怎么样，IE6～8的各种bug和不兼容让web前端开发举步维艰是个不争的事实，该淘汰的时候就应该淘汰。最好的做法让用户升级浏览器或改用chrome，不要在兼容性上面浪费精力。</p>
+
+<h2>semantic-ui示例</h2>
+
+<p>刚刚进入到semantci-ui的网站的时候，就被它的各种控件样式吸引住了，感觉比bootstrap好看很多，又很符合当前流行的“扁平化设计”的风格,这里列一下几个看起来比较酷的控件。</p>
+
+<h4>好看的按钮</h4>
+
+<div class="ui buttons">
+  <div class="ui button">Cancel</div>
+  <div class="or"></div>
+  <div class="ui positive button">Save</div>
+</div>
+
+
+<h4>代码如下</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui buttons&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui button&quot;</span><span class="nt">&gt;</span>Cancel<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;or&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui positive button&quot;</span><span class="nt">&gt;</span>Save<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<div class="ui divider"></div>
+
+
+<p></p>
+
+<h4>好看的标签</h4>
+
+<div class="ui two column grid" style="display: block;">
+  <div class="row">
+    <div class="column">
+      <div class="ui raised segment">
+        <div class="ui ribbon label">Dogs</div>
+        <p>Pretty nice animals.</p>
+        <div class="ui teal ribbon label">Cats</div>
+        <p>Also pretty nice animals, but can prefer solitude.</p>
+        <div class="ui red ribbon label">Ogres and monsters</div>
+        <p>Never seen one as a pet before, but I imagine they'd make pretty terrible companions.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<h4>代码如下</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui two column grid&quot;</span> <span class="na">style=</span><span class="s">&quot;display: block;&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;column&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui raised segment&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui ribbon label&quot;</span><span class="nt">&gt;</span>Dogs<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>Pretty nice animals.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui teal ribbon label&quot;</span><span class="nt">&gt;</span>Cats<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>Also pretty nice animals, but can prefer solitude.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui red ribbon label&quot;</span><span class="nt">&gt;</span>Ogres and monsters<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>Never seen one as a pet before, but I imagine they&#39;d make pretty terrible companions.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<div class="ui divider"></div>
+
+
+<p></p>
+
+<h4>好看的注解</h4>
+
+<div class="ui comments">
+  <div class="comment">
+    <a class="avatar">
+      <img src="http://zhaozhiming.github.io/images/post/photo2.jpg">
+    </a>
+    <div class="content">
+      <a class="author">Dog Doggington</a>
+      <div class="text">
+        I think this is a great idea and i am voting on it
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<h4>代码如下</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui comments&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;comment&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;avatar&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://zhaozhiming.github.io/images/post/photo2.jpg&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;author&quot;</span><span class="nt">&gt;</span>Dog Doggington<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;text&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        I think this is a great idea and i am voting on it
+</span><span class='line'>      <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>是不是非常酷？想使用这些很酷很炫的特性，就赶快使用semantic-ui吧～</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[类似github的框架]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/10/25/something-like-github-can-build-by-self/"/>
+    <updated>2013-10-25T07:36:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/10/25/something-like-github-can-build-by-self</id>
+    <content type="html"><![CDATA[<p>github是程序员经常上的网站，但如果是在一家苦逼不能访问外网的公司，那不能把自己的代码托管在github上绝对是一件非常痛苦的事情。如果想要在公司内网也可以用github托管自己的代码，那就要自己搭建类似github的服务器，好在类似github的框架有很多，基本上都是基于git的，可以无缝衔接github而无需额外学习其他技术。</p>
+
+<!--more-->
+
+
+<h2>github企业版</h2>
+
+<p><a href="https://enterprise.github.com/">github enterprise</a>，如果你的基金充足，github企业版绝对是你的首选。它基本上包涵了现有github网站上面的一切功能，你使用它甚至在视觉上都不会发生任何变化，界面都是和现有github一样的。而且安装十分方便，安装文件就是一个虚拟机镜像文件，只要用虚拟机加载就可以了。但刚才说了“如果你的基金充足”，说明它是要收费的，而且价格不菲，1个20人团队的license每年要5000美刀。国外有用到github企业版的公司有Bizzard（玩游戏的都知道），国内用的很少，我了解到的只有豆瓣在用，而且只用在其中一个或几个项目组（PS:豆瓣好像有自己的代码托管工具叫豆瓣Code，克隆github且增加了自己的特性）。</p>
+
+<h2>gitlab</h2>
+
+<p><a href="https://github.com/gitlabhq/gitlabhq">gitlab</a>，是用Ruby On Rails开发的一款开源代码托管框架，界面也是仿照github设计的，github用户可以快速上手，最重要的是它是一个开源的软件，这意味着你可以免费获取到软件，并将它部署到自己的机器上。但是gitlab的安装过程比较复杂，安装需要依赖以下几个工具：</p>
+
+<ul>
+<li>ruby 1.9.3+</li>
+<li>git 1.7.10+</li>
+<li>redis 2.0+</li>
+<li>MySQL or PostgreSQL</li>
+</ul>
+
+
+<p>另外gitlab的markdown文件显示功能不是很好，比如markdown中的table和嵌入html在github上面是可以正常显示，但是在gitlab上面就不行。</p>
+
+<h2>GitBucket</h2>
+
+<p><a href="https://github.com/takezoe/gitbucket">GitBucket</a>，是一个用scala写的高仿github的代码托管框架。这个框架是今年才开发的，目前功能还不是很齐全，数据库也是用的内存数据库，但是github上面的基本功能都有。它的一个最重要的特点是<strong>安装非常方便</strong>，只需要下载gitbucket最新版本的war包，然后放到随便哪个web容器（Jetty，Tomcat）就可以启起来了，想尝尝鲜的同学可以试用一下。</p>
+
+<h2>其他框架</h2>
+
+<p>下面列举一些其他类似的框架，没怎么用过不好做评价，下面的括号表示用哪种语言写的。</p>
+
+<ul>
+<li><a href="http://gitorious.org/">Gitorious</a>(Ruby)</li>
+<li><a href="http://www.indefero.net">InDefero</a>(PHP)</li>
+<li><a href="http://repo.or.cz">Girocco</a>(Perl)</li>
+<li><a href="http://eagain.net/gitweb/?p=gitosis.git">Gitosis</a>(Python)</li>
+<li><a href="http://github.com/sitaramc/gitolite">Gitolite</a>(Perl)</li>
+</ul>
+
+
+<p>这里也有一篇文章是介绍类似github框架的框架，看<a href="http://blacka.com/david/2010/09/28/hosting-your-own-git-repositories/">这里</a>。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[如何了解新技术（三）——微信公众号]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/10/24/how-to-know-new-technique-about-it-part3/"/>
+    <updated>2013-10-24T07:32:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/10/24/how-to-know-new-technique-about-it-part3</id>
+    <content type="html"><![CDATA[<p>随着微博等新兴社交工具的兴起，很多个人博客的博主都放弃了博客而去转战微博，但仍然有一些个人博客坚持了下来，在微信平台搭建了自己的公众帐号，以自身博客内容做起了自媒体。下面就介绍一下几个比较出名的公众帐号。</p>
+
+<!--more -->
+
+
+<h2>微信的公众帐号——小道消息，道哥的黑板报，MacTalk池建强等</h2>
+
+<p><a href="http://wemedia.so.com/xiaodaoxiaoxi.html">小道消息</a>，“丁香园”技术负责人冯大辉，以科技人文类的文章，IT业界的小道消息吸引读者。作者前身是在淘宝做数据库方面的工作，技术能力很强，文笔也很犀利，后出来自主创业，所以文章涵盖了作者在技术，管理和成长等各方面的独到见解。</p>
+
+<p><a href="http://taosay.net/">道哥的黑板报</a>，《白帽子讲Web安全》的作者，前淘宝（淘宝的牛人真不少啊）的高级安全专家，现在也出来自主创业。首先作者是一名黑客，而且是一名顶级黑客，手握很多未公开漏洞的人之一。文章大部分内容讲的是安全相关的东西，比如今年struts2漏洞相关的内容；还有讲一些黑客的传奇历史，比如最近介绍一名中国传奇黑客的成长史；还有其他跟技术，成长，文学相关的文章。</p>
+
+<p><a href="http://macshuo.com/">MacTalk池建强</a>，原本是介绍Mac技巧的文章，但后来慢慢变成技术和人文结合的文章，时而技术时而随笔，最近作者还将其公众帐号上面的文章整理形成一本书叫《MacTalk·人生元编程》，在各大电子阅读平台上都有售。公众帐号之间经常有互相推荐，这个帐号也是在小道消息和道哥的推荐下我才关注的，慢慢发现作者的文笔风趣，文章内容也十分有料。现在这3个公众帐号号称微信三jian客(我也不知道哪个jian&hellip;)，他们还将在最近的上海Qcon上面做演讲，有兴趣的同学可以关注他们哦。</p>
+
+<p><a href="http://www.guifabu.com/">硅发布</a>，是一个专注中国和美国科技信息、分析和观点的新媒体，在最近的中国自媒体评选中排名中国前十。</p>
+
+<p>还有之前提到的比如infoQ，36氪，极客公园等也有自己的公众帐号，其实越来越多的IT网站都慢慢创建了自己的微信公众帐号，有兴趣的同学可以自行搜索一下。</p>
+
+<h2>顺藤摸瓜</h2>
+
+<p>最近在知乎上面看到了关于读书的一些讨论，有介绍书的，有讨论读书方法的等等。</p>
+
+<p>其中有人提问如何读到好书？有人就回答道：想要读好书，就要从自己喜欢的书或作者开始，看看里面推荐的一些书和作者，这样顺藤摸瓜就可以找到很多好书，避免浪费时间去读一些垃圾书。其实了解技术的渠道也是一样的，从一个大牛开始了解，找他喜欢的书或者blog，顺藤摸瓜挨个这样找下去，就可以找到更多大牛和高质量的博客了。</p>
+
+<p>说到这里要补充一下之前讲到的关于网站的内容，其实大部分的网站和博客的收录可以使用rss阅读器来完成，之前比较出名的是Google Reader，现在Google Reader关闭了可以用<a href="http://www.feedly.com">feedly</a>来代替，而且可以完整迁移原Google Reader里面的数据。</p>
+
+<p>还有一个讨论是关于如何专注阅读的，对于程序员来讲技术书的阅读是必不可少的，但是技术书需要集中精神，不受外界干扰的阅读才能有所收获，简单分享一下讨论内容：</p>
+
+<ul>
+<li>首先要把看技术类书籍当成一件严肃的事情，不能跟看小说看杂志一样随便。</li>
+<li>其次要选择一段完整的时间来做阅读，保证中间不要被干扰。</li>
+<li>然后记录读书笔记。</li>
+<li>最后是温习，用提问题或者画思维导图的方式来回顾之前看的内容。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[如何了解新技术（二）——电子杂志]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/10/17/how-to-know-new-technique-about-it-part2/"/>
+    <updated>2013-10-17T20:45:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/10/17/how-to-know-new-technique-about-it-part2</id>
+    <content type="html"><![CDATA[<p>除了平时浏览网站外，我们还可以通过手机来了解技术资讯。这里推荐一款APP——多看阅读，这是一款很不错的阅读APP，它以精品阅读来吸引喜欢读书的朋友，虽然上面的电子书没有亚马逊的多，但他们的电子书制作十分精良，每一本书都让人爱不释手，而且完美匹配各种移动设备的尺寸&hellip;不说了，说多了就有广告嫌疑了。下面就说说多看上面的电子杂志。</p>
+
+<!--more -->
+
+
+<h2>免费的电子杂志——极客公园、码农、虎嗅等</h2>
+
+<p><a href="http://www.geekpark.net">极客公园</a>，内容和36氪相近，也是有很多质量很好的文章，介绍最新的APP或者创业公司。极客公园每个月都有一个主题，比如最近几期的智能硬件，打车应用等。还定期举办了一些活动，记得有一期邀请了很多IT大佬比如百度的李彦宏，360的周鸿祎，微信的张小龙等来做演讲，内容十分精彩。每月一期的电子杂志涵盖了这个月里面的精华文章内容，让你足不出户就可以了解最近发生的IT资讯。</p>
+
+<p><img class="right" src="/images/post/1074.948.big.jpg">  <br/>
+<strong>码农</strong>，是图灵社区出版的一本关于程序员的电子杂志。这里面重点介绍的是技术，比如编程语言，算法，技术框架等，还有一些科技人文，比如有一期对几位国内的大牛进行访谈，介绍了他们从菜鸟蜕变到大牛的过程。因为是图灵社区出版的书，所以里面还有一些新书推荐，基本上都是关于技术类的。有点可惜的是，杂志好像不再更新了，最晚的一期是今年7月。</p>
+
+<p><a href="http://www.huxiu.com">虎嗅</a>是一个有视角的，个性化商业资讯与交流平台，核心关注对象是包括公众公司与创业型企业在内的一系列明星公司。杂志的内容和36氪，极客公园有点类似，但更偏重于商业。杂志是从去年开始的，前面几期杂志是免费的，但从最近开始杂志开始收费，每本是￥2.99。</p>
+
+<p><strong>36氪</strong>，之前讲的36氪网站，它在多看上面也有自己的电子杂志，而且是免费的。</p>
+
+<p><strong>知乎周刊</strong>，这个是最近发现的比较好玩的一个电子杂志，上面的内容来自最近一周的精彩问答（应该是根据点赞的次数来统计的），每一期都有一个主题，比如关于旅游，设计，健身等。杂志的内容虽然不是全部都和技术相关，但有时候看看这种也可以扩展自己的视野，了解了解IT以外的世界。</p>
+
+<h2>电子书和纸质书</h2>
+
+<p>顺便说下电子阅读和纸质书阅读，我现在大部分的阅读都是通过智能手机（其实也可以通过其他移动设备，比如pad，kindle等），因为手机随身携带，无论走到哪都可以阅读，只要有空闲时间也可以阅读，anywhere，anytime，非常方便。纸质书在这一点上是不能与之相比的。</p>
+
+<p>传统的纸质书长时间的专注，而现在外界干扰的东西太多了,以致我们很难长时间地阅读（比如有时候想起什么事情，或者看看网站，看看电视什么的等，也可能是我的自制力比较弱吧:(），特别是看技术类的书，如果无法专注的话，阅读的进度会非常缓慢，有时候我看一本技术书甚至要几个月的时间才看完:(。而电子书就不存在这个问题了，等车的时候可以看，等电梯的时候也可以看，一般这种碎片时间都比较短，专注相对比较容易，阅读内容可以较快吸收。</p>
+
+<p>如果在公交车上拿出一本专业书来看，别人可能会觉得你装，但如果是用手机读书的话，别人就不知道你看的是什么书了，别人或许以为你和他读的一样的YY小说呢，这样既可以避开别人的眼光又可以心安理得的读自己的书，低调奢华又不失内涵，多好。</p>
+
+<p>价格方面，电子书相比纸质书要便宜一半甚至一半以上，但电子书的数量现在还不是很多，可能是因为电子书是一种新兴的产物，还没有一种更快捷更成熟的方式来创建电子书。或者是因为传统观念还未转变过来，可能大家觉得电子书像以前的pdf一样，应该是免费的，付费去买一件虚拟的东西感觉“不划算”，没有利益就很难驱动生产。但随着接受电子书的用户越来越多，电子书的需求也会随着增多，这样在市场利益的驱动下，电子书的产量和质量也会越来越高，而纸质书将会慢慢淡出市场。</p>
+
+<p>总结电子书的优点就是：随时随地，小巧灵活，价格便宜。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[如何了解新技术（一）——网站]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2013/10/15/how-to-know-new-technique-about-it-part1/"/>
+    <updated>2013-10-15T21:28:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2013/10/15/how-to-know-new-technique-about-it-part1</id>
+    <content type="html"><![CDATA[<p>说说自己平时了解业界新技术和技术资讯的途径，其实基本上都是国内的网站，或者是中文的blog，因为自己实在懒得费精力去看英文哈。</p>
+
+<!--more -->
+
+
+<h2>大型的科技资讯网和博客网——infoQ，博客园，36氪等</h2>
+
+<p><a href="http://www.infoq.com/cn">InfoQ</a>，全球知名的IT资讯网站，在上面可以看到一些大神的访谈，前沿技术的介绍，知名网站的案例分析等，文章质量颇高(这里主要是指国内作者投稿的文章，而国外文章翻译过来的就没那么好了）。InfoQ还会定期举办QCon全球软件大会，今年5月份有幸参加了北京的QCon大会，认识到了安全专家道哥和golang国内传道者（也是go的web框架beego作者）astaxie谢，收获颇丰。。。额，跑题了。</p>
+
+<p><a href="http://www.cnblogs.com">博客园</a>，聚集了大量高质量技术博客在上面，简洁的页面，漂亮的代码嵌入页面，没有太多恼人的广告（一点广告都没有不现实，毕竟网站也是要盈利的），这些都是我喜欢的。有很多技术大牛也在上面写自己的博客，比如新浪技术大V老赵（现在他的博客不知道搬哪了-_-）等。</p>
+
+<p><a href="http://www.36kr.com">36氪</a>，是一家关注互联网创业，提供国内外最新互联网资讯的公司。这家网站提供的资讯主要是针对创业公司，创业项目，创新产品等，相对技术类的介绍比较少。其实我在PC上看浏览这个网站比较少，因为我关注了他们的电子杂志，每个月有一本（免费的，在多看阅读上有，电子杂志后面会介绍），上面收集了一个月内36氪的精华文章。</p>
+
+<p>还有其他比较有名的网站和博客，比如：</p>
+
+<p><a href="http://www.oschina.net">开源中国</a>——主要介绍开源项目，每天会介绍最新的国内和国外开源项目，定期也会举办一些线下活动。</p>
+
+<p><a href="http://coolshell.cn">酷壳</a>——原来是技术大牛陈皓搭建的个人博客，后来由于超高的博客质量以及其观点的争议性，吸引了很多技术人员的关注，并在上面投稿发表文章。</p>
+
+<p><a href="http://www.ruanyifeng.com/blog">阮一峰的网络日志</a>——IT技术名人，也是以高质量的博客内容出名。</p>
+
+<p>如果想了解国外的IT技术资讯网站，可以看看知乎<a href="http://www.zhihu.com/question/19557033">这个问题</a>的答案。</p>
+
+<p>可能有人会问，怎么没有介绍CSDN和ITeye？<br/>
+说实话，我以前还是经常上这2个网站的，但现在，我只能说“呵呵”。<br/>
+CSDN有时候开个首页要让我等半天，而且老是弹出广告让我很不爽，帖子内容也普遍低下，问题回答区基本没人（都上stackoverflow去了）。引用酷壳陈皓的话<code>CSDN算技术网站吗？</code><br/>
+ITeye呢感觉沦为菜鸟集中地，看着帖子里面夹杂着大片大片无格式的代码就觉得头晕，而且大部分帖子还是转载的。<br/>
+顺便再吐槽一下百度，前段时间酷壳的404页面写着<strong>“做环保的程序员，从不用百度开始”</strong>，百度觉得名誉遭到“贬损”，于是酷壳陈皓收到了百度的律师信。。。就我个人使用经验来说，我用百度来搜技术类的问题真的什么也搜不到，即使有也是上面那2个网站的链接，所以陈皓的告诫我觉得是对的。现在我一般是用Google加英文描述来查找我需要的答案，如果有时候出现Google访问不了的情况（再次BS一下GFW），就用Bing来搜，也能搜出跟Google差不多的答案出来。</p>
+]]></content>
+  </entry>
+  
+</feed>
