@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-02-17T22:47:34+08:00</updated>
+  <updated>2014-02-17T22:53:43+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,231 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[openstack swift中间件编写]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/02/17/how-to-write-a-openstack-swift-middle-ware/"/>
+    <updated>2014-02-17T20:33:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/02/17/how-to-write-a-openstack-swift-middle-ware</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-2/swift.jpg"></p>
+
+<p>关于openstack swift的资料可以看<a href="http://zh.wikipedia.org/wiki/OpenStack">这里</a>，<a href="http://www.programmer.com.cn/12403/">这里</a>还有<a href="http://www.ibm.com/developerworks/cn/cloud/library/1310_zhanghua_openstackswift/">这里</a>。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>准备环境</h2>
+
+<p>从零开始接触的同学可以先从swift的<a href="http://docs.openstack.org/developer/swift/development_saio.html">all in one</a>部署开始学习，在本机搭建好swift环境就可以进行简单的测试了。由于swift是用Python语言写的，如果要开发swift的中间件的还需要在本地安装Pythone的IDE，我比较喜欢JETBRAIN（他们比较出名的是JAVA的IDE——IDEA）公司的IDE——Pycharm。准备环境如下:</p>
+
+<ul>
+<li>Ububutn 12.04 LTS 64bit</li>
+<li>Python2.7(虽然现在已经有Python3了，但swift是用2.x的Python写的，Python3不向后兼容Python2)</li>
+<li>Pycharm3</li>
+</ul>
+
+
+<h2>中间件介绍</h2>
+
+<p>swift通过提供基于HTTP协议的API给外界调用来完成对象存储的功能，我们从swift的各个部署说明里面可以看到，proxy server和storage node的配置文件里面都有一个<code>[pipeline:main]</code>，这个是swift各个服务的请求链，由多个中间件组成的一个中间件集合。pipeline有点像J2EE里面filter，每个http请求需要经过各个服务的pipeline。</p>
+
+<figure class='code'><figcaption><span>proxy-server.conf </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>...
+</span><span class='line'>[pipeline:main]
+</span><span class='line'># Yes, proxy-logging appears twice. This is so that
+</span><span class='line'># middleware-originated requests get logged too.
+</span><span class='line'>pipeline = catch_errors healthcheck proxy-logging bulk ratelimit crossdomain slo cache tempurl tempauth staticweb account-quotas container-quotas proxy-logging proxy-server
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>account-server.conf </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>...
+</span><span class='line'>[pipeline:main]
+</span><span class='line'>pipeline = recon account-server
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>中间件编写</h2>
+
+<p>了解了swift的基本功能流程后，我们就可以来写自己的中间件了。</p>
+
+<p>没有写过中间件的同学可以通过学习其他中间件开始，在swift的源码中配置了很多中间件，有一些功能非常简单。比如name_check中间件，这个中间件的作用是拿来分析请求的url，判断url中是否有特殊字符，长度是否超出规定长度等。这个中间件没有配置在swift的标准配置中，有需要的可以自行加上本机的swift环境做测试。</p>
+
+<p>我们先来看一下name_check中间件的配置信息：</p>
+
+<figure class='code'><figcaption><span>proxy-server.conf </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>[pipeline:main]
+</span><span class='line'>pipeline = catch_errors healthcheck name_check cache ratelimit tempauth sos
+</span><span class='line'>           proxy-logging proxy-server
+</span><span class='line'>
+</span><span class='line'>[filter:name_check]
+</span><span class='line'>use = egg:swift#name_check
+</span><span class='line'>forbidden_chars = &#39;&quot;`<span class="err">&lt;</span>&gt;
+</span><span class='line'>maximum_length = 255
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在上面的例子中，name_check中间件加在healthcheck这个中间件后面，filter:name_check下面的配置信息是name_check的一些配置参数。</p>
+
+<ul>
+<li>forbidden_chars: 指url中不能包含的特殊字符</li>
+<li>maximum_length: 指url的最大长度</li>
+</ul>
+
+
+<p>我们再来看name_check的单元测试：</p>
+
+<figure class='code'><figcaption><span>test_name_check.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">FakeApp</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="s">&quot;OK&quot;</span><span class="p">)(</span><span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">TestNameCheckMiddleware</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;maximum_length&#39;</span><span class="p">:</span> <span class="n">MAX_LENGTH</span><span class="p">,</span> <span class="s">&#39;forbidden_chars&#39;</span><span class="p">:</span>
+</span><span class='line'>                     <span class="n">FORBIDDEN_CHARS</span><span class="p">,</span> <span class="s">&#39;forbidden_regexp&#39;</span><span class="p">:</span> <span class="n">FORBIDDEN_REGEXP</span><span class="p">}</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">test_check</span> <span class="o">=</span> <span class="n">name_check</span><span class="o">.</span><span class="n">filter_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">)(</span><span class="n">FakeApp</span><span class="p">())</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">test_valid_length_and_character</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">path</span> <span class="o">=</span> <span class="s">&#39;/V1.0/&#39;</span> <span class="o">+</span> <span class="s">&#39;c&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">MAX_LENGTH</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">resp</span> <span class="o">=</span> <span class="n">Request</span><span class="o">.</span><span class="n">blank</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">environ</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;REQUEST_METHOD&#39;</span><span class="p">:</span> <span class="s">&#39;PUT&#39;</span><span class="p">}</span>
+</span><span class='line'>                             <span class="p">)</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_check</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="s">&#39;OK&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">......</span> <span class="c"># other test cases    </span>
+</span><span class='line'><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>看源码先从单元测试看起，可以以最快的速度了解源代码的功能。在这个测试案例中，测试先mock了一个虚拟的app，这个app不会真实的调用swift，而是会将http response返回预设好的值。<br/>
+再看其中的一个测试案例，这里给定了一个最大长度url，然后通过调用name_check中间件，期望请求可以正常通过。</p>
+
+<p>最后我们再来看name_check中间件的<a href="https://github.com/openstack/swift/blob/master/swift/common/middleware/name_check.py">源码</a>几个方法：
+* <strong>init</strong>: 中间件的初始化方法
+* <strong>call</strong>: 中间件被调用时触发的方法
+* filter_factory: 这个是类以外的方法，在swift服务启动时会创建中间件实例，并加入到pipeline中。</p>
+
+<p>学习完这个简单的中间件后，相信大家都可以依葫芦画瓢开始写自己的中间件了。</p>
+
+<h2>修改配置文件</h2>
+
+<p>编写完中间件之后，还需要将中间件配置到swift中，这样才算真正完成中间件的创建。</p>
+
+<h4>首先先停止swift的服务</h4>
+
+<figure class='code'><figcaption><span>shell </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>swift@ubuntu:~$ swift-init main stop
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>接着修改conf文件</h4>
+
+<p>假设你增加的中间件是proxy server的中间件，就修改proxy-server.conf，自行决定要放到pipeline中的哪个位置，具体要看你的中间件是执行什么功能。</p>
+
+<figure class='code'><figcaption><span>proxy-server.conf </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>[pipeline:main]
+</span><span class='line'>pipeline = catch_errors healthcheck your_middleware cache ratelimit tempauth sos
+</span><span class='line'>           proxy-logging proxy-server
+</span><span class='line'>
+</span><span class='line'>[filter:your_middleware]
+</span><span class='line'>use = egg:swift#your_middleware
+</span><span class='line'>your_middleware_config1 = value1
+</span><span class='line'>your_middleware_config1 = value2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>要修改swift的根目录下的setup.cfg文件</h4>
+
+<figure class='code'><figcaption><span>setup.cfg </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>paste.filter_factory =
+</span><span class='line'>  #这里加入一行自己的中间件，可以看下name_check中间件是怎么写的
+</span><span class='line'>  name_check = swift.common.middleware.name_check:filter_factory
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>执行命令重新安装swift</h4>
+
+<figure class='code'><figcaption><span>shell </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>swift@ubuntu:~$ cd swift目录
+</span><span class='line'>swift@ubuntu:~$ sudo python setyp.py develop
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>最后重启swift服务</h4>
+
+<figure class='code'><figcaption><span>shell </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>swift@ubuntu:~$ swift-init main start
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[《黑客》读书笔记]]></title>
@@ -1954,74 +2179,6 @@ ITeye呢感觉沦为菜鸟集中地，看着帖子里面夹杂着大片大片无
 <p>同样进入setting的Appearance页面，将Override default fonts by(not recommended) 勾选上，然后选择字体，如果觉得字体太小，还可以选择字体大小。设置以后，IDEA就可以正常使用了。</p>
 
 <p>喜欢的这个开发工具的原因是里面的重构功能非常强大，还有快捷操作也很多，可以让你少敲很多代码，很多时候一个alt + enter就可以搞定一切。希望喜欢的朋友去下来试试，用过之后你会发现比eclipse好的不是一点半点。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Jacoco的原理]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2012/12/07/the-elements-of-jacoco/"/>
-    <updated>2012-12-07T19:47:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2012/12/07/the-elements-of-jacoco</id>
-    <content type="html"><![CDATA[<h2>覆盖率计数器</h2>
-
-<p>Jacoco使用一系列的不同的计数器来做覆盖率的度量计算。所有这些计数器都是从java的class文件中获取信息，这些class文件可以（可选）包含调试的信息在里面。即使在没有源码的情况下，这种方法也可以实时有效地对应用程序进行度量和分析。在大部分情况下，收集到的信息可以映射到源码，可视化到每一行代码的粒度。但这种方法还是有一些限制。这些class文件必须使用调试信息来编译，这样才可以计算行的覆盖率和提供出源码的高亮。但不是所有的JAVA语言的结构都可以直接编译成一致的二进制代码。在这种情况下，java 编译器会创建所谓的“合成”代码，会导致产生一些不期望得到的覆盖率结果。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h4>指令（C0 Coverage）</h4>
-
-<p>Jacoco最小的计数单元是单个java二进制代码指令。指令覆盖率提供了代码是否被执行的信息。这个度量完全独立源码格式，并且总是可用，即使class文件里面没有调试信息。</p>
-
-<h4>分支（C1 Coverage）</h4>
-
-<p>Jacoco也计算分支的覆盖率，包括所有的if和switch语句。这个度量计算一个方法里面的总分支数，确定执行和不执行的分支数量。分支覆盖率总是可用的，即使class文件里面没有调试信息。注意异常处理是不在分支度量里面统计的。</p>
-
-<p>如果class文件使用调试信息编译的话，产生的覆盖率可以映射到源码行并且高亮提示：</p>
-
-<ul>
-<li>没有覆盖：在这一行中没有分支被执行（红色方块）</li>
-<li>部分覆盖：这一行的分支中只有一部分被执行（黄色方块）</li>
-<li>完全覆盖：这一行的所有分支都被执行（绿色方块）</li>
-</ul>
-
-
-<h4>圈复杂度</h4>
-
-<p>Jacoco同样可以为每一个非抽象方法计算复杂度，最终计算出类、包和组的复杂度。根据由McCabe1996圈复杂度的定义是，在（线性）组合中，计算在一个方法里面所有可能路径的最小数目。所以复杂度可以作为度量单元测试是否有完全覆盖所有场景的一个依据。复杂度即使是在没有调试信息的情况下也可以计算。</p>
-
-<p>圈复杂度V（G）的正式定义是基于方法的控制流图的有向图表示：</p>
-
-<p>v(G) = E &ndash; N + 2</p>
-
-<p>E是边界的数量，N是节点的数量。Jacoco 基于下面的方程来计算复杂度，B是分支的数量，D是决策点的数量：</p>
-
-<p>v(G) = B &ndash; D + 1</p>
-
-<p>基于每个分支的被覆盖情况，Jacoco也为每个方法计算覆盖和缺失的复杂度。缺失的复杂度同样表示测试案例没有完全覆盖到这个模块。注意Jacoco不将异常处理作为分支，try/catch块也同样不增加复杂度。</p>
-
-<h4>行</h4>
-
-<p>所有的class文件使用debug信息编译之后，就可以计算行的覆盖率信息。一行源代码是否被执行，要看这一行中是否至少有一个指令被执行。</p>
-
-<p>由于实际上一行代码一般被编译成多个二进制代码指令，这样源码在高亮显示时，会显示成3种不同的状态：</p>
-
-<ul>
-<li>没有覆盖：这一行中没有指令被执行（红色背景）</li>
-<li>部分覆盖：这一行中只有一部分指令被执行（黄色背景）</li>
-<li>完全覆盖：这一行中所有指令都被覆盖（绿色背景</li>
-</ul>
-
-
-<h4>方法</h4>
-
-<p>每一个非抽象方法至少包含一个指令。一个方法是否执行取决于方法中是否有至少一个指令被执行。在Jacoco中，构造器和静态初始化同样会像方法一样统计。其中一些方法可能没有可以直接对应的源码，比如默认构造器或常量的初始化命令。</p>
-
-<h4>类</h4>
-
-<p>一个方法是否执行取决于类中是否有至少一个方法被执行。注意Jacoco认为构造器和静态初始化都是方法。Java的接口一般包含静态初始化，所以接口也同样被认为是可执行的类。</p>
 ]]></content>
   </entry>
   
