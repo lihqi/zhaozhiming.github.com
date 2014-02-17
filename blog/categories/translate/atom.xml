@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: translate | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/blog/categories/translate/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2014-02-17T22:47:34+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Jacoco的原理]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/12/07/the-elements-of-jacoco/"/>
+    <updated>2012-12-07T19:47:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/12/07/the-elements-of-jacoco</id>
+    <content type="html"><![CDATA[<h2>覆盖率计数器</h2>
+
+<p>Jacoco使用一系列的不同的计数器来做覆盖率的度量计算。所有这些计数器都是从java的class文件中获取信息，这些class文件可以（可选）包含调试的信息在里面。即使在没有源码的情况下，这种方法也可以实时有效地对应用程序进行度量和分析。在大部分情况下，收集到的信息可以映射到源码，可视化到每一行代码的粒度。但这种方法还是有一些限制。这些class文件必须使用调试信息来编译，这样才可以计算行的覆盖率和提供出源码的高亮。但不是所有的JAVA语言的结构都可以直接编译成一致的二进制代码。在这种情况下，java 编译器会创建所谓的“合成”代码，会导致产生一些不期望得到的覆盖率结果。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h4>指令（C0 Coverage）</h4>
+
+<p>Jacoco最小的计数单元是单个java二进制代码指令。指令覆盖率提供了代码是否被执行的信息。这个度量完全独立源码格式，并且总是可用，即使class文件里面没有调试信息。</p>
+
+<h4>分支（C1 Coverage）</h4>
+
+<p>Jacoco也计算分支的覆盖率，包括所有的if和switch语句。这个度量计算一个方法里面的总分支数，确定执行和不执行的分支数量。分支覆盖率总是可用的，即使class文件里面没有调试信息。注意异常处理是不在分支度量里面统计的。</p>
+
+<p>如果class文件使用调试信息编译的话，产生的覆盖率可以映射到源码行并且高亮提示：</p>
+
+<ul>
+<li>没有覆盖：在这一行中没有分支被执行（红色方块）</li>
+<li>部分覆盖：这一行的分支中只有一部分被执行（黄色方块）</li>
+<li>完全覆盖：这一行的所有分支都被执行（绿色方块）</li>
+</ul>
+
+
+<h4>圈复杂度</h4>
+
+<p>Jacoco同样可以为每一个非抽象方法计算复杂度，最终计算出类、包和组的复杂度。根据由McCabe1996圈复杂度的定义是，在（线性）组合中，计算在一个方法里面所有可能路径的最小数目。所以复杂度可以作为度量单元测试是否有完全覆盖所有场景的一个依据。复杂度即使是在没有调试信息的情况下也可以计算。</p>
+
+<p>圈复杂度V（G）的正式定义是基于方法的控制流图的有向图表示：</p>
+
+<p>v(G) = E &ndash; N + 2</p>
+
+<p>E是边界的数量，N是节点的数量。Jacoco 基于下面的方程来计算复杂度，B是分支的数量，D是决策点的数量：</p>
+
+<p>v(G) = B &ndash; D + 1</p>
+
+<p>基于每个分支的被覆盖情况，Jacoco也为每个方法计算覆盖和缺失的复杂度。缺失的复杂度同样表示测试案例没有完全覆盖到这个模块。注意Jacoco不将异常处理作为分支，try/catch块也同样不增加复杂度。</p>
+
+<h4>行</h4>
+
+<p>所有的class文件使用debug信息编译之后，就可以计算行的覆盖率信息。一行源代码是否被执行，要看这一行中是否至少有一个指令被执行。</p>
+
+<p>由于实际上一行代码一般被编译成多个二进制代码指令，这样源码在高亮显示时，会显示成3种不同的状态：</p>
+
+<ul>
+<li>没有覆盖：这一行中没有指令被执行（红色背景）</li>
+<li>部分覆盖：这一行中只有一部分指令被执行（黄色背景）</li>
+<li>完全覆盖：这一行中所有指令都被覆盖（绿色背景</li>
+</ul>
+
+
+<h4>方法</h4>
+
+<p>每一个非抽象方法至少包含一个指令。一个方法是否执行取决于方法中是否有至少一个指令被执行。在Jacoco中，构造器和静态初始化同样会像方法一样统计。其中一些方法可能没有可以直接对应的源码，比如默认构造器或常量的初始化命令。</p>
+
+<h4>类</h4>
+
+<p>一个方法是否执行取决于类中是否有至少一个方法被执行。注意Jacoco认为构造器和静态初始化都是方法。Java的接口一般包含静态初始化，所以接口也同样被认为是可执行的类。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[持续集成一天一美元]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/"/>
+    <updated>2012-09-17T21:53:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/09/17/continuous-integration-on-a-dollar-a-day</id>
+    <content type="html"><![CDATA[<p>原文：<a href="http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html">http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html</a>
+有一种持续集成，比使用像CruiseControl这样的构建服务来的更容易更便宜。实际上，它是如此简单，你可以从现在开始做这件事，不用为你还没有构建服务而感到不舒服。</p>
+
+<!--more-->
+
+
+<p>
+（肮脏的小秘密？我将要告诉你的是比使用CruiseControl更好的东西!）</p>
+
+<h3>第一步：找一台老的电脑</h3>
+
+<p>找一台你以前用来做开发的电脑，不要太老&hellip;它需要用来跑构建程序。找一个没用的显示器和一个废弃的角落，把它连接起来，放一张破旧的椅子在前面，不需要太舒适&hellip;你不会想这里坐太久。</p>
+
+<h3>第二步：找一只橡皮鸡(<em>不是真的鸡</em>)</h3>
+
+<p><img class="<a" src="href="http://www.jamesshore.com/Blog/usbchicken.jpg">http://www.jamesshore.com/Blog/usbchicken.jpg</a>"><br/>
+<em>我的办公室，大概在2001年</em></p>
+
+<p>你如果想要也可以使用其他东西，比如毛绒绒的玩具。玩具要搞笑、没有菱角，这样你用力把它扔向某人时不会不小心伤害到别人的眼睛（特别是你误中他人的时候）。如果你没有合适的东西，不要让这一步搁置你的下一步行动。即兴创作，有趣就行。</p>
+
+<p>我想<a href="http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sprite/www/Origami/crane_gif.html">这个</a>有助于即兴创作，但我做不来，所以你不会也没关系。</p>
+
+<h3>第三步：买一个桌铃</h3>
+
+<p>那种你轻拍就会发出“叮”的铃铛。不要因为你没有一个桌铃就停止做持续集成，可以后面再做这一步。现在你已经有开始的势头了。旧电脑，就绪。插线，就绪。搞笑玩具，就绪。你离开始做持续集成已经越来越近了（如果你真的没钱，你可以完全跳过这一步（译者注：指桌铃））。</p>
+
+<h3>第四步：让你的构建自动化</h3>
+
+<p>噢！这是最难的一步。好消息是CruiseControl 的好处之一就是可以使你的构建自动化。更好的消息是你接下来要做的持续集成，可以做的事情比CruiseControl的自动化构建要多，并且我将帮你获得所有的这些好处。但你还是需要让你的构建自动化。</p>
+
+<p>好吧，这个很难，我知道。如果你已经依赖你的IDE为你构建，让构建自动化可能意味着要做很多的工作。现在，你可能要创建一个批处理文件来跑你的IDE并要求它来构建。程序运行的时间太长不是件好事，所以还是回来做正确的事情吧。</p>
+
+<p>如果你已经有了自动化检查的单元测试，比如JUnit/NUnit 测试，也将它们放到构建里面。</p>
+
+<p>在你继续之前，走向那台旧电脑（见第一步），然后确认你的版本库中的最新代码可以成功构建。没有使用任何版本控制工具？额&hellip;好吧&hellip;放下键盘然后离开电脑。现在，跟我读：“原谅我，老天爷，我错了。我又一次没有使用版本控制来编程。我会马上下载TortoiseSvn（译者注：现在当然是git了），安装使用它。从今以后我不会再犯了。”谢谢。</p>
+
+<p>如果一个干净运行的自动化构建超过10分钟，那么请停下来。你还没为持续集成做好准备，你需要加速你的构建。你可以做接下来的步骤，或者你可以使用CruiseControl，但真正的持续集成现在还不属于你。</p>
+
+<h3>第五步：洗脑</h3>
+
+<p>这在列表中绝对，毫无疑问，100%是最重要的一步。让你团队中的所有开发人员一起去到一个房间。</p>
+
+<p>如果有人问，不，这不是开会。你将要在5分钟内完成某件事情。有用，简短，所以这不是一个会议。</p>
+
+<p>现在，在保证没有动用武力胁迫的情况下，让每个人都同意下面的话：</p>
+
+<p><blockquote><p>“从现在开始，我们版本库中的代码将一直构建成功并且可以跑过所有测试。”</p></blockquote></p>
+
+<p>如果有人抱怨这个太难了，让他们知道，通过持续集成来做这个很简单。额，应该说更简单。如果他们仍然认为这太难了，可以委婉地提醒他们的工作，你知道，构建软件。</p>
+
+<p>噢，太残酷了，还是不要说的好。啊，我刚失去了10个粉丝，呀，又一个，11个。</p>
+
+<p>实际上，“每个人都同意这是个好主意”的部分真的非常重要。你看，能够一直依赖你的软件构建，是持续集成的革命性部分。想象一下如果你知道你刚从版本库上下下来的代码可以工作，你的生活会变得多轻松。</p>
+
+<p>让我来讲一个小故事。我维护开源软件的一块叫NUnitAsp。去年，我开了一门课来专门将它。在讲课期间，有人要求增加一个NUnitAsp没有的功能。我看了下代码发现很容易就可以增加。所以我做了修改（花了几分钟）。然后我跑我的构建，96秒后有个新的发布文件，然后把它拿出来。真实的故事，我们甚至有一个编程奖品，我们叫它“找bug得杯具”（我们人很好，即使没有找到bug的人我们也给他杯具）。</p>
+
+<p>好了，你的持续集成可能还没到那一步。你需要像我的那个项目一样有很好的自动化测试来构建和发布。所以让我来讲另外一个故事。在另外一个项目，没有那么成功，我们所有人在代码的不同部分上工作。虽然我们每天都很小心的检入代码，但我们没有构建整个工程或跑测试。（测试？我们没有任何自动化测试。）六个月以后，我们尝试去集成，但没有东西可以组装在一起。我们花费了一个星期才让程序跑起来。我甚至不想描述在这个过程中有多少个bug了。持续集成，即使没有好的测试，也意味着你将再次不会面对这种噩梦了。</p>
+
+<p>我讨厌试图去说服人们相信这是个好主意。我告诉你要刷牙了吗？但你还是会每天做。这个对你有好处。不想做？那就不要做！不是我的问题。</p>
+
+<p>12&hellip;13&hellip;14，15，16&hellip;妹的。（译者注：指粉丝流失）</p>
+
+<p>不然怎样，如果没有让每个人都同意这样做，那么这个过程将不会有效。你还能指望什么？</p>
+
+<h3>第六步：启动！</h3>
+
+<p>在<a href="http://jamesshore.com/Blog/Continuous-Integration-Checklist.html">这里</a>看到可打印的清单。
+你已经准备好了！让我们浏览一下预启动清单：</p>
+
+<ol>
+<li>构建电脑？就绪。</li>
+<li>搞笑玩具？就绪。</li>
+<li>烦人的闹铃？可选。</li>
+<li>自动构建？就绪。</li>
+<li>团队同意？就绪。</li>
+</ol>
+
+
+<p>现在，让我们开始吧！</p>
+
+<p>首先，每天至少检入代码2次。这是“持续”的部分。当你熟练以后，你将每1~2个小时检入一次。</p>
+
+<p>在获取版本库的最新代码之前，看下有没有人手里有橡皮鸡。如果有，先等他们把代码检入。</p>
+
+<p>当你检入时，遵循以下步骤：</p>
+
+<p>A 在本地跑构建/测试脚本，确认100%通过。 <br/>
+B 把橡皮鸡从它原来的地方拿过来。如果橡皮鸡不在原地，找一下看在谁那里，然后一直烦着他们直到他们检入代码。<br/>
+C 从版本库下载最新代码然后再次运行构建脚本。如果没有运行成功，你知道刚下的代码有问题。发发牢骚抱怨一下，然后找到最后检入代码的那个人帮你解决问题。解决问题后重新开始。<br/>
+D 检入你的代码。<br/>
+E 走向那台破旧的构建电脑，从版本库获取最新代码，再次运行构建脚本。如果没有运行成功，将你检入的代码还原。没成功的原因，可能是你安装了一些新的软件，或者修改了一个环境变量，或者设置注册表环境，或者忘记添加文件到版本库，或者其他原因。不管怎样，你需要在你的电脑上修复这个问题然后重新试一次。你可以暂时保留橡皮鸡，但如果其他人需要你要还回去（然后重新开始）。<br/>
+F 让铃铛响起来。（其他人会为你鼓掌，或以其他方式为你高兴。）把橡皮鸡放回去，你已经做完了。</p>
+
+<p>顺便说一下，当步骤E失败了，你可能会冒险在构建机器上直接修复问题，但如果你这样做了，下一个可怜的家伙下载了最新代码后将会构建失败。</p>
+
+<p>最后，但并非最不重要：保持你的构建时间在10分钟之内，少于5分钟更好。如果运行时间太长，这个过程将不再是一件愉快的事情而是痛苦的开始。而且一般来说快速构建对你有好处，不管怎样，因为速度慢的构建往往意味着测试方法的缺陷。</p>
+
+<h3>为什么比 CruiseControl 好？</h3>
+
+<ol>
+<li>代码在版本控制中总是周期性地可以构建和通过测试。</li>
+<li>如果出错了，你知道问题出在哪里。要么是你的代码（在步骤A失败了），要么是其他人的代码（在步骤C失败了），或者是环境改变了（在步骤E失败了）。反正你可以找到原因，让修复问题更简单。</li>
+<li>当其他人没有等CruiseControl 跑完构建就跑去吃午饭时，你不用再去修复其他人引起的构建失败。</li>
+<li>你会让构建运行的时间保持简短（长时间运行的构建会让你痛苦），这意味着测试写得更好，使设计更佳。</li>
+</ol>
+
+
+<h3>高级课程</h3>
+
+<p>一旦你让基础设施工作起来了，你可以继续真正完善你的持续集成的使用。一个可选的做法是让你的构建独立起来，换句话说，你构建所需的所有东西就只是你的源控制，一旦你得到代码了，你就可以断开网络连接去构建。这个好处是让你的构建更可信，允许你轻易地去构建老版本。这也有助于找出数据库配置和迁移的错误。</p>
+
+<p>真正给力的测试也是一个好的选择。如果你真的拥有给力的测试，那么你可以盖着帽子好好休息了。</p>
+
+<p>我同样喜欢让我的构建脚本来构建一个安装包。人们经常从他们的测试和集成过程中拿掉安装程序，然后忍受花费额外时间来构建一个安装包。这是快速构建带来的众多好处之一，让你做这件事情更容易，虽然自动测试安装程序是一件痛苦的事情。</p>
+
+<p>嗯&hellip;我讨厌承认&hellip;安装CruiseControl 也是一个好主意，等你从高级课程毕业了再接触比较好。而现在，你已经真正做到熟悉（持续集成）基础（团队同意，快速测试，永不破坏的构建），你已经不大可能回到坏实践中去了。</p>
+
+<p>最后祝你好运！别忘了给我一美元。</p>
+
+<p><em>相关材料：</em></p>
+
+<ul>
+<li><a href="http://www.martinfowler.com/articles/continuousIntegration.html">Continuous Integration</a> (Martin Fowler)</li>
+<li><a href="http://jamesshore.com/Blog/Red-Green-Refactor.html">Red-Green-Refactor</a> (James Shore)</li>
+<li><a href="http://jamesshore.com/Blog/Continuous-Integration-is-an-Attitude.html">Continuous Integration is an Attitude, Not a Tool</a> (James Shore)</li>
+<li><a href="http://blogs.msdn.com/mswanson/articles/169058.aspx">Automated Continuous Integration and the Ambient Orb</a> (Michael Swanson)</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在JavaScript中进行文件处理，第五部分：Blobs]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/08/01/working-with-files-in-javascript-part-5/"/>
+    <updated>2012-08-01T17:28:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/08/01/working-with-files-in-javascript-part-5</id>
+    <content type="html"><![CDATA[<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/31/working-with-files-in-javascript-part-5-Blobs">这里</a></strong></p>
+
+<hr />
+
+<p>到目前为止，这个系列的帖子集中在和这些文件交互——用户指定的文件和通过File对象访问的文件。File对象实际上是Blob的一个特殊版本，表示一块块的二进制数据。Blob对象继承了File对象的size和type属性。</p>
+
+<!--more-->
+
+
+<p>
+在大部分情况下，Blobs和Files可以用在同一个地方。例如，你可以使用一个FileReader从一个Blob中读取数据，并且你可以在一个Blob中使用URL.createObjectURL()方法来创建一个对象URL。</p>
+
+<h2>slice</h2>
+
+<p>使用Blobs的一件有趣的事情是可以基于另外一个Blob的小部分来创建一个新的Blob。由于每个Blob代表的是数据的内存地址，而不是数据本身，所以你可以快速创建一个指向其他Blob子部分数据的Blob对象。这可以通过使用slice()方法来做到。</p>
+
+<p>你可能对类似slice()的方法比较熟悉，可以用来处理字符串和数组，还有Blob。这个方法接收3个参数：起始字节的下标，结束字节的下标，还有一个可选且适用于Blob的MIME类型。如果MIME类型没有指定，新的Blob跟原始的BLob对象有相同的MIME类型。</p>
+
+<p>浏览器对slice()的支持还不是很普遍，只有Firefox通过mozSlice()和webkitSlice()来支持它（其他浏览器现在都不支持）。这里有一个例子：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">sliceBlob</span><span class="p">(</span><span class="nx">blob</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span> <span class="o">||</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">type</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">blob</span><span class="p">.</span><span class="nx">mozSlice</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">return</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">mozSlice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">type</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">blob</span><span class="p">.</span><span class="nx">webkitSlice</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">return</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">webkitSlice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span> <span class="nx">type</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">This</span> <span class="nx">doesn</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;</span><span class="nx">t</span> <span class="nx">work</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>比如，你可以使用这个函数将一个大文件拆分成一块块然后进行上传。每一个新产生的Blob都和原始的文件互不相干，即使每个blob的数据有重叠的部分。网络相册的工程师们使用blob分割来读取照片的可交换图片文件信息，这些照片是正在上传<em>[1]</em>的而不是已经上传到了服务器。当文件被选择的时候，上传文件和从照片中读取可交换图片文件信息，这2个动作在网络相册上传页面是同时开始的。这就允许在文件上传的时候，可以同时预览已经上传的部分数据的图像。</p>
+
+<h2>创建Blobs的老方法</h2>
+
+<p>ile对象在浏览器中开始出现后不久，开发人员意识到Blob对象是如此强大，以致想不通过用户交互就可以直接创建它们。毕竟，任何数据都可以放在Blob里面，而不一定要绑定一个文件。浏览器可以快速的创建BlobBuilder，这个对象类型的唯一目的就是将数据封装在一个Blob对象里面。这是一个非标准类型并且已经在Firefox（像MozBlobBuilder），IE10（像MSBlobBuilder）和Chrome（像WebKitBlobBuilder）中实现。</p>
+
+<p>BlobBuilder通过创建一个实例，然后调用append()方法紧跟一个字符串、ArrayBuffer或者Blob来工作。一旦这些数据都被添加之后，你可以调用getBlob()并传递一个可选的MIME类型参数来使用Blob。这有个例子：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlobBuilder</span><span class="p">();</span>
+</span><span class='line'><span class="nx">builder</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Hello</span> <span class="nx">world</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">blob</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">getBlob</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">text</span><span class="o">/</span><span class="nx">plain</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>为数据的任意片段创建URLs的能力是非常强大的，允许你在浏览器中动态的创建链接到文件的对象。例如，你可以使用一个Blob来创建一个web worker，而不需要为web worker指定文件。这项技术写在Web Workers<em>[2]</em>的基础里：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// Prefixed in Webkit, Chrome 12, and FF6: window.WebKitBlobBuilder, window.MozBlobBuilder</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">bb</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlobBuilder</span><span class="p">();</span>
+</span><span class='line'><span class="nx">bb</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">postMessage</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">msg</span> <span class="nx">from</span> <span class="nx">worker</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
+</span><span class='line'><span class="p">}</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="c1">// Obtain a blob URL reference to our worker &amp;lsquo;file&amp;rsquo;.</span>
+</span><span class='line'><span class="c1">// Note: window.webkitURL.createObjectURL() in Chrome 10+.</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">blobURL</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">bb</span><span class="p">.</span><span class="nx">getBlob</span><span class="p">());</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">worker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Worker</span><span class="p">(</span><span class="nx">blobURL</span><span class="p">);</span>
+</span><span class='line'><span class="nx">worker</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="c1">// e.data == &amp;lsquo;msg from worker&amp;rsquo;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">worker</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">();</span>
+</span><span class='line'><span class="c1">// Start the worker.</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这段代码创建了一个简单的脚本，然后创建一个对象URL。将对象URL赋予一个web worker来代替一个脚本URL。</p>
+
+<p>你可以任意次调用append()来创建Blob的内容。</p>
+
+<h2>创建Blobs的新方式</h2>
+
+<p>因为开发人员一直呼吁可以有一种方式来直接创建Blob对象，然后浏览器出现了BlobBuilder，它决定添加一个Blob构造器。这个构造器现在是规范的一部分，将是未来创建Blob对象的一种方式。</p>
+
+<p>这个构造器接收2个参数。第一个参数是一个分配了Blob块的数组。数据的元素跟传入BlobBuilder的append()方法的值相同，可以是任意数量的字符串，Blobs和ArrayBuffers。第二个参数是一个包含了新创建的Blob属性的对象。当前有2个属性已经定义：类型——指定Blob的MIME类型；endings——值分别是“transparent”（默认值）和“native”。这里有个例子：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">blob</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Blob</span><span class="p">([</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Hello</span> <span class="nx">world</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;],</span> <span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">text</span><span class="o">/</span><span class="nx">plain</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span> <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>像你看到的一样，这比使用BlobBuilder更加简单。Chrome的nightly builds版本和未来的Firefox 13将支持Blob构造器。其他浏览器还没有宣布实现该构造器的计划，尽管如此，现在它是File API<em>[3]</em>标准的一部分，期望以后会被普遍支持。</p>
+
+<h2>总结</h2>
+
+<p>这是“在JavaScript中进行文件处理”这一系列的最后一部分。我希望你了解到，File API非常强大，在web应用中开辟了很多全新的方式来处理文件。当用户需要上传文件时你不再需要坚持使用文件上传框，现在你可以在客户端读取文件，为客户端操作开辟了多种可能性。你可以在上传文件之前重置图片的大小（使用FileReader和<code>&lt;canvas&gt;</code>）；你可以单纯在浏览器里创建一个文本编辑器；你可以分隔大文件进行逐步上载。可能性不是无穷无尽的，但也很接近无穷尽了。</p>
+
+<h4>引用</h4>
+
+<ol>
+<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fcode.flickr.com/blog/2012/06/01/parsing-exif-client-side-using-javascript-2/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg">Parsing Exif client-side using JavaScript</a> by Flickr Team</li>
+<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fwww.html5rocks.com/en/tutorials/workers/basics/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg">The Basics of Web Workers</a> by Eric Bidelman</li>
+<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fdev.w3.org/2006/webapi/FileAPI/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg&amp;whp=3AconstructorBlob">File API</a> – Blob Constructor</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在JavaScript中进行文件处理，第四部分：对象URLs]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/07/30/working-with-files-in-javascript-part-4/"/>
+    <updated>2012-07-30T22:17:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/07/30/working-with-files-in-javascript-part-4</id>
+    <content type="html"><![CDATA[<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/31/working-with-files-in-javascript-part-4-object-urls">这里</a></strong></p>
+
+<hr />
+
+<p>学习到这里，你已经了解在传统方式中如何使用文件，你可以上传文件到服务端，可以从磁盘上读取文件，这些都是最常见的文件处理方式。但是，有一种全新的文件处理方式可以简化这些常见的任务，这就是使用对象URLs。</p>
+
+<!--more-->
+
+
+<h2>什么是对象URL？</h2>
+
+<p>对象URLs是磁盘上的文件地址。比如说，你想要将用户系统的一个图像文件显示到web页面，服务端无需要知道这个文件，所以也不需要上传它。如果你只是想要加载文件到页面，你可以像之前的帖子说的一样，获取一个File对象引用，将数据读取为一个数据URI，然后将数据URI分配到一个<code>&lt;img&gt;</code>元素。但想一想这里面的浪费，图像已经在磁盘上存在，为什么还要将图像读取为另外一种形式呢？如果你创建一个对象URL，你可以将其分配给<code>&lt;img&gt;</code>，这样就可以直接访问本地文件。</p>
+
+<h2>它如何工作？</h2>
+
+<p>File API<em>[1]</em>定义了一个全局对象叫URL，它有2个方法。第一个是createObjectURL()，接受一个File对象作为参数，返回一个对象URL，作用是告诉浏览器创建并且管理一个本地文件的URL。第二个方法是revokeObjectURL()，作用是告诉浏览器去销毁作为参数传入的URL，有效的释放内存。当然，一旦web页面被卸载了，则所有对象URLs都会被注销，当不再需要它们的时候，这是释放它们内存的一个好机会。</p>
+
+<p>File API对URL对象的支持不像其他部分那么好，在我写这篇文章的时候，IE10和Firefox9+支持一个全局URL对象。Chrome支持它的webkitURL形式，Safari和Opera不支持。</p>
+
+<h2>例子</h2>
+
+<p>如果你没有读取图片文件的数据，你怎么显示这个图片呢？假设你已经提供给用户文件选择的方式，并且现在有这个文件对象的引用并赋给了一个变量file。你可以如下使用：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">URL</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">URL</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">webkitURL</span><span class="p">,</span> <span class="nx">imageUrl</span><span class="p">,</span> <span class="nx">image</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nx">URL</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">imageUrl</span> <span class="o">=</span> <span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">image</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">img</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">image</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">imageUrl</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">};</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">image</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">imageUrl</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">image</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这个例子创建了一个本地URL变量，标准化浏览器的实现（即无论是何种浏览器都可以得到）。如果URL存在，程序将创建一个文件对象URL并将其存储在变量imageUrl，然后创建一个新的<img>元素，将imageUrl传入该元素的onloade事件处理方法，该方法将注销对象URL（一分钟内）。然后，src属性被分配了一个对象URL并将元素添加到页面。</p>
+
+<p>当图片加载的时候为什么要注销对象URL呢？在图片加载完之后，该URL就不再需要了，除非你想要在另外一个元素里面复用它。在这个例子中，图片被加载到一个单独的元素中，并且一旦图片完成加载，该URL就不再起任何作用，这是释放任何与其关联的内存的绝佳时刻。</p>
+
+<h2>安全和注意事项</h2>
+
+<p>乍一看，这种能力有点恐怖。实际上你是通过一个URL直接从用户机器上加载一个文件，这种方式当然存在安全隐患。URL本身其实不是一个大的安全问题，因为URL是通过浏览器动态分配的，在其他电脑上不会起作用。那跨网点会怎么样呢？</p>
+
+<p>File API 不允许在不同网点使用对象URLs。当一个对象URL被创建，它就紧跟着执行JavaScript脚本的页面网点，所以你不能跨www.wrox.com和p2p.wrox.com两个不同网点使用同一个对象URL（会发生错误）。但是，如果两个页面都是来自www.wrox.com，比如其中一个页面嵌套在另外一个页面的iframe里，这样就可以共享对象URLs。</p>
+
+<p>对象URLs只存在于文档创建它们的时候。当文档被卸载，所有对象URLs都会被注销。所以，在客户端存储对象URLs以便以后使用是没有意义的，它们在页面卸载之后就没有用了。</p>
+
+<p>你可以在浏览器中任何一个发起get请求的地方使用对象URLs，其中包括图片，脚本，web worker，样式表，音频，视频。浏览器执行post请求时使用不了对象URL。</p>
+
+<hr />
+
+<h4>下集预告</h4>
+
+<p>创建直接链接到本地文件的URL是一种很强的能力。对比读取一个本地文件到JavaScript然后在页面上显示，你可以简单地创建一个URL并在页面指定它，后者大大简化了本地文件在页面中的使用情况。尽管如此，JavaScript处理文件有趣的地方才刚刚开始。在下一篇blog，你将学习到一些有趣的方式来处理文件数据。</p>
+
+<h4>相关链接</h4>
+
+<ol>
+<li><a href="http://www.w3.org/TR/FileAPI/">File API</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在JavaScript中进行文件处理，第三部分：处理事件和错误]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/07/23/working-with-files-in-javascript-part-3/"/>
+    <updated>2012-07-23T21:46:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/07/23/working-with-files-in-javascript-part-3</id>
+    <content type="html"><![CDATA[<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/22/working-with-files-in-javascript-part-3/">这里</a></strong></p>
+
+<hr />
+
+<p>FileReader对象用来读取浏览器可以访问的文件的内容。在我前一篇blog中，你学习到了如何使用FileReader对象轻松读取文件，并将文件内容转换为各种形式。FileReader在很多方面和XMLHttpRequest非常相似。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>进度事件</h2>
+
+<p>progress事件变得如此普遍，以致实际上它们写在一个独立的规范<em>[1]</em>里面。这些事件设计用来表示数据传输的进度。这些传输不只发生在从服务器端请求数据的时候，而且也发生在从磁盘上请求数据的时候，这都是FileReader可以做的。</p>
+
+<p>这里有6个进度事件：</p>
+
+<ul>
+<li>loadstart – 表示加载数据的进度开始，这个事件总是首先被触发。</li>
+<li>progress – 在加载数据过程中多次被触发，可以访问中间的数据。</li>
+<li>error – 当加载失败时触发。</li>
+<li>abort &ndash; 当通过调用abort()取消数据加载时触发（在XMLHttpRequest和FileReader上都可使用）。</li>
+<li>load &ndash; 只有当所有数据被成功读取后才触发。</li>
+<li>loadend &ndash; 当对象停止传输数据时触发。在error，abort和load后始终被触发。</li>
+</ul>
+
+
+<p>error和load事件我们在前一篇blog已经讨论了。其他事件让你更好地控制在数据传输。</p>
+
+<h2>跟踪进度</h2>
+
+<p>当你想要跟踪一个文件读取的进度，你可以使用progress事件。这个事件对象包含了3个属性来监控数据的传输：</p>
+
+<ul>
+<li>lengthComputable &ndash; 一个布尔值，表示浏览器是否能侦测数据的完整大小。</li>
+<li>loaded &ndash; 已经读取的数据字节数大小。</li>
+<li>total &ndash; 所要读取的数据字节数总大小</li>
+</ul>
+
+
+<p>这些数据是为了生成一个使用了progress事件数据的进度条。例如，你可以使用HTML5<code>&lt;progress&gt;</code>元素来监控文件的读取进度。你可以像下面的代码一样让你的进度条和实际数据相关联：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">(),</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">progressNode</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">my</span><span class="o">-</span><span class="nx">progress</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onprogress</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span> <span class="err">　　</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">lengthComputable</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">total</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">loaded</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onloadend</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
+</span><span class='line'><span class="err">　　　　</span> <span class="nx">error</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">File</span> <span class="nx">could</span> <span class="nx">not</span> <span class="nx">be</span> <span class="nx">read</span><span class="o">!</span> <span class="nx">Code</span> <span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span> <span class="o">+</span> <span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Contents</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span> <span class="o">+</span> <span class="nx">contents</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span><span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这与Gmail用拖拽方式进行文件上传的方法相似，拖拽一个文件到email后你可以立即看到一个进度条。这个进度条表示有多少文件已经被传输到服务器。</p>
+
+<h2>错误处理</h2>
+
+<p>即使你已经在读取一个本地文件，但仍然有可能读取失败。在File API规范<em>[2]</em>中定义了4种错误类型：</p>
+
+<ul>
+<li>NotFoundError – 找不到该文件。　　</li>
+<li>SecurityError – 文件或者读取操作可能包含某些危险。浏览器有一些补救措施来处理这种情况，但一般来讲，如果加载到浏览器的文件有危险或者浏览器被限制了不能有太多的读取动作，你将会看到这个错误。　　</li>
+<li>NotReadableError – 文件存在但不可读，大部分情况可能是权限问题。　　</li>
+<li>EncodingError – 主要当尝试将文件内容读取为一个数据URI并且数据URI结果的长度超过浏览器可支持的最大长度时，会抛出这个错误。</li>
+</ul>
+
+
+<p>当读取文件发生错误时，上述的4个错误类型之一会被实例化，并分配到FileReader对象的error属性上。至少，规范上是这样写的。实际上，浏览器是通过一个FileError对象来实现的，FileError对象有一个code属性，表示当前发生的错误类型。每个错误类型通过一个数字常量来表示：</p>
+
+<ul>
+<li>FileError.NOT_FOUND_ERR对应找不到该文件错误。</li>
+<li>FileError.SECURITY_ERR对应安全错误。</li>
+<li>FileError.NOT_READABLE_ERR对应不可读错误。</li>
+<li>FileError.ENCODING_ERR对应编码错误。</li>
+<li>FileError.ABORT_ERR当没有读取进度时调用abort()方法。</li>
+</ul>
+
+
+<p>你可以在error或者loadend事件中测试错误类型：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onloadend</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">error</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">switch</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">ENCODING_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Encoding</span> <span class="nx">error</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">NOT_FOUND_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">File</span> <span class="nx">not</span> <span class="nx">found</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">NOT_READABLE_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">File</span> <span class="nx">could</span> <span class="nx">not</span> <span class="nx">be</span> <span class="nx">read</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">SECURITY_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Security</span> <span class="nx">issue</span> <span class="kd">with</span> <span class="nx">file</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">default</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">I</span> <span class="nx">have</span> <span class="nx">no</span> <span class="nx">idea</span> <span class="nx">what</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;</span><span class="nx">s</span> <span class="nx">wrong</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　</span><span class="p">}</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Contents</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span> <span class="o">+</span> <span class="nx">contents</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span> <span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<hr />
+
+<h4>下集预告</h4>
+
+<p>FileReader是一个全面的对象，有着非常多的功能，并且和XMLHttpRequest很相似。在学习了这3篇blog之后，你现在应该可以使用JavaScript来读取文件数据，如果需要的话，还可以将数据发送回给服务器。尽管如此，File API的功能和内容比我们在这个系列里讨论的东西要多得多，在下一章你将学习到一个强大全新的功能设计来处理文件。</p>
+
+<h4>相关链接</h4>
+
+<ol>
+<li><a href="http://www.w3.org/TR/progress-events/">Progress Events</a></li>
+<li><a href="http://www.w3.org/TR/FileAPI/">File API</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: javascript | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/tags/javascript/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2014-02-17T22:47:34+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在JavaScript中进行文件处理，第五部分：Blobs]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/08/01/working-with-files-in-javascript-part-5/"/>
+    <updated>2012-08-01T17:28:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/08/01/working-with-files-in-javascript-part-5</id>
+    <content type="html"><![CDATA[<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/31/working-with-files-in-javascript-part-5-Blobs">这里</a></strong></p>
+
+<hr />
+
+<p>到目前为止，这个系列的帖子集中在和这些文件交互——用户指定的文件和通过File对象访问的文件。File对象实际上是Blob的一个特殊版本，表示一块块的二进制数据。Blob对象继承了File对象的size和type属性。</p>
+
+<!--more-->
+
+
+<p>
+在大部分情况下，Blobs和Files可以用在同一个地方。例如，你可以使用一个FileReader从一个Blob中读取数据，并且你可以在一个Blob中使用URL.createObjectURL()方法来创建一个对象URL。</p>
+
+<h2>slice</h2>
+
+<p>使用Blobs的一件有趣的事情是可以基于另外一个Blob的小部分来创建一个新的Blob。由于每个Blob代表的是数据的内存地址，而不是数据本身，所以你可以快速创建一个指向其他Blob子部分数据的Blob对象。这可以通过使用slice()方法来做到。</p>
+
+<p>你可能对类似slice()的方法比较熟悉，可以用来处理字符串和数组，还有Blob。这个方法接收3个参数：起始字节的下标，结束字节的下标，还有一个可选且适用于Blob的MIME类型。如果MIME类型没有指定，新的Blob跟原始的BLob对象有相同的MIME类型。</p>
+
+<p>浏览器对slice()的支持还不是很普遍，只有Firefox通过mozSlice()和webkitSlice()来支持它（其他浏览器现在都不支持）。这里有一个例子：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">sliceBlob</span><span class="p">(</span><span class="nx">blob</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span> <span class="o">||</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">type</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">blob</span><span class="p">.</span><span class="nx">mozSlice</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">return</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">mozSlice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">type</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">blob</span><span class="p">.</span><span class="nx">webkitSlice</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">return</span> <span class="nx">blob</span><span class="p">.</span><span class="nx">webkitSlice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span> <span class="nx">type</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">This</span> <span class="nx">doesn</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;</span><span class="nx">t</span> <span class="nx">work</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>比如，你可以使用这个函数将一个大文件拆分成一块块然后进行上传。每一个新产生的Blob都和原始的文件互不相干，即使每个blob的数据有重叠的部分。网络相册的工程师们使用blob分割来读取照片的可交换图片文件信息，这些照片是正在上传<em>[1]</em>的而不是已经上传到了服务器。当文件被选择的时候，上传文件和从照片中读取可交换图片文件信息，这2个动作在网络相册上传页面是同时开始的。这就允许在文件上传的时候，可以同时预览已经上传的部分数据的图像。</p>
+
+<h2>创建Blobs的老方法</h2>
+
+<p>ile对象在浏览器中开始出现后不久，开发人员意识到Blob对象是如此强大，以致想不通过用户交互就可以直接创建它们。毕竟，任何数据都可以放在Blob里面，而不一定要绑定一个文件。浏览器可以快速的创建BlobBuilder，这个对象类型的唯一目的就是将数据封装在一个Blob对象里面。这是一个非标准类型并且已经在Firefox（像MozBlobBuilder），IE10（像MSBlobBuilder）和Chrome（像WebKitBlobBuilder）中实现。</p>
+
+<p>BlobBuilder通过创建一个实例，然后调用append()方法紧跟一个字符串、ArrayBuffer或者Blob来工作。一旦这些数据都被添加之后，你可以调用getBlob()并传递一个可选的MIME类型参数来使用Blob。这有个例子：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlobBuilder</span><span class="p">();</span>
+</span><span class='line'><span class="nx">builder</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Hello</span> <span class="nx">world</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">blob</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">getBlob</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">text</span><span class="o">/</span><span class="nx">plain</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>为数据的任意片段创建URLs的能力是非常强大的，允许你在浏览器中动态的创建链接到文件的对象。例如，你可以使用一个Blob来创建一个web worker，而不需要为web worker指定文件。这项技术写在Web Workers<em>[2]</em>的基础里：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// Prefixed in Webkit, Chrome 12, and FF6: window.WebKitBlobBuilder, window.MozBlobBuilder</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">bb</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlobBuilder</span><span class="p">();</span>
+</span><span class='line'><span class="nx">bb</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">postMessage</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">msg</span> <span class="nx">from</span> <span class="nx">worker</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
+</span><span class='line'><span class="p">}</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="c1">// Obtain a blob URL reference to our worker &amp;lsquo;file&amp;rsquo;.</span>
+</span><span class='line'><span class="c1">// Note: window.webkitURL.createObjectURL() in Chrome 10+.</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">blobURL</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">bb</span><span class="p">.</span><span class="nx">getBlob</span><span class="p">());</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">worker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Worker</span><span class="p">(</span><span class="nx">blobURL</span><span class="p">);</span>
+</span><span class='line'><span class="nx">worker</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="c1">// e.data == &amp;lsquo;msg from worker&amp;rsquo;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">worker</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">();</span>
+</span><span class='line'><span class="c1">// Start the worker.</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这段代码创建了一个简单的脚本，然后创建一个对象URL。将对象URL赋予一个web worker来代替一个脚本URL。</p>
+
+<p>你可以任意次调用append()来创建Blob的内容。</p>
+
+<h2>创建Blobs的新方式</h2>
+
+<p>因为开发人员一直呼吁可以有一种方式来直接创建Blob对象，然后浏览器出现了BlobBuilder，它决定添加一个Blob构造器。这个构造器现在是规范的一部分，将是未来创建Blob对象的一种方式。</p>
+
+<p>这个构造器接收2个参数。第一个参数是一个分配了Blob块的数组。数据的元素跟传入BlobBuilder的append()方法的值相同，可以是任意数量的字符串，Blobs和ArrayBuffers。第二个参数是一个包含了新创建的Blob属性的对象。当前有2个属性已经定义：类型——指定Blob的MIME类型；endings——值分别是“transparent”（默认值）和“native”。这里有个例子：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">blob</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Blob</span><span class="p">([</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Hello</span> <span class="nx">world</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;],</span> <span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">text</span><span class="o">/</span><span class="nx">plain</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span> <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>像你看到的一样，这比使用BlobBuilder更加简单。Chrome的nightly builds版本和未来的Firefox 13将支持Blob构造器。其他浏览器还没有宣布实现该构造器的计划，尽管如此，现在它是File API<em>[3]</em>标准的一部分，期望以后会被普遍支持。</p>
+
+<h2>总结</h2>
+
+<p>这是“在JavaScript中进行文件处理”这一系列的最后一部分。我希望你了解到，File API非常强大，在web应用中开辟了很多全新的方式来处理文件。当用户需要上传文件时你不再需要坚持使用文件上传框，现在你可以在客户端读取文件，为客户端操作开辟了多种可能性。你可以在上传文件之前重置图片的大小（使用FileReader和<code>&lt;canvas&gt;</code>）；你可以单纯在浏览器里创建一个文本编辑器；你可以分隔大文件进行逐步上载。可能性不是无穷无尽的，但也很接近无穷尽了。</p>
+
+<h4>引用</h4>
+
+<ol>
+<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fcode.flickr.com/blog/2012/06/01/parsing-exif-client-side-using-javascript-2/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg">Parsing Exif client-side using JavaScript</a> by Flickr Team</li>
+<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fwww.html5rocks.com/en/tutorials/workers/basics/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg">The Basics of Web Workers</a> by Eric Bidelman</li>
+<li><a href="http://www.google.com/gwt/x?wsc=tb&amp;source=wax&amp;u=http%3A%2F%2Fdev.w3.org/2006/webapi/FileAPI/&amp;ei=DcsYUMuwAcSmkAXmvoHoAg&amp;whp=3AconstructorBlob">File API</a> – Blob Constructor</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在JavaScript中进行文件处理，第四部分：对象URLs]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/07/30/working-with-files-in-javascript-part-4/"/>
+    <updated>2012-07-30T22:17:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/07/30/working-with-files-in-javascript-part-4</id>
+    <content type="html"><![CDATA[<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/31/working-with-files-in-javascript-part-4-object-urls">这里</a></strong></p>
+
+<hr />
+
+<p>学习到这里，你已经了解在传统方式中如何使用文件，你可以上传文件到服务端，可以从磁盘上读取文件，这些都是最常见的文件处理方式。但是，有一种全新的文件处理方式可以简化这些常见的任务，这就是使用对象URLs。</p>
+
+<!--more-->
+
+
+<h2>什么是对象URL？</h2>
+
+<p>对象URLs是磁盘上的文件地址。比如说，你想要将用户系统的一个图像文件显示到web页面，服务端无需要知道这个文件，所以也不需要上传它。如果你只是想要加载文件到页面，你可以像之前的帖子说的一样，获取一个File对象引用，将数据读取为一个数据URI，然后将数据URI分配到一个<code>&lt;img&gt;</code>元素。但想一想这里面的浪费，图像已经在磁盘上存在，为什么还要将图像读取为另外一种形式呢？如果你创建一个对象URL，你可以将其分配给<code>&lt;img&gt;</code>，这样就可以直接访问本地文件。</p>
+
+<h2>它如何工作？</h2>
+
+<p>File API<em>[1]</em>定义了一个全局对象叫URL，它有2个方法。第一个是createObjectURL()，接受一个File对象作为参数，返回一个对象URL，作用是告诉浏览器创建并且管理一个本地文件的URL。第二个方法是revokeObjectURL()，作用是告诉浏览器去销毁作为参数传入的URL，有效的释放内存。当然，一旦web页面被卸载了，则所有对象URLs都会被注销，当不再需要它们的时候，这是释放它们内存的一个好机会。</p>
+
+<p>File API对URL对象的支持不像其他部分那么好，在我写这篇文章的时候，IE10和Firefox9+支持一个全局URL对象。Chrome支持它的webkitURL形式，Safari和Opera不支持。</p>
+
+<h2>例子</h2>
+
+<p>如果你没有读取图片文件的数据，你怎么显示这个图片呢？假设你已经提供给用户文件选择的方式，并且现在有这个文件对象的引用并赋给了一个变量file。你可以如下使用：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">URL</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">URL</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">webkitURL</span><span class="p">,</span> <span class="nx">imageUrl</span><span class="p">,</span> <span class="nx">image</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nx">URL</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">imageUrl</span> <span class="o">=</span> <span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">image</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">img</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">image</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">imageUrl</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">};</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">image</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">imageUrl</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">image</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这个例子创建了一个本地URL变量，标准化浏览器的实现（即无论是何种浏览器都可以得到）。如果URL存在，程序将创建一个文件对象URL并将其存储在变量imageUrl，然后创建一个新的<img>元素，将imageUrl传入该元素的onloade事件处理方法，该方法将注销对象URL（一分钟内）。然后，src属性被分配了一个对象URL并将元素添加到页面。</p>
+
+<p>当图片加载的时候为什么要注销对象URL呢？在图片加载完之后，该URL就不再需要了，除非你想要在另外一个元素里面复用它。在这个例子中，图片被加载到一个单独的元素中，并且一旦图片完成加载，该URL就不再起任何作用，这是释放任何与其关联的内存的绝佳时刻。</p>
+
+<h2>安全和注意事项</h2>
+
+<p>乍一看，这种能力有点恐怖。实际上你是通过一个URL直接从用户机器上加载一个文件，这种方式当然存在安全隐患。URL本身其实不是一个大的安全问题，因为URL是通过浏览器动态分配的，在其他电脑上不会起作用。那跨网点会怎么样呢？</p>
+
+<p>File API 不允许在不同网点使用对象URLs。当一个对象URL被创建，它就紧跟着执行JavaScript脚本的页面网点，所以你不能跨www.wrox.com和p2p.wrox.com两个不同网点使用同一个对象URL（会发生错误）。但是，如果两个页面都是来自www.wrox.com，比如其中一个页面嵌套在另外一个页面的iframe里，这样就可以共享对象URLs。</p>
+
+<p>对象URLs只存在于文档创建它们的时候。当文档被卸载，所有对象URLs都会被注销。所以，在客户端存储对象URLs以便以后使用是没有意义的，它们在页面卸载之后就没有用了。</p>
+
+<p>你可以在浏览器中任何一个发起get请求的地方使用对象URLs，其中包括图片，脚本，web worker，样式表，音频，视频。浏览器执行post请求时使用不了对象URL。</p>
+
+<hr />
+
+<h4>下集预告</h4>
+
+<p>创建直接链接到本地文件的URL是一种很强的能力。对比读取一个本地文件到JavaScript然后在页面上显示，你可以简单地创建一个URL并在页面指定它，后者大大简化了本地文件在页面中的使用情况。尽管如此，JavaScript处理文件有趣的地方才刚刚开始。在下一篇blog，你将学习到一些有趣的方式来处理文件数据。</p>
+
+<h4>相关链接</h4>
+
+<ol>
+<li><a href="http://www.w3.org/TR/FileAPI/">File API</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在JavaScript中进行文件处理，第三部分：处理事件和错误]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/07/23/working-with-files-in-javascript-part-3/"/>
+    <updated>2012-07-23T21:46:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/07/23/working-with-files-in-javascript-part-3</id>
+    <content type="html"><![CDATA[<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/22/working-with-files-in-javascript-part-3/">这里</a></strong></p>
+
+<hr />
+
+<p>FileReader对象用来读取浏览器可以访问的文件的内容。在我前一篇blog中，你学习到了如何使用FileReader对象轻松读取文件，并将文件内容转换为各种形式。FileReader在很多方面和XMLHttpRequest非常相似。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>进度事件</h2>
+
+<p>progress事件变得如此普遍，以致实际上它们写在一个独立的规范<em>[1]</em>里面。这些事件设计用来表示数据传输的进度。这些传输不只发生在从服务器端请求数据的时候，而且也发生在从磁盘上请求数据的时候，这都是FileReader可以做的。</p>
+
+<p>这里有6个进度事件：</p>
+
+<ul>
+<li>loadstart – 表示加载数据的进度开始，这个事件总是首先被触发。</li>
+<li>progress – 在加载数据过程中多次被触发，可以访问中间的数据。</li>
+<li>error – 当加载失败时触发。</li>
+<li>abort &ndash; 当通过调用abort()取消数据加载时触发（在XMLHttpRequest和FileReader上都可使用）。</li>
+<li>load &ndash; 只有当所有数据被成功读取后才触发。</li>
+<li>loadend &ndash; 当对象停止传输数据时触发。在error，abort和load后始终被触发。</li>
+</ul>
+
+
+<p>error和load事件我们在前一篇blog已经讨论了。其他事件让你更好地控制在数据传输。</p>
+
+<h2>跟踪进度</h2>
+
+<p>当你想要跟踪一个文件读取的进度，你可以使用progress事件。这个事件对象包含了3个属性来监控数据的传输：</p>
+
+<ul>
+<li>lengthComputable &ndash; 一个布尔值，表示浏览器是否能侦测数据的完整大小。</li>
+<li>loaded &ndash; 已经读取的数据字节数大小。</li>
+<li>total &ndash; 所要读取的数据字节数总大小</li>
+</ul>
+
+
+<p>这些数据是为了生成一个使用了progress事件数据的进度条。例如，你可以使用HTML5<code>&lt;progress&gt;</code>元素来监控文件的读取进度。你可以像下面的代码一样让你的进度条和实际数据相关联：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">(),</span>
+</span><span class='line'><span class="err">　　</span><span class="nx">progressNode</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">my</span><span class="o">-</span><span class="nx">progress</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onprogress</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span> <span class="err">　　</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">lengthComputable</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">total</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">loaded</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onloadend</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
+</span><span class='line'><span class="err">　　　　</span> <span class="nx">error</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">File</span> <span class="nx">could</span> <span class="nx">not</span> <span class="nx">be</span> <span class="nx">read</span><span class="o">!</span> <span class="nx">Code</span> <span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span> <span class="o">+</span> <span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Contents</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span> <span class="o">+</span> <span class="nx">contents</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span><span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这与Gmail用拖拽方式进行文件上传的方法相似，拖拽一个文件到email后你可以立即看到一个进度条。这个进度条表示有多少文件已经被传输到服务器。</p>
+
+<h2>错误处理</h2>
+
+<p>即使你已经在读取一个本地文件，但仍然有可能读取失败。在File API规范<em>[2]</em>中定义了4种错误类型：</p>
+
+<ul>
+<li>NotFoundError – 找不到该文件。　　</li>
+<li>SecurityError – 文件或者读取操作可能包含某些危险。浏览器有一些补救措施来处理这种情况，但一般来讲，如果加载到浏览器的文件有危险或者浏览器被限制了不能有太多的读取动作，你将会看到这个错误。　　</li>
+<li>NotReadableError – 文件存在但不可读，大部分情况可能是权限问题。　　</li>
+<li>EncodingError – 主要当尝试将文件内容读取为一个数据URI并且数据URI结果的长度超过浏览器可支持的最大长度时，会抛出这个错误。</li>
+</ul>
+
+
+<p>当读取文件发生错误时，上述的4个错误类型之一会被实例化，并分配到FileReader对象的error属性上。至少，规范上是这样写的。实际上，浏览器是通过一个FileError对象来实现的，FileError对象有一个code属性，表示当前发生的错误类型。每个错误类型通过一个数字常量来表示：</p>
+
+<ul>
+<li>FileError.NOT_FOUND_ERR对应找不到该文件错误。</li>
+<li>FileError.SECURITY_ERR对应安全错误。</li>
+<li>FileError.NOT_READABLE_ERR对应不可读错误。</li>
+<li>FileError.ENCODING_ERR对应编码错误。</li>
+<li>FileError.ABORT_ERR当没有读取进度时调用abort()方法。</li>
+</ul>
+
+
+<p>你可以在error或者loadend事件中测试错误类型：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onloadend</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">error</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">switch</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">ENCODING_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Encoding</span> <span class="nx">error</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">NOT_FOUND_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">File</span> <span class="nx">not</span> <span class="nx">found</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">NOT_READABLE_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">File</span> <span class="nx">could</span> <span class="nx">not</span> <span class="nx">be</span> <span class="nx">read</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">case</span> <span class="nx">error</span><span class="p">.</span><span class="nx">SECURITY_ERR</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Security</span> <span class="nx">issue</span> <span class="kd">with</span> <span class="nx">file</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">default</span><span class="o">:</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">I</span> <span class="nx">have</span> <span class="nx">no</span> <span class="nx">idea</span> <span class="nx">what</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;</span><span class="nx">s</span> <span class="nx">wrong</span><span class="o">!&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="err">　　　　</span><span class="p">}</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">progressNode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Contents</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span> <span class="o">+</span> <span class="nx">contents</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span> <span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<hr />
+
+<h4>下集预告</h4>
+
+<p>FileReader是一个全面的对象，有着非常多的功能，并且和XMLHttpRequest很相似。在学习了这3篇blog之后，你现在应该可以使用JavaScript来读取文件数据，如果需要的话，还可以将数据发送回给服务器。尽管如此，File API的功能和内容比我们在这个系列里讨论的东西要多得多，在下一章你将学习到一个强大全新的功能设计来处理文件。</p>
+
+<h4>相关链接</h4>
+
+<ol>
+<li><a href="http://www.w3.org/TR/progress-events/">Progress Events</a></li>
+<li><a href="http://www.w3.org/TR/FileAPI/">File API</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在JavaScript中进行文件处理，第二部分：文件读取]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/07/16/working-with-files-in-javascript-part-2/"/>
+    <updated>2012-07-16T10:09:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/07/16/working-with-files-in-javascript-part-2</id>
+    <content type="html"><![CDATA[<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/15/working-with-files-in-javascript-part-2/">这里</a></strong></p>
+
+<hr />
+
+<p>在我的前一篇blog中，我介绍了在JavaScript中如何使用文件，具体重点放在如何获得File对象。只有当用户通过上传或者拖拽的方式上传了文件，这些对象才拥有文件的元数据。一旦你有了这些文件，下一步就是从这些文件中读取数据。</p>
+
+<!--more-->
+
+
+<h2>FileReader 类型</h2>
+
+<p>FileReader类型有一个单一的工作，就是从一个文件中读取数据并存储在一个JavaScript变量中。它的API有意设计得与XMLHttpRequest相同，因为它们都是从一个外部资源（浏览器之外）加载数据。读操作是异步的，这样不会使浏览器堵塞。</p>
+
+<p>FileReader可以创建多种格式来表示文件的数据，而当读取文件时返回的格式是必须的。读取操作是通过调用下面任一方法来完成的：</p>
+
+<ul>
+<li>readAsText() – 使用纯文本的形式返回文件内容</li>
+<li>readAsBinaryString() – 使用加密二进制数据字符串的形式来返回文件内容（该方法已废弃，请使用readAsArrayBuffer()代替）</li>
+<li>readAsArrayBuffer() – 使用ArrayBuffer的形式来返回文件内容（对二进制数据比如图像文件有用）</li>
+<li>readAsDataURL() – 使用数据URL的形式返回文件内容</li>
+</ul>
+
+
+<p>像XHR对象的send方法会发起一个Http请求一样，上面的每个方法都会启动一个文件读取。就这一点来说，在开始读取之前，你必须监听load事件，event.target.result总是返回读取的结果。例如：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;File contents: &quot;</span> <span class="o">+</span> <span class="nx">contents</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">reader</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;File could not be read! Code &quot;</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>在这个例子中，我们简单地读取文件内容，并将内容以纯文本的形式输出到console。当文件被成功读取时会调用onload操作，而因为某些原因无法读取时会调用onerror操作。在事件处理器中可以通过event.target来获得FileReader实例，而且它推荐这样使用，而不是直接使用reader变量。result属性包含读取成功时的文件内容和读取失败时的错误信息。</p>
+
+<h2>读取数据URI</h2>
+
+<p>你可以用差不多的方法来将文件读取为一个数据URI，数据的URI（有时也叫数据URL）是个有趣的选项，比如你想要显示从磁盘上读取的图像文件，你可以用下面的代码这样做：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">dataUri</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">img</span>     <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">img</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">dataUri</span><span class="p">;</span>
+</span><span class='line'><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">img</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">reader</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;File could not be read! Code &quot;</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsDataURL</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这段代码简单地在页面上插入一个从磁盘上读取来的图像文件。因为这个数据URI包含了图像的所有数据，所以它可以被直接传给图像的src属性，并显示在页面上。你可以交替地加载图像和将其绘制到一个<code>&lt;canvas&gt;</code>上：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
+</span><span class='line'><span class="nx">reader</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">dataUri</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">context</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;mycanvas&quot;</span><span class="p">).</span><span class="nx">getContext</span><span class="p">(</span><span class="s2">&quot;2d&quot;</span><span class="p">),</span>
+</span><span class='line'>    <span class="nx">img</span>     <span class="o">=</span> <span class="k">new</span> <span class="nx">Image</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// wait until the image has been fully processed</span>
+</span><span class='line'><span class="nx">img</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">context</span><span class="p">.</span><span class="nx">drawImage</span><span class="p">(</span><span class="nx">img</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">img</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">dataUri</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">reader</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;File could not be read! Code &quot;</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">reader</span><span class="p">.</span><span class="nx">readAsDataURL</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这段代码将图像数据加载到一个新的Image对象，并将其绘制到一个画布上（宽度和长度都指定为100）。</p>
+
+<p>数据URI一般用来做这个，但能用在任何类型的文件上。将文件读取为一个数据URI最普遍的用法是在web页面中快速显示文件内容。</p>
+
+<h2>读取ArrayBuffers</h2>
+
+<p>ArrayBuffer类型<em>[1]</em>最初是作为WebGL的一部分被引进的。一个Arraybuffer代表一个有限的字节数，可以用来存储任意大小的数字。读取一个ArrayBuffer数据的方式需要一个特定的视图，比如Int8Array是将其中的字节处理为一个有符号的8位整数集合，而Float32Array是将其中的字节处理为一个32位浮点数的集合。这些称为类型数组<em>[2]</em>，这样可以强制你工作在一个特定的数字类型上，而不是包含任意类型的数据（像传统的数组）。</p>
+
+<p>当处理二进制文件时你可以优先使用ArrayBuffer，这样对数据可以有更细粒度的控制。要解释关于ArrayBuffer的所有ins和outs已经超出本篇blog的范围，你只需要知道在你需要的时候可以很容易地将一个文件读取为一个ArrayBuffer就可以了。你可以直接传一个ArrayBuffer到一个XHR对象的send()方法，发送原始数据到服务器（你会在服务器的请求中读取这个数据去重建文件），只要你的浏览器完全支持XMLHttpRequest Level 2<em>[3]</em>（大部分最新的浏览器，包括IE10和Opera12都支持）。</p>
+
+<hr />
+
+<h4>下集预告</h4>
+
+<p>使用FileReader读取文件数据相当简单。如果你知道怎么使用XMLHttpRequest, 那么你肯定知道怎么从文件中读取数据。在这个系列的下一章，你将学到更多有关如何使用FileReader事件和理解更多潜在错误的内容。</p>
+
+<h4>相关链接</h4>
+
+<ol>
+<li><a href="https://developer.mozilla.org/en/JavaScript_typed_arrays/ArrayBuffer">ArrayBuffer</a></li>
+<li><a href="http://www.khronos.org/registry/typedarray/specs/latest/">Typed Array Specification</a></li>
+<li><a href="http://www.w3.org/TR/XMLHttpRequest/">XMLHttpRequest Level 2</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在JavaScript中进行文件处理，第一部分：基础]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/07/08/working-with-files-in-javascript-part-1/"/>
+    <updated>2012-07-08T16:26:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/07/08/working-with-files-in-javascript-part-1</id>
+    <content type="html"><![CDATA[<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/08/working-with-files-in-javascript-part-1/">这里</a></strong></p>
+
+<hr />
+
+<p>很多年前，我在一次Goole面试被问到，如何在web应用中提供更好的用户体验。浮现在我脑海里的第一个想法是，通过比<code>&lt;input type="file"&gt;</code>标签更好的方式来进行文件操作。虽然web发展一路高歌猛进，但自从该标签引进以来，我们操作文件的方式就一直使用它而从来没有改变过。幸运的是，有了HTML5和相关API，我们在最新版本的浏览器上可以有更多的方式进行文件操作（iOS 仍然不支持File的API）。</p>
+
+<!--more-->
+
+
+<h2>File 类型</h2>
+
+<p>File类型在File的API<em>[1]</em>中有详细定义，是一个文件的抽象表征。每个File实例有如下几个属性：</p>
+
+<ul>
+<li>name &ndash; 文件名</li>
+<li>size &ndash; 文件的二进制大小</li>
+<li>type &ndash; 文件的MIME类型</li>
+</ul>
+
+
+<p>一个File对象是在不直接访问文件内容的情况下，给你文件的基本信息。这一点很重要，因为从磁盘上读取文件内容，视乎文件的大小，如果文件很大，可能会在读取上等待很长时间。File对象只是一个文件的引用，和获取文件内容是两个独立的过程。</p>
+
+<h2>获取文件引用</h2>
+
+<p>基于安全的考虑，访问用户文件是严格禁止的，你不希望在加载某个页面时页面自动扫描你的硬盘然后把你的文件罗列出来吧？你访问用户电脑上的文件时要经过他们的许可，在想象中会弹出授权窗口给用户进行确认，但当用户通过页面上载东西时，实际上已经授权页面可以一直访问文件，所以不会弹出那些杂乱无章的授权窗口。</p>
+
+<p>当你使用<code>&lt;input type="file"&gt;</code>标签时，你已经授权web页面（或者服务器）去访问该文件，通过<code>&lt;input type="file"&gt;</code>标签去检索到文件对象。</p>
+
+<p>HTML5为所有<code>&lt;input type="file"&gt;</code>标签定义了一个文件集属性FileList，是一个类型数据类型的的数据结构，包含了每一个被选中的文件（HTML5允许多文件选择操作）。所以无论何时，你都可以使用以下代码来访问用户选择的文件。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;file&quot;</span> <span class="na">id=</span><span class="s">&quot;your-files&quot;</span> <span class="na">multiple</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script&gt;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">control</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;your-files&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">control</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// When the control has changed, there are new files </span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">files</span> <span class="o">=</span> <span class="nx">control</span><span class="p">.</span><span class="nx">files</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">files</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Filename: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Type: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">type</span><span class="p">);</span>
+</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Size: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">size</span> <span class="o">+</span> <span class="s2">&quot; bytes&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这段代码监听了文件操作的change事件，一旦change事件触发，表示选中的文件已经发生改变，然后程序会迭代输出每个File对象的信息。记住，始终是通过javascript来访问文件的属性，所以不会有读取文件内容的动作。</p>
+
+<h2>拖拽文件</h2>
+
+<p>在表单中进行文件访问，需要用户先浏览查询再选中所需的文件。幸运的是，HTML5的拖拽功能<em>[2]</em>给用户提供了另外一种方式去授权需要访问的文件：通过简单的将文件从本地拖拽到浏览器。要实现这个功能你只需监听2个事件。</p>
+
+<p>为了读取从某些区域拖拽到浏览器的文件，你需要监听dragover和drop事件，并取消它们原有的默认行为。做这些是为了告诉浏览器无需处理，你可以直接处理这些动作，例如，打开一个图像文件。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;your-files&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script&gt;</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">target</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;your-files&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">target</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;dragover&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+</span><span class='line'><span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">target</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;drop&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// cancel default actions</span>
+</span><span class='line'>    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">files</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">files</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">len</span> <span class="o">=</span> <span class="nx">files</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Filename: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Type: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">type</span><span class="p">);</span>
+</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Size: &quot;</span> <span class="o">+</span> <span class="nx">files</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">size</span> <span class="o">+</span> <span class="s2">&quot; bytes&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+event.dataTransfer.files是另外一个文件集合对象，你可以从中获取文件信息。这段代码的功能等同于你手工选择打开一个文件。</p>
+
+<h2>Ajax文件上传</h2>
+
+<p>一旦你有了一个文件的引用，你可能会做一些非常酷的事情，比如用Ajax上传文件。由于XMLHttpRequest Level 2<em>[3]</em>的FormData对象，使得这完全有可能。这个对象表示一个HTML表单，并且允许你在里面通过append方法来添加键值对数据，然后提交到服务器。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">();</span>
+</span><span class='line'><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">name</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Nicholas</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>FormData的伟大之处在于它可以直接添加一个文件对象，从而有效地模仿表单的文件上传。你所需要做的仅仅是添加一个File引用，并且指定一个文件名，剩下的由浏览器全部搞定。例如：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// create a form with a couple of values</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">();</span>
+</span><span class='line'><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">name</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">Nicholas</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;);</span>
+</span><span class='line'><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">photo</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;,</span> <span class="nx">control</span><span class="p">.</span><span class="nx">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="c1">// send via XHR &amp;ndash; look ma, no headers being set!</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+</span><span class='line'><span class="nx">xhr</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Upload complete.&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">};</span>
+</span><span class='line'><span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">post</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="err">/entrypoint&amp;rdquo;, true);</span>
+</span><span class='line'><span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">form</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>一旦FormData对象被传递到send方法，适当的HTTP头将会为你设置好。你不需要担心使用文件的表单如何设置正确的编码格式，服务器会将其当作一个常规的HTML表单来提交，然后读取“photo"键的文件数据和“name"键的文本数据。这让你在写后台代码时可以很自由，很容易的处理表单数据，不管是传统HTML表单还是Ajax表单形式。</p>
+
+<p>所有这些都可以在最新版本的浏览器上工作，包括IE10。</p>
+
+<hr />
+
+<h4>下集预告</h4>
+
+<p>你现在知道两种在浏览器中访问文件信息的方法，一种是通过文件上传操作，一种是通过本地的拖拽操作。未来可能有其他的方法，但现在你只需要了解这两种就好了。当然，读取文件信息只是问题的一部分，下一步是如何读取文件的内容，这将在第二部分做讲解。</p>
+
+<h4>相关链接：</h4>
+
+<ol>
+<li><a href="http://dev.w3.org/2006/webapi/FileAPI/">File API specification (editor’s draft)</a></li>
+<li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dnd.html#dnd">HTML5 Drag and Drop</a></li>
+<li><a href="http://www.w3.org/TR/XMLHttpRequest/">XMLHttpRequest Level 2</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

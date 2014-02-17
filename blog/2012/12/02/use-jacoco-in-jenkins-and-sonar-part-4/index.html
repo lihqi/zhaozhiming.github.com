@@ -1,0 +1,299 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>在jenkins和sonar中集成jacoco(四)--在sonar中集成jacoco - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令： build.xml 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27 &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">在jenkins和sonar中集成jacoco(四)--在sonar中集成jacoco</h2>
+	<div class="entry-content"><p>首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令：</p>
+
+<!--more-->
+
+
+
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.sonar.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/sonar/ant/antlib.xml&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;classpath</span> <span class="na">path=</span><span class="s">&quot;${env.SONAR-ANT-TASK.JAR}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/taskdef&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;sonar&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;sonar:sonar</span> <span class="na">key=</span><span class="s">&quot;${sonar.project.key}&quot;</span> <span class="na">version=</span><span class="s">&quot;${sonar.project.version}&quot;</span> <span class="na">xmlns:sonar=</span><span class="s">&quot;antlib:org.sonar.ant&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;sources&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${src.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/sources&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.projectName&quot;</span> <span class="na">value=</span><span class="s">&quot;jacoco_demo&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.sourceEncoding&quot;</span> <span class="na">value=</span><span class="s">&quot;UTF-8&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.dynamicAnalysis&quot;</span> <span class="na">value=</span><span class="s">&quot;reuseReports&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.surefire.reportsPath&quot;</span> <span class="na">value=</span><span class="s">&quot;${junit.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.core.codeCoveragePlugin&quot;</span> <span class="na">value=</span><span class="s">&quot;jacoco&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.jacoco.reportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;${basedir}/ut.exec&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">key=</span><span class="s">&quot;sonar.jacoco.itReportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;${basedir}/uat.exec&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;tests&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${src.test.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/tests&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;binaries&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${build.src.class}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${build.test.class}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/binaries&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;libraries&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${build.lib.dir}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/libraries&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/sonar:sonar&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参数解释：</p>
+
+<ul>
+<li>sonar.dynamicAnalysis是指单元测试报告的生成方式，值为reuseReports是指给出生成好的单元测试报告路径。</li>
+<li>sonar.surefire.reportsPath是指单元测试报告的路径。</li>
+<li>sonar.core.codeCoveragePlugin是覆盖率插件，有jacoco,cobetura等。</li>
+<li>sonar.jacoco.reportPath是单元测试覆盖率文件的路径。</li>
+<li>sonar.jacoco.itReportPath是集成测试覆盖率文件的路径。</li>
+</ul>
+
+
+<p>更多参数可以参考这里：<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Unit+Tests">单元测试</a>，<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Integration+Tests">集成测试</a><br/>
+在sonar 3.3的版本会自动将单元测试和集成测试的覆盖率合并，最后附上sonar上的覆盖率显示：</p>
+
+<p><img src="/images/post/2012112914305954.png"><br/>
+<img src="/images/post/2012112914311753.png"></p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

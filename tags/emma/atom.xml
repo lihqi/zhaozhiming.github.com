@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: emma | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/tags/emma/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2014-02-17T22:47:34+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用emma时遇到的一些问题]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/03/27/some-problems-in-emma/"/>
+    <updated>2012-03-27T22:05:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/03/27/some-problems-in-emma</id>
+    <content type="html"><![CDATA[<p>今天在用使用emma的过程中遇到了几个问题，记录一下.</p>
+
+<p><strong>1.跑junit过程中没办法产生coverage data文件，导致最后没办法出emma报告，上官网查了一下原因如下：</strong></p>
+
+<!--more-->
+
+
+<p>
+<blockquote><p>I have instrumented my classes but am not getting any coverage data&hellip; <br/><br/>This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.</p></blockquote>
+意思是emma会根据工程里面的class文件产生自己的instrumented class，junit在跑单元测试的时候，classpath要把定义emma的class文件路径放在项目class文件路径前面，才能产生coverage data文件。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;junit</span> <span class="err">...</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${emma.classes.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${project.classes.dir}&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'><span class="ni">&amp;hellip;</span>
+</span><span class='line'><span class="nt">&lt;/junit&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>2.emma的示例代码里面，report的sourcepath属性只有一个src路径，如果项目里面有多个src路径同时要进行覆盖率检查的话，则需要这样写：</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;report</span> <span class="na">sourcepath=</span><span class="s">&quot;${src1};${src2};${src3}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="ni">&amp;hellip;</span>
+</span><span class='line'><span class="nt">&lt;/report&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+不同的src路径用操作系统的classpath分隔符或逗号隔开，比如window用分号隔开，官网是这样解释的：<br/>
+<blockquote><p>sourcepath : An optional source path to use for report generation (a path-like structure). It is interpreted as a list of directories (separated by the OS-specific classpath separator or comma) containing .java source files. The local path names within each directory should reflect class package names. (Currently, only the HTML report generator uses this data, and only atmethod report depth.)</p></blockquote></p>
+
+<p><strong>3.jenkins的emma插件可以显示覆盖率的趋势，已经包，类，方法的覆盖率情况，但不支持链接显示代码源文件，看了下jenkins的官网，有人已经对插件提了这样一个需求，但回复说无法实现，说明如下：</strong>  <br/>
+<blockquote><p>This was an obvious feature and so I tried to do this, but the problem is that the HTML file names and anchors that EMMA puts are just random numbers. So Hudson cannot link to the appropriate portion of those HTML files.</p></p><p><p>I also thought about generating those reports by myself in Hudson, but EMMA doesn&rsquo;t leave the line-by-line coverage information in XML file either.</p></p><p><p>So that leaves me no choice but to parse emma&rsquo;s data file directly. So this is bit involving.　　</p></blockquote></p>
+
+<p>意思是说emma的html源文件是用随机数字命名，所以在xml文件中无法链接这些html源文件，emma没有修复这个问题，插件作者也无法完成这个需求:(</p>
+
+<p>我的解决方案是用doc link插件在jenkins页面上直接链接coverage.html文件。</p>
+]]></content>
+  </entry>
+  
+</feed>
