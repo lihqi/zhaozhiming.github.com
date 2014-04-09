@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: swift | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/swift/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-03-15T22:26:23+08:00</updated>
+  <updated>2014-04-09T22:06:27+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,561 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[swift单节点多dev环境部署]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/04/09/swift-multiply-nodes-deploy-in-one-machine/"/>
+    <updated>2014-04-09T20:45:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/04/09/swift-multiply-nodes-deploy-in-one-machine</id>
+    <content type="html"><![CDATA[<h2>环境目标</h2>
+
+<ul>
+<li>同一台机器</li>
+<li>1台proxy server</li>
+<li>5个storage node</li>
+<li>每个storage node有2个dev</li>
+</ul>
+
+
+<!--more-->
+
+
+<p></p>
+
+<p>安装过程可以按照<a href="http://docs.openstack.org/developer/swift/development_saio.html">swift all in one</a>文档进行搭建，在操作过程中需要修改以下的地方。</p>
+
+<h2>Using a loopback device for storage</h2>
+
+<ol>
+<li>Create the file for the loopback device:<br/>
+<code>(这里的标题和编号是与saio的保持一致，这样方便大家按照saio的编号进行修改，后面的步骤与此相同，不再做说明)</code></li>
+</ol>
+
+
+<p>修改前：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo truncate -s 1GB /srv/swift-disk
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>修改后：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo truncate -s 500GB /srv/swift-disk
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>将xfs文件系统的大小改为500GB，原来的1GB太小不适合做测试。</p>
+
+<ol>
+<li>Create the mount point and the individualized links: <br/>
+将原来的脚本修改为：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo mkdir /mnt/sdb1
+</span><span class='line'>sudo mount /mnt/sdb1
+</span><span class='line'>sudo mkdir /mnt/sdb1/1 /mnt/sdb1/2 /mnt/sdb1/3 /mnt/sdb1/4 /mnt/sdb1/5
+</span><span class='line'>sudo chown <span class="k">${</span><span class="nv">USER</span><span class="k">}</span>:<span class="k">${</span><span class="nv">USER</span><span class="k">}</span> /mnt/sdb1/*
+</span><span class='line'><span class="k">for </span>x in <span class="o">{</span>1..5<span class="o">}</span>; <span class="k">do </span>sudo ln -s /mnt/sdb1/<span class="nv">$x</span> /srv/<span class="nv">$x</span>; <span class="k">done</span>
+</span><span class='line'>sudo mkdir -p /srv/1/node/dev1 /srv/1/node/dev2 /srv/2/node/dev3 /srv/2/node/dev4 /srv/3/node/dev5 /srv/3/node/dev6 /srv/4/node/dev7 /srv/4/node/dev8 /srv/5/node/dev9 /srv/5/node/dev10 /var/run/swift
+</span><span class='line'>sudo chown -R <span class="k">${</span><span class="nv">USER</span><span class="k">}</span>:<span class="k">${</span><span class="nv">USER</span><span class="k">}</span> /var/run/swift
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;&lt;strong&gt;Make sure to include the trailing slash after /srv/<span class="nv">$x</span>/&lt;/strong&gt;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;for x in <span class="o">{</span>1..5<span class="o">}</span>; <span class="k">do </span>sudo chown -R <span class="k">${</span><span class="nv">USER</span><span class="k">}</span>:<span class="k">${</span><span class="nv">USER</span><span class="k">}</span> /srv/<span class="nv">$x</span>/; <span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
+</ol>
+
+
+<p>创建属于5个节点的文件夹，在每个节点文件夹下创建2个dev文件夹，表示1个节点有2个dev，其中region1有6台dev(1~6)，region2有4台dev(7~10)。</p>
+
+<h2>Common Post-Device Setup</h2>
+
+<p>Add the following lines to /etc/rc.local (before the exit 0): <br/>
+修改前：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /var/cache/swift /var/cache/swift2 /var/cache/swift3 /var/cache/swift4
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>修改后：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /var/cache/swift /var/cache/swift2 /var/cache/swift3 /var/cache/swift4 /var/cache/swift5
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+因为有5个节点，所以增加了1个新节点的缓存文件夹。</p>
+
+<h2>Setting up rsync</h2>
+
+<p>Here is the default rsyncd.conf file contents maintained in the repo that is copied and fixed up above:</p>
+
+<p>在/etc/rsyncd.conf文件追加以下内容：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>account6052<span class="o">]</span>
+</span><span class='line'>max <span class="nv">connections</span> <span class="o">=</span> 25
+</span><span class='line'><span class="nv">path</span> <span class="o">=</span> /srv/5/node/
+</span><span class='line'><span class="nb">read </span><span class="nv">only</span> <span class="o">=</span> <span class="nb">false</span>
+</span><span class='line'>lock <span class="nv">file</span> <span class="o">=</span> /var/lock/account6052.lock&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>container6051<span class="o">]</span>
+</span><span class='line'>max <span class="nv">connections</span> <span class="o">=</span> 25
+</span><span class='line'><span class="nv">path</span> <span class="o">=</span> /srv/5/node/
+</span><span class='line'><span class="nb">read </span><span class="nv">only</span> <span class="o">=</span> <span class="nb">false</span>
+</span><span class='line'>lock <span class="nv">file</span> <span class="o">=</span> /var/lock/container6051.lock&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>object6050<span class="o">]</span>
+</span><span class='line'>max <span class="nv">connections</span> <span class="o">=</span> 25
+</span><span class='line'><span class="nv">path</span> <span class="o">=</span> /srv/5/node/
+</span><span class='line'><span class="nb">read </span><span class="nv">only</span> <span class="o">=</span> <span class="nb">false</span>
+</span><span class='line'>lock <span class="nv">file</span> <span class="o">=</span> /var/lock/object6050.lock
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>增加了新节点的account, container, object服务的同步配置。</p>
+
+<p>You should see the following output from the above command:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>account6012
+</span><span class='line'>account6022
+</span><span class='line'>account6032
+</span><span class='line'>account6042
+</span><span class='line'>account6052
+</span><span class='line'>container6011
+</span><span class='line'>container6021
+</span><span class='line'>container6031
+</span><span class='line'>container6041
+</span><span class='line'>container6051
+</span><span class='line'>object6010
+</span><span class='line'>object6020
+</span><span class='line'>object6030
+</span><span class='line'>object6040
+</span><span class='line'>object6050
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>验证rsync可以看到新增的account, container, object信息。</p>
+
+<h2>Optional: Setting up rsyslog for individual logging</h2>
+
+<p>将/etc/rsyslog.d/10-swift.conf文件内容修改为：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Uncomment the following to have a log containing all logs together&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;local1,local2,local3,local4,local5.*   /var/log/swift/all.log&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Uncomment the following to have hourly proxy logs <span class="k">for </span>stats processing&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;<span class="nv">$template</span> HourlyProxyLog,&amp;ldquo;/var/log/swift/hourly/%<span class="nv">$YEAR</span>%%<span class="nv">$MONTH</span>%%<span class="nv">$DAY</span>%%<span class="nv">$HOUR</span>%&amp;rdquo;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;local1.*;local1.!notice ?HourlyProxyLog&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;local1.&lt;em&gt;;local1.!notice /var/log/swift/proxy.log
+</span><span class='line'>local1.notice           /var/log/swift/proxy.error
+</span><span class='line'>local1.&lt;/em&gt;                ~&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;local2.&lt;em&gt;;local2.!notice /var/log/swift/storage1.log
+</span><span class='line'>local2.notice           /var/log/swift/storage1.error
+</span><span class='line'>local2.&lt;/em&gt;                ~&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;local3.&lt;em&gt;;local3.!notice /var/log/swift/storage2.log
+</span><span class='line'>local3.notice           /var/log/swift/storage2.error
+</span><span class='line'>local3.&lt;/em&gt;                ~&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;local4.&lt;em&gt;;local4.!notice /var/log/swift/storage3.log
+</span><span class='line'>local4.notice           /var/log/swift/storage3.error
+</span><span class='line'>local4.&lt;/em&gt;                ~&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;local5.&lt;em&gt;;local5.!notice /var/log/swift/storage4.log
+</span><span class='line'>local5.notice           /var/log/swift/storage4.error
+</span><span class='line'>local5.&lt;/em&gt;                ~&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;local6.&lt;em&gt;;local6.!notice /var/log/swift/storage5.log
+</span><span class='line'>local6.notice           /var/log/swift/storage5.error
+</span><span class='line'>local6.&lt;/em&gt;                ~&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;local7.&lt;em&gt;;local7.!notice /var/log/swift/expirer.log
+</span><span class='line'>local7.notice           /var/log/swift/expirer.error
+</span><span class='line'>local7.&lt;/em&gt;                ~
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>修改日志配置，将原来的local6指向storage node 5, 原来的expirer用local7来记录日志（<code>注意：后面在修改各个节点的服务配置文件时需要知道这些日志配置信息</code>）。</p>
+
+<h2>Configuring each node</h2>
+
+<ol>
+<li>/etc/swift/object-expirer.conf</li>
+</ol>
+
+
+<p>修改前：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL6   &lt;br/&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>修改后：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL7
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>新增account5的配置文件 /etc/swift/account-server/5.conf：</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>DEFAULT<span class="o">]</span>
+</span><span class='line'><span class="nv">devices</span> <span class="o">=</span> /srv/5/node
+</span><span class='line'><span class="nv">mount_check</span> <span class="o">=</span> <span class="nb">false</span>
+</span><span class='line'><span class="nv">disable_fallocate</span> <span class="o">=</span> <span class="nb">true</span>
+</span><span class='line'><span class="nv">bind_port</span> <span class="o">=</span> 6052
+</span><span class='line'><span class="nv">workers</span> <span class="o">=</span> 1
+</span><span class='line'><span class="nv">user</span> <span class="o">=</span> swift
+</span><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL6
+</span><span class='line'><span class="nv">recon_cache_path</span> <span class="o">=</span> /var/cache/swift5
+</span><span class='line'><span class="nv">eventlet_debug</span> <span class="o">=</span> <span class="nb">true</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>pipeline:main<span class="o">]</span>
+</span><span class='line'><span class="nv">pipeline</span> <span class="o">=</span> recon account-server&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>app:account-server<span class="o">]</span>
+</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#account&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>filter:recon<span class="o">]</span>
+</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#recon&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>account-replicator<span class="o">]</span>
+</span><span class='line'><span class="nv">vm_test_mode</span> <span class="o">=</span> yes&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>account-auditor<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>account-reaper<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>新增container5的配置文件/etc/swift/container-server/5.conf：</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>DEFAULT<span class="o">]</span>
+</span><span class='line'><span class="nv">devices</span> <span class="o">=</span> /srv/5/node
+</span><span class='line'><span class="nv">mount_check</span> <span class="o">=</span> <span class="nb">false</span>
+</span><span class='line'><span class="nv">disable_fallocate</span> <span class="o">=</span> <span class="nb">true</span>
+</span><span class='line'><span class="nv">bind_port</span> <span class="o">=</span> 6051
+</span><span class='line'><span class="nv">workers</span> <span class="o">=</span> 1
+</span><span class='line'><span class="nv">user</span> <span class="o">=</span> swift
+</span><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL6
+</span><span class='line'><span class="nv">recon_cache_path</span> <span class="o">=</span> /var/cache/swift5
+</span><span class='line'><span class="nv">eventlet_debug</span> <span class="o">=</span> <span class="nb">true</span>
+</span><span class='line'><span class="nv">allow_versions</span> <span class="o">=</span> <span class="nb">true</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>pipeline:main<span class="o">]</span>
+</span><span class='line'><span class="nv">pipeline</span> <span class="o">=</span> recon container-server&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>app:container-server<span class="o">]</span>
+</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#container&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>filter:recon<span class="o">]</span>
+</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#recon&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>container-replicator<span class="o">]</span>
+</span><span class='line'><span class="nv">vm_test_mode</span> <span class="o">=</span> yes&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>container-updater<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>container-auditor<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>container-sync<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>新增object5的配置文件/etc/swift/object-server/5.conf：</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>DEFAULT<span class="o">]</span>
+</span><span class='line'><span class="nv">devices</span> <span class="o">=</span> /srv/5/node
+</span><span class='line'><span class="nv">mount_check</span> <span class="o">=</span> <span class="nb">false</span>
+</span><span class='line'><span class="nv">disable_fallocate</span> <span class="o">=</span> <span class="nb">true</span>
+</span><span class='line'><span class="nv">bind_port</span> <span class="o">=</span> 6050
+</span><span class='line'><span class="nv">workers</span> <span class="o">=</span> 1
+</span><span class='line'><span class="nv">user</span> <span class="o">=</span> swift
+</span><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL6
+</span><span class='line'><span class="nv">recon_cache_path</span> <span class="o">=</span> /var/cache/swift5
+</span><span class='line'><span class="nv">eventlet_debug</span> <span class="o">=</span> <span class="nb">true</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>pipeline:main<span class="o">]</span>
+</span><span class='line'><span class="nv">pipeline</span> <span class="o">=</span> recon object-server&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>app:object-server<span class="o">]</span>
+</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#object&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>filter:recon<span class="o">]</span>
+</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#recon&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>object-replicator<span class="o">]</span>
+</span><span class='line'><span class="nv">vm_test_mode</span> <span class="o">=</span> yes&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>object-updater<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>object-auditor<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Setting up scripts for running Swift</h2>
+
+<ol>
+<li>Construct the initial rings using the provided script:</li>
+</ol>
+
+
+<p>先修改bin/remakerings文件，在执行remakerings命令：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;cd /etc/swift&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;rm -f &lt;em&gt;.builder &lt;/em&gt;.ring.gz backups/&lt;em&gt;.builder backups/&lt;/em&gt;.ring.gz&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;swift-ring-builder object.builder create 19 6 1
+</span><span class='line'>swift-ring-builder object.builder add r1z1-127.0.0.1:6010/dev1 1
+</span><span class='line'>swift-ring-builder object.builder add r1z1-127.0.0.1:6010/dev2 1
+</span><span class='line'>swift-ring-builder object.builder add r1z2-127.0.0.1:6020/dev3 1
+</span><span class='line'>swift-ring-builder object.builder add r1z2-127.0.0.1:6020/dev4 1
+</span><span class='line'>swift-ring-builder object.builder add r1z3-127.0.0.1:6030/dev5 1
+</span><span class='line'>swift-ring-builder object.builder add r1z3-127.0.0.1:6030/dev6 1
+</span><span class='line'>swift-ring-builder object.builder add r2z1-127.0.0.1:6040/dev7 1
+</span><span class='line'>swift-ring-builder object.builder add r2z1-127.0.0.1:6040/dev8 1
+</span><span class='line'>swift-ring-builder object.builder add r2z2-127.0.0.1:6050/dev9 1
+</span><span class='line'>swift-ring-builder object.builder add r2z2-127.0.0.1:6050/dev10 1
+</span><span class='line'>swift-ring-builder object.builder rebalance
+</span><span class='line'>swift-ring-builder container.builder create 19 6 1
+</span><span class='line'>swift-ring-builder container.builder add r1z1-127.0.0.1:6011/dev1 1
+</span><span class='line'>swift-ring-builder container.builder add r1z1-127.0.0.1:6011/dev2 1
+</span><span class='line'>swift-ring-builder container.builder add r1z2-127.0.0.1:6021/dev3 1
+</span><span class='line'>swift-ring-builder container.builder add r1z2-127.0.0.1:6021/dev4 1
+</span><span class='line'>swift-ring-builder container.builder add r1z3-127.0.0.1:6031/dev5 1
+</span><span class='line'>swift-ring-builder container.builder add r1z3-127.0.0.1:6031/dev6 1
+</span><span class='line'>swift-ring-builder container.builder add r2z1-127.0.0.1:6041/dev7 1
+</span><span class='line'>swift-ring-builder container.builder add r2z1-127.0.0.1:6041/dev8 1
+</span><span class='line'>swift-ring-builder container.builder add r2z2-127.0.0.1:6051/dev9 1
+</span><span class='line'>swift-ring-builder container.builder add r2z2-127.0.0.1:6051/dev10 1
+</span><span class='line'>swift-ring-builder container.builder rebalance
+</span><span class='line'>swift-ring-builder account.builder create 19 6 1
+</span><span class='line'>swift-ring-builder account.builder add r1z1-127.0.0.1:6012/dev1 1
+</span><span class='line'>swift-ring-builder account.builder add r1z1-127.0.0.1:6012/dev2 1
+</span><span class='line'>swift-ring-builder account.builder add r1z2-127.0.0.1:6022/dev3 1
+</span><span class='line'>swift-ring-builder account.builder add r1z2-127.0.0.1:6022/dev4 1
+</span><span class='line'>swift-ring-builder account.builder add r1z3-127.0.0.1:6032/dev5 1
+</span><span class='line'>swift-ring-builder account.builder add r1z3-127.0.0.1:6032/dev6 1
+</span><span class='line'>swift-ring-builder account.builder add r2z1-127.0.0.1:6042/dev7 1
+</span><span class='line'>swift-ring-builder account.builder add r2z1-127.0.0.1:6042/dev8 1
+</span><span class='line'>swift-ring-builder account.builder add r2z2-127.0.0.1:6052/dev9 1
+</span><span class='line'>swift-ring-builder account.builder add r2z2-127.0.0.1:6052/dev10 1
+</span><span class='line'>swift-ring-builder account.builder rebalance
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>新ring环有2的19次方，6个副本，修改后重新生成ring环即可。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[openstack swift中间件编写]]></title>
