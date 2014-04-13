@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: pycharm | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/tags/pycharm/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2014-04-13T20:45:28+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在ubunut下使用pycharm和eclipse进行python远程调试]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu/"/>
+    <updated>2014-04-13T15:54:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-4/pycharm_and_eclipse.jpg"></p>
+
+<p>我比较喜欢Pycharm，因为这个是JetBrains公司出的python IDE工具，该公司下的java IDE工具——IDEA，无论从界面还是操作上都甩eclipse几条街，但项目组里有些人使用eclipse比较久了，一时让他们转pycharm比较困难，所以还是两边的设置都介绍一下吧。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>pycharm远程调试</h2>
+
+<p>pycharmd的远程调试比eclipse的简单多了，而且调试程序也比较稳定，不像eclipse那样容易出一些莫名其妙的问题，步骤如下。</p>
+
+<ol>
+<li>将pycharm安装目录下的pycharm-debug.egg文件拷贝到远程机器上（如果是python3的话就拷贝pycharm-debug-py3k.egg文件）。</li>
+<li>在远程机器上安装pycharm-debug.egg，安装命令： <code>easy_install pycharm-debug.egg</code>。</li>
+<li><p>在pycharm中设置断点监听配置。<br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-1.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-2.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-3.png"></p></li>
+<li><p>启动调试监听程序。<br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-4.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-5.png"></p></li>
+<li><p>在远程机器上启动服务并发起http请求。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
+<li><p>pycharm监听到请求会进入断点。
+<img src="/images/post/2014-4/pycharm-debug/pycharm-6.png"></p></li>
+</ol>
+
+
+<p>更多关于pycharm远程调试的信息可以参阅<a href="http://www.jetbrains.com/pycharm/webhelp/remote-debugging.html">这里</a>。</p>
+
+<h2>eclipse远程调试</h2>
+
+<p>使用eclipse进行python远程调试，需要先在ubuntu下面安装eclipse和eclipse的python插件PyDev。</p>
+
+<ul>
+<li>Eclipse安装比较简单，直接解压下载后的eclipse包即可使用。</li>
+<li><p>PyDev可以按照<a href="http://pydev.org/manual_101_install.html">官网的向导</a>进行安装。<br/>
+安装完后按照下面的步骤进行远程调试。</p></li>
+<li><p>在window->Preperences->PyDev->Debug中，设置debug端口，比如12306。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-1.png"></p></li>
+<li><p>新增PyDev视图。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-2.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-3.png"></p></li>
+<li><p>在Pydev试图中增加remote debug菜单。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-4.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-5.png"></p></li>
+<li><p>在远程机器的源码里面添加调试代码和断点。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-6.png"></p></li>
+<li><p>断点设置语句：<br/>
+<code>pydevd.settrace('192.168.8.128', port=12306, stdoutToServer=True, stderrToServer=True)</code><br/>
+注意：这里的ip是指设置了调试监听的机器ip。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-7.png"></p></li>
+<li><p>通过Pydev菜单打开调试监听。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-8.png"><br/>
+开始监听显示信息如下：<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-9.png"></p></li>
+<li><p>启动远程服务并发起http请求。
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
+<li><p>Pydev监听到请求后就会进入断点。
+<img src="/images/post/2014-4/eclipse-debug/eclipse-11.png"></p></li>
+</ul>
+
+
+<p>更多远程调试的内容可以参照Pydev的<a href="http://pydev.org/manual_adv_remote_debugger.html">官网步骤</a>。</p>
+]]></content>
+  </entry>
+  
+</feed>
