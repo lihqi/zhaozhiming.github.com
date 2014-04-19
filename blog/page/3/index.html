@@ -6,7 +6,7 @@
 	<title>Hacker and Geeker's Way</title>
     <meta name="author" content="赵芝明">
     
-	<meta name="description" content=" Published on: Feb 3rd, 2013 Tags: code 在上一篇blog 中我们介绍了如何创建我们第一个jenkins插件，在这一篇blog继续介绍在开发我们的插件过程中需要注意的一些问题。 Read on | Comments ">
+	<meta name="description" content="Published on: Feb 4th, 2013 Tags: code 上一篇blog介绍了插件开发中要注意的一些问题， 我们再来介绍插件开发完成后，如何上传到jenkins的插件中心（这里假设你的代码是放在github上的，使用svn或其他版本管理工具的请参考其他文章）。 Read on &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -111,6 +111,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/19/swift-code-explain-total/">Swift源码分析一——开始</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu/">在ubunut下使用pycharm和eclipse进行python远程调试</a>
       </li>
     
@@ -126,10 +130,6 @@
         <a href="/blog/2014/02/28/hello-galting/">压力测试工具——Galting</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/02/26/tomato-work-method-and-bullet-journal/">番茄工作法和Bullet Journal笔记法</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -142,8 +142,8 @@
 <a style="font-size: 210%" href="/tags/jenkins/">jenkins</a>
 <a style="font-size: 145%" href="/tags/js/">js</a>
 <a style="font-size: 159%" href="/tags/junit/">junit</a>
-<a style="font-size: 145%" href="/tags/plugins/">plugins</a>
 <a style="font-size: 194%" href="/tags/sonar/">sonar</a>
+<a style="font-size: 145%" href="/tags/swift/">swift</a>
 <a style="font-size: 145%" href="/tags/technique/">technique</a>
 
   </ul>
@@ -191,7 +191,7 @@
   </ul>
 </section><section>
   <h1>文章归档</h1>
-  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2014 (7)</li><ul class="month_list"><li class="month"><a href='/blog/2014/04/'>APR (2)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul></ul></div>
+  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2014 (8)</li><ul class="month_list"><li class="month"><a href='/blog/2014/04/'>APR (3)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul></ul></div>
 </section>
 
       
@@ -201,6 +201,52 @@
   <div class="left-content">
     <div class="left-post">
       
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/02/04/jenkins-plugins-develop-part-4/">
+		
+			Jenkins插件开发（四）&#8211; 插件发布</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-04T20:47:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2013</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>上一篇blog介绍了插件开发中要注意的一些问题， 我们再来介绍插件开发完成后，如何上传到jenkins的插件中心（这里假设你的代码是放在github上的，使用svn或其他版本管理工具的请参考其他文章）。</p>
+
+
+		
+		<a href="/blog/2013/02/04/jenkins-plugins-develop-part-4/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2013/02/04/jenkins-plugins-develop-part-4/#comments">Comments</a>
+    
+</div>
+</article>
       
       
           <article class="post">
@@ -616,54 +662,6 @@
 	
 	
           | <a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/#comments">Comments</a>
-    
-</div>
-</article>
-      
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">
-		
-			在jenkins和sonar中集成jacoco(一)&#8211;使用jacoco收集单元测试的覆盖率</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-29T14:45:00+08:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/code/'>code</a>
-
-
-</div>
-    </div>
-		<p>之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
-
-<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
-
-
-		
-		<a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-	
-          | <a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/#comments">Comments</a>
     
 </div>
 </article>

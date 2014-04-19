@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: swift | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/swift/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-04-13T20:45:28+08:00</updated>
+  <updated>2014-04-19T20:24:21+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,149 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[swift源码分析一——开始]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/04/19/swift-code-explain-total/"/>
+    <updated>2014-04-19T17:19:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/04/19/swift-code-explain-total</id>
+    <content type="html"><![CDATA[<p>从今天开始准备仔细再看一下swift的源码，然后把理解的内容记录下来。下面是swift源码的代码结构，准备每天更新1～2个文件的代码理解，更新好的在文件名上会在下面的代码结构上有链接出现。</p>
+
+<!--more-->
+
+
+<p>
+swift的源码因为不断在更新，笔记记录的代码就以2014-4-18的为准，我已经fork了一份swift源码到我github上，地址是：<a href="https://github.com/zhaozhiming/swift">https://github.com/zhaozhiming/swift</a>，代码结构如下：</p>
+
+<ul>
+<li><h3>swift</h3>
+
+<ul>
+<li><h3>account</h3>
+
+<ul>
+<li>auditor.py</li>
+<li>backend.py</li>
+<li>reaper.py</li>
+<li>replicator.py</li>
+<li>server.py</li>
+<li>utils.py</li>
+</ul>
+</li>
+<li><h3>cli</h3>
+
+<ul>
+<li>info.py</li>
+<li>recon.py</li>
+<li>ringbuilder.py</li>
+<li>ringbuilder.py</li>
+</ul>
+</li>
+<li><h3>common</h3>
+
+<ul>
+<li><h3>middleware</h3>
+
+<ul>
+<li>account_quotas.py</li>
+<li>acl.py</li>
+<li>bulk.py</li>
+<li>catch_errors.py</li>
+<li>cname_lookup.py</li>
+<li>container_quotas.py</li>
+<li>container_sync.py</li>
+<li>crossdomain.py</li>
+<li>dlo.py</li>
+<li>domain_remap.py</li>
+<li>formpost.py</li>
+<li>gatekeeper.py</li>
+<li>healthcheck.py</li>
+<li>list_endpoints.py</li>
+<li>memcache.py</li>
+<li>name_check.py</li>
+<li>proxy_logging.py</li>
+<li>ratelimit.py</li>
+<li>recon.py</li>
+<li>slo.py</li>
+<li>staticweb.py</li>
+<li>tempauth.py</li>
+<li>tempurl.py</li>
+</ul>
+</li>
+<li><h3>ring</h3>
+
+<ul>
+<li>builder.py</li>
+<li>ring.py</li>
+<li>utils.py</li>
+</ul>
+</li>
+<li>bufferedhttp.py</li>
+<li>constraints.py</li>
+<li>container_sync_realms.py</li>
+<li>daemon.py</li>
+<li>db.py</li>
+<li>db_replicator.py</li>
+<li>direct_client.py</li>
+<li>exceptions.py</li>
+<li>http.py</li>
+<li>internal_client.py</li>
+<li>manager.py</li>
+<li>memcached.py</li>
+<li>request_helpers.py</li>
+<li>swob.py</li>
+<li>swob.py</li>
+<li>utils.py</li>
+<li>wsgi.py</li>
+</ul>
+</li>
+<li><h3>container</h3>
+
+<ul>
+<li>auditor.py</li>
+<li>backend.py</li>
+<li>replicator.py</li>
+<li>server.py</li>
+<li>sync.py</li>
+<li>updater.py</li>
+</ul>
+</li>
+<li><h3>obj</h3>
+
+<ul>
+<li>auditor.py</li>
+<li>diskfile.py</li>
+<li>expirer.py</li>
+<li>mem_diskfile.py</li>
+<li>mem_server.py</li>
+<li>replicator.py</li>
+<li>server.py</li>
+<li>ssync_receiver.py</li>
+<li>ssync_sender.py</li>
+<li>updater.py</li>
+</ul>
+</li>
+<li><h3>proxy</h3>
+
+<ul>
+<li>controllers
+
+<ul>
+<li>account.py</li>
+<li>base.py</li>
+<li>container.py</li>
+<li>obj.py</li>
+</ul>
+</li>
+<li>server.py</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[swift单节点多dev环境部署]]></title>
