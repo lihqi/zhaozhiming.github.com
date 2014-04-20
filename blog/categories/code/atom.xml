@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-04-19T20:24:21+08:00</updated>
+  <updated>2014-04-20T21:26:15+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,1348 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[swift源码详解（二）——proxy/server.py]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/04/20/swift-code-explain-proxy-server/"/>
+    <updated>2014-04-20T20:52:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/04/20/swift-code-explain-proxy-server</id>
+    <content type="html"><![CDATA[<h3>int方法</h3>
+
+<!--more-->
+
+
+<p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">memcache</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">account_ring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+</span><span class='line'>             <span class="n">container_ring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">object_ring</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">conf</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">conf</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">log_route</span><span class="o">=</span><span class="s">&#39;proxy-server&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+</span><span class='line'>    <span class="n">swift_dir</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;swift_dir&#39;</span><span class="p">,</span> <span class="s">&#39;/etc/swift&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">node_timeout</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;node_timeout&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">recoverable_node_timeout</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+</span><span class='line'>        <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;recoverable_node_timeout&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_timeout</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">conn_timeout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;conn_timeout&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">client_timeout</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;client_timeout&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">put_queue_depth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;put_queue_depth&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">object_chunk_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;object_chunk_size&#39;</span><span class="p">,</span> <span class="mi">65536</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">client_chunk_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;client_chunk_size&#39;</span><span class="p">,</span> <span class="mi">65536</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">trans_id_suffix</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;trans_id_suffix&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">post_quorum_timeout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;post_quorum_timeout&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_interval</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error_suppression_interval&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_limit</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error_suppression_limit&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">recheck_container_existence</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;recheck_container_existence&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">recheck_account_existence</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;recheck_account_existence&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">allow_account_management</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="n">config_true_value</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;allow_account_management&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">object_post_as_copy</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="n">config_true_value</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;object_post_as_copy&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">object_ring</span> <span class="o">=</span> <span class="n">object_ring</span> <span class="ow">or</span> <span class="n">Ring</span><span class="p">(</span><span class="n">swift_dir</span><span class="p">,</span> <span class="n">ring_name</span><span class="o">=</span><span class="s">&#39;object&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">container_ring</span> <span class="o">=</span> <span class="n">container_ring</span> <span class="ow">or</span> <span class="n">Ring</span><span class="p">(</span><span class="n">swift_dir</span><span class="p">,</span>
+</span><span class='line'>                                                 <span class="n">ring_name</span><span class="o">=</span><span class="s">&#39;container&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">account_ring</span> <span class="o">=</span> <span class="n">account_ring</span> <span class="ow">or</span> <span class="n">Ring</span><span class="p">(</span><span class="n">swift_dir</span><span class="p">,</span>
+</span><span class='line'>                                             <span class="n">ring_name</span><span class="o">=</span><span class="s">&#39;account&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">memcache</span> <span class="o">=</span> <span class="n">memcache</span>
+</span><span class='line'>    <span class="n">mimetypes</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">mimetypes</span><span class="o">.</span><span class="n">knownfiles</span> <span class="o">+</span>
+</span><span class='line'>                   <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">swift_dir</span><span class="p">,</span> <span class="s">&#39;mime.types&#39;</span><span class="p">)])</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">account_autocreate</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="n">config_true_value</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;account_autocreate&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">expiring_objects_account</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;auto_create_account_prefix&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> \
+</span><span class='line'>        <span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;expiring_objects_account_name&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s">&#39;expiring_objects&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">expiring_objects_container_divisor</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;expiring_objects_container_divisor&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">86400</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">max_containers_per_account</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_containers_per_account&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">max_containers_whitelist</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>        <span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_containers_whitelist&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">deny_host_headers</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>        <span class="n">host</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span>
+</span><span class='line'>        <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;deny_host_headers&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">host</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit_after_segment</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;rate_limit_after_segment&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit_segments_per_sec</span> <span class="o">=</span> \
+</span><span class='line'>        <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;rate_limit_segments_per_sec&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">log_handoffs</span> <span class="o">=</span> <span class="n">config_true_value</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;log_handoffs&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">cors_allow_origin</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>        <span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;cors_allow_origin&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">strict_cors_mode</span> <span class="o">=</span> <span class="n">config_true_value</span><span class="p">(</span>
+</span><span class='line'>        <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;strict_cors_mode&#39;</span><span class="p">,</span> <span class="s">&#39;t&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">node_timings</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">timing_expiry</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;timing_expiry&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sorting_method&#39;</span><span class="p">,</span> <span class="s">&#39;shuffle&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">max_large_object_get_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+</span><span class='line'>        <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_large_object_get_time&#39;</span><span class="p">,</span> <span class="s">&#39;86400&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="n">value</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;request_node_count&#39;</span><span class="p">,</span> <span class="s">&#39;2 * replicas&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">request_node_count</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">replicas</span><span class="p">:</span> <span class="n">value</span>
+</span><span class='line'>    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;*&#39;</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;replicas&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">request_node_count</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">replicas</span><span class="p">:</span> <span class="n">value</span> <span class="o">*</span> <span class="n">replicas</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span class='line'>            <span class="s">&#39;Invalid request_node_count value: </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">_read_affinity</span> <span class="o">=</span> <span class="n">read_affinity</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;read_affinity&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">read_affinity_sort_key</span> <span class="o">=</span> <span class="n">affinity_key_function</span><span class="p">(</span><span class="n">read_affinity</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span><span class='line'>        <span class="c"># make the message a little more useful</span>
+</span><span class='line'>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid read_affinity value: </span><span class="si">%r</span><span class="s"> (</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span>
+</span><span class='line'>                         <span class="p">(</span><span class="n">read_affinity</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">write_affinity</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;write_affinity&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">write_affinity_is_local_fn</span> \
+</span><span class='line'>            <span class="o">=</span> <span class="n">affinity_locality_predicate</span><span class="p">(</span><span class="n">write_affinity</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span><span class='line'>        <span class="c"># make the message a little more useful</span>
+</span><span class='line'>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid write_affinity value: </span><span class="si">%r</span><span class="s"> (</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span>
+</span><span class='line'>                         <span class="p">(</span><span class="n">write_affinity</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">value</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;write_affinity_node_count&#39;</span><span class="p">,</span>
+</span><span class='line'>                     <span class="s">&#39;2 * replicas&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">write_affinity_node_count</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">replicas</span><span class="p">:</span> <span class="n">value</span>
+</span><span class='line'>    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;*&#39;</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;replicas&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">write_affinity_node_count</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">replicas</span><span class="p">:</span> <span class="n">value</span> <span class="o">*</span> <span class="n">replicas</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span class='line'>            <span class="s">&#39;Invalid write_affinity_node_count value: </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+</span><span class='line'>    <span class="c"># swift_owner_headers are stripped by the account and container</span>
+</span><span class='line'>    <span class="c"># controllers; we should extend header stripping to object controller</span>
+</span><span class='line'>    <span class="c"># when a privileged object header is implemented.</span>
+</span><span class='line'>    <span class="n">swift_owner_headers</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+</span><span class='line'>        <span class="s">&#39;swift_owner_headers&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;x-container-read, x-container-write, &#39;</span>
+</span><span class='line'>        <span class="s">&#39;x-container-sync-key, x-container-sync-to, &#39;</span>
+</span><span class='line'>        <span class="s">&#39;x-account-meta-temp-url-key, x-account-meta-temp-url-key-2, &#39;</span>
+</span><span class='line'>        <span class="s">&#39;x-account-access-control&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">swift_owner_headers</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>        <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">swift_owner_headers</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+</span><span class='line'>    <span class="c"># Initialization was successful, so now apply the client chunk size</span>
+</span><span class='line'>    <span class="c"># parameter as the default read / write buffer size for the network</span>
+</span><span class='line'>    <span class="c"># sockets.</span>
+</span><span class='line'>    <span class="c">#</span>
+</span><span class='line'>    <span class="c"># NOTE WELL: This is a class setting, so until we get set this on a</span>
+</span><span class='line'>    <span class="c"># per-connection basis, this affects reading and writing on ALL</span>
+</span><span class='line'>    <span class="c"># sockets, those between the proxy servers and external clients, and</span>
+</span><span class='line'>    <span class="c"># those between the proxy servers and the other internal servers.</span>
+</span><span class='line'>    <span class="c">#</span>
+</span><span class='line'>    <span class="c"># ** Because it affects the client as well, currently, we use the</span>
+</span><span class='line'>    <span class="c"># client chunk size as the govenor and not the object chunk size.</span>
+</span><span class='line'>    <span class="n">socket</span><span class="o">.</span><span class="n">_fileobject</span><span class="o">.</span><span class="n">default_bufsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_chunk_size</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">expose_info</span> <span class="o">=</span> <span class="n">config_true_value</span><span class="p">(</span>
+</span><span class='line'>        <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;expose_info&#39;</span><span class="p">,</span> <span class="s">&#39;yes&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">disallowed_sections</span> <span class="o">=</span> <span class="n">list_from_csv</span><span class="p">(</span>
+</span><span class='line'>        <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;disallowed_sections&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">admin_key</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;admin_key&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">register_swift_info</span><span class="p">(</span>
+</span><span class='line'>        <span class="n">version</span><span class="o">=</span><span class="n">swift_version</span><span class="p">,</span>
+</span><span class='line'>        <span class="n">strict_cors_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">strict_cors_mode</span><span class="p">,</span>
+</span><span class='line'>        <span class="o">**</span><span class="n">constraints</span><span class="o">.</span><span class="n">EFFECTIVE_CONSTRAINTS</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+proxy server的初始化函数，具体配置的说明可以参考<a href="http://docs.openstack.org/havana/config-reference/content/proxy-server-conf.html">这里</a>。</p>
+
+<h3>check_config</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">check_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Check the configuration for possible errors</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_affinity</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">!=</span> <span class="s">&#39;affinity&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;sorting_method is set to &#39;</span><span class="si">%s</span><span class="s">&#39;, not &#39;affinity&#39;; &quot;</span>
+</span><span class='line'>                         <span class="s">&quot;read_affinity setting will have no effect.&quot;</span> <span class="o">%</span>
+</span><span class='line'>                         <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+proxy server初始化后被调用的方法，检查proxy的read_affinity配置和排序方法设置不一致时，记录警告日志。</p>
+
+<h3>call方法</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="err">&lt;</span><span class="nf">strong</span><span class="o">&gt;</span><span class="n">call</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s">    WSGI entry point.</span>
+</span><span class='line'><span class="s">    Wraps env in swob.Request object and passes it down.</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">    :param env: WSGI environment dictionary</span>
+</span><span class='line'><span class="s">    :param start_response: WSGI callable</span>
+</span><span class='line'><span class="s">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">memcache</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">memcache</span> <span class="o">=</span> <span class="n">cache_from_env</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_request</span><span class="p">(</span><span class="n">Request</span><span class="p">(</span><span class="n">env</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_request</span><span class="p">(</span><span class="n">req</span><span class="p">)(</span><span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">except</span> <span class="ne">UnicodeError</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">err</span> <span class="o">=</span> <span class="n">HTTPPreconditionFailed</span><span class="p">(</span>
+</span><span class='line'>            <span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid UTF8 or contains NULL&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">err</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">Timeout</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">start_response</span><span class="p">(</span><span class="s">&#39;500 Server Error&#39;</span><span class="p">,</span>
+</span><span class='line'>                       <span class="p">[(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s">&#39;text/plain&#39;</span><span class="p">)])</span>
+</span><span class='line'>        <span class="k">return</span> <span class="p">[</span><span class="s">&#39;Internal server error.</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">]</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 9~10: 检查memcache缓存是否为空，如果为空的话就从上下文中获取，由于proxy-server在pipeline中是最后面，如果pipeline前面配置了memcache中间件的话，就可以从上下文中取到。<br/>
+* 12: 调用update_request方法，后面会介绍。<br/>
+* 13: 调用handle_request方法，后面会介绍，最后返回response。<br/>
+* 14~17: 捕获UnicodeError并返回412。<br/>
+* 18~21: 捕获Timeout和其他异常并返回500。</p>
+
+<h3>update_request</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">update_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="s">&#39;x-storage-token&#39;</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">headers</span> <span class="ow">and</span> \
+</span><span class='line'>            <span class="s">&#39;x-auth-token&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;x-auth-token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;x-storage-token&#39;</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">req</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+该方法是将requeset中的x-auth-token的header替换为x-storage-token的header。</p>
+
+<h3>handle_request</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">handle_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s">    Entry point for proxy server.</span>
+</span><span class='line'><span class="s">    Should return a WSGI-style callable (such as swob.Response).</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">    :param req: swob.Request object</span>
+</span><span class='line'><span class="s">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">set_statsd_prefix</span><span class="p">(</span><span class="s">&#39;proxy-server&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">content_length</span> <span class="ow">and</span> <span class="n">req</span><span class="o">.</span><span class="n">content_length</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">HTTPBadRequest</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span>
+</span><span class='line'>                                  <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid Content-Length&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">if</span> <span class="ow">not</span> <span class="n">check_utf8</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">path_info</span><span class="p">):</span>
+</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">HTTPPreconditionFailed</span><span class="p">(</span>
+</span><span class='line'>                    <span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid UTF8 or contains NULL&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">except</span> <span class="ne">UnicodeError</span><span class="p">:</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">HTTPPreconditionFailed</span><span class="p">(</span>
+</span><span class='line'>                <span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid UTF8 or contains NULL&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 8: 在log中设置'proxy-server'前缀。<br/>
+* 10~13: 检查request中content length如果有且长度为0，则返回500。<br/>
+* 15~23  : 检查url格式是否utf-8，如果不是则返回412。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">controller</span><span class="p">,</span> <span class="n">path_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_controller</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">p</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">path_info</span>
+</span><span class='line'>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
+</span><span class='line'>                <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">HTTPNotFound</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="n">controller</span><span class="p">:</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">HTTPPreconditionFailed</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Bad URL&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deny_host_headers</span> <span class="ow">and</span> \
+</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">deny_host_headers</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">HTTPForbidden</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid host header&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 2～5: 调用get_controller方法(后面会介绍)，通过url获取对应的controller类和url中通过'/&lsquo;符号分割的各个部分。<br/>
+* 6~8: 捕获ValueError并返回404。<br/>
+* 9~11: 如果controller类为空则返回404。<br/>
+* 12~14: 如果proxy中有定义deny_host_headers(禁止访问的ip），并且request的ip与禁止访问的ip一致，则返回403。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">set_statsd_prefix</span><span class="p">(</span><span class="s">&#39;proxy-server.&#39;</span> <span class="o">+</span>
+</span><span class='line'>                                      <span class="n">controller</span><span class="o">.</span><span class="n">server_type</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+</span><span class='line'>        <span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">path_parts</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="s">&#39;swift.trans_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+</span><span class='line'>            <span class="c"># if this wasn&#39;t set by an earlier middleware, set it now</span>
+</span><span class='line'>            <span class="n">trans_id</span> <span class="o">=</span> <span class="n">generate_trans_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trans_id_suffix</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.trans_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trans_id</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">txn_id</span> <span class="o">=</span> <span class="n">trans_id</span>
+</span><span class='line'>        <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;x-trans-id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.trans_id&#39;</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">controller</span><span class="o">.</span><span class="n">trans_id</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.trans_id&#39;</span><span class="p">]</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">client_ip</span> <span class="o">=</span> <span class="n">get_remote_client</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 1～2: 日志加上controller名字前缀。
+* 3: 通过controller类实例化controller对象。
+* 4~10: 如果swift.trans_id没有在request的上下文中，则重新生成trans_id，并设置在上下文、日志、header和controller中。<br/>
+* 11: 调用get_remote_client方法(后面介绍)，先判断header中是否有'x-cluster-client-ip'，如果没有再去获取header中的'x-forwarded-for'，还是没有的话就从request中的remote_addr取值，得到client_ip。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">handler</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+</span><span class='line'>            <span class="nb">getattr</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s">&#39;publicly_accessible&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">allowed_methods</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="s">&#39;allowed_methods&#39;</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">HTTPMethodNotAllowed</span><span class="p">(</span>
+</span><span class='line'>                <span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;Allow&#39;</span><span class="p">:</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed_methods</span><span class="p">)})</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 2~3: 通过request的method，在controller得到一个名字相同，并且有'public'标签的方法对象handler。
+* 4~7: 如果获取不到对应的public方法，则打印出controller中所有public方法并返回405。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="k">if</span> <span class="s">&#39;swift.authorize&#39;</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+</span><span class='line'>            <span class="c"># We call authorize before the handler, always. If authorized,</span>
+</span><span class='line'>            <span class="c"># we remove the swift.authorize hook so isn&#39;t ever called</span>
+</span><span class='line'>            <span class="c"># again. If not authorized, we return the denial unless the</span>
+</span><span class='line'>            <span class="c"># controller&#39;s method indicates it&#39;d like to gather more</span>
+</span><span class='line'>            <span class="c"># information and try again later.</span>
+</span><span class='line'>            <span class="n">resp</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.authorize&#39;</span><span class="p">](</span><span class="n">req</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">if</span> <span class="ow">not</span> <span class="n">resp</span><span class="p">:</span>
+</span><span class='line'>                <span class="c"># No resp means authorized, no delayed recheck required.</span>
+</span><span class='line'>                <span class="k">del</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.authorize&#39;</span><span class="p">]</span>
+</span><span class='line'>            <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>                <span class="c"># Response indicates denial, but we might delay the denial</span>
+</span><span class='line'>                <span class="c"># and recheck later. If not delayed, return the error now.</span>
+</span><span class='line'>                <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s">&#39;delay_denial&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">):</span>
+</span><span class='line'>                    <span class="k">return</span> <span class="n">resp</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+如果request的上下文中有swift.authorize，则调用这个方法进行认证。<br/>
+如果没有返回结果证明之前已经认证通过了，后面的请求不需要再认证，将'swift.authorize'从上下文去掉。<br/>
+如果有Response返回则表示认证不通过，会先检查是否有延迟禁止的配置，如果没有返回认证不通过的response，如果有则会等后面再重新确认。<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="c"># Save off original request method (GET, POST, etc.) in case it</span>
+</span><span class='line'>        <span class="c"># gets mutated during handling.  This way logging can display the</span>
+</span><span class='line'>        <span class="c"># method the client actually sent.</span>
+</span><span class='line'>        <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.orig_req_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">method</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">except</span> <span class="n">HTTPException</span> <span class="k">as</span> <span class="n">error_response</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">error_response</span>
+</span><span class='line'>    <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">Timeout</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;ERROR Unhandled exception in request&#39;</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">HTTPServerError</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 4~5: 在日志中记录原始的request方法，防止请求在传播过程中发生突变http请求方法发生改变。
+* 6~10: 捕获异常，记录日志。</p>
+
+<h3>get_controller</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">get_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Get the controller to handle a request.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param path: path from request</span>
+</span><span class='line'><span class="sd">    :returns: tuple of (controller class, path dictionary)</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :raises: ValueError (thrown by split_path) if given invalid path</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s">&#39;/info&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+</span><span class='line'>                 <span class="n">expose_info</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">expose_info</span><span class="p">,</span>
+</span><span class='line'>                 <span class="n">disallowed_sections</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">disallowed_sections</span><span class="p">,</span>
+</span><span class='line'>                 <span class="n">admin_key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">admin_key</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">InfoController</span><span class="p">,</span> <span class="n">d</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">version</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">split_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
+</span><span class='line'>             <span class="n">account_name</span><span class="o">=</span><span class="n">account</span><span class="p">,</span>
+</span><span class='line'>             <span class="n">container_name</span><span class="o">=</span><span class="n">container</span><span class="p">,</span>
+</span><span class='line'>             <span class="n">object_name</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">obj</span> <span class="ow">and</span> <span class="n">container</span> <span class="ow">and</span> <span class="n">account</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">ObjectController</span><span class="p">,</span> <span class="n">d</span>
+</span><span class='line'>    <span class="k">elif</span> <span class="n">container</span> <span class="ow">and</span> <span class="n">account</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">ContainerController</span><span class="p">,</span> <span class="n">d</span>
+</span><span class='line'>    <span class="k">elif</span> <span class="n">account</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">container</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">obj</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">AccountController</span><span class="p">,</span> <span class="n">d</span>
+</span><span class='line'>    <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="n">d</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 10～15: 如果url是'info'，则返回InController和controller字典参数，expose_info表示是否暴露信息，disallowed_sections表示不允许暴露的字段列表，比如container_qutoas, tempurl等。
+* 17～28: 根据url判断是account、container还是object，返回对应的controller和字典参数。</p>
+
+<h3>sort_nodes</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">sort_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&#39;&#39;&#39;</span>
+</span><span class='line'><span class="sd">    Sorts nodes in-place (and returns the sorted list) according to</span>
+</span><span class='line'><span class="sd">    the configured strategy. The default &quot;sorting&quot; is to randomly</span>
+</span><span class='line'><span class="sd">    shuffle the nodes. If the &quot;timing&quot; strategy is chosen, the nodes</span>
+</span><span class='line'><span class="sd">    are sorted according to the stored timing data.</span>
+</span><span class='line'><span class="sd">    &#39;&#39;&#39;</span>
+</span><span class='line'>    <span class="c"># In the case of timing sorting, shuffling ensures that close timings</span>
+</span><span class='line'>    <span class="c"># (ie within the rounding resolution) won&#39;t prefer one over another.</span>
+</span><span class='line'>    <span class="c"># Python&#39;s sort is stable (http://wiki.python.org/moin/HowTo/Sorting/)</span>
+</span><span class='line'>    <span class="n">shuffle</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">==</span> <span class="s">&#39;timing&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">def</span> <span class="nf">key_func</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+</span><span class='line'>            <span class="n">timing</span><span class="p">,</span> <span class="n">expires</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_timings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">timing</span> <span class="k">if</span> <span class="n">expires</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">now</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1.0</span>
+</span><span class='line'>        <span class="n">nodes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key_func</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">==</span> <span class="s">&#39;affinity&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">nodes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">read_affinity_sort_key</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">nodes</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+节点的排序方法，将节点根据配置的排序策略进行排序。<br/>
+* 11: 将节点顺序打乱，确保节点不会按照时间排好序。
+* 12～18: 如果配置的排序策略是按时间排序，则定义一个（节点）按时间排序的方法让节点按照这个方法排序，如果节点已过期则timing为-0.1，即会被排到最后。
+* 19～20: 如果配置的排序策略是按亲和力排序，则节点按照亲和力方法排序。</p>
+
+<h3>set_node_timing</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">set_node_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">timing</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">!=</span> <span class="s">&#39;timing&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">return</span>
+</span><span class='line'>    <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">timing</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">timing</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c"># sort timings to the millisecond</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">node_timings</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span><span class="n">timing</span><span class="p">,</span> <span class="n">now</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">timing_expiry</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 2～3: 如果配置的排序策略不是'timing'，则直接返回不做设置。
+* 4～6: 设置单个节点的排序时间过期时间。</p>
+
+<h3>error_limited</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">error_limited</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Check if the node is currently error limited.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param node: dictionary of node to check</span>
+</span><span class='line'><span class="sd">    :returns: True if error limited, False otherwise</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">if</span> <span class="s">&#39;errors&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">False</span>
+</span><span class='line'>    <span class="k">if</span> <span class="s">&#39;last_error&#39;</span> <span class="ow">in</span> <span class="n">node</span> <span class="ow">and</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;last_error&#39;</span><span class="p">]</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> \
+</span><span class='line'>            <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_interval</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">del</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;last_error&#39;</span><span class="p">]</span>
+</span><span class='line'>        <span class="k">if</span> <span class="s">&#39;errors&#39;</span> <span class="ow">in</span> <span class="n">node</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">del</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;errors&#39;</span><span class="p">]</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">False</span>
+</span><span class='line'>    <span class="n">limited</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;errors&#39;</span><span class="p">]</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_limit</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">limited</span><span class="p">:</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+</span><span class='line'>            <span class="n">_</span><span class="p">(</span><span class="s">&#39;Node error limited </span><span class="si">%(ip)s</span><span class="s">:</span><span class="si">%(port)s</span><span class="s"> (</span><span class="si">%(device)s</span><span class="s">)&#39;</span><span class="p">),</span> <span class="n">node</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">limited</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 8～10: 如果节点里面没有'errors'选项，则返回false。
+* 11～10: 如果节点里面的'last_error'选项不正确，则删除该选项和errors选项，并返回false。
+* 12～15: 判断节点的错误个数是否超过配置的错误限制，如果超过则记录日志，并返回是否超限制的结果。</p>
+
+<h3>error_limit</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">error_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Mark a node as error limited. This immediately pretends the</span>
+</span><span class='line'><span class="sd">    node received enough errors to trigger error suppression. Use</span>
+</span><span class='line'><span class="sd">    this for errors like Insufficient Storage. For other errors</span>
+</span><span class='line'><span class="sd">    use :func:`error_occurred`.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param node: dictionary of node to error limit</span>
+</span><span class='line'><span class="sd">    :param msg: error message</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="n">node</span><span class="p">[</span><span class="s">&#39;errors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_limit</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="n">node</span><span class="p">[</span><span class="s">&#39;last_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%(msg)s</span><span class="s"> </span><span class="si">%(ip)s</span><span class="s">:</span><span class="si">%(port)s</span><span class="s">/</span><span class="si">%(device)s</span><span class="s">&#39;</span><span class="p">),</span>
+</span><span class='line'>                      <span class="p">{</span><span class="s">&#39;msg&#39;</span><span class="p">:</span> <span class="n">msg</span><span class="p">,</span> <span class="s">&#39;ip&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span>
+</span><span class='line'>                      <span class="s">&#39;port&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;port&#39;</span><span class="p">],</span> <span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">]})</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 11～14: 记录一个节点的错误信息:错误个数，最后错误的时间，并记录日志。</p>
+
+<h3>error_occurred</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">error_occurred</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Handle logging, and handling of errors.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param node: dictionary of node to handle errors for</span>
+</span><span class='line'><span class="sd">    :param msg: error message</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="n">node</span><span class="p">[</span><span class="s">&#39;errors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="n">node</span><span class="p">[</span><span class="s">&#39;last_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%(msg)s</span><span class="s"> </span><span class="si">%(ip)s</span><span class="s">:</span><span class="si">%(port)s</span><span class="s">/</span><span class="si">%(device)s</span><span class="s">&#39;</span><span class="p">),</span>
+</span><span class='line'>                      <span class="p">{</span><span class="s">&#39;msg&#39;</span><span class="p">:</span> <span class="n">msg</span><span class="p">,</span> <span class="s">&#39;ip&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span>
+</span><span class='line'>                      <span class="s">&#39;port&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;port&#39;</span><span class="p">],</span> <span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">]})</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 8～12: 与前面的方法类似，唯一区别是记录节点错误个数是取当前的错误个数，然后+1。</p>
+
+<h3>iter_nodes</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">iter_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ring</span><span class="p">,</span> <span class="n">partition</span><span class="p">,</span> <span class="n">node_iter</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Yields nodes for a ring partition, skipping over error</span>
+</span><span class='line'><span class="sd">    limited nodes and stopping at the configurable number of</span>
+</span><span class='line'><span class="sd">    nodes. If a node yielded subsequently gets error limited, an</span>
+</span><span class='line'><span class="sd">    extra node will be yielded to take its place.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    Note that if you&#39;re going to iterate over this concurrently from</span>
+</span><span class='line'><span class="sd">    multiple greenthreads, you&#39;ll want to use a</span>
+</span><span class='line'><span class="sd">    swift.common.utils.GreenthreadSafeIterator to serialize access.</span>
+</span><span class='line'><span class="sd">    Otherwise, you may get ValueErrors from concurrent access. (You also</span>
+</span><span class='line'><span class="sd">    may not, depending on how logging is configured, the vagaries of</span>
+</span><span class='line'><span class="sd">    socket IO and eventlet, and the phase of the moon.)</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param ring: ring to get yield nodes from</span>
+</span><span class='line'><span class="sd">    :param partition: ring partition to yield nodes for</span>
+</span><span class='line'><span class="sd">    :param node_iter: optional iterable of nodes to try. Useful if you</span>
+</span><span class='line'><span class="sd">        want to filter or reorder the nodes.</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">ring</span><span class="o">.</span><span class="n">get_part_nodes</span><span class="p">(</span><span class="n">partition</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">node_iter</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">node_iter</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">part_nodes</span><span class="p">,</span>
+</span><span class='line'>                                    <span class="n">ring</span><span class="o">.</span><span class="n">get_more_nodes</span><span class="p">(</span><span class="n">partition</span><span class="p">))</span>
+</span><span class='line'>    <span class="n">num_primary_nodes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">part_nodes</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c"># Use of list() here forcibly yanks the first N nodes (the primary</span>
+</span><span class='line'>    <span class="c"># nodes) from node_iter, so the rest of its values are handoffs.</span>
+</span><span class='line'>    <span class="n">primary_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sort_nodes</span><span class="p">(</span>
+</span><span class='line'>        <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">node_iter</span><span class="p">,</span> <span class="n">num_primary_nodes</span><span class="p">)))</span>
+</span><span class='line'>    <span class="n">handoff_nodes</span> <span class="o">=</span> <span class="n">node_iter</span>
+</span><span class='line'>    <span class="n">nodes_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_node_count</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">primary_nodes</span><span class="p">))</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 20～24: 根据partition获取相应的节点，如果node_iter为空，则将之前取到的节点和get_more_nodes节点连接起来为node_iter赋值，并取得节点个数。
+* 28～31: 将node_iter的节点重新排序，并取前面部分作为主要nodes，handoff_nodes为node_iter剩下的nodes， nodes_left为剩下的节点个数。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">primary_nodes</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_limited</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+</span><span class='line'>            <span class="k">yield</span> <span class="n">node</span>
+</span><span class='line'>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_limited</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+</span><span class='line'>                <span class="n">nodes_left</span> <span class="o">-=</span> <span class="mi">1</span>
+</span><span class='line'>                <span class="k">if</span> <span class="n">nodes_left</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span class='line'>                    <span class="k">return</span>
+</span><span class='line'>    <span class="n">handoffs</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">handoff_nodes</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_limited</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+</span><span class='line'>            <span class="n">handoffs</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span class='line'>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_handoffs</span><span class="p">:</span>
+</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;handoff_count&#39;</span><span class="p">)</span>
+</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span class='line'>                    <span class="s">&#39;Handoff requested (</span><span class="si">%d</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">handoffs</span><span class="p">)</span>
+</span><span class='line'>                <span class="k">if</span> <span class="n">handoffs</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">primary_nodes</span><span class="p">):</span>
+</span><span class='line'>                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;handoff_all_count&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">yield</span> <span class="n">node</span>
+</span><span class='line'>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_limited</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+</span><span class='line'>                <span class="n">nodes_left</span> <span class="o">-=</span> <span class="mi">1</span>
+</span><span class='line'>                <span class="k">if</span> <span class="n">nodes_left</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span class='line'>                    <span class="k">return</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 1～7: 遍历每个主节点，如果节点没有错误则返回该节点，剩余节点数-1,如果剩余节点数&lt;=0,则直接返回。
+* 8～22: 如果主节点中都有错误，则从剩余节点中查找满足条件的节点，查找方法和主节点查找方法雷同，只是多了一些日志的记录。</p>
+
+<h3>exception_occurred</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">exception_occurred</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">additional_info</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Handle logging of generic exceptions.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param node: dictionary of node to log the error for</span>
+</span><span class='line'><span class="sd">    :param typ: server type</span>
+</span><span class='line'><span class="sd">    :param additional_info: additional information to log</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+</span><span class='line'>        <span class="n">_</span><span class="p">(</span><span class="s">&#39;ERROR with </span><span class="si">%(type)s</span><span class="s"> server </span><span class="si">%(ip)s</span><span class="s">:</span><span class="si">%(port)s</span><span class="s">/</span><span class="si">%(device)s</span><span class="s"> re: &#39;</span>
+</span><span class='line'>          <span class="s">&#39;</span><span class="si">%(info)s</span><span class="s">&#39;</span><span class="p">),</span>
+</span><span class='line'>        <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">typ</span><span class="p">,</span> <span class="s">&#39;ip&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span> <span class="s">&#39;port&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;port&#39;</span><span class="p">],</span>
+</span><span class='line'>         <span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">],</span> <span class="s">&#39;info&#39;</span><span class="p">:</span> <span class="n">additional_info</span><span class="p">})</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 9～13: 当异常发生的时候，记录异常日志。</p>
+
+<h3>modify_wsgi_pipeline</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">modify_wsgi_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipe</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Called during WSGI pipeline creation. Modifies the WSGI pipeline</span>
+</span><span class='line'><span class="sd">    context to ensure that mandatory middleware is present in the pipeline.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param pipe: A PipelineWrapper object</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="n">pipeline_was_modified</span> <span class="o">=</span> <span class="bp">False</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">filter_spec</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">required_filters</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">filter_name</span> <span class="o">=</span> <span class="n">filter_spec</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">filter_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipe</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">afters</span> <span class="o">=</span> <span class="n">filter_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;after_fn&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_junk</span><span class="p">:</span> <span class="p">[])(</span><span class="n">pipe</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">insert_at</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>            <span class="k">for</span> <span class="n">after</span> <span class="ow">in</span> <span class="n">afters</span><span class="p">:</span>
+</span><span class='line'>                <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>                    <span class="n">insert_at</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">insert_at</span><span class="p">,</span> <span class="n">pipe</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">after</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c"># not in pipeline; ignore it</span>
+</span><span class='line'>                    <span class="k">pass</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span class='line'>                <span class="s">&#39;Adding required filter </span><span class="si">%s</span><span class="s"> to pipeline at position </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span>
+</span><span class='line'>                <span class="p">(</span><span class="n">filter_name</span><span class="p">,</span> <span class="n">insert_at</span><span class="p">))</span>
+</span><span class='line'>            <span class="n">ctx</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">create_filter</span><span class="p">(</span><span class="n">filter_name</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">pipe</span><span class="o">.</span><span class="n">insert_filter</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">insert_at</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">pipeline_was_modified</span> <span class="o">=</span> <span class="bp">True</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">pipeline_was_modified</span><span class="p">:</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Pipeline was modified. New pipeline is </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s">.&quot;</span><span class="p">,</span>
+</span><span class='line'>                         <span class="n">pipe</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Pipeline is </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pipe</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* 8～24: 遍历定义好的中间件required_filters，如果该中间件没有在pipeline中，则将该中间件插入到pipeline，插入位置根据中间件的atfer_fn方法得到。
+* 26～31: 记录人日志信息。</p>
+
+<h3>required_filters</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">List</span> <span class="n">of</span> <span class="n">entry</span> <span class="n">points</span> <span class="k">for</span> <span class="n">mandatory</span> <span class="n">middlewares</span><span class="o">.&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c">#&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Fields</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c">#&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">name</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="p">(</span><span class="n">required</span><span class="p">)</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">entry</span> <span class="n">point</span> <span class="n">name</span> <span class="kn">from</span> <span class="nn">setup.py.</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c">#&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">after_fn</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span> <span class="n">a</span> <span class="n">function</span> <span class="n">that</span> <span class="n">takes</span> <span class="n">a</span> <span class="n">PipelineWrapper</span> <span class="nb">object</span> <span class="k">as</span> <span class="n">its</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">single</span> <span class="n">argument</span> <span class="ow">and</span> <span class="n">returns</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">middlewares</span> <span class="n">that</span> <span class="n">this</span> <span class="n">middleware</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">should</span> <span class="n">come</span> <span class="n">after</span><span class="o">.</span> <span class="n">Any</span> <span class="n">middlewares</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">returned</span> <span class="nb">list</span> <span class="n">that</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">present</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="ow">in</span> <span class="n">the</span> <span class="n">pipeline</span> <span class="n">will</span> <span class="n">be</span> <span class="n">ignored</span><span class="p">,</span> <span class="n">so</span> <span class="n">you</span> <span class="n">can</span> <span class="n">safely</span> <span class="n">name</span> <span class="n">optional</span> <span class="n">middlewares</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">to</span> <span class="n">come</span> <span class="n">after</span><span class="o">.</span> <span class="n">For</span> <span class="n">example</span><span class="p">,</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">catch_errors</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">bulk</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;]</span> <span class="n">would</span> <span class="n">install</span> <span class="n">this</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">middleware</span> <span class="n">after</span> <span class="n">catch_errors</span> <span class="ow">and</span> <span class="n">bulk</span> <span class="k">if</span> <span class="n">both</span> <span class="n">were</span> <span class="n">present</span><span class="p">,</span> <span class="n">but</span> <span class="k">if</span> <span class="n">bulk</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">were</span> <span class="n">absent</span><span class="p">,</span> <span class="n">would</span> <span class="n">just</span> <span class="n">install</span> <span class="n">it</span> <span class="n">after</span> <span class="n">catch_errors</span><span class="o">.&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">required_filters</span> <span class="o">=</span> <span class="p">[</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;catch_errors&#39;</span><span class="p">},</span>
+</span><span class='line'><span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;gatekeeper&#39;</span><span class="p">,</span>
+</span><span class='line'> <span class="s">&#39;after_fn&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">pipe</span><span class="p">:</span> <span class="p">([</span><span class="s">&#39;catch_errors&#39;</span><span class="p">]</span>
+</span><span class='line'>                           <span class="k">if</span> <span class="n">pipe</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;catch_errors&quot;</span><span class="p">)</span>
+</span><span class='line'>                           <span class="k">else</span> <span class="p">[])},</span>
+</span><span class='line'><span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;dlo&#39;</span><span class="p">,</span> <span class="s">&#39;after_fn&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">_junk</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;catch_errors&#39;</span><span class="p">,</span> <span class="s">&#39;gatekeeper&#39;</span><span class="p">,</span>
+</span><span class='line'>                                           <span class="s">&#39;proxy_logging&#39;</span><span class="p">]}]</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* modify_wsgi_pipeline方法用到的required_filters。</p>
+
+<h3>app_factory</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">app_factory</span><span class="p">(</span><span class="n">global_conf</span><span class="p">,</span> <span class="o">**</span><span class="n">local_conf</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="s">&quot;&quot;&quot;paste.deploy app factory for creating WSGI proxy apps.&quot;&quot;&quot;</span>
+</span><span class='line'><span class="n">conf</span> <span class="o">=</span> <span class="n">global_conf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span class='line'><span class="n">conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">local_conf</span><span class="p">)</span>
+</span><span class='line'><span class="n">app</span> <span class="o">=</span> <span class="n">Application</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+</span><span class='line'><span class="n">app</span><span class="o">.</span><span class="n">check_config</span><span class="p">()</span>
+</span><span class='line'><span class="k">return</span> <span class="n">app</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+* proxy server的工厂方法，初始化server对象并检查配置，然后返回创建好的对象。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[swift源码分析一——开始]]></title>
@@ -894,95 +2236,6 @@ swift的源码因为不断在更新，笔记记录的代码就以2014-4-18的为
 <h2>Http &amp; JMS</h2>
 
 <p>目前Gatling支持的协议不多，毕竟是一个轻量级的测试工具，目前只支持Http和JMS(以前用的时候还只是支持HTTP)，随着Gatling的发展，以后肯定会支持更多的协议。现在大部分的系统和应用都是提供http协议的api，所以基于http协议的测试也能满足大部分的测试场景了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[番茄工作法和Bullet journal笔记法]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/02/26/tomato-work-method-and-bullet-journal/"/>
-    <updated>2014-02-26T20:31:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/02/26/tomato-work-method-and-bullet-journal</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-2/tomato_and_bullet_journal.jpg"></p>
-
-<p>番茄工作法是一套时间管理方法，Bullet journal是一套笔记记录的方法，最近通过学习这2个方法来管理自己的时间，让自己战胜拖延症。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h1>番茄工作法</h1>
-
-<p>番茄工作法的整体思路就是将时间分割成一个个小时间段，每个时间段25分钟，在每个时间段里面排除所有干扰，集中精力完成自己制定的任务，让工作效率最大化。</p>
-
-<h4>为什么叫番茄工作法</h4>
-
-<p>番茄工作法是弗朗西斯科·西里洛于1992年创立的一种时间管理方法，通过一种外貌类似番茄的厨房定时器设置好25分钟，在25分钟内把任务做完，根据定时器的形状命名为番茄工作法。其实不一定要找一个像番茄一样的计时器，可以根据自己需要选择任意的计时器，只要有定时的功能就可以，现在手机都有这个功能，也可以使用手机来代替。</p>
-
-<h4>如何实施</h4>
-
-<ul>
-<li>制定计划。找一张纸和一支笔，列出自己接下来的时间要完成的任务清单，每个任务后面可以画上需要一个或者多个番茄钟，这个是你预估此项任务要花费的时间。比如要开发某个功能，自己预估这项任务可能需要2～3个小时，那就在任务后面画上4～6个番茄钟，这个就是你的预估时间量。</li>
-<li>排除干扰。在你开始番茄钟之前，请把干扰源去掉，比如邮箱、电话、手机等，把它们关掉或者调成静音，以便自己在番茄钟内工作时不受打扰。</li>
-<li>开始工作。扭动番茄钟，将其设置为25分钟后响铃，然后开始集中精力做你的任务。如果中间想起另外一件更重要的事情，请不要中断手头的任务去做它，而要将该事情记录到你的任务清单里面，然后回过头来继续你的任务，直到番茄钟响起。</li>
-<li>完成休息。当番茄钟响起的时候，停止手头的工作，在之前画在任务后面的番茄钟上划掉一个，表示你已经完成了一个番茄钟。然后休息5分钟，让自己在休息时间内充分放松，为下个番茄钟做好准备。</li>
-</ul>
-
-
-<p>按照以上的步骤循环进行，直到完成自己的任务。</p>
-
-<h4>有什么好处</h4>
-
-<p>首先番茄钟工作法可以让你更有效率地完成自己的工作任务，想象一下自己平时工作的时候经常会被别人打断，打断过后需要一段时间才能回复到原来的工作状态，这样很浪费时间。有的人会觉得整天忙忙碌碌的，但回想一下基本没有完成什么任务。</p>
-
-<p>这里还要说一下遇到外部的干扰的情况，比如同事来找你问问题这种干扰，可以根据具体情况处理：</p>
-
-<ul>
-<li>跟同事说明自己在番茄钟内，请他在番茄钟完了后再找你;</li>
-<li>如果事情比较重要，停下手头的任务，先帮他解决问题，然后重新开始一个番茄钟，继续完成刚才的任务;</li>
-</ul>
-
-
-<p>其次番茄工作法让你养成一个习惯，每当你扭开番茄钟开始计时的时候，身体会暗示你现在准备开始工作，使你进入全身心投入的状态，让你更好的完成任务。</p>
-
-<p>再次番茄工作法会锻炼你的时间预估能力，每次你都会为自己的任务预估一个时间，可能开始的时候不准确，但是时间久了以后，就会慢慢让自己预估的时间与实际完成的时间相符了。</p>
-
-<p>最后是番茄工作法会带给你成就感，每当你划掉一个番茄钟或者完成一个任务，就会让自己觉得今天自己没有浪费时间，会真的看到自己实实在在做完了哪些事情。</p>
-
-<p>我自己也是刚学习番茄工作法，还在养成习惯中。我试用了3个星期，基本上将之前拖延的一些任务完成了，比如写blog，之前老是拖拉想放到以后再写，导致几个月都没有更新，现在基本上一个月可以写到3～4篇blog了。所以我觉得番茄工作法还是比较有用的。</p>
-
-<h1>Bullet Journal笔记法</h1>
-
-<p>Bullet Journal是由纽约艺术家Ryder Carroll发明的。这一快速笔记系统简单灵活，十分容易上手。这里有<a href="http://www.bulletjournal.com/">它的网站</a>，感兴趣的同学可以看一下。</p>
-
-<p>Bullet Journal很简单，20分钟就可以学会，只需要一个空白笔记本和一支笔。</p>
-
-<h4>目录</h4>
-
-<p>首先在笔记本的前面几页写上目录标题，然后在开始记录任务的每一页下角写上页数，以后笔记有更新，就可以随时更新目录的内容。</p>
-
-<h4>目标和日期</h4>
-
-<p>在目录后面，开始记录当月的目标，在目标页前面一页写上当月的日期，每一行记录一个日期，以后如果有什么重要的事件完成了，就可以在日期后面写上备注。</p>
-
-<h4>每日日记</h4>
-
-<p>Bullet Journal最重要的部分就是当天的日记，有3种标志：</p>
-
-<ul>
-<li>勾选框表示要完成的任务</li>
-<li>圆圈表示特定时间要完成事情，可以在后面备注时间</li>
-<li>圆点表示备注，可以记录任何事情，包括你的想法。</li>
-</ul>
-
-
-<p><img src="/images/post/2014-2/bullet_journal.jpg"></p>
-
-<p>这3种标志可以自由组合，比如勾选框下面可以有子勾选框，圆点，圆圈等，表示该项任务有子任务。根据自己需要灵活配置。</p>
-
-<p>可能用文字描述比较难懂，不理解的同学可以看一下<a href="http://www.youtube.com/watch?v=GfRf43JTqY4">这里</a>的视频（youtube，需要翻墙），看完大概就可以理解了，Bullet Journal就是这么简单。它还可以配合番茄工作法一起工作，之前谈到番茄工作法也是需要列任务清单，我们就可以将任务清单用Bullet Journal的方式记录下来，然后进行操作。两者互相配合，效果更佳。</p>
-
-<p>开始使用Bullet Journal的时候不需要买太好的笔记本，官网推荐的是米国一款感觉特别高级的笔记本，带小格子的，其实完全没有必要，只要找一本普通的笔记本就可以了（像我用的是公司发的笔记本，每年都会发一本，基本用不完，就拿来做Bullet Journal笔记本了），或者在淘宝上面买个差不多的，也就10～20块，还包邮哦亲～</p>
 ]]></content>
   </entry>
   
