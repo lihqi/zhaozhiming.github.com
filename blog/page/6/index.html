@@ -6,7 +6,7 @@
 	<title>Hacker and Geeker's Way</title>
     <meta name="author" content="赵芝明">
     
-	<meta name="description" content="Published on: Apr 16th, 2012 Tags: code 目前的项目里用junit写单元测试，使用的是junit4，由于大部分开发之前使用的都是junit3，对junit4还不是很熟悉，所以出现了junit3和4混合使用的情况，导致发生了一些问题，这里列举一下。 Read &hellip;">
+	<meta name="description" content="Published on: Apr 16th, 2012 Tags: code 最近买了新的笔记本电脑，发现新买的电脑上面安装的是win7用户版，在网上查了一下这个版本的win7是功能最少的。。。另外又发现偌大的500G硬盘居然只给分成2个区，每个250。。。各种不爽， &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -111,6 +111,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/07/redis-install-guide-in-redhat/">Red Hat系统安装Redis</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/04/swift-code-explain-3-proxy-controllers-base/">swift源码详解（三）——proxy/controllers/base.py</a>
       </li>
     
@@ -124,10 +128,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu/">在ubunut下使用pycharm和eclipse进行python远程调试</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/09/swift-multiply-nodes-deploy-in-one-machine/">Swift单节点多dev环境部署</a>
       </li>
     
   </ul>
@@ -196,7 +196,7 @@
   </ul>
 </section><section>
   <h1>文章归档</h1>
-  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2014 (10)</li><ul class="month_list"><li class="month"><a href='/blog/2014/05/'>MAY (1)</a></li><li class="month"><a href='/blog/2014/04/'>APR (4)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul></ul></div>
+  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2014 (11)</li><ul class="month_list"><li class="month"><a href='/blog/2014/05/'>MAY (2)</a></li><li class="month"><a href='/blog/2014/04/'>APR (4)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul></ul></div>
 </section>
 
       
@@ -206,6 +206,52 @@
   <div class="left-content">
     <div class="left-post">
       
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/">
+		
+			安装win7和ubuntu双系统</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-16T16:53:00+08:00" pubdate data-updated="true">Apr 16<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>最近买了新的笔记本电脑，发现新买的电脑上面安装的是win7用户版，在网上查了一下这个版本的win7是功能最少的。。。另外又发现偌大的500G硬盘居然只给分成2个区，每个250。。。各种不爽，于是决定格式化硬盘重新安装系统。</p>
+
+
+		
+		<a href="/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/#comments">Comments</a>
+    
+</div>
+</article>
       
       
           <article class="post">

@@ -1,0 +1,506 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>swift源码详解（四）——common/swob.py - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="swift源码详解">
+	<meta name="keywords" content="swift">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">swift源码详解（四）——common/swob.py</h2>
+	<div class="entry-content"><h2><a href="http://zhaozhiming.github.io/blog/2014/04/19/swift-code-explain-total/">回swift代码结构目录</a></h2>
+
+<h3>RESPONSE_REASONS(常量)</h3>
+
+<!--more-->
+
+
+<p></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">RESPONSE_REASONS</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="mi">100</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Continue&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">200</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;OK&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">201</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Created&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">202</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Accepted&#39;</span><span class="p">,</span> <span class="s">&#39;The request is accepted for processing.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">204</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;No Content&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">206</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Partial Content&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">301</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Moved Permanently&#39;</span><span class="p">,</span> <span class="s">&#39;The resource has moved permanently.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">302</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Found&#39;</span><span class="p">,</span> <span class="s">&#39;The resource has moved temporarily.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">303</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;See Other&#39;</span><span class="p">,</span> <span class="s">&#39;The response to the request can be found under a &#39;</span>
+</span><span class='line'>          <span class="s">&#39;different URI.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">304</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Not Modified&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">307</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Temporary Redirect&#39;</span><span class="p">,</span> <span class="s">&#39;The resource has moved temporarily.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">400</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Bad Request&#39;</span><span class="p">,</span> <span class="s">&#39;The server could not comply with the request since &#39;</span>
+</span><span class='line'>          <span class="s">&#39;it is either malformed or otherwise incorrect.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">401</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Unauthorized&#39;</span><span class="p">,</span> <span class="s">&#39;This server could not verify that you are &#39;</span>
+</span><span class='line'>          <span class="s">&#39;authorized to access the document you requested.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">402</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Payment Required&#39;</span><span class="p">,</span> <span class="s">&#39;Access was denied for financial reasons.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">403</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Forbidden&#39;</span><span class="p">,</span> <span class="s">&#39;Access was denied to this resource.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">404</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Not Found&#39;</span><span class="p">,</span> <span class="s">&#39;The resource could not be found.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">405</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Method Not Allowed&#39;</span><span class="p">,</span> <span class="s">&#39;The method is not allowed for this &#39;</span>
+</span><span class='line'>          <span class="s">&#39;resource.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">406</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Not Acceptable&#39;</span><span class="p">,</span> <span class="s">&#39;The resource is not available in a format &#39;</span>
+</span><span class='line'>          <span class="s">&#39;acceptable to your browser.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">408</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Request Timeout&#39;</span><span class="p">,</span> <span class="s">&#39;The server has waited too long for the request &#39;</span>
+</span><span class='line'>          <span class="s">&#39;to be sent by the client.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">409</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Conflict&#39;</span><span class="p">,</span> <span class="s">&#39;There was a conflict when trying to complete &#39;</span>
+</span><span class='line'>          <span class="s">&#39;your request.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">410</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Gone&#39;</span><span class="p">,</span> <span class="s">&#39;This resource is no longer available.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">411</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Length Required&#39;</span><span class="p">,</span> <span class="s">&#39;Content-Length header required.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">412</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Precondition Failed&#39;</span><span class="p">,</span> <span class="s">&#39;A precondition for this request was not &#39;</span>
+</span><span class='line'>          <span class="s">&#39;met.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">413</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Request Entity Too Large&#39;</span><span class="p">,</span> <span class="s">&#39;The body of your request was too &#39;</span>
+</span><span class='line'>          <span class="s">&#39;large for this server.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">414</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Request URI Too Long&#39;</span><span class="p">,</span> <span class="s">&#39;The request URI was too long for this &#39;</span>
+</span><span class='line'>          <span class="s">&#39;server.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">415</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Unsupported Media Type&#39;</span><span class="p">,</span> <span class="s">&#39;The request media type is not &#39;</span>
+</span><span class='line'>          <span class="s">&#39;supported by this server.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">416</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Requested Range Not Satisfiable&#39;</span><span class="p">,</span> <span class="s">&#39;The Range requested is not &#39;</span>
+</span><span class='line'>          <span class="s">&#39;available.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">417</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Expectation Failed&#39;</span><span class="p">,</span> <span class="s">&#39;Expectation failed.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">422</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Unprocessable Entity&#39;</span><span class="p">,</span> <span class="s">&#39;Unable to process the contained &#39;</span>
+</span><span class='line'>          <span class="s">&#39;instructions&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">499</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Client Disconnect&#39;</span><span class="p">,</span> <span class="s">&#39;The client was disconnected during request.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">500</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Internal Error&#39;</span><span class="p">,</span> <span class="s">&#39;The server has either erred or is incapable of &#39;</span>
+</span><span class='line'>          <span class="s">&#39;performing the requested operation.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">501</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Not Implemented&#39;</span><span class="p">,</span> <span class="s">&#39;The requested method is not implemented by &#39;</span>
+</span><span class='line'>          <span class="s">&#39;this server.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">502</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Bad Gateway&#39;</span><span class="p">,</span> <span class="s">&#39;Bad gateway.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">503</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Service Unavailable&#39;</span><span class="p">,</span> <span class="s">&#39;The server is currently unavailable. &#39;</span>
+</span><span class='line'>          <span class="s">&#39;Please try again at a later time.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">504</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Gateway Timeout&#39;</span><span class="p">,</span> <span class="s">&#39;A timeout has occurred speaking to a &#39;</span>
+</span><span class='line'>          <span class="s">&#39;backend server.&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="mi">507</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;Insufficient Storage&#39;</span><span class="p">,</span> <span class="s">&#39;There was not enough space to save the &#39;</span>
+</span><span class='line'>          <span class="s">&#39;resource. Drive: </span><span class="si">%(drive)s</span><span class="s">&#39;</span><span class="p">),</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>定义了各个状态码的定义和详细描述信息。</li>
+</ul>
+
+
+<h3>类UTC</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">_UTC</span>  <span class="p">(</span><span class="n">tzinfo</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    A tzinfo class for datetime objects that returns a 0 timedelta (UTC time)</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">dst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">utcoffset</span> <span class="o">=</span> <span class="n">dst</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">tzname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&#39;UTC&#39;</span>
+</span><span class='line'><span class="n">UTC</span> <span class="o">=</span> <span class="n">_UTC</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>定义了一个UTC的timezone类。</li>
+</ul>
+
+
+<h3>_datetime_property</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">_datetime_property</span><span class="p">(</span><span class="n">header</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Set and retrieve the datetime value of self.headers[header]</span>
+</span><span class='line'><span class="sd">    (Used by both request and response)</span>
+</span><span class='line'><span class="sd">    The header is parsed on retrieval and a datetime object is returned.</span>
+</span><span class='line'><span class="sd">    The header can be set using a datetime, numeric value, or str.</span>
+</span><span class='line'><span class="sd">    If a value of None is given, the header is deleted.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param header: name of the header, e.g. &quot;Content-Length&quot;</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">parts</span> <span class="o">=</span> <span class="n">parsedate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">header</span><span class="p">])[:</span><span class="mi">7</span><span class="p">]</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">datetime</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">parts</span> <span class="o">+</span> <span class="p">(</span><span class="n">UTC</span><span class="p">,)))</span>
+</span><span class='line'>            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span class='line'>                <span class="k">return</span> <span class="bp">None</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">)):</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span>
+</span><span class='line'>                <span class="s">&quot;%a, </span><span class="si">%d</span><span class="s"> %b %Y %H:%M:%S GMT&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%a, </span><span class="si">%d</span><span class="s"> %b %Y %H:%M:%S GMT&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">property</span><span class="p">(</span><span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="p">,</span>
+</span><span class='line'>                    <span class="n">doc</span><span class="o">=</span><span class="p">(</span><span class="s">&quot;Retrieve and set the </span><span class="si">%s</span><span class="s"> header as a datetime, &quot;</span>
+</span><span class='line'>                         <span class="s">&quot;set it with a datetime, int, or str&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">header</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>定义dateime属性的getter和setter方法。</li>
+</ul>
+
+
+<h3>_header_property</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">_header_property</span><span class="p">(</span><span class="n">header</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Set and retrieve the value of self.headers[header]</span>
+</span><span class='line'><span class="sd">    (Used by both request and response)</span>
+</span><span class='line'><span class="sd">    If a value of None is given, the header is deleted.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param header: name of the header, e.g. &quot;Transfer-Encoding&quot;</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">property</span><span class="p">(</span><span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="p">,</span>
+</span><span class='line'>                    <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Retrieve and set the </span><span class="si">%s</span><span class="s"> header&quot;</span> <span class="o">%</span> <span class="n">header</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>定义header属性的getter和setter方法。</li>
+</ul>
+
+
+<h3>_header_int_property</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">_header_int_property</span><span class="p">(</span><span class="n">header</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Set and retrieve the value of self.headers[header]</span>
+</span><span class='line'><span class="sd">    (Used by both request and response)</span>
+</span><span class='line'><span class="sd">    On retrieval, it converts values to integers.</span>
+</span><span class='line'><span class="sd">    If a value of None is given, the header is deleted.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    :param header: name of the header, e.g. &quot;Content-Length&quot;</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">val</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">property</span><span class="p">(</span><span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="p">,</span>
+</span><span class='line'>                    <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Retrieve and set the </span><span class="si">%s</span><span class="s"> header as an int&quot;</span> <span class="o">%</span> <span class="n">header</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>定义整数型header属性的getter和setter方法。</li>
+</ul>
+
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

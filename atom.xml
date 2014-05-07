@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-05-04T21:43:11+08:00</updated>
+  <updated>2014-05-07T20:16:38+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,133 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Red Hat系统安装Redis]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/05/07/redis-install-guide-in-redhat/"/>
+    <updated>2014-05-07T19:53:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/05/07/redis-install-guide-in-redhat</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-5/redis.jpg"></p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>环境</h2>
+
+<p>RHLinux-6.4-64-EN, 红帽6.4 64位，英文正式发布版</p>
+
+<h2>安装</h2>
+
+<p>安装很简单，先下载redis的压缩包，下载地址见<a href="http://redis.io/download">这里</a>，然后拷贝到你的linux机器，接着执行下面的命令。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>tar xzf redis-2.6.14.tar.gz
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14
+</span><span class='line'><span class="nv">$ </span>make
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>启动</h2>
+
+<p>编译完后增加了src目录，执行src下面的redis-server脚本即可启动redis服务。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-server
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>调试</h2>
+
+<p>执行src目录下的redis-cli脚本，这个是redis的客户端。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-cli
+</span><span class='line'>redis&gt; <span class="nb">set </span>foo bar
+</span><span class='line'>OK
+</span><span class='line'>redis&gt; get foo
+</span><span class='line'><span class="s2">&quot;bar&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>java调用</h2>
+
+<ol>
+<li>Redis比较出名的java客户端是jedis，先下载jedis的jar包，可以去maven库搜下jedis就可以下载到，源码是放在github上：<a href="https://github.com/xetorthio/jedis">https://github.com/xetorthio/jedis</a>。</li>
+<li>简单写个main方法就可以调用。</li>
+</ol>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Jedis</span> <span class="n">jedis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Jedis</span><span class="o">(</span><span class="s">&quot;10.20.8.39&quot;</span><span class="o">);</span> <span class="c1">//redis服务器的ip，端口默认6379</span>
+</span><span class='line'>        <span class="n">jedis</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;bar&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">jedis</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>后台进程</h2>
+
+<p>之前的启动方式不是后台进程方式的，终端关了服务也就停了，可以使用下面的命令将Redis作为后台进程启动，并添加到系统启动命名中。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14/utils
+</span><span class='line'><span class="nv">$.</span>/install_server
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>执行命令后，会提示你回答几个问题，可以一路回车过去，选择默认设置。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Please <span class="k">select </span>the redis port <span class="k">for </span>this instance: <span class="o">[</span>6379<span class="o">]</span>
+</span><span class='line'>Selecting default: 6379
+</span><span class='line'>Please <span class="k">select </span>the redis config file name <span class="o">[</span>/etc/redis/6379.conf<span class="o">]</span>
+</span><span class='line'>Selected default - /etc/redis/6379.conf
+</span><span class='line'>Please <span class="k">select </span>the redis log file name <span class="o">[</span>/var/log/redis_6379.log<span class="o">]</span>
+</span><span class='line'>Selected default - /var/log/redis_6379.log
+</span><span class='line'>Please <span class="k">select </span>the data directory <span class="k">for </span>this instance <span class="o">[</span>/var/lib/redis/6379<span class="o">]</span>
+</span><span class='line'>Selected default - /var/lib/redis/6379
+</span><span class='line'>Please <span class="k">select </span>the redis executable path <span class="o">[</span>/usr/local/bin/redis-server<span class="o">]</span>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>后续可以通过下面的方式启停服务。<br/>
+1. /etc/init.d/redis_6379 start &mdash;启动<br/>
+2. /etc/init.d/redis_6379 stop &mdash;服务<br/>
+当然也可在/usr/local/bin目录下使用redis-server来启动。</p>
+
+<p><strong>PS: 我在执行install_server脚本后，发现服务启动不起来，查看/etc/init.d/redis_6379这个文件发现里面的换行符号被替换成了<code>/n</code>符号，手动将这些符号替换成换行就可以了。</strong></p>
+
+<h2>更多资料</h2>
+
+<p>更多资料可以看这里：<a href="http://redis.io/">http://redis.io/</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[swift源码详解（三）——proxy/controllers/base.py]]></title>
@@ -6228,76 +6355,6 @@ ITeye呢感觉沦为菜鸟集中地，看着帖子里面夹杂着大片大片无
 
 <p>如果语法错误，右边的窗口会给出提示，如果查询语句不正确，任何源代码都不会被选中。更多的XPath语法可以参考<a href="http://www.w3schools.com/xpath/">http://www.w3schools.com/xpath/</a>。<br/>
 总结：sonar其实很早就支持了对JS的代码校验，但是你如果想自己定制校验规则，最简单的方式就是通过sonar的web接口增加XPath规则，这个需要在XPath语法上多花点力气，如果写出来的查询语法不正确，可以多试几遍，用SSLR JavaScript Toolkit 可以很方便的调试。最后祝大家都可以在sonar上配置自己的自定义规则。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[利用Sonar定制自定义JS扫描规则（二）——自定义JS扫描规则]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2/"/>
-    <updated>2013-05-19T11:20:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2</id>
-    <content type="html"><![CDATA[<p>在上一篇blog中，我们将sonar几个需要的环境都搭建好了，包括sonar的服务器，sonar runner，sonar的javascript插件。现在我们就来讲如何自定义JS扫描规则。</p>
-
-<!--more-->
-
-
-<p>
-实际上有3种方法可以自定义代码的校验规则：</p>
-
-<ul>
-<li>直接在sonar的web接口中增加XPath规则；</li>
-<li>通过插件的功能来增加自定义规则，比如checkstyle，pmd等插件是允许自定义规则的；</li>
-<li>通过新增一个代码分析器来实现自定义规则；</li>
-</ul>
-
-
-<p>sonar官方推荐的方式是使用最简单的XPath方式来增加自定义规则，如果语言太复杂或者XPath无法查询其结构的，再使用自定义插件的方式，所以我们这里重点介绍的是使用XPath的方式。</p>
-
-<h3>使用XPath增加自定义JS规则</h3>
-
-<p>sonar为大部分流行的语言（C, C#, C++, Cobol, Flex, JavaScript, PL/I, PL/SQL, Python and VB.NET）提供了一个简洁的方式来增加代码规则。这些新增规则必须使用<a href="http://en.wikipedia.org/wiki/XPath">XPath</a>来实现，这样的话语言的每一部分都可以映射到<a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Tree</a>（AST）。对于每一种语言，SSLR Toolkit 工具提供了代码转AST的功能，该工具具体的使用在下面会介绍，这里是<a href="http://repository.codehaus.org/org/codehaus/sonar-plugins/javascript/sslr-javascript-toolkit/1.3/sslr-javascript-toolkit-1.3.jar">SSLR Javascript Toolkit</a>工具的下载。如果对XPath不熟悉，可以参考这里看一下例子<a href="http://www.w3schools.com/xpath/">http://www.w3schools.com/xpath/</a>。<br/>
-1、首先使用管理员的角色登录sonar，然后去到Settings > Quality Profile页面，选择Js规则（如下图所示）。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/02070803-9bce5fab1bf543059071fafff2ae37d8.png"></p>
-
-<p>2、接着在Coding rules页面输入查询条件，找到XPath规则：</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/02070943-c9a5b7732ea6478fba266555c308fc29.png"></p>
-
-<p>3、查询结果出来后，点击Copy rule连接来新增规则：</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/02071054-da90a48498234fc19d34aff75c84a104.png"></p>
-
-<p>4、按照XPath的语法编写自己的规则：</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/02071436-15c170e9f4eb4f6684d95df76fe6e628.png"></p>
-
-<p>如果对XPath不熟悉，建议先学习一些XPath的语法，下面给出3个javascript xpath的规则：</p>
-
-<h5>不要使用document.write:</h5>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>//callExpression/memberExpression[count(*) = 3 and primaryExpression[@tokenValue = &quot;document&quot;] and identifierName[@tokenValue = &quot;write&quot;]]
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>if/else语句后面必须接大括号：</h5>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>//ifStatement/statement[not(block)]
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>本地变量名以XX开头：</h5>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>//functionBody//variableDeclaration/IDENTIFIER[not(starts-with(@tokenValue,&#39;zzm&#39;))]
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>5、创建好规则之后，把规则设置为active，将规则的级别调高一些就会自动变为active，然后重新跑一下规则分析，这样新增的规则就生效了。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/02072520-4308a5a558d04ded998bb54f452c71f7.png"></p>
 ]]></content>
   </entry>
   
