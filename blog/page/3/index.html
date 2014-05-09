@@ -6,7 +6,7 @@
 	<title>Hacker and Geeker's Way</title>
     <meta name="author" content="赵芝明">
     
-	<meta name="description" content="Published on: May 19th, 2013 Tags: code 在上一篇blog中，我们将sonar几个需要的环境都搭建好了，包括sonar的服务器，sonar runner，sonar的javascript插件。现在我们就来讲如何自定义JS扫描规则。 Read on | &hellip;">
+	<meta name="description" content="Published on: May 20th, 2013 Tags: code 在上一篇blog中讲了在sonar中如何新增自定义的JS规则，这里面比较难的地方是XPath语句的编写，而要编写正确的XPath语句，首先要拿到语法的AST，下面我们就来介绍如何使用SSLR JavaScript &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -111,6 +111,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/09/read-book-note-2014-4/">读书笔记——沸腾十五年，看板方法，精益创业</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/07/redis-install-guide-in-redhat/">Red Hat系统安装Redis</a>
       </li>
     
@@ -126,10 +130,6 @@
         <a href="/blog/2014/04/19/swift-code-explain-total/">Swift源码详解（一）——开始</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu/">在ubunut下使用pycharm和eclipse进行python远程调试</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -142,9 +142,9 @@
 <a style="font-size: 210%" href="/tags/jenkins/">jenkins</a>
 <a style="font-size: 145%" href="/tags/js/">js</a>
 <a style="font-size: 159%" href="/tags/junit/">junit</a>
+<a style="font-size: 145%" href="/tags/plugins/">plugins</a>
 <a style="font-size: 194%" href="/tags/sonar/">sonar</a>
 <a style="font-size: 171%" href="/tags/swift/">swift</a>
-<a style="font-size: 145%" href="/tags/technique/">technique</a>
 
   </ul>
 </section>
@@ -196,7 +196,7 @@
   </ul>
 </section><section>
   <h1>文章归档</h1>
-  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2014 (11)</li><ul class="month_list"><li class="month"><a href='/blog/2014/05/'>MAY (2)</a></li><li class="month"><a href='/blog/2014/04/'>APR (4)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul></ul></div>
+  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2014 (12)</li><ul class="month_list"><li class="month"><a href='/blog/2014/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2014/04/'>APR (4)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul></ul></div>
 </section>
 
       
@@ -206,6 +206,52 @@
   <div class="left-content">
     <div class="left-post">
       
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/05/20/use-sonar-create-customer-js-verify-rule-part-3/">
+		
+			利用Sonar定制自定义JS扫描规则（三）——SSLR JavaScript Toolkit 使用说明</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-20T11:20:00+08:00" pubdate data-updated="true">May 20<span>th</span>, 2013</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>在上一篇blog中讲了在sonar中如何新增自定义的JS规则，这里面比较难的地方是XPath语句的编写，而要编写正确的XPath语句，首先要拿到语法的AST，下面我们就来介绍如何使用SSLR JavaScript Toolkit 工具来得到源代码的语法树。</p>
+
+
+		
+		<a href="/blog/2013/05/20/use-sonar-create-customer-js-verify-rule-part-3/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2013/05/20/use-sonar-create-customer-js-verify-rule-part-3/#comments">Comments</a>
+    
+</div>
+</article>
       
       
           <article class="post">
@@ -617,54 +663,6 @@
 	
 	
           | <a href="/blog/2012/12/20/first-experience-at-idea-12/#comments">Comments</a>
-    
-</div>
-</article>
-      
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/12/07/the-elements-of-jacoco/">
-		
-			Jacoco的原理</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-07T19:47:00+08:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/translate/'>translate</a>
-
-
-</div>
-    </div>
-		<h2>覆盖率计数器</h2>
-
-<p>Jacoco使用一系列的不同的计数器来做覆盖率的度量计算。所有这些计数器都是从java的class文件中获取信息，这些class文件可以（可选）包含调试的信息在里面。即使在没有源码的情况下，这种方法也可以实时有效地对应用程序进行度量和分析。在大部分情况下，收集到的信息可以映射到源码，可视化到每一行代码的粒度。但这种方法还是有一些限制。这些class文件必须使用调试信息来编译，这样才可以计算行的覆盖率和提供出源码的高亮。但不是所有的JAVA语言的结构都可以直接编译成一致的二进制代码。在这种情况下，java 编译器会创建所谓的“合成”代码，会导致产生一些不期望得到的覆盖率结果。</p>
-
-
-		
-		<a href="/blog/2012/12/07/the-elements-of-jacoco/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-	
-          | <a href="/blog/2012/12/07/the-elements-of-jacoco/#comments">Comments</a>
     
 </div>
 </article>
