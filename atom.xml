@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-05-09T21:21:35+08:00</updated>
+  <updated>2014-05-11T21:11:03+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,234 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Redis集群环境安装指南]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/05/11/redis-cluster-env-create/"/>
+    <updated>2014-05-11T20:50:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/05/11/redis-cluster-env-create</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-5/redis-cluster.jpg"></p>
+
+<h3>环境</h3>
+
+<p>RHLinux-6.4-64-EN, 红帽6.4 64位，英文正式发布版。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h3>Redis3.0.0</h3>
+
+<ul>
+<li>redis2.x版本还不支持集群，3.0版本将会支持，现在3.0版本还在开发中，现在是beta-3版本(截止2014-5-8)，但功能是可用的。</li>
+<li>下载Redis3.0.0 beta-3版本，点击<a href="https://github.com/antirez/redis/archive/3.0.0-beta3.tar.gz">这里</a>下载。</li>
+<li>Redis3的安装可以参照之前的<a href="http://10.42.173.13/zhaozhiming003/redis-poc/blob/master/doc/redis_install.md">单机安装指南</a>操作。</li>
+</ul>
+
+
+<h3>创建Redis集群实例</h3>
+
+<ul>
+<li>创建集群节点的文件夹，先创建cluster-test文件夹，再以端口为名称创建子文件夹。这里我们要创建6个Redis实例，3个作为master，3个作为slave。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir cluster-test
+</span><span class='line'><span class="nb">cd </span>cluster-test
+</span><span class='line'>mkdir 7000 7001 7002 7003 7004 7005
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在每个文件夹下面创建创建Redis配置文件，注意根据不同实例的端口号修改下面的配置文件，nodes.conf文件为Redis实例启动时自动生成。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>port 7000
+</span><span class='line'>cluster-enabled yes
+</span><span class='line'>cluster-config-file nodes.conf
+</span><span class='line'>cluster-node-timeout 5000
+</span><span class='line'>appendonly yes
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>开6个terminal窗口，分别启动这6个Redis实例。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>7000
+</span><span class='line'>../redis-server ./redis.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>当成功启动后，能看到每个terminal出现下面的字样，是因为node.conf文件不存在，所以给每个实例分配了一个新的ID。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>82462<span class="o">]</span> 26 Nov 11:56:55.329 * No cluster configuration found, I<span class="err">&#39;</span>m 97a3a64667477371c4479320d683e4c8db5858b1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>创建集群</h3>
+
+<ul>
+<li>现在Redis的6个实例都已经启动了，现在来开始创建集群。创建集群用到了一个ruby文件，放在redis3目录的src子目录下，找到后执行以下命令。这里的<code>-replicas 1</code>表示每个master配备1个slave，后面的参数就是6个实例的ip加端口，以空格隔开。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>redis-3.0.0-beta3/src
+</span><span class='line'>./redis-trib.rb create --replicas 1 127.0.0.1:7000 127.0.0.1:7001 <span class="se">\</span>
+</span><span class='line'>127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>执行命令后会提示你是否接受提示的配置信息，默认的是前3台作为master机器，后3台作为slave机器，输入<code>yes</code>，出现最后的信息表示集群已经创建好了。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Creating cluster
+</span><span class='line'>Connecting to node 127.0.0.1:7000: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7001: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7002: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7003: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7004: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7005: OK &gt;&gt;&gt;
+</span><span class='line'>Performing <span class="nb">hash </span>slots allocation on 6 nodes...
+</span><span class='line'>Using 3 masters: 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002
+</span><span class='line'>127.0.0.1:7000 replica <span class="c">#1 is 127.0.0.1:7003</span>
+</span><span class='line'>127.0.0.1:7001 replica <span class="c">#1 is 127.0.0.1:7004</span>
+</span><span class='line'>127.0.0.1:7002 replica <span class="c">#1 is 127.0.0.1:7005</span>
+</span><span class='line'>M: 9991306f0e50640a5684f1958fd754b38fa034c9 127.0.0.1:7000 slots:0-5460 <span class="o">(</span>5461 slots<span class="o">)</span> master
+</span><span class='line'>M: e68e52cee0550f558b03b342f2f0354d2b8a083b 127.0.0.1:7001 slots:5461-10921 <span class="o">(</span>5461 slots<span class="o">)</span> master
+</span><span class='line'>M: 393c6df5eb4b4cec323f0e4ca961c8b256e3460a 127.0.0.1:7002 slots:10922-16383 <span class="o">(</span>5462 slots<span class="o">)</span> master
+</span><span class='line'>S: 48b728dbcedff6bf056231eb44990b7d1c35c3e0 127.0.0.1:7003
+</span><span class='line'>S: 345ede084ac784a5c030a0387f8aaa9edfc59af3 127.0.0.1:7004
+</span><span class='line'>S: 3375be2ccc321932e8853234ffa87ee9fde973ff 127.0.0.1:7005
+</span><span class='line'>Can I <span class="nb">set </span>the above configuration? <span class="o">(</span><span class="nb">type</span> <span class="s1">&#39;yes&#39;</span> to accept<span class="o">)</span>: yes
+</span><span class='line'>
+</span><span class='line'>Nodes configuration updated &gt;&gt;&gt;
+</span><span class='line'>Sending CLUSTER MEET messages to join the cluster Waiting <span class="k">for </span>the cluster to join... &gt;&gt;&gt;
+</span><span class='line'>Performing Cluster Check <span class="o">(</span>using node 127.0.0.1:7000<span class="o">)</span>
+</span><span class='line'>M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7000
+</span><span class='line'>   slots:0-5460 <span class="o">(</span>5461 slots<span class="o">)</span> master
+</span><span class='line'>M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7001
+</span><span class='line'>   slots:5461-10922 <span class="o">(</span>5462 slots<span class="o">)</span> master
+</span><span class='line'>M: 73c22198cd1d0782ec24e3c9b03378030891c9a3 127.0.0.1:7002
+</span><span class='line'>   slots:10923-16383 <span class="o">(</span>5461 slots<span class="o">)</span> master
+</span><span class='line'>M: c785d85b95d7bdc28ec90384ab8a5885b289542c 127.0.0.1:7003
+</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
+</span><span class='line'>   replicates b949ea2d9c822ff069521a354b4ed48855ac6203
+</span><span class='line'>M: 570c472fe553ba3c9d0fb3ba16fcdb8579b4fc86 127.0.0.1:7004
+</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
+</span><span class='line'>   replicates ebbb890e899244e4a2a6303826a29543ebf9885d
+</span><span class='line'>M: f86667ec42cff41a5666162a912713173f5306d7 127.0.0.1:7005
+</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
+</span><span class='line'>   replicates 73c22198cd1d0782ec24e3c9b03378030891c9a3
+</span><span class='line'><span class="o">[</span>OK<span class="o">]</span> All nodes agree about slots configuration.
+</span><span class='line'>&gt;&gt;&gt; Check <span class="k">for </span>open slots...
+</span><span class='line'>&gt;&gt;&gt; Check slots coverage...
+</span><span class='line'><span class="o">[</span>OK<span class="o">]</span> All 16384 slots covered.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>PS: 安装过程还发现RedHat系统上没有安装ruby，需要先安装ruby，而且公司机器还不能上网下载安装，只能通过离线的方式安装ruby，这里有离线安装的文档可以参考一下:<a href="https://rvm.io/rvm/offline">https://rvm.io/rvm/offline</a>。</p>
+
+<h3>验证</h3>
+
+<p>可以使用Redis3.0的redis-cli客户端进行验证，需要加上<code>-c</code>参数，表示集群的意思。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>redis-cli -c -p 7000
+</span><span class='line'>redis 127.0.0.1:7000&gt; <span class="nb">set </span>foo bar
+</span><span class='line'>-&gt; Redirected to slot <span class="o">[</span>12182<span class="o">]</span> located at 127.0.0.1:7002
+</span><span class='line'>OK
+</span><span class='line'>redis 127.0.0.1:7002&gt; <span class="nb">set </span>hello world
+</span><span class='line'>-&gt; Redirected to slot <span class="o">[</span>866<span class="o">]</span> located at 127.0.0.1:7000
+</span><span class='line'>OK
+</span><span class='line'>redis 127.0.0.1:7000&gt; get foo
+</span><span class='line'>-&gt; Redirected to slot <span class="o">[</span>12182<span class="o">]</span> located at 127.0.0.1:7002
+</span><span class='line'><span class="s2">&quot;bar&quot;</span>
+</span><span class='line'>redis 127.0.0.1:7000&gt; get hello
+</span><span class='line'>-&gt; Redirected to slot <span class="o">[</span>866<span class="o">]</span> located at 127.0.0.1:7000
+</span><span class='line'><span class="s2">&quot;world&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>更多的资料可以参考这里：<a href="http://redis.io/topics/cluster-tutorial">http://redis.io/topics/cluster-tutorial</a>。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[读书笔记——沸腾十五年，看板方法，精益创业]]></title>
@@ -6371,36 +6599,6 @@ ITeye呢感觉沦为菜鸟集中地，看着帖子里面夹杂着大片大片无
 <p>在github上面搭建自己的octopress博客，有个缺点是在搜索引擎中没有收录你的网站，导致别人很难在google或者百度里面找到你的文章，如果你的blog放在比较大的博客网站的话（比如博客园、博客大巴等），在各大搜索网站就可以很容易搜到你的blog。我曾经试过在每篇blog上面加上“keywords&#8221;标签来记录post的关键字，希望搜索引擎可以搜录，但结果还是不行。<br/>
 在网上搜了一下，发现有人写了一个octopress插件，可以将octopress的blog同步到几个比较大的博客网站，可以同步所有的blog，也可以同步最近一篇blog。网址在<a href="https://github.com/huangbowen521/octopress-syncPost">这里</a>。<br/>
 上面几个是我的octopress主要插件，主题上面我还是不大满意，可能以后还会更新。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[facebook的工程师文化——《打造facebook》读后感]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2013/06/04/facebook-engineer-culture/"/>
-    <updated>2013-06-04T07:36:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2013/06/04/facebook-engineer-culture</id>
-    <content type="html"><![CDATA[<p>在今年北京的QCon大会上听了facebook早期中国籍工程师王淮的演讲，受益匪浅，主题是如何打造高效能团队，主要介绍他在facebook的一些经历和管理上的经验分享。现在的他是一名天使投资人，投资的领域有移动互联，支付，云应用等。他还写了《打造facebook》一书，讲了facebook的公司文化和他在其中的开发管理等经历。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h3>工具文化</h3>
-
-<p>这本书给我印象最深的一点是facebook的&#8221;工具文化&#8221;。为帮助工程师更好的进行产品开发，facebook对内部工具Tools是非常关注的。facebook极力强调，要将最好的工程师放到工具开发这一块，因为工具做好了，可以达到事半功倍的效果，所有人的效率都可以提高，而不仅仅是工程师。还有通过工具来解决流程上面的问题，比如公司在推广一些规范性的规则，传统的方法是反复强调，另一种是开发出好用的工具，将这些东西固定在工具里面，借助工具进行强制性推广。不断的更新和完善公司自己的工具，并将公司的企业文化也融入到工具之中，有时候比找到一个伟大的创意更重要。</p>
-
-<p>facebook研发的工具有很多，比如新人刚加入facebook时，需要分配自己的开发服务器，facebook就有一个工具来管理公司的开发机器。在这个工具上，你可以看到所有机器的详细信息，包括分配给什么人，什么时间分配的，机器的配置信息等。在还未申请的机器上面，只需要点击一个按钮就会帮你安装好开发服务器，非常方便和简单。对于我们开发人员来说工作主要是写代码，facebook针对代码管理业开发了很多工具。比如有一款工具是在开发人员提交代码之前对代码进行检查，如果代码不符合代码规范或者没有写测试案例，工具会发出警告并交给开发人员修改。还有一款code review的工具叫Phabricator，开发人员可以在上面针对每一行代码进行讨论，如果代码有问题，代码审查者可以提问题，或者让代码提交者修改等，只有代码明确接受后，才可以提交到服务器的代码库中。这些工具的理念是将重复性的劳动交给电脑来执行，以&#8221;Don&rsquo;t Make Me Think&#8221;的方式来推广好习惯。</p>
-
-<h3>黑客文化</h3>
-
-<p>facebook一直强调公司的黑客文化，总部基地建有&#8221;黑客广场&#8221;，公司内部随处可见的黑客标志，facebook还会定期举行黑客马拉松(Hackathon)。像Google 允许员工用工作时间的20%来做自己喜欢的东西一样，Hackathon也是facebook让员工保持创造力，避免工作枯燥而失去工作激情的一种方式，在这个过程中，也催生了很多伟大的作品，比如timeline(时间轴)，全屏照片视图等。参加Hackathon虽然是自愿的，但facebook强烈建议每个员工都去参加Hackahton，甚至有的工程师因为要安排产品上线而无法参加Hackathon，公司会调整产品的上线时间来让工程师去参加Hackathon。</p>
-
-<p>facebook的CEO 扎克伯格本身就是一个黑客，看过《社交网络》的朋友都会记得电影开始的那一段场景，扎克伯格做了一个哈佛版美女评选网站（Facemash），为了得到更多女同学的照片，他黑进了当时学生宿舍里面每个学生的电脑去获取他们同学的照片。扎克伯格想打造独一无二的企业文化和管理方式，他将公司的这种文化称之为&#8221;黑客之道&#8221;(Hacker Wiay)，他诠释说，黑客文化是一种持续改进的做事方法，黑客迅速发布小规模的更新，然后从中获取到经验，在下一次更新中更好的改进，直到产品完成（有点敏捷开发的意思）。Done is better than prefect（完成胜于完美），这是facebook对这种黑客精神的诠释。</p>
-
-<p>facebook的黑客文化还包括一种亲身实践，积极进取的精神。Code Wins Arguments（代码胜于雄辩），在facebook的产品开发过程中，经常会有一个工程师站出来说，给我2天的时间我做个demo出来，证明我的想法是可行的。facebook不会有那种长达几天的马拉松会议，工程师们会开发出产品原型来证明是否行得通，在facebook每个工程师都是顶尖的人才，他们具有这样一种快速开发的能力。</p>
-
-<p>书中除了谈到上面所讲的这些点外，还谈到了作者在facebook中的项目管理经验，适合做项目管理的同学参考借鉴，最后希望大家也喜欢facebook的黑客文化。</p>
 ]]></content>
   </entry>
   
