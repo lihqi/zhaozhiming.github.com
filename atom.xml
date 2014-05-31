@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-05-11T21:11:03+08:00</updated>
+  <updated>2014-05-31T12:06:20+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,640 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[最近小项目的一些记录（二）]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/"/>
+    <updated>2014-05-31T10:40:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2</id>
+    <content type="html"><![CDATA[<p><a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project/">前一篇post</a>主要记录了Spring JPA和Hibernate的问题，接着记录其他一些工具遇到的问题。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>Jsoup</h2>
+
+<p><a href="https://github.com/jhy/jsoup">Jsoup</a>是一个比较火的Java解析Html工具，简单易用，功能强大，在github上有不少星星。</p>
+
+<h3>使用Jsoup连接url时报403</h3>
+
+<p>一般使用Jsoup连接url都不会有什么问题，正常的写法如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但有些网站会获取用户的浏览器信息，而上面的写法是没有浏览器信息的，这个时候就会报403的错误，需要在连接时加上userAngent。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">userAgent</span><span class="o">(</span><span class="s">&quot;Mozilla&quot;</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Css Selector</h3>
+
+<p>使用Jsoup来抓取网页信息，最简单的一种方式就是通过Css selector，这样可以让你少写很多代码。比如下面的一段html:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'> <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;main&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;header&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用css selector可以这样简单的获得。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">doc</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="s">&quot;#main div.header&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Velocity</h2>
+
+<p>项目用到了Velocity来定制邮件模板，这样可以方便的修改邮件格式。在网上可以搜到很多关于Spring和Velocity集成的文章，但大部分是讲如何使用Velocity来生成页面的，而如何生成其他文件的说明比较少，下面我们就来看一下如何配置的。</p>
+
+<ul>
+<li>先配置velocityConfigurer的bean，这里定义了模板文件的路径，属性和编码等信息。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;velocityConfigurer&quot;</span>
+</span><span class='line'>          <span class="na">class=</span><span class="s">&quot;org.springframework.web.servlet.view.velocity.VelocityConfigurer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;resourceLoaderPath&quot;</span> <span class="na">value=</span><span class="s">&quot;WEB-INF/velocity&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;velocityProperties&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;props&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.name&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    loopCounter
+</span><span class='line'>                <span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.initial.value&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    0
+</span><span class='line'>                <span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;input.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;output.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/props&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在需要使用的Sevice里面引入，这样就可以在service里面使用到Velocity的配置信息了。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Service</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailService</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Resource</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;velocityConfigurer&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">VelocityConfigurer</span> <span class="n">velocityConfigurer</span><span class="o">;</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>使用Velocity的工具类来得到生成的文件信息。
+
+<ul>
+<li>temple是模板文件的名称。</li>
+<li>model是生成文件所需的参数。</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">content</span> <span class="o">=</span> <span class="n">VelocityEngineUtils</span><span class="o">.</span><span class="na">mergeTemplateIntoString</span><span class="o">(</span>
+</span><span class='line'>                <span class="n">velocityConfigurer</span><span class="o">.</span><span class="na">getVelocityEngine</span><span class="o">(),</span> <span class="n">temple</span><span class="o">,</span>
+</span><span class='line'>                <span class="n">MAIL_ENCODING</span><span class="o">,</span> <span class="n">model</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Angularjs</h3>
+
+<p>Angularjs功能比较强大，使用它之后基本可以不用使用JQuery了，这里记录一下使用遇到的一个比较奇怪的问题。</p>
+
+<ul>
+<li>问题: 使用Angularjs发起一个post请求，带了几个请求的参数，后台接收请求时获取不到参数。开始的写法如下：</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>   <span class="kd">var</span> <span class="nx">queryData</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>                <span class="s2">&quot;depGroup&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#dep_group&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s2">&quot;website&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#website&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s2">&quot;startDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#start_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s2">&quot;endDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#end_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>            <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'>                <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>接收不到参数的原因是angularjs把参数转成了json导致后台接收不到，需要在发起请求时将参数转换一下，修改后的代码如下：</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>   <span class="kd">var</span> <span class="nx">postConfig</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">},</span>
+</span><span class='line'>        <span class="nx">transformRequest</span><span class="o">:</span> <span class="nx">transform</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="err">，</span><span class="nx">postConfig</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Semantic-ui</h3>
+
+<p>这个是我比较喜欢的一个css框架，这里要注意的地方是有些功能和Angularjs结合起来会发现不起作用，如果不起作用可以尝试使用<a href="https://github.com/caitp/angular-semantic">angular-semantic</a>这个工具看看能否解决问题。</p>
+
+<ul>
+<li>semantic-ui的表单规则和行为设置，简单的示例如下，需要设置规则(rules)和配置(setting即校验通过后的行为)。</li>
+</ul>
+
+
+<p>js代码:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="kd">var</span> <span class="nx">rules</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">searchKeyword</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">identifier</span><span class="o">:</span> <span class="s1">&#39;searchKeyword&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="nx">rules</span><span class="o">:</span> <span class="p">[</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;empty&#39;</span><span class="p">,</span>
+</span><span class='line'>                    <span class="nx">prompt</span><span class="o">:</span> <span class="s1">&#39;请输入查询关键字&#39;</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>            <span class="p">]</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">setting</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">onSuccess</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>            <span class="c1">// 发http请求</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#searchForm&#39;</span><span class="p">).</span><span class="nx">form</span><span class="p">(</span><span class="nx">rules</span><span class="p">,</span> <span class="nx">setting</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>html代码:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'> <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;searchForm&quot;</span> <span class="na">class=</span><span class="s">&quot;ui form&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;two fields&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui icon input&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;searchKeyword&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;searchKeyword&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;请输入查询关键字...&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">&quot;search icon&quot;</span><span class="nt">&gt;&lt;/i&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;searchBtn&quot;</span> <span class="na">class=</span><span class="s">&quot;ui blue submit button&quot;</span><span class="nt">&gt;</span>查询<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui error message&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[最近小项目的一些记录（一）]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project/"/>
+    <updated>2014-05-31T09:09:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project</id>
+    <content type="html"><![CDATA[<p>最近花了2个星期的时间做了一个小网站，用来统计部门同事发布的博客情况。需求比较简单，做这个项目的时候就顺便把以前学到的东西整合到了一起，从前端到后台，从编码到部署（“全栈工程师”？呵呵），虽然事情比较琐碎但也学到了不少东西，下面就记录一下开发过程中遇到的一些问题。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>技术栈</h2>
+
+<p>这里先列举一下项目用到的一些技术，其实这些东西就是自己的工具箱，要慢慢丰富，要及时更新，这样才能做出来好东西。</p>
+
+<ul>
+<li>Spring4 MVC</li>
+<li>Hibernate orm</li>
+<li>Spring Data JPA</li>
+<li>AngularJS(Javascript MVW Framework)</li>
+<li>Semantic UI(CSS Framework)</li>
+<li>Velocity(for mail)</li>
+<li>Gradle</li>
+<li>SAE(Sina App Engine)</li>
+</ul>
+
+
+<h2>Spring JPA</h2>
+
+<p>项目遇到不少的问题都来自JPA，也有一部分原因是由于SAE的MySql数据库是读写分离的两个库，所以要配置多个数据源才能在上面正常读写数据。<br/>
+JPA有个好处就是操作数据库时不用写太多代码，不用像以前一样写一个接口再写一个实现，只需要一个接口就可以完成基本的操作了，如果有特殊的操作则可以通过标签的方式来写sql。</p>
+
+<h3>Spring JPA配置多个persistence-unit(或多个数据源）</h3>
+
+<ul>
+<li>首先增加JPA的多persistence-unit的管理Bean。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;persistenceUnitManager&quot;</span>
+</span><span class='line'>          <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceXmlLocation&quot;</span> <span class="na">value=</span><span class="s">&quot;classpath:META-INF/persistence.xml&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="c">&lt;!--  comment dataSourceLooup to use jndi --&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;dataSourceLookup&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.jdbc.datasource.lookup.BeanFactoryDataSourceLookup&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>然后配置多套DataSource，EntityManagerFactory，TransactionManger和jpa:repository，这里要重点注意jps:repository的配置也要有多套，否则启动就会报<code>No unique bean of type [javax.persistence.EntityManagerFactory] is defined: expected single bean but found 2</code>的错误。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="c">&lt;!--write persistence unit config--&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeJpaVendor&quot;</span>
+</span><span class='line'>          <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;showSql&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;generateDdl&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeDataSource&quot;</span> <span class="na">class=</span><span class="s">&quot;com.mchange.v2.c3p0.ComboPooledDataSource &quot;</span> <span class="na">destroy-method=</span><span class="s">&quot;close&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;driverClass&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jdbcUrl&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;acquireIncrement&quot;</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;initialPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;minPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxStatements&quot;</span> <span class="na">value=</span><span class="s">&quot;100&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;testConnectionOnCheckout&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="na">ref=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitName&quot;</span> <span class="na">value=</span><span class="s">&quot;mainPersistenceUnit&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaVendorAdapter&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeJpaVendor&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;loadTimeWeaver&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeTransactionManager&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.JpaTransactionManager&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;entityManagerFactory&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;qualifier</span> <span class="na">value=</span><span class="s">&quot;writeEm&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;jpa:repositories</span> <span class="na">base-package=</span><span class="s">&quot;com.github.dba.repo.write&quot;</span>
+</span><span class='line'>                      <span class="na">entity-manager-factory-ref=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span>
+</span><span class='line'>                      <span class="na">transaction-manager-ref=</span><span class="s">&quot;writeTransactionManager&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;tx:annotation-driven</span> <span class="na">transaction-manager=</span><span class="s">&quot;writeTransactionManager&quot;</span><span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在persistence.xml文件中增加多个unit,这里以一个unit为例，多个的话只要persistence-unit的name不一样就可以了。下面的例子引用了之前的datasource的配置，可以不需要再配置一次jdbc信息。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;persistence-unit</span> <span class="na">name=</span><span class="s">&quot;mainPersistenceUnit&quot;</span> <span class="na">transaction-type=</span><span class="s">&quot;RESOURCE_LOCAL&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;provider&gt;</span>org.hibernate.ejb.HibernatePersistence<span class="nt">&lt;/provider&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;non-jta-data-source&gt;</span>writeDataSource<span class="nt">&lt;/non-jta-data-source&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.Blog<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepGroup<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepMember<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.BlogView<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;properties&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.driver&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.url&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.dialect&quot;</span> <span class="na">value=</span><span class="s">&quot;org.hibernate.dialect.MySQLDialect&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.show_sql&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.hbm2ddl.auto&quot;</span> <span class="na">value=</span><span class="s">&quot;update&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/properties&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/persistence-unit&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Spring JPA动态查询</h3>
+
+<ul>
+<li>首先在model类中增加一个静态方法，用来生成本次查询的动态条件。
+
+<ul>
+<li>下面的例子假设depGroup, website, startDate, endDate都可能有值。</li>
+<li>where中的&#8221;=&ldquo;,&rdquo;&lt;&ldquo;,&rdquo;>&ldquo;可以在CriteriaBuilder中找到相应的方法，还有比如like等。</li>
+<li>如果是嵌套对象的话，比如Blog对象包含Author对象，要对比Author对象的值，则可以用这种方式来取值: <code>root.&lt;Author&gt;get("author").&lt;String&gt;get("groupName")</code>。</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Specification</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="nf">querySpecification</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">depGroup</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">website</span><span class="o">,</span>
+</span><span class='line'>                                                         <span class="kd">final</span> <span class="n">String</span> <span class="n">startDate</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">endDate</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Specifications</span><span class="o">.</span><span class="na">where</span><span class="o">(</span><span class="k">new</span> <span class="n">Specification</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="nd">@Override</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="n">Predicate</span> <span class="nf">toPredicate</span><span class="o">(</span><span class="n">Root</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="n">root</span><span class="o">,</span> <span class="n">CriteriaQuery</span><span class="o">&lt;?&gt;</span> <span class="n">query</span><span class="o">,</span> <span class="n">CriteriaBuilder</span> <span class="n">cb</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">Predicate</span> <span class="n">predicate</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="na">conjunction</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">depGroup</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">depGroup</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
+</span><span class='line'>                            <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">Author</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;author&quot;</span><span class="o">).&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;groupName&quot;</span><span class="o">),</span> <span class="n">depGroup</span><span class="o">));</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">website</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">website</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
+</span><span class='line'>                            <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;website&quot;</span><span class="o">),</span> <span class="n">website</span><span class="o">));</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">startDate</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">startDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
+</span><span class='line'>                        <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">ge</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
+</span><span class='line'>                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">startDate</span><span class="o">));</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">endDate</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">endDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
+</span><span class='line'>                        <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">le</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
+</span><span class='line'>                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">endDate</span><span class="o">));</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">return</span> <span class="n">predicate</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>写好了动态查询条件后，就要把它放到查询语句里面了，比如要查询所有数据，示例如下，例子还加了一个对时间的排序条件。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="n">blogs</span> <span class="o">=</span> <span class="n">blogReadRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">(</span>
+</span><span class='line'>                <span class="n">Blog</span><span class="o">.</span><span class="na">querySpecification</span><span class="o">(</span><span class="n">depGroup</span><span class="o">,</span> <span class="n">website</span><span class="o">,</span> <span class="n">startDate</span><span class="o">,</span> <span class="n">endDate</span><span class="o">),</span>
+</span><span class='line'>                <span class="k">new</span> <span class="nf">Sort</span><span class="o">(</span><span class="n">Sort</span><span class="o">.</span><span class="na">Direction</span><span class="o">.</span><span class="na">DESC</span><span class="o">,</span> <span class="s">&quot;time&quot;</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>嵌套对象</h3>
+
+<p>这个可能跟JPA没有多大关系，更多是跟Hibernate有关，但都属于db层面的，就写在一起了。</p>
+
+<p>比如有张表是Blog，这样用Hibernate-orm对应到程序就有一个Blog类，如果Blog属性比较多的话，后续就会变成了一个大类。我们想在数据库只对应一张表的情况下，可以对应到程序的多个类，比如Blog类下面有个Author的类，要怎么做呢？可以用<code>@Embedded</code>标签来解决这个问题。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;blogs&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Blog</span> <span class="o">{</span>
+</span><span class='line'>  <span class="nd">@Id</span>
+</span><span class='line'>    <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Embedded</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Author</span> <span class="n">author</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Embeddable</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Author</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Basic</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>分离成多个对象的话，有个好处就是可以在不同的model添加不同的逻辑计算，避免把所有逻辑都放在一个类里面，这也是面向对象设计时要考虑的一个问题。但数据库始终只对应一张表，操作简单。</p>
+
+<p>下一篇: <a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/">最近小项目的一些记录（二）</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Redis集群环境安装指南]]></title>
@@ -6174,431 +6808,6 @@ swift的源码因为不断在更新，笔记记录的代码就以2014-4-18的为
 CSDN有时候开个首页要让我等半天，而且老是弹出广告让我很不爽，帖子内容也普遍低下，问题回答区基本没人（都上stackoverflow去了）。引用酷壳陈皓的话<code>CSDN算技术网站吗？</code><br/>
 ITeye呢感觉沦为菜鸟集中地，看着帖子里面夹杂着大片大片无格式的代码就觉得头晕，而且大部分帖子还是转载的。<br/>
 顺便再吐槽一下百度，前段时间酷壳的404页面写着<strong>“做环保的程序员，从不用百度开始”</strong>，百度觉得名誉遭到“贬损”，于是酷壳陈皓收到了百度的律师信。。。就我个人使用经验来说，我用百度来搜技术类的问题真的什么也搜不到，即使有也是上面那2个网站的链接，所以陈皓的告诫我觉得是对的。现在我一般是用Google加英文描述来查找我需要的答案，如果有时候出现Google访问不了的情况（再次BS一下GFW），就用Bing来搜，也能搜出跟Google差不多的答案出来。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[如何重构一个圈复杂度超30的类]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2013/10/08/how-to-refactor-a-class-which-cyclomatic-complexity-over-30/"/>
-    <updated>2013-10-08T20:43:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2013/10/08/how-to-refactor-a-class-which-cyclomatic-complexity-over-30</id>
-    <content type="html"><![CDATA[<p>下面的类是一个老系统的代码，现在放到sonar上面进行扫描，扫出来的结果发现复杂度超过了30。</p>
-
-<p>代码复杂度是指代码中的分支数量，比如有一个if分支，代码复杂度就加1，如果if中有“||”或者“&amp;&amp;”那么代码复杂度就加2，for和while同理。一般复杂度超过10的类就算是比较复杂的了，而这个类的复杂度竟然达到了30，代码的糟糕程度可见一斑，现在我们就来重构一下这个类的代码。</p>
-
-<!--more-->
-
-
-<p>原始文件在<strong><a href="https://github.com/zhaozhiming/zhaozhiming.github.com/blob/source/source/file/SomeClient(old).java">这里</a>。</strong><br/>
-重构开始吧！</p>
-
-<h2>多处String类型非空判断</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">StringUtil</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">username</span><span class="o">))</span>
-</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;username can not be null&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">StringUtil</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">password</span><span class="o">))</span>
-</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;password can not be null&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">udto</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
-</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;ICRUploadDTO can not be null&quot;</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重构之后：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来的地方替换为</span>
-</span><span class='line'><span class="n">checkStringParamEmpty</span><span class="o">(</span><span class="n">username</span><span class="o">,</span> <span class="s">&quot;username&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="n">checkStringParamEmpty</span><span class="o">(</span><span class="n">password</span><span class="o">,</span> <span class="s">&quot;password&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="n">checkStringParamEmpty</span><span class="o">(</span><span class="n">udto</span><span class="o">.</span><span class="na">getUrlPath</span><span class="o">(),</span> <span class="s">&quot;urlPath&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="c1">//新增一个方法</span>
-</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkStringParamEmpty</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">StringUtil</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">value</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; can not be null&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>原代码中不止这3个参数的校验，还有很多，越多参数的校验，我们重构后的复杂度就会越低。</p>
-
-<p><strong>代码复杂度变化：原来是3，修改后为1。</strong></p>
-
-<h2>多String值判断</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">(!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;0&quot;</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;1&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;2&quot;</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;3&quot;</span><span class="o">))</span>
-</span><span class='line'><span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;priority must be 0/1/2/3&quot;</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重构之后：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来代码替换为</span>
-</span><span class='line'><span class="n">checkValueWithinList</span><span class="o">(</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">());</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="c1">//新增一个方法：</span>
-</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkValueWithinList</span><span class="o">(</span><span class="n">String</span> <span class="n">priority</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(!</span><span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">&quot;0&quot;</span><span class="o">,</span> <span class="s">&quot;1&quot;</span><span class="o">,</span> <span class="s">&quot;2&quot;</span><span class="o">,</span> <span class="s">&quot;3&quot;</span><span class="o">).</span><span class="na">contains</span><span class="o">(</span><span class="n">priority</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;priority must be 0/1/2/3&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>代码复杂度变化：原来是4，修改后为1。</strong></p>
-
-<h2>对list的非空判断</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">list</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="s">&quot;list can not be null&quot;</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重构之后：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来的代码替换为</span>
-</span><span class='line'><span class="n">checkValueWithinList</span><span class="o">(</span><span class="n">udto</span><span class="o">.</span><span class="na">getPriority</span><span class="o">());</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="c1">//新增一个方法</span>
-</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkListNoNull</span><span class="o">(</span><span class="n">List</span> <span class="n">list</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ICRClientException</span><span class="o">(</span><span class="s">&quot;list can not be null&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>代码复杂度变化：原来是2，修改后为1。</strong></p>
-
-<h2>多个catch的内容相同</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kt">int</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'><span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">code</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">executeMethod</span><span class="o">(</span><span class="n">post</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">HttpException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重构之后：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来的地方替换为</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">code</span> <span class="o">=</span> <span class="n">executeHttpClient</span><span class="o">(</span><span class="n">httpClient</span><span class="o">,</span> <span class="n">post</span><span class="o">);</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="c1">//新增一个方法</span>
-</span><span class='line'><span class="kd">private</span> <span class="kt">int</span> <span class="nf">executeHttpClient</span><span class="o">(</span><span class="n">HttpClient</span> <span class="n">httpClient</span><span class="o">,</span> <span class="n">PostMethod</span> <span class="n">post</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">code</span><span class="o">;</span>
-</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">code</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">executeMethod</span><span class="o">(</span><span class="n">post</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">code</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>代码复杂度变化：原来是2，修改后为1。</strong></p>
-
-<h2>if判断结果复杂化</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">==</span> <span class="mi">200</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;ok&quot;</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">==</span> <span class="mi">500</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">());</span>
-</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">code</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">post</span><span class="o">.</span><span class="na">getStatusText</span><span class="o">());</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重构之后:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//将原来代码替换为</span>
-</span><span class='line'><span class="k">return</span> <span class="nf">returnFinialResult</span><span class="o">(</span><span class="n">post</span><span class="o">,</span> <span class="n">code</span><span class="o">);</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="c1">//新增一个方法</span>
-</span><span class='line'><span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">returnFinialResult</span><span class="o">(</span><span class="n">PostMethod</span> <span class="n">post</span><span class="o">,</span> <span class="kt">int</span> <span class="n">code</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">==</span> <span class="mi">500</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ICRClientException</span><span class="o">(</span><span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">());</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">200</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ICRClientException</span><span class="o">(</span><span class="n">code</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">post</span><span class="o">.</span><span class="na">getStatusText</span><span class="o">());</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">post</span><span class="o">.</span><span class="na">getResponseBodyAsString</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;ok&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">ICRClientException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>代码复杂度变化：原来是4，修改后为3。</strong></p>
-
-<h2>本地变量始终不为null</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">uploadToICR</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">,</span> <span class="n">ICRUploadDTO</span> <span class="n">udto</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">PostMethod</span> <span class="n">post</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpClient</span><span class="o">();</span>
-</span><span class='line'>  <span class="c1">//some code here</span>
-</span><span class='line'>  <span class="err">…</span>
-</span><span class='line'>  <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">post</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>          <span class="n">post</span><span class="o">.</span><span class="na">releaseConnection</span><span class="o">();</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">httpClient</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>          <span class="n">httpClient</span><span class="o">.</span><span class="na">getHttpConnectionManager</span><span class="o">().</span><span class="na">closeIdleConnections</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重构之后：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">uploadToICR</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">,</span> <span class="n">ICRUploadDTO</span> <span class="n">udto</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ICRClientException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpClient</span><span class="o">();</span>
-</span><span class='line'>    <span class="n">PostMethod</span> <span class="n">post</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>  <span class="c1">//some code here</span>
-</span><span class='line'>  <span class="err">…</span>
-</span><span class='line'>  <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">post</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>          <span class="n">post</span><span class="o">.</span><span class="na">releaseConnection</span><span class="o">();</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>代码复杂度变化：原来是1，修改后为0。</strong></p>
-
-<h2>读取IO流的方法，为什么要自己实现？</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">readData</span><span class="o">(</span><span class="n">InputStream</span> <span class="n">ins</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kt">byte</span><span class="o">[]</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">2048</span><span class="o">];</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">byte</span> <span class="n">data</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">2048</span><span class="o">];</span>
-</span><span class='line'>    <span class="kt">byte</span><span class="o">[]</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">while</span> <span class="o">((</span><span class="n">len</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">2048</span><span class="o">))</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="kt">int</span> <span class="n">newcount</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="n">len</span><span class="o">;</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">newcount</span> <span class="o">&gt;</span> <span class="n">buf</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="kt">byte</span> <span class="n">newbuf</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">Math</span>
-</span><span class='line'>                        <span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">buf</span><span class="o">.</span><span class="na">length</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="o">,</span> <span class="n">newcount</span><span class="o">)];</span>
-</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">newbuf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
-</span><span class='line'>                <span class="n">buf</span> <span class="o">=</span> <span class="n">newbuf</span><span class="o">;</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">buf</span><span class="o">,</span> <span class="n">count</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">count</span> <span class="o">=</span> <span class="n">newcount</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">count</span><span class="o">];</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">result</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">ins</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在原代码里面自己实现了一个对读取IO流字节的方法，这个可以使用apache-io或者guava的API代替：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//使用apache io API的实现：</span>
-</span><span class='line'><span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span> <span class="o">=</span> <span class="n">IOUtils</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
-</span><span class='line'><span class="c1">//使用guava API的实现：</span>
-</span><span class='line'><span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes1</span> <span class="o">=</span> <span class="n">ByteStreams</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>代码复杂度变化：原来是很多，修改后为0。</strong></p>
-
-<p>最终重构后的版本见<strong><a href="https://github.com/zhaozhiming/zhaozhiming.github.com/blob/source/source/file/SomeClient(new).java">这里</a></strong>，最后的代码复杂度从原来的30降到了3。<br/>
-代码写的比较仓促，没有写单元测试，其实最好的做法是在重构之前先写好单元测试，然后再慢慢修改原来的代码，每修改一处地方跑一遍单元测试，这样可以保证你的重构没有破坏原来的代码逻辑。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[我的octopress配置]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2013/09/05/my-octopress-setting/"/>
-    <updated>2013-09-05T07:33:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2013/09/05/my-octopress-setting</id>
-    <content type="html"><![CDATA[<p>在github上用octopress搭建了自己的blog，octopress号称是“专门给黑客打造的博客（A blogging framework for
-把hackers）”，使用Markdown语法来写blog确实感觉像写代码一样，而且写好的
-把blog可以本地调试好了再上传到github的服务器，就像你的应用程序调试好了部署到服务器一样。</p>
-
-<!--more-->
-
-
-<p>
-我最喜欢的是octopress的代码片段，简洁清晰，而且支持各种语言的高亮显示，你还可以在你的blog中嵌入不同的js框架（比如jquery或angularJs），展示js代码的效果。octopress支持的插件很多，还可以选择各种主题来装饰你的blog，下面我也按照惯例秀秀自己的octopress配置。</p>
-
-<h3>主题</h3>
-
-<p>你当然可以使用octopress的默认主题，但这样很容易和其他人的界面“撞衫”，想要让自己的octopress与众不同，就要定制自己的主题界面。在github上面可以找到octopress的第三方主题，地址在<a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">这里</a>，另外还有一个网站也是专门介绍octopress主题的，地址在<a href="http://opthemes.com/">这里</a>。其中也有一些国人制作的主题界面，非常漂亮。</p>
-
-<h3>评论插件</h3>
-
-<p>原先使用的是国外的一个第三方评论插件Disqus，但由于国外多用facebook或twitter等帐号来登录这个插件，而这些网站都被我们伟大的GFW墙了，所以我选择了国内的一个同类产品——多说（其实应该是山寨Disqus的）。多说可以使用国内主流应用的帐号来登录，比如新浪微博或QQ等，可以将你blog中的评论保存到服务器上，后续不管你把blog迁移到什么地方，评论都不会消失。可以到<a href="http://duoshuo.com/">这里</a>下载。</p>
-
-<h3>标签云</h3>
-
-<p>octopress默认的只有目录（categories），没有标签（Tag），目录和标签是不一样的，每一篇blog只能归在一个目录里面，但却可以归在多个标签中。随着标签慢慢增多，可以将标签做成标签云，放在blog的边栏上，不仅非常美观，还可以看出你的blog关注方向有哪些。想做标签云，需要使用到2个插件，<a href="https://github.com/robbyedwards/octopress-tag-pages">robbyedwards/octopress-tag-pages</a>和<a href="https://github.com/robbyedwards/octopress-tag-cloud">robbyedwards/octopress-tag-cloud</a>。具体安装步骤请参照该github上的说明。</p>
-
-<h3>同步插件</h3>
-
-<p>在github上面搭建自己的octopress博客，有个缺点是在搜索引擎中没有收录你的网站，导致别人很难在google或者百度里面找到你的文章，如果你的blog放在比较大的博客网站的话（比如博客园、博客大巴等），在各大搜索网站就可以很容易搜到你的blog。我曾经试过在每篇blog上面加上“keywords&#8221;标签来记录post的关键字，希望搜索引擎可以搜录，但结果还是不行。<br/>
-在网上搜了一下，发现有人写了一个octopress插件，可以将octopress的blog同步到几个比较大的博客网站，可以同步所有的blog，也可以同步最近一篇blog。网址在<a href="https://github.com/huangbowen521/octopress-syncPost">这里</a>。<br/>
-上面几个是我的octopress主要插件，主题上面我还是不大满意，可能以后还会更新。</p>
 ]]></content>
   </entry>
   
