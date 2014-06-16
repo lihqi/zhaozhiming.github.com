@@ -6,7 +6,7 @@
 	<title>Hacker and Geeker's Way</title>
     <meta name="author" content="赵芝明">
     
-	<meta name="description" content=" Published on: May 31st, 2014 Tags: code 前一篇post主要记录了Spring JPA和Hibernate的问题，接着记录其他一些工具遇到的问题。 Read on | Comments ">
+	<meta name="description" content="Published on: Jun 16th, 2014 Tags: code 最近用Spring Mvc框架做了几个小项目，但都没有做单元测试，最近想恶补一下这方面的东西，包括基于Spring的单元测试，自动化测试和JS单元测试。今天先讲一下基于Spring框架的单元测试， &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -111,6 +111,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/16/spring-mvc-unit-test-part-1/">基于Spring Mvc做单元测试（一）——使用Spring Test框架</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/31/some-tips-in-my-recent-project-2/">最近小项目的一些记录（二）</a>
       </li>
     
@@ -124,10 +128,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/09/read-book-note-2014-4/">读书笔记——沸腾十五年，看板方法，精益创业</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/07/redis-install-guide-in-redhat/">Red Hat系统安装Redis</a>
       </li>
     
   </ul>
@@ -196,7 +196,7 @@
   </ul>
 </section><section>
   <h1>文章归档</h1>
-  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2014 (15)</li><ul class="month_list"><li class="month"><a href='/blog/2014/05/'>MAY (6)</a></li><li class="month"><a href='/blog/2014/04/'>APR (4)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul></ul></div>
+  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2014 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2014/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2014/05/'>MAY (6)</a></li><li class="month"><a href='/blog/2014/04/'>APR (4)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul></ul></div>
 </section>
 
       
@@ -206,6 +206,52 @@
   <div class="left-content">
     <div class="left-post">
       
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/06/16/spring-mvc-unit-test-part-1/">
+		
+			基于Spring Mvc做单元测试（一）——使用Spring Test框架</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-16T10:54:00+08:00" pubdate data-updated="true">Jun 16<span>th</span>, 2014</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>最近用Spring Mvc框架做了几个小项目，但都没有做单元测试，最近想恶补一下这方面的东西，包括基于Spring的单元测试，自动化测试和JS单元测试。今天先讲一下基于Spring框架的单元测试，测试使用的是Spring自带的test组件，再结合Mockito一起编写测试案例，以下示例会包括Controller和Service，由于Repository是基于Spring JPA，没有自己的逻辑，所以这里就不涉及Repository的单元测试，以后有需要再介绍。</p>
+
+
+		
+		<a href="/blog/2014/06/16/spring-mvc-unit-test-part-1/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2014/06/16/spring-mvc-unit-test-part-1/#comments">Comments</a>
+    
+</div>
+</article>
       
       
           <article class="post">
@@ -627,60 +673,6 @@
 	
 	
           | <a href="/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu/#comments">Comments</a>
-    
-</div>
-</article>
-      
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/04/09/swift-multiply-nodes-deploy-in-one-machine/">
-		
-			Swift单节点多dev环境部署</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-09T20:45:00+08:00" pubdate data-updated="true">Apr 9<span>th</span>, 2014</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/code/'>code</a>
-
-
-</div>
-    </div>
-		<h2>环境目标</h2>
-
-<ul>
-<li>同一台机器</li>
-<li>1台proxy server</li>
-<li>5个storage node</li>
-<li>每个storage node有2个dev</li>
-</ul>
-
-
-
-		
-		<a href="/blog/2014/04/09/swift-multiply-nodes-deploy-in-one-machine/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-	
-          | <a href="/blog/2014/04/09/swift-multiply-nodes-deploy-in-one-machine/#comments">Comments</a>
     
 </div>
 </article>
