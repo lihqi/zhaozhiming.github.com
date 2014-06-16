@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-06-16T14:05:31+08:00</updated>
+  <updated>2014-06-16T14:14:38+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -236,14 +236,14 @@
 
 <ul>
 <li>Mock: 如果该对象需要mock，则加上此Annotate;</li>
-<li>InjectMocks: mock对象的使用类，在上面这个例子中，mock对象是MailService，使用了MailService的是MailController，所以在Controller加上该Annotate;</li>
+<li>InjectMocks: 使mock对象的使用类可以注入mock对象，在上面这个例子中，mock对象是MailService，使用了MailService的是MailController，所以在Controller加上该Annotate;</li>
 </ul>
 
 
 <h4>Setup方法</h4>
 
 <ul>
-<li><code>MockitoAnnotations.initMocks(this)</code>: 将打上Mockito的标签起作用，使得Mock的类被Mock，使用了Mock对象的类自动与Mock对象关联。</li>
+<li><code>MockitoAnnotations.initMocks(this)</code>: 将打上Mockito标签的对象起作用，使得Mock的类被Mock，使用了Mock对象的类自动与Mock对象关联。</li>
 <li><code>mockMvc</code>: 细心的朋友应该注意到了这个对象，这个对象是Controller单元测试的关键，它的初始化也是在setup方法里面。</li>
 </ul>
 
@@ -332,8 +332,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p> ## Service
-照例我们先看一下Service的功能代码:</p>
+<h2>Service</h2>
+
+<p>照例我们先看一下Service的功能代码，代码也比较简单，就是调用Repository做一些增删改查的动作。</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
