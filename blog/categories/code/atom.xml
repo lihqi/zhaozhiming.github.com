@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-06-16T14:14:38+08:00</updated>
+  <updated>2014-06-17T14:17:39+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -14,7 +14,188 @@
 
   
   <entry>
-    <title type="html"><![CDATA[基于Spring Mvc做单元测试（一）——使用Spring Test框架]]></title>
+    <title type="html"><![CDATA[基于Spring MVC做单元测试（二）——使用JMockit]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/06/17/spring-mvc-unit-test-part-2/"/>
+    <updated>2014-06-17T12:24:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/06/17/spring-mvc-unit-test-part-2</id>
+    <content type="html"><![CDATA[<p>上一篇Post讲了如何使用Spring的Test框架来进行单元测试，但在运行单元测试的时候有一个问题，就是每次跑单元测试都需要加载一下配置文件，或者启动web容器，这样的单元测试跑起来就不能达到快的目的。下面再介绍一下通过JMockit这个Java Mock工具来进行spring的单元测试，其特点是不需指定spring的配置文件，任何对象都可以mock出来并进行关联。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>Controller</h2>
+
+<p>首先我们还是来看一下使用了JMockit的Controller单元测试是怎么写的，Controller的功能代码可以查看上一篇post。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.service.MailService</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Expectations</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Injectable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Tested</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.integration.junit4.JMockit</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">CoreMatchers</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JMockit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailControllerTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Tested</span>
+</span><span class='line'><span class="n">MailController</span> <span class="n">mailController</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Injectable</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">MailService</span> <span class="n">mailService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_status_success_when_send_mail_success</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">new</span> <span class="nf">Expectations</span><span class="o">()</span> <span class="o">{</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mailService</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Result</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mailController</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;{\&quot;status\&quot;:\&quot;成功\&quot;}&quot;</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>@RunWith(JMockit.class): 指定单元测试的执行类为JMockit.class;</li>
+<li>@Tested: 这个Annotate是指被测试类，在这个测试案例中我们要测试的是MailController，所以我们给其打上这个标签;</li>
+<li>@Injectable: 这个Annotate可以将对象进行mock并自动关联到被测试类，而不需要通过其他文件类似spring的配置文件等来进行关联;</li>
+<li>@Expectations: mock对象mailService的send方法，让其返回一个Result对象;</li>
+</ul>
+
+
+<p>做完上面这些基本就可以了，后面的被测方法调用和验证都跟原来的一样。这样看起来是不是比原来的单元测试代码少了一些，也更简洁了一些，最重要的一点是这样的单元测试不依赖spring的bean定义文件，不需要启动web服务，执行起来速度很快。</p>
+
+<h2>Service</h2>
+
+<p>再来看一下Service的单元测试要怎么改写，同样Service的功能代码可以看上一篇Post。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Recipient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.repo.RecipientRepository</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Injectable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.NonStrictExpectations</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Tested</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.integration.junit4.JMockit</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">Is</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JMockit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RecipientServiceTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Tested</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RecipientService</span> <span class="n">recipientService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Injectable</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RecipientRepository</span> <span class="n">recipientRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_success_when_add_recipient_not_exist</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Result</span> <span class="n">result</span> <span class="o">=</span> <span class="n">recipientService</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;Tom&quot;</span><span class="o">,</span> <span class="s">&quot;test@test.com&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">getStatus</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>相对Controller Test这里少了一步对recipientRepository对象findByEmail方法的mock，因为如果不通过Expectations进行方法mock的话，方法会默认返回null，而我们要测试的场景正是需要findByEmail方法返回null，所以mock方法这一步我们也省了。<br/>
+改写后的整体代码也比原来的少了很多，而且速度更快。</p>
+
+<h2>适当使用Mock框架</h2>
+
+<p>JMockit功能非常强大，不仅可以轻松处理上面的这些测试场景，还可以对static,final,private等方法进行mock，可以让你的单元测试毫无阻碍的进行。<br/>
+但是如果过度的使用Mock框架，会让功能代码的坏味道被掩盖。本来单元测试的设计可以让你发现功能代码上的一些设计是否合理，比如有没有紧耦合等，但使用JMockit可以让你在设计不合理的代码上也可以轻松地进行单元测试，这样你就很难发现功能代码上的问题了。<br/>
+所以建议JMockit等类似的mock框架还是要谨慎使用，首先要保证功能代码设计合理，满足面向对象设计的要求，再来考虑提高单元测试效率的问题。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[基于Spring MVC做单元测试（一）——使用Spring Test框架]]></title>
     <link href="http://zhaozhiming.github.io/blog/2014/06/16/spring-mvc-unit-test-part-1/"/>
     <updated>2014-06-16T10:54:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/06/16/spring-mvc-unit-test-part-1</id>
@@ -1474,126 +1655,6 @@ JPA有个好处就是操作数据库时不用写太多代码，不用像以前�
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>更多的资料可以参考这里：<a href="http://redis.io/topics/cluster-tutorial">http://redis.io/topics/cluster-tutorial</a>。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Red Hat系统安装Redis]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/05/07/redis-install-guide-in-redhat/"/>
-    <updated>2014-05-07T19:53:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/05/07/redis-install-guide-in-redhat</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-5/redis.jpg"></p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>环境</h2>
-
-<p>RHLinux-6.4-64-EN, 红帽6.4 64位，英文正式发布版</p>
-
-<h2>安装</h2>
-
-<p>安装很简单，先下载redis的压缩包，下载地址见<a href="http://redis.io/download">这里</a>，然后拷贝到你的linux机器，接着执行下面的命令。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>tar xzf redis-2.6.14.tar.gz
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14
-</span><span class='line'><span class="nv">$ </span>make
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>启动</h2>
-
-<p>编译完后增加了src目录，执行src下面的redis-server脚本即可启动redis服务。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-server
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>调试</h2>
-
-<p>执行src目录下的redis-cli脚本，这个是redis的客户端。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-cli
-</span><span class='line'>redis&gt; <span class="nb">set </span>foo bar
-</span><span class='line'>OK
-</span><span class='line'>redis&gt; get foo
-</span><span class='line'>&amp;ldquo;bar&amp;rdquo;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>java调用</h2>
-
-<ol>
-<li>Redis比较出名的java客户端是jedis，先下载jedis的jar包，可以去maven库搜下jedis就可以下载到，源码是放在github上：<a href="https://github.com/xetorthio/jedis">https://github.com/xetorthio/jedis</a>。</li>
-<li>简单写个main方法就可以调用。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>     <span class="n">Jedis</span> <span class="n">jedis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Jedis</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mf">10.20</span><span class="o">.</span><span class="mf">8.39</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span> <span class="c1">//redis服务器的ip，端口默认6379</span>
-</span><span class='line'>     <span class="n">jedis</span><span class="o">.</span><span class="na">set</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">foo</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">bar</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
-</span><span class='line'>     <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">jedis</span><span class="o">.</span><span class="na">get</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">foo</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
-</span><span class='line'>     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-</span><span class='line'> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></li>
-</ol>
-
-
-<h2>后台进程</h2>
-
-<p>之前的启动方式不是后台进程方式的，终端关了服务也就停了，可以使用下面的命令将Redis作为后台进程启动，并添加到系统启动命名中。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14/utils
-</span><span class='line'><span class="nv">$.</span>/install_server
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>执行命令后，会提示你回答几个问题，可以一路回车过去，选择默认设置。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>Please <span class="k">select </span>the redis port <span class="k">for </span>this instance: <span class="o">[</span>6379<span class="o">]</span>
-</span><span class='line'>Selecting default: 6379
-</span><span class='line'>Please <span class="k">select </span>the redis config file name <span class="o">[</span>/etc/redis/6379.conf<span class="o">]</span>
-</span><span class='line'>Selected default &amp;ndash; /etc/redis/6379.conf
-</span><span class='line'>Please <span class="k">select </span>the redis log file name <span class="o">[</span>/var/log/redis_6379.log<span class="o">]</span>
-</span><span class='line'>Selected default &amp;ndash; /var/log/redis_6379.log
-</span><span class='line'>Please <span class="k">select </span>the data directory <span class="k">for </span>this instance <span class="o">[</span>/var/lib/redis/6379<span class="o">]</span>
-</span><span class='line'>Selected default &amp;ndash; /var/lib/redis/6379
-</span><span class='line'>Please <span class="k">select </span>the redis executable path <span class="o">[</span>/usr/local/bin/redis-server<span class="o">]</span>
-</span><span class='line'>&amp;hellip;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>后续可以通过下面的方式启停服务。<br/>
-1. /etc/init.d/redis_6379 start &mdash;启动<br/>
-2. /etc/init.d/redis_6379 stop &mdash;服务<br/>
-当然也可在/usr/local/bin目录下使用redis-server来启动。</p>
-
-<p><strong>PS: 我在执行install_server脚本后，发现服务启动不起来，查看/etc/init.d/redis_6379这个文件发现里面的换行符号被替换成了<code>/n</code>符号，手动将这些符号替换成换行就可以了。</strong></p>
-
-<h2>更多资料</h2>
-
-<p>更多资料可以看这里：<a href="http://redis.io/">http://redis.io/</a></p>
 ]]></content>
   </entry>
   
