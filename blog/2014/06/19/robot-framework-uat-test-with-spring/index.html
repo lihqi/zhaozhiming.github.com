@@ -1,0 +1,393 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>使用Robot Framework结合Spring进行uat测试 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="使用Robot Framework结合Spring进行uat测试">
+	<meta name="keywords" content="robot,spring,uat">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">使用Robot Framework结合Spring进行uat测试</h2>
+	<div class="entry-content"><p>在做项目过程中，单元测试是大家经常接触的也是了解的比较多的，但单元测试有时候为了更快的运行，会mock掉数据库或者关联系统来执行测试，这样的话整体的功能就得不到验证，另外单元测试也无法进行页面比如html的测试，这个时候就需要进行UAT自动化测试了。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<p><a href="http://baike.baidu.com/view/1330235.htm?fromTaglist">UAT</a>，(User Acceptance Test),用户接受度测试，即验收测试，这种一般是手工测试，当然重复进行手动测试是一种选择，但如果手工测试很多的话每次执行就比较浪费时间和精力，而且也容易遗漏和出错，所以我们需要将手工测试进行自动化。</p>
+
+<h2><a href="http://robotframework.org/">Robot Framework</a></h2>
+
+<p>Robot是一个自动化测试框架，其可以使用的Lib很多，简单地安装即可使用，也可以自己通过Python和Java来开发自己需要的Lib包，不过现在robot的Lib已经比较多了，可以满足大部分的使用场景。</p>
+
+<h4>安装</h4>
+
+<p>Robot安装十分简单，但首先要安装Python环境（Python安装这里不介绍了，请自行google了解），然后执行以下语句进行安装。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>安装完成后验证是否安装成功。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot --version
+</span><span class='line'>Robot Framework 2.8.5 <span class="o">(</span>Python 2.7.3 on linux2<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果需要安装其他Lib包，同样是通过pip进行安装，下面以安装Selenium2Library为例。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework_Selenium2Library
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Robot脚本</h4>
+
+<p>Robot安装完成后，就可以开始编写测试脚本了，下面是测试脚本和Resource文件的例子:</p>
+
+<figure class='code'><figcaption><span>create_recipient.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="gh">*** Settings ***</span><span class="p"></span>
+</span><span class='line'><span class="kn">Library</span><span class="p">    </span><span class="nn">Selenium2Library</span><span class="p"></span>
+</span><span class='line'><span class="kn">Library</span><span class="p">    </span><span class="nn">DatabaseLibrary</span><span class="p"></span>
+</span><span class='line'><span class="kn">Resource</span><span class="p">   </span><span class="nn">resource.robot</span><span class="p"></span>
+</span><span class='line'><span class="kn">Test Setup</span><span class="p">      </span><span class="nf">Open Browser</span><span class="p">  ${</span><span class="nv">baseurl</span><span class="p">}</span><span class="s">/#/recipients</span><span class="p">  ${</span><span class="nv">browser</span><span class="p">}</span>
+</span><span class='line'><span class="kn">Test Teardown</span><span class="p">   </span><span class="nf">Close Browser</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="gh">*** TestCases ***</span><span class="p"></span>
+</span><span class='line'><span class="gu">create new recipient</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="ge">Given </span><span class="nf">execute sql</span><span class="p">  </span><span class="s">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="ge">When </span><span class="nf">create recipient</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="ge">Then </span><span class="nf">verify create recipient</span><span class="p">  </span><span class="s">添加用户成功</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="gu">create exist recipient</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="ge">Given </span><span class="nf">execute sql</span><span class="p">  </span><span class="s">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="ge">Given </span><span class="nf">execute sql</span><span class="p">  </span><span class="s">insert into recipients(username,email) values(&#39;zhaozhiming&#39;,&#39;zhaozhiming003@gmail.com&#39;)</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="ge">When </span><span class="nf">create recipient</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="ge">Then </span><span class="nf">verify create recipient</span><span class="p">  </span><span class="s">添加用户失败</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="gh">*** Keywords ***</span><span class="p"></span>
+</span><span class='line'><span class="gu">execute sql</span><span class="p"></span>
+</span><span class='line'><span class="p">    [</span><span class="kn">Arguments</span><span class="p">]  ${</span><span class="nv">sql</span><span class="p">}</span>
+</span><span class='line'><span class="p">    </span><span class="nf">Connect To Database Using Custom Params</span><span class="p">      </span><span class="s">cymysql</span><span class="p">    </span><span class="s">db=&#39;</span><span class="p">${</span><span class="nv">dbname</span><span class="p">}</span><span class="s">&#39;,user=&#39;</span><span class="p">${</span><span class="nv">dbuser</span><span class="p">}</span><span class="s">&#39;,passwd=&#39;</span><span class="p">${</span><span class="nv">dbpassword</span><span class="p">}</span><span class="s">&#39;, host=&#39;</span><span class="p">${</span><span class="nv">dbhost</span><span class="p">}</span><span class="s">&#39;,port=</span><span class="p">${</span><span class="nv">dbport</span><span class="p">}</span>
+</span><span class='line'><span class="p">    </span><span class="nf">Execute Sql String</span><span class="p">    ${</span><span class="nv">sql</span><span class="p">}</span>
+</span><span class='line'><span class="p">    </span><span class="nf">Disconnect from database</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="gu">create recipient</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="nf">Input text</span><span class="p">    </span><span class="s">username</span><span class="p">    </span><span class="s">zhaozhiming</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="nf">Input text</span><span class="p">    </span><span class="s">email</span><span class="p">    </span><span class="s">zhaozhiming003@gmail.com</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="nf">click element</span><span class="p">  </span><span class="s">css=.submit</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="gu">verify create recipient</span><span class="p"></span>
+</span><span class='line'><span class="p">    [</span><span class="kn">Arguments</span><span class="p">]  ${</span><span class="nv">expectContent</span><span class="p">}</span>
+</span><span class='line'><span class="p">    </span><span class="nf">sleep</span><span class="p">   </span><span class="s">2s</span><span class="p"></span>
+</span><span class='line'><span class="p">    </span><span class="nf">page should contain</span><span class="p">  ${</span><span class="nv">expectContent</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>resource.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="gh">*** Variables ***</span><span class="p"></span>
+</span><span class='line'><span class="p">${</span><span class="nv">baseurl</span><span class="p">}  </span><span class="s">http://localhost:9898/oddemail</span><span class="p"></span>
+</span><span class='line'><span class="p">${</span><span class="nv">dbhost</span><span class="p">}  </span><span class="s">localhost</span><span class="p"></span>
+</span><span class='line'><span class="p">${</span><span class="nv">dbport</span><span class="p">}  </span><span class="s">3306</span><span class="p"></span>
+</span><span class='line'><span class="p">${</span><span class="nv">dbname</span><span class="p">}  </span><span class="s">oms</span><span class="p"></span>
+</span><span class='line'><span class="p">${</span><span class="nv">dbuser</span><span class="p">}  </span><span class="s">root</span><span class="p"></span>
+</span><span class='line'><span class="p">${</span><span class="nv">dbpassword</span><span class="p">}  </span><span class="s">root</span><span class="p"></span>
+</span><span class='line'><span class="p">${</span><span class="nv">browser</span><span class="p">}  </span><span class="s">chrome</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>Settings下面是测试脚本需要引用的Lib包名，Resource文件，Setup和Teardown方法。</p>
+
+<ul>
+<li>Resource文件可以用来存放一些可以复用的变量，当然也可以将这一部分放到测试脚本中。</li>
+<li>Setup和Teardow跟单元测试一样，是在跑每个Test Case之前和之后会做的事情。注意上面例子里面打开url指定了浏览器Chrome，如果不指定浏览器的话会默认用Firefox打开，如果想使用Chrome来进行web自动化测试的话，则需要下载Chrome驱动<a href="https://code.google.com/p/selenium/wiki/ChromeDriver">chromedriver</a>，下载完后将其解压并设置到PATH路径。</li>
+</ul>
+</li>
+<li><p>TestCases设置了脚本里的测试案例，每个测试案例可以由Given，When，Then组成，每一行除开这几个关键字就是测试案例的步骤，在robot里面叫关键字，关键字可以带参数，可以把关键字理解为程序里面的方法。</p></li>
+<li><p>Keywords就是在Test Case里面定义的关键字了，里面有是每个关键字具体的执行内容。</p>
+
+<ul>
+<li><code>execute sql</code>这个关键字的内容是连接数据库，执行sql，关闭数据库连接。</li>
+<li><code>create recipient</code>这个关键字的内容是在页面输入用户名，输入邮箱地址，点击提交按钮。注意这里的页面元素是通过class来查找的，也可以通过id，tag或其他。</li>
+<li><code>verify create recipient</code>这个关键字的内容是等待2秒，验证页面是否包含期望的内容。</li>
+</ul>
+</li>
+</ul>
+
+
+<p>可以看到Keyword的每个内容描述都很简单易懂，甚至还可以写中文，让不懂开发的人也知道你的测试案例是做什么的。</p>
+
+<h4>执行脚本</h4>
+
+<p>因为这个测试案例是对web页面进行测试，所以在执行测试案例之前需要先将应用服务启起来，服务启起来后，执行下面的 语句:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot /your/robot/scripts/path/create_recipient.robot
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>执行完后会看到系统自动打开浏览器，输入url，自动填写输入框，并验证是否正确，最后会产生几个报告文件，如果测试案例失败，还会自动将失败的页面截图存成文件。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Output:  /home/kingzzm/projects/odde-mail-server/output.xml
+</span><span class='line'>Log:     /home/kingzzm/projects/odde-mail-server/log.html
+</span><span class='line'>Report:  /home/kingzzm/projects/odde-mail-server/report.html
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外建议脚本存放到test目录下，建议目录结构如下:</p>
+
+<p><img src="/images/post/2014-6/robot_script_local.png"></p>
+
+<h4>与Gradle集成</h4>
+
+<p>每次跑robot测试都需要手动启一个web服务比较麻烦，可以考虑在Gradle中通过任务的方式来执行robot测试，在跑测试之前先通过gradle启一个本地应用，然后开始跑robot测试，跑完测试后通过Gradle停掉本地服务。<br/>
+因为Gradle自带jetty容器，所以这一步实现起来也比较简单:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]*.</span><span class="na">stopPort</span> <span class="o">=</span> <span class="mi">7654</span>
+</span><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]*.</span><span class="na">stopKey</span> <span class="o">=</span> <span class="s1">&#39;oddemail&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="nf">uat</span><span class="o">(</span><span class="nl">type:</span><span class="n">Exec</span><span class="o">,</span> <span class="nl">dependsOn:</span> <span class="n">jettyRun</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">commandLine</span> <span class="s1">&#39;/usr/local/bin/pybot&#39;</span><span class="o">,</span> <span class="s1">&#39;src/test/uat/testcase&#39;</span>
+</span><span class='line'>    <span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">jettyStop</span><span class="o">.</span><span class="na">execute</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以后需要跑uat测试就执行<code>gradle uat</code>这个命令就可以了，这样还可以结合jenkins进行uat自动化测试。</p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

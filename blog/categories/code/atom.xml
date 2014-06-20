@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-06-17T14:17:39+08:00</updated>
+  <updated>2014-06-20T23:11:08+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,245 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Robot Framework结合Spring进行uat测试]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/06/19/robot-framework-uat-test-with-spring/"/>
+    <updated>2014-06-19T21:50:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/06/19/robot-framework-uat-test-with-spring</id>
+    <content type="html"><![CDATA[<p>在做项目过程中，单元测试是大家经常接触的也是了解的比较多的，但单元测试有时候为了更快的运行，会mock掉数据库或者关联系统来执行测试，这样的话整体的功能就得不到验证，另外单元测试也无法进行页面比如html的测试，这个时候就需要进行UAT自动化测试了。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<p><a href="http://baike.baidu.com/view/1330235.htm?fromTaglist">UAT</a>，(User Acceptance Test),用户接受度测试，即验收测试，这种一般是手工测试，当然重复进行手动测试是一种选择，但如果手工测试很多的话每次执行就比较浪费时间和精力，而且也容易遗漏和出错，所以我们需要将手工测试进行自动化。</p>
+
+<h2><a href="http://robotframework.org/">Robot Framework</a></h2>
+
+<p>Robot是一个自动化测试框架，其可以使用的Lib很多，简单地安装即可使用，也可以自己通过Python和Java来开发自己需要的Lib包，不过现在robot的Lib已经比较多了，可以满足大部分的使用场景。</p>
+
+<h4>安装</h4>
+
+<p>Robot安装十分简单，但首先要安装Python环境（Python安装这里不介绍了，请自行google了解），然后执行以下语句进行安装。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>安装完成后验证是否安装成功。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot &amp;mdash;version
+</span><span class='line'>Robot Framework 2.8.5 <span class="o">(</span>Python 2.7.3 on linux2<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>如果需要安装其他Lib包，同样是通过pip进行安装，下面以安装Selenium2Library为例。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework_Selenium2Library
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>Robot脚本</h4>
+
+<p>Robot安装完成后，就可以开始编写测试脚本了，下面是测试脚本和Resource文件的例子:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>create_recipient.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Settings &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">Selenium2Library</span><span class="p"></span>
+</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">DatabaseLibrary</span><span class="p"></span>
+</span><span class='line'><span class="c">Resource</span><span class="p">   </span><span class="c">resource.robot</span><span class="p"></span>
+</span><span class='line'><span class="c">Test Setup</span><span class="p">      </span><span class="c">Open Browser</span><span class="p">  </span><span class="c">${baseurl}/#/recipients</span><span class="p">  </span><span class="c">${browser}</span><span class="p"></span>
+</span><span class='line'><span class="c">Test Teardown</span><span class="p">   </span><span class="c">Close Browser&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; TestCases &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">create new recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
+</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户成功</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;create exist recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="c">Given execute sql</span><span class="p">  </span><span class="c">insert into recipients(username,email) values(&#39;zhaozhiming&#39;,&#39;zhaozhiming003@gmail.com&#39;)</span><span class="p"></span>
+</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
+</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户失败</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; Keywords &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">execute sql&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${sql}</span><span class="p"></span>
+</span><span class='line'><span class="c">Connect To Database Using Custom Params</span><span class="p">      </span><span class="c">cymysql</span><span class="p">    </span><span class="c">db=&#39;${dbname}&#39;,user=&#39;${dbuser}&#39;,passwd=&#39;${dbpassword}&#39;, host=&#39;${dbhost}&#39;,port=${dbport}</span><span class="p"></span>
+</span><span class='line'><span class="c">Execute Sql String</span><span class="p">    </span><span class="c">${sql}</span><span class="p"></span>
+</span><span class='line'><span class="c">Disconnect from database</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;create recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Input text</span><span class="p">    </span><span class="c">username</span><span class="p">    </span><span class="c">zhaozhiming</span><span class="p"></span>
+</span><span class='line'><span class="c">Input text</span><span class="p">    </span><span class="c">email</span><span class="p">    </span><span class="c">zhaozhiming003@gmail.com</span><span class="p"></span>
+</span><span class='line'><span class="c">click element</span><span class="p">  </span><span class="c">css=.submit</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;verify create recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
+</span><span class='line'><span class="c">sleep</span><span class="p">   </span><span class="c">2s</span><span class="p"></span>
+</span><span class='line'><span class="c">page should contain</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>resource.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Variables &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">${baseurl}</span><span class="p">  </span><span class="c">&lt;a href=&quot;http://localhost:9898/oddemail&quot;&gt;http://localhost:9898/oddemail&lt;/a&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbhost}</span><span class="p">  </span><span class="c">localhost</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbport}</span><span class="p">  </span><span class="c">3306</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbname}</span><span class="p">  </span><span class="c">oms</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbuser}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbpassword}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
+</span><span class='line'><span class="c">${browser}</span><span class="p">  </span><span class="c">chrome</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li><p>Settings下面是测试脚本需要引用的Lib包名，Resource文件，Setup和Teardown方法。</p>
+
+<ul>
+<li>Resource文件可以用来存放一些可以复用的变量，当然也可以将这一部分放到测试脚本中。</li>
+<li>Setup和Teardow跟单元测试一样，是在跑每个Test Case之前和之后会做的事情。注意上面例子里面打开url指定了浏览器Chrome，如果不指定浏览器的话会默认用Firefox打开，如果想使用Chrome来进行web自动化测试的话，则需要下载Chrome驱动<a href="https://code.google.com/p/selenium/wiki/ChromeDriver">chromedriver</a>，下载完后将其解压并设置到PATH路径。</li>
+</ul>
+</li>
+<li><p>TestCases设置了脚本里的测试案例，每个测试案例可以由Given，When，Then组成，每一行除开这几个关键字就是测试案例的步骤，在robot里面叫关键字，关键字可以带参数，可以把关键字理解为程序里面的方法。</p></li>
+<li><p>Keywords就是在Test Case里面定义的关键字了，里面有是每个关键字具体的执行内容。</p>
+
+<ul>
+<li><code>execute sql</code>这个关键字的内容是连接数据库，执行sql，关闭数据库连接。</li>
+<li><code>create recipient</code>这个关键字的内容是在页面输入用户名，输入邮箱地址，点击提交按钮。注意这里的页面元素是通过class来查找的，也可以通过id，tag或其他。</li>
+<li><code>verify create recipient</code>这个关键字的内容是等待2秒，验证页面是否包含期望的内容。</li>
+</ul>
+</li>
+</ul>
+
+
+<p>可以看到Keyword的每个内容描述都很简单易懂，甚至还可以写中文，让不懂开发的人也知道你的测试案例是做什么的。</p>
+
+<h4>执行脚本</h4>
+
+<p>因为这个测试案例是对web页面进行测试，所以在执行测试案例之前需要先将应用服务启起来，服务启起来后，执行下面的 语句:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot /your/robot/scripts/path/create_recipient.robot
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>执行完后会看到系统自动打开浏览器，输入url，自动填写输入框，并验证是否正确，最后会产生几个报告文件，如果测试案例失败，还会自动将失败的页面截图存成文件。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Output:  /home/kingzzm/projects/odde-mail-server/output.xml
+</span><span class='line'>Log:     /home/kingzzm/projects/odde-mail-server/log.html
+</span><span class='line'>Report:  /home/kingzzm/projects/odde-mail-server/report.html
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>另外建议脚本存放到test目录下，建议目录结构如下:</p>
+
+<p><img src="/images/post/2014-6/robot_script_local.png"></p>
+
+<h4>与Gradle集成</h4>
+
+<p>每次跑robot测试都需要手动启一个web服务比较麻烦，可以考虑在Gradle中通过任务的方式来执行robot测试，在跑测试之前先通过gradle启一个本地应用，然后开始跑robot测试，跑完测试后通过Gradle停掉本地服务。<br/>
+因为Gradle自带jetty容器，所以这一步实现起来也比较简单:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="n">em</span><span class="o">&gt;.</span><span class="na">stopPort</span> <span class="o">=</span> <span class="mi">7654</span>
+</span><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="s">/em&gt;.stopKey = &amp;lsquo;oddemail&amp;rsquo;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">task</span> <span class="n">uat</span><span class="o">(</span><span class="nl">type:</span><span class="n">Exec</span><span class="o">,</span> <span class="nl">dependsOn:</span> <span class="n">jettyRun</span><span class="o">)</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;commandLine &#39;/</span><span class="n">usr</span><span class="s">/local/</span><span class="n">bin</span><span class="s">/pybot&#39;, &#39;src/</span><span class="n">test</span><span class="s">/uat/</span><span class="n">testcase</span><span class="err">&#39;</span>
+</span><span class='line'><span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">jettyStop</span><span class="o">.</span><span class="na">execute</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="s">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>以后需要跑uat测试就执行<code>gradle uat</code>这个命令就可以了，这样还可以结合jenkins进行uat自动化测试。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[基于Spring MVC做单元测试（二）——使用JMockit]]></title>
@@ -1432,229 +1671,6 @@ JPA有个好处就是操作数据库时不用写太多代码，不用像以前�
 分离成多个对象的话，有个好处就是可以在不同的model添加不同的逻辑计算，避免把所有逻辑都放在一个类里面，这也是面向对象设计时要考虑的一个问题。但数据库始终只对应一张表，操作简单。</p>
 
 <p>下一篇: <a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/">最近小项目的一些记录（二）</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Redis集群环境安装指南]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/05/11/redis-cluster-env-create/"/>
-    <updated>2014-05-11T20:50:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/05/11/redis-cluster-env-create</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-5/redis-cluster.jpg"></p>
-
-<h3>环境</h3>
-
-<p>RHLinux-6.4-64-EN, 红帽6.4 64位，英文正式发布版。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h3>Redis3.0.0</h3>
-
-<ul>
-<li>redis2.x版本还不支持集群，3.0版本将会支持，现在3.0版本还在开发中，现在是beta-3版本(截止2014-5-8)，但功能是可用的。</li>
-<li>下载Redis3.0.0 beta-3版本，点击<a href="https://github.com/antirez/redis/archive/3.0.0-beta3.tar.gz">这里</a>下载。</li>
-<li>Redis3的安装可以参照之前的<a href="http://10.42.173.13/zhaozhiming003/redis-poc/blob/master/doc/redis_install.md">单机安装指南</a>操作。</li>
-</ul>
-
-
-<h3>创建Redis集群实例</h3>
-
-<ul>
-<li>创建集群节点的文件夹，先创建cluster-test文件夹，再以端口为名称创建子文件夹。这里我们要创建6个Redis实例，3个作为master，3个作为slave。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir cluster-test
-</span><span class='line'><span class="nb">cd </span>cluster-test
-</span><span class='line'>mkdir 7000 7001 7002 7003 7004 7005
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>在每个文件夹下面创建创建Redis配置文件，注意根据不同实例的端口号修改下面的配置文件，nodes.conf文件为Redis实例启动时自动生成。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>port 7000
-</span><span class='line'>cluster-enabled yes
-</span><span class='line'>cluster-config-file nodes.conf
-</span><span class='line'>cluster-node-timeout 5000
-</span><span class='line'>appendonly yes
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>开6个terminal窗口，分别启动这6个Redis实例。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>7000
-</span><span class='line'>../redis-server ./redis.conf
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>当成功启动后，能看到每个terminal出现下面的字样，是因为node.conf文件不存在，所以给每个实例分配了一个新的ID。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>82462<span class="o">]</span> 26 Nov 11:56:55.329 * No cluster configuration found, I&amp;rsquo;m 97a3a64667477371c4479320d683e4c8db5858b1
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h3>创建集群</h3>
-
-<ul>
-<li>现在Redis的6个实例都已经启动了，现在来开始创建集群。创建集群用到了一个ruby文件，放在redis3目录的src子目录下，找到后执行以下命令。这里的<code>-replicas 1</code>表示每个master配备1个slave，后面的参数就是6个实例的ip加端口，以空格隔开。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>redis-3.0.0-beta3/src
-</span><span class='line'>./redis-trib.rb create &amp;mdash;replicas 1 127.0.0.1:7000 127.0.0.1:7001 <span class="se">\</span>
-</span><span class='line'>127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>执行命令后会提示你是否接受提示的配置信息，默认的是前3台作为master机器，后3台作为slave机器，输入<code>yes</code>，出现最后的信息表示集群已经创建好了。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>Creating cluster
-</span><span class='line'>Connecting to node 127.0.0.1:7000: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7001: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7002: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7003: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7004: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7005: OK &gt;&gt;&gt;
-</span><span class='line'>Performing <span class="nb">hash </span>slots allocation on 6 nodes&amp;hellip;
-</span><span class='line'>Using 3 masters: 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002
-</span><span class='line'>127.0.0.1:7000 replica <span class="c">#1 is 127.0.0.1:7003</span>
-</span><span class='line'>127.0.0.1:7001 replica <span class="c">#1 is 127.0.0.1:7004</span>
-</span><span class='line'>127.0.0.1:7002 replica <span class="c">#1 is 127.0.0.1:7005</span>
-</span><span class='line'>M: 9991306f0e50640a5684f1958fd754b38fa034c9 127.0.0.1:7000 slots:0-5460 <span class="o">(</span>5461 slots<span class="o">)</span> master
-</span><span class='line'>M: e68e52cee0550f558b03b342f2f0354d2b8a083b 127.0.0.1:7001 slots:5461-10921 <span class="o">(</span>5461 slots<span class="o">)</span> master
-</span><span class='line'>M: 393c6df5eb4b4cec323f0e4ca961c8b256e3460a 127.0.0.1:7002 slots:10922-16383 <span class="o">(</span>5462 slots<span class="o">)</span> master
-</span><span class='line'>S: 48b728dbcedff6bf056231eb44990b7d1c35c3e0 127.0.0.1:7003
-</span><span class='line'>S: 345ede084ac784a5c030a0387f8aaa9edfc59af3 127.0.0.1:7004
-</span><span class='line'>S: 3375be2ccc321932e8853234ffa87ee9fde973ff 127.0.0.1:7005
-</span><span class='line'>Can I <span class="nb">set </span>the above configuration? <span class="o">(</span><span class="nb">type</span> &amp;lsquo;yes&amp;rsquo; to accept<span class="o">)</span>: yes&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;Nodes configuration updated &gt;&gt;&gt;
-</span><span class='line'>Sending CLUSTER MEET messages to join the cluster Waiting <span class="k">for </span>the cluster to join&amp;hellip; &gt;&gt;&gt;
-</span><span class='line'>Performing Cluster Check <span class="o">(</span>using node 127.0.0.1:7000<span class="o">)</span>
-</span><span class='line'>M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7000
-</span><span class='line'>   slots:0-5460 <span class="o">(</span>5461 slots<span class="o">)</span> master
-</span><span class='line'>M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7001
-</span><span class='line'>   slots:5461-10922 <span class="o">(</span>5462 slots<span class="o">)</span> master
-</span><span class='line'>M: 73c22198cd1d0782ec24e3c9b03378030891c9a3 127.0.0.1:7002
-</span><span class='line'>   slots:10923-16383 <span class="o">(</span>5461 slots<span class="o">)</span> master
-</span><span class='line'>M: c785d85b95d7bdc28ec90384ab8a5885b289542c 127.0.0.1:7003
-</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
-</span><span class='line'>   replicates b949ea2d9c822ff069521a354b4ed48855ac6203
-</span><span class='line'>M: 570c472fe553ba3c9d0fb3ba16fcdb8579b4fc86 127.0.0.1:7004
-</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
-</span><span class='line'>   replicates ebbb890e899244e4a2a6303826a29543ebf9885d
-</span><span class='line'>M: f86667ec42cff41a5666162a912713173f5306d7 127.0.0.1:7005
-</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
-</span><span class='line'>   replicates 73c22198cd1d0782ec24e3c9b03378030891c9a3
-</span><span class='line'><span class="o">[</span>OK<span class="o">]</span> All nodes agree about slots configuration.&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;blockquote&gt;&lt;blockquote&gt;&lt;blockquote&gt;&lt;p&gt;Check <span class="k">for </span>open slots&amp;hellip;
-</span><span class='line'>Check slots coverage&amp;hellip;
-</span><span class='line'><span class="o">[</span>OK<span class="o">]</span> All 16384 slots covered.
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote></blockquote></blockquote>
-
-<p>PS: 安装过程还发现RedHat系统上没有安装ruby，需要先安装ruby，而且公司机器还不能上网下载安装，只能通过离线的方式安装ruby，这里有离线安装的文档可以参考一下:<a href="https://rvm.io/rvm/offline">https://rvm.io/rvm/offline</a>。</p>
-
-<h3>验证</h3>
-
-<p>可以使用Redis3.0的redis-cli客户端进行验证，需要加上<code>-c</code>参数，表示集群的意思。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>redis-cli -c -p 7000
-</span><span class='line'>redis 127.0.0.1:7000&gt; <span class="nb">set </span>foo bar
-</span><span class='line'>&amp;ndash;&gt; Redirected to slot <span class="o">[</span>12182<span class="o">]</span> located at 127.0.0.1:7002
-</span><span class='line'>OK
-</span><span class='line'>redis 127.0.0.1:7002&gt; <span class="nb">set </span>hello world
-</span><span class='line'>&amp;ndash;&gt; Redirected to slot <span class="o">[</span>866<span class="o">]</span> located at 127.0.0.1:7000
-</span><span class='line'>OK
-</span><span class='line'>redis 127.0.0.1:7000&gt; get foo
-</span><span class='line'>&amp;ndash;&gt; Redirected to slot <span class="o">[</span>12182<span class="o">]</span> located at 127.0.0.1:7002
-</span><span class='line'>&amp;ldquo;bar&amp;rdquo;
-</span><span class='line'>redis 127.0.0.1:7000&gt; get hello
-</span><span class='line'>&amp;ndash;&gt; Redirected to slot <span class="o">[</span>866<span class="o">]</span> located at 127.0.0.1:7000
-</span><span class='line'>&amp;ldquo;world&amp;rdquo;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>更多的资料可以参考这里：<a href="http://redis.io/topics/cluster-tutorial">http://redis.io/topics/cluster-tutorial</a>。</p>
 ]]></content>
   </entry>
   
