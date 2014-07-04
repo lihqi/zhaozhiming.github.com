@@ -1,0 +1,414 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>AngularJS单元测试 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="AngularJS单元测试">
+	<meta name="keywords" content="AngularJS,unit-test">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">AngularJS单元测试</h2>
+	<div class="entry-content"><p>讲了Java的单元测试，基于Spring框架的单元测试，Robot自动化测试，现在就来讲一下基于AngularJS的JavaScript单元测试。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>Karma和Jasmine</h2>
+
+<p>Karma是一个JS的测试运行器，Jasmine是一个JS的单元测试框架。<br/>
+* 首先我们在工程根目录下创建npm的一个配置文件——package.json，这个配置文件填写所需的依赖组件，比如我们需要Karma和Jasmine，package.json示例代码如下。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-project&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;devDependencies&quot;</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="s2">&quot;karma&quot;</span><span class="o">:</span> <span class="s2">&quot;0.8.4&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;jshint&quot;</span><span class="o">:</span> <span class="s2">&quot;1.1.0&quot;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>然后在工程目录下执行<code>npm install</code>来进行依赖组件的安装。<br/>
+PS:<code>npm install</code>会默认从国外网站下载，速度较慢，可以使用淘宝的npm镜像进行下载:<code>npm install --registry=https://registry.npm.taobao.org</code>。</p></li>
+<li><p>安装完成后，会在工程目录下看到多出了一个<code>node_modules</code>的目录，这个目录下面就是我们跑JS测试所需要的依赖组件。</p></li>
+</ul>
+
+
+<h2>JS测试文件目录结构</h2>
+
+<p>我们以Spring的工程目录为例，其实JS的单元测试文件跟Spring的Java代码或者xml文件一点关系都没有，可以随意放置，但为了结构统一，可以放到src/test这个目录下面，目录结构如下:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>project.root
+</span><span class='line'>--src
+</span><span class='line'>----main
+</span><span class='line'>------java
+</span><span class='line'>------webapp
+</span><span class='line'>--------resources
+</span><span class='line'>----------js(here is source js files)
+</span><span class='line'>----test
+</span><span class='line'>------java
+</span><span class='line'>------uat
+</span><span class='line'>------js
+</span><span class='line'>--------config
+</span><span class='line'>--------lib
+</span><span class='line'>--------unit(here is test js files)   
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>config目录放置Karma的配置文件，后面会讲Karma配置文件怎么写。</li>
+<li>lib目录放置跑测试需要的js依赖文件，比如AnglarJS的文件等。</li>
+<li>unit目录放置js测试文件。</li>
+</ul>
+
+
+<h2>Karma配置文件</h2>
+
+<p>下面是一个Karma配置文件的示例。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">basePath</span> <span class="o">=</span> <span class="s1">&#39;../../../../&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">files</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>    <span class="nx">JASMINE</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">JASMINE_ADAPTER</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;./src/test/js/lib/jquery.js&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;./src/test/js/lib/semantic.js&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;./src/test/js/lib/angular.js&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;./src/test/js/lib/angular-route.js&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;./src/test/js/lib/angular-mocks.js&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;./src/main/webapp/resources/js/recipients.js&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;./src/main/webapp/resources/js/index.js&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;./src/main/webapp/resources/js/send.js&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;./src/test/js/unit/**/*.js&#39;</span>
+</span><span class='line'><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">browsers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Chrome&#39;</span><span class="p">];</span>
+</span><span class='line'><span class="nx">reporters</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;progress&#39;</span><span class="p">,</span> <span class="s1">&#39;growl&#39;</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">autoWatch</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'><span class="nx">singleRun</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里介绍一下主要的几个配置项:</p>
+
+<ul>
+<li>basePath: 执行JS单元测试的开始路径。</li>
+<li>files: 执行JS单元测试所需JS文件的路径，包含测试文件本身的路径。</li>
+<li>browsers: 跑测试的浏览器，这里是Chrome。</li>
+</ul>
+
+
+<p>编写完配置文件后，在项目根目录下执行命令<code>node_modules/karma/bin/karma start src/test/js/config/karma.unit.js</code>就可以跑JS单元测试了，执行命令后会看到弹出Chrome浏览器窗口，在命令窗口可以看到单元测试的执行结果。执行结果示例如下所示:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">INFO</span> <span class="p">[</span><span class="nx">karma</span><span class="p">]</span><span class="o">:</span> <span class="nx">Karma</span> <span class="nx">server</span> <span class="nx">started</span> <span class="nx">at</span> <span class="nx">http</span><span class="o">:</span><span class="c1">//localhost:9876/</span>
+</span><span class='line'><span class="nx">INFO</span> <span class="p">[</span><span class="nx">launcher</span><span class="p">]</span><span class="o">:</span> <span class="nx">Starting</span> <span class="nx">browser</span> <span class="nx">Chrome</span>
+</span><span class='line'><span class="nx">WARN</span> <span class="p">[</span><span class="nx">reporter</span><span class="p">]</span><span class="o">:</span> <span class="nx">No</span> <span class="nx">running</span> <span class="nx">verion</span> <span class="nx">of</span> <span class="nx">GNTP</span> <span class="nx">found</span><span class="p">.</span>
+</span><span class='line'><span class="nx">For</span> <span class="nx">more</span> <span class="nx">information</span> <span class="nx">see</span> <span class="nx">https</span><span class="o">:</span><span class="c1">//github.com/theabraham/growly.</span>
+</span><span class='line'><span class="nx">INFO</span> <span class="p">[</span><span class="nx">Chrome</span> <span class="mf">35.0</span> <span class="p">(</span><span class="nx">Linux</span><span class="p">)]</span><span class="o">:</span> <span class="nx">Connected</span> <span class="nx">on</span> <span class="nx">socket</span> <span class="nx">id</span> <span class="nx">b_3qDVgVpidrFvZcErX3</span>
+</span><span class='line'><span class="nx">Chrome</span> <span class="mf">35.0</span> <span class="p">(</span><span class="nx">Linux</span><span class="p">)</span><span class="o">:</span> <span class="nx">Executed</span> <span class="mi">2</span> <span class="nx">of</span> <span class="mi">2</span> <span class="nx">SUCCESS</span> <span class="p">(</span><span class="mf">4.79</span> <span class="nx">secs</span> <span class="o">/</span> <span class="mf">0.051</span> <span class="nx">secs</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>AngularJS的单元测试</h2>
+
+<p>先看一下功能代码，功能比较简单，就是发起一个http的get请求，然后将json结果赋给页面的recipients对象:</p>
+
+<figure class='code'><figcaption><span>recipients.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">RecipientsController</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">,</span> <span class="nx">$route</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;api/recipient/list&#39;</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">$scope</span><span class="p">.</span><span class="nx">recipients</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>再看一下我们的测试代码，我们先构造了一个http对象，再mock了http请求的返回结果来进行测试:</p>
+
+<figure class='code'><figcaption><span>recipients.test.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Controllers&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;oms&#39;</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;RecipientsController&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">scope</span><span class="p">,</span> <span class="nx">controller</span><span class="p">,</span> <span class="nx">http</span><span class="p">;</span>
+</span><span class='line'>        <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">inject</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$httpBackend</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">http</span> <span class="o">=</span> <span class="nx">$httpBackend</span><span class="p">;</span>
+</span><span class='line'>            <span class="nx">http</span><span class="p">.</span><span class="nx">expectGET</span><span class="p">(</span><span class="s1">&#39;api/recipient/list&#39;</span><span class="p">).</span><span class="nx">respond</span><span class="p">([</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="nx">username</span><span class="o">:</span> <span class="s2">&quot;Tom&quot;</span><span class="p">,</span>
+</span><span class='line'>                    <span class="nx">email</span><span class="o">:</span> <span class="s2">&quot;Tom@test.com&quot;</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>            <span class="p">]);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+</span><span class='line'>            <span class="nx">controller</span> <span class="o">=</span> <span class="nx">$controller</span><span class="p">(</span><span class="s1">&#39;RecipientsController&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
+</span><span class='line'>        <span class="p">}));</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should load the Recipients from the API&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">http</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
+</span><span class='line'>            <span class="nx">expect</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">recipients</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>            <span class="nx">expect</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">recipients</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">username</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s2">&quot;Tom&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">});</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里只是对AngularJS单元测试的一个简单介绍，更多的内容可以查阅<a href="https://docs.angularjs.org/guide/unit-testing">AngularJS官方文档</a>。</p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

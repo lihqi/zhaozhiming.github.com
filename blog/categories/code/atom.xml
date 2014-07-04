@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-06-20T23:11:08+08:00</updated>
+  <updated>2014-07-05T00:58:03+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,262 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJS单元测试]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/07/04/angular-js-unit-test/"/>
+    <updated>2014-07-04T21:07:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/07/04/angular-js-unit-test</id>
+    <content type="html"><![CDATA[<p>讲了Java的单元测试，基于Spring框架的单元测试，Robot自动化测试，现在就来讲一下基于AngularJS的JavaScript单元测试。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>Karma和Jasmine</h2>
+
+<p>Karma是一个JS的测试运行器，Jasmine是一个JS的单元测试框架。<br/>
+* 首先我们在工程根目录下创建npm的一个配置文件——package.json，这个配置文件填写所需的依赖组件，比如我们需要Karma和Jasmine，package.json示例代码如下。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-project&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="s2">&quot;devDependencies&quot;</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;karma&quot;</span><span class="o">:</span> <span class="s2">&quot;0.8.4&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;jshint&quot;</span><span class="o">:</span> <span class="s2">&quot;1.1.0&quot;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li><p>然后在工程目录下执行<code>npm install</code>来进行依赖组件的安装。<br/>
+PS:<code>npm install</code>会默认从国外网站下载，速度较慢，可以使用淘宝的npm镜像进行下载:<code>npm install --registry=https://registry.npm.taobao.org</code>。</p></li>
+<li><p>安装完成后，会在工程目录下看到多出了一个<code>node_modules</code>的目录，这个目录下面就是我们跑JS测试所需要的依赖组件。</p></li>
+</ul>
+
+
+<h2>JS测试文件目录结构</h2>
+
+<p>我们以Spring的工程目录为例，其实JS的单元测试文件跟Spring的Java代码或者xml文件一点关系都没有，可以随意放置，但为了结构统一，可以放到src/test这个目录下面，目录结构如下:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>project.root
+</span><span class='line'><span class="ni">&amp;mdash;</span>src
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;</span>main
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;</span>java
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;</span>webapp
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;</span>resources
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;</span>js(here is source js files)
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;</span>test
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;</span>java
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;</span>uat
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;</span>js
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;</span>config
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;</span>lib
+</span><span class='line'><span class="ni">&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;</span>unit(here is test js files)
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>config目录放置Karma的配置文件，后面会讲Karma配置文件怎么写。</li>
+<li>lib目录放置跑测试需要的js依赖文件，比如AnglarJS的文件等。</li>
+<li>unit目录放置js测试文件。</li>
+</ul>
+
+
+<h2>Karma配置文件</h2>
+
+<p>下面是一个Karma配置文件的示例。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">basePath</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="p">..</span><span class="o">/&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">files</span> <span class="o">=</span> <span class="p">[</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">JASMINE</span><span class="p">,</span>
+</span><span class='line'><span class="nx">JASMINE_ADAPTER</span><span class="p">,</span>
+</span><span class='line'><span class="s1">&#39;./src/test/js/lib/jquery.js&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s1">&#39;./src/test/js/lib/semantic.js&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s1">&#39;./src/test/js/lib/angular.js&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s1">&#39;./src/test/js/lib/angular-route.js&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s1">&#39;./src/test/js/lib/angular-mocks.js&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s1">&#39;./src/main/webapp/resources/js/recipients.js&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s1">&#39;./src/main/webapp/resources/js/index.js&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s1">&#39;./src/main/webapp/resources/js/send.js&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s1">&#39;./src/test/js/unit/**/*.js&#39;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">];</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">browsers</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">Chrome</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;];</span>
+</span><span class='line'><span class="nx">reporters</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">progress</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">growl</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;];</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">autoWatch</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'><span class="nx">singleRun</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这里介绍一下主要的几个配置项:</p>
+
+<ul>
+<li>basePath: 执行JS单元测试的开始路径。</li>
+<li>files: 执行JS单元测试所需JS文件的路径，包含测试文件本身的路径。</li>
+<li>browsers: 跑测试的浏览器，这里是Chrome。</li>
+</ul>
+
+
+<p>编写完配置文件后，在项目根目录下执行命令<code>node_modules/karma/bin/karma start src/test/js/config/karma.unit.js</code>就可以跑JS单元测试了，执行命令后会看到弹出Chrome浏览器窗口，在命令窗口可以看到单元测试的执行结果。执行结果示例如下所示:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">INFO</span> <span class="p">[</span><span class="nx">karma</span><span class="p">]</span><span class="o">:</span> <span class="nx">Karma</span> <span class="nx">server</span> <span class="nx">started</span> <span class="nx">at</span> <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;http://localhost:9876/&quot;</span><span class="o">&gt;</span><span class="nx">http</span><span class="o">:</span><span class="c1">//localhost:9876/&lt;/a&gt;</span>
+</span><span class='line'><span class="nx">INFO</span> <span class="p">[</span><span class="nx">launcher</span><span class="p">]</span><span class="o">:</span> <span class="nx">Starting</span> <span class="nx">browser</span> <span class="nx">Chrome</span>
+</span><span class='line'><span class="nx">WARN</span> <span class="p">[</span><span class="nx">reporter</span><span class="p">]</span><span class="o">:</span> <span class="nx">No</span> <span class="nx">running</span> <span class="nx">verion</span> <span class="nx">of</span> <span class="nx">GNTP</span> <span class="nx">found</span><span class="p">.</span>
+</span><span class='line'><span class="nx">For</span> <span class="nx">more</span> <span class="nx">information</span> <span class="nx">see</span> <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/theabraham/growly.&quot;</span><span class="o">&gt;</span><span class="nx">https</span><span class="o">:</span><span class="c1">//github.com/theabraham/growly.&lt;/a&gt;</span>
+</span><span class='line'><span class="nx">INFO</span> <span class="p">[</span><span class="nx">Chrome</span> <span class="mf">35.0</span> <span class="p">(</span><span class="nx">Linux</span><span class="p">)]</span><span class="o">:</span> <span class="nx">Connected</span> <span class="nx">on</span> <span class="nx">socket</span> <span class="nx">id</span> <span class="nx">b_3qDVgVpidrFvZcErX3</span>
+</span><span class='line'><span class="nx">Chrome</span> <span class="mf">35.0</span> <span class="p">(</span><span class="nx">Linux</span><span class="p">)</span><span class="o">:</span> <span class="nx">Executed</span> <span class="mi">2</span> <span class="nx">of</span> <span class="mi">2</span> <span class="nx">SUCCESS</span> <span class="p">(</span><span class="mf">4.79</span> <span class="nx">secs</span> <span class="o">/</span> <span class="mf">0.051</span> <span class="nx">secs</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>AngularJS的单元测试</h2>
+
+<p>先看一下功能代码，功能比较简单，就是发起一个http的get请求，然后将json结果赋给页面的recipients对象:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>recipients.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">RecipientsController</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">,</span> <span class="nx">$route</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">$http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;api/recipient/list&#39;</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">recipients</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>再看一下我们的测试代码，我们先构造了一个http对象，再mock了http请求的返回结果来进行测试:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>recipients.test.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">Controllers</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">beforeEach</span><span class="p">(</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;oms&#39;</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;RecipientsController&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">scope</span><span class="p">,</span> <span class="nx">controller</span><span class="p">,</span> <span class="nx">http</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">inject</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$httpBackend</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">http</span> <span class="o">=</span> <span class="nx">$httpBackend</span><span class="p">;</span>
+</span><span class='line'>        <span class="nx">http</span><span class="p">.</span><span class="nx">expectGET</span><span class="p">(</span><span class="s1">&#39;api/recipient/list&#39;</span><span class="p">).</span><span class="nx">respond</span><span class="p">([</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="nx">username</span><span class="o">:</span> <span class="s2">&quot;Tom&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="nx">email</span><span class="o">:</span> <span class="s2">&quot;Tom@test.com&quot;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">]);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+</span><span class='line'>        <span class="nx">controller</span> <span class="o">=</span> <span class="nx">$controller</span><span class="p">(</span><span class="s1">&#39;RecipientsController&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
+</span><span class='line'>    <span class="p">}));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should load the Recipients from the API&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">http</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
+</span><span class='line'>        <span class="nx">expect</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">recipients</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>        <span class="nx">expect</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">recipients</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">username</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s2">&quot;Tom&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这里只是对AngularJS单元测试的一个简单介绍，更多的内容可以查阅<a href="https://docs.angularjs.org/guide/unit-testing">AngularJS官方文档</a>。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用Robot Framework结合Spring进行uat测试]]></title>
@@ -1310,367 +1566,6 @@
 </span><span class='line'>
 </span><span class='line'><span class="nt">&lt;p&gt;</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[最近小项目的一些记录（一）]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project/"/>
-    <updated>2014-05-31T09:09:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project</id>
-    <content type="html"><![CDATA[<p>最近花了2个星期的时间做了一个小网站，用来统计部门同事发布的博客情况。需求比较简单，做这个项目的时候就顺便把以前学到的东西整合到了一起，从前端到后台，从编码到部署（“全栈工程师”？呵呵），虽然事情比较琐碎但也学到了不少东西，下面就记录一下开发过程中遇到的一些问题。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>技术栈</h2>
-
-<p>这里先列举一下项目用到的一些技术，其实这些东西就是自己的工具箱，要慢慢丰富，要及时更新，这样才能做出来好东西。</p>
-
-<ul>
-<li>Spring4 MVC</li>
-<li>Hibernate orm</li>
-<li>Spring Data JPA</li>
-<li>AngularJS(Javascript MVW Framework)</li>
-<li>Semantic UI(CSS Framework)</li>
-<li>Velocity(for mail)</li>
-<li>Gradle</li>
-<li>SAE(Sina App Engine)</li>
-</ul>
-
-
-<h2>Spring JPA</h2>
-
-<p>项目遇到不少的问题都来自JPA，也有一部分原因是由于SAE的MySql数据库是读写分离的两个库，所以要配置多个数据源才能在上面正常读写数据。<br/>
-JPA有个好处就是操作数据库时不用写太多代码，不用像以前一样写一个接口再写一个实现，只需要一个接口就可以完成基本的操作了，如果有特殊的操作则可以通过标签的方式来写sql。</p>
-
-<h3>Spring JPA配置多个persistence-unit(或多个数据源）</h3>
-
-<ul>
-<li><p>首先增加JPA的多persistence-unit的管理Bean。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;persistenceUnitManager&quot;</span>
-</span><span class='line'>        <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceXmlLocation&quot;</span> <span class="na">value=</span><span class="s">&quot;classpath:META-INF/persistence.xml&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="c">&lt;!--  comment dataSourceLooup to use jndi --&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;dataSourceLookup&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.jdbc.datasource.lookup.BeanFactoryDataSourceLookup&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
-<li><p>然后配置多套DataSource，EntityManagerFactory，TransactionManger和jpa:repository，这里要重点注意jps:repository的配置也要有多套，否则启动就会报<code>No unique bean of type [javax.persistence.EntityManagerFactory] is defined: expected single bean but found 2</code>的错误。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="c">&lt;!--write persistence unit config--&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeJpaVendor&quot;</span>
-</span><span class='line'>        <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;showSql&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;generateDdl&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeDataSource&quot;</span> <span class="na">class=</span><span class="s">&quot;com.mchange.v2.c3p0.ComboPooledDataSource &quot;</span> <span class="na">destroy-method=</span><span class="s">&quot;close&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;driverClass&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jdbcUrl&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;acquireIncrement&quot;</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;initialPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;minPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxStatements&quot;</span> <span class="na">value=</span><span class="s">&quot;100&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;testConnectionOnCheckout&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="na">ref=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitName&quot;</span> <span class="na">value=</span><span class="s">&quot;mainPersistenceUnit&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaVendorAdapter&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeJpaVendor&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;loadTimeWeaver&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeTransactionManager&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.JpaTransactionManager&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;entityManagerFactory&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;qualifier</span> <span class="na">value=</span><span class="s">&quot;writeEm&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="ni">&amp;lt;</span>jpa:repositories base-package=<span class="ni">&amp;ldquo;</span>com.github.dba.repo.write<span class="ni">&amp;rdquo;</span>
-</span><span class='line'>                    entity-manager-factory-ref=<span class="ni">&amp;ldquo;</span>writeEntityManagerFactory<span class="ni">&amp;rdquo;</span>
-</span><span class='line'>                    transaction-manager-ref=<span class="ni">&amp;ldquo;</span>writeTransactionManager<span class="ni">&amp;rdquo;</span> /&gt;<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="ni">&amp;lt;</span>tx:annotation-driven transaction-manager=<span class="ni">&amp;ldquo;</span>writeTransactionManager<span class="ni">&amp;rdquo;</span>/&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
-<li><p>在persistence.xml文件中增加多个unit,这里以一个unit为例，多个的话只要persistence-unit的name不一样就可以了。下面的例子引用了之前的datasource的配置，可以不需要再配置一次jdbc信息。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="ni">&amp;lt;</span>persistence-unit name=<span class="ni">&amp;ldquo;</span>mainPersistenceUnit<span class="ni">&amp;rdquo;</span> transaction-type=<span class="ni">&amp;ldquo;</span>RESOURCE_LOCAL<span class="ni">&amp;rdquo;</span>&gt;
-</span><span class='line'>      <span class="nt">&lt;provider&gt;</span>org.hibernate.ejb.HibernatePersistence<span class="nt">&lt;/provider&gt;</span>
-</span><span class='line'>      <span class="ni">&amp;lt;</span>non-jta-data-source&gt;writeDataSource<span class="ni">&amp;lt;</span>/non-jta-data-source&gt;
-</span><span class='line'>      <span class="nt">&lt;class&gt;</span>com.github.dba.model.Blog<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepGroup<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepMember<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;class&gt;</span>com.github.dba.model.BlogView<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;properties&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.driver&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.url&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>      <span class="ni">&amp;lt;</span>property name=&quot;hibernate.dialect&quot; value=&quot;org.hibernate.dialect.MySQLDialect&quot; /<span class="ni">&amp;gt;</span>
-</span><span class='line'>      <span class="ni">&amp;lt;</span>property name=&quot;hibernate.show_sql&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
-</span><span class='line'>      <span class="ni">&amp;lt;</span>property name=&quot;hibernate.hbm2ddl.auto&quot; value=&quot;update&quot; /<span class="ni">&amp;gt;</span>
-</span><span class='line'>  <span class="ni">&amp;lt;</span>/properties<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="ni">&amp;lt;</span>/persistence-unit&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
-</ul>
-
-
-<h3>Spring JPA动态查询</h3>
-
-<ul>
-<li>首先在model类中增加一个静态方法，用来生成本次查询的动态条件。
-
-<ul>
-<li>下面的例子假设depGroup, website, startDate, endDate都可能有值。</li>
-<li>where中的"=&ldquo;,&rdquo;&lt;&ldquo;,&rdquo;>&ldquo;可以在CriteriaBuilder中找到相应的方法，还有比如like等。</li>
-<li>如果是嵌套对象的话，比如Blog对象包含Author对象，要对比Author对象的值，则可以用这种方式来取值: <code>root.&lt;Author&gt;get("author").&lt;String&gt;get("groupName")</code>。</li>
-</ul>
-</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">static</span> <span class="n">Specification</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Blog</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">querySpecification</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">depGroup</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">website</span><span class="o">,</span>
-</span><span class='line'>                                                     <span class="kd">final</span> <span class="n">String</span> <span class="n">startDate</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">endDate</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">Specifications</span><span class="o">.</span><span class="na">where</span><span class="o">(</span><span class="k">new</span> <span class="n">Specification</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Blog</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="nd">@Override</span>
-</span><span class='line'>        <span class="kd">public</span> <span class="n">Predicate</span> <span class="nf">toPredicate</span><span class="o">(</span><span class="n">Root</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Blog</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">root</span><span class="o">,</span> <span class="n">CriteriaQuery</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;?&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">query</span><span class="o">,</span> <span class="n">CriteriaBuilder</span> <span class="n">cb</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">Predicate</span> <span class="n">predicate</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="na">conjunction</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">depGroup</span><span class="o">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">depGroup</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
-</span><span class='line'>                        <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Author</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;author&quot;</span><span class="o">).&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;groupName&quot;</span><span class="o">),</span> <span class="n">depGroup</span><span class="o">));</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">website</span><span class="o">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">website</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
-</span><span class='line'>                        <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;website&quot;</span><span class="o">),</span> <span class="n">website</span><span class="o">));</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">startDate</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">startDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
-</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">ge</span><span class="o">(</span><span class="n">root</span><span class="o">.&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Long</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">startDate</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">endDate</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">endDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
-</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">le</span><span class="o">(</span><span class="n">root</span><span class="o">.&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Long</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">endDate</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">return</span> <span class="n">predicate</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">});</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>写好了动态查询条件后，就要把它放到查询语句里面了，比如要查询所有数据，示例如下，例子还加了一个对时间的排序条件。<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>      <span class="n">List</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="n">blogs</span> <span class="o">=</span> <span class="n">blogReadRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">(</span>
-</span><span class='line'>              <span class="n">Blog</span><span class="o">.</span><span class="na">querySpecification</span><span class="o">(</span><span class="n">depGroup</span><span class="o">,</span> <span class="n">website</span><span class="o">,</span> <span class="n">startDate</span><span class="o">,</span> <span class="n">endDate</span><span class="o">),</span>
-</span><span class='line'>              <span class="k">new</span> <span class="nf">Sort</span><span class="o">(</span><span class="n">Sort</span><span class="o">.</span><span class="na">Direction</span><span class="o">.</span><span class="na">DESC</span><span class="o">,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">time</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;));</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></li>
-</ul>
-
-
-<h3>嵌套对象</h3>
-
-<p>这个可能跟JPA没有多大关系，更多是跟Hibernate有关，但都属于db层面的，就写在一起了。</p>
-
-<p>比如有张表是Blog，这样用Hibernate-orm对应到程序就有一个Blog类，如果Blog属性比较多的话，后续就会变成了一个大类。我们想在数据库只对应一张表的情况下，可以对应到程序的多个类，比如Blog类下面有个Author的类，要怎么做呢？可以用<code>@Embedded</code>标签来解决这个问题。<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">blogs</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Blog</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Id</span>
-</span><span class='line'><span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Embedded</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">Author</span> <span class="n">author</span><span class="o">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@Embeddable</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Author</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Basic</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
-分离成多个对象的话，有个好处就是可以在不同的model添加不同的逻辑计算，避免把所有逻辑都放在一个类里面，这也是面向对象设计时要考虑的一个问题。但数据库始终只对应一张表，操作简单。</p>
-
-<p>下一篇: <a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/">最近小项目的一些记录（二）</a></p>
 ]]></content>
   </entry>
   
