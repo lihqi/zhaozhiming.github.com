@@ -1,0 +1,238 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>让路由飞越长城(一) - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="让路由飞越长城">
+	<meta name="keywords" content="ddwrt,buffalo,autoddvpn">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">让路由飞越长城(一)</h2>
+	<div class="entry-content"><p><img src="/images/post/2014-8/greatefw.jpeg"></p>
+
+<p>最近GFW貌似升级了，现在连Google也无法访问，开发用百度实在搜不到什么东西，用bing也各种不爽(用了几天自己都快病了)。虽说可以用SSH，VPN翻墙，但家里的电子设备如果比较多，要一个一个设置起来就会比较麻烦，如果能在路由器上翻墙就好了，这样只要设备只需要接入路由器的WIFI就可以自动翻墙，无需任何设置。</p>
+
+<!--more-->
+
+
+<h3>可以刷固件的路由器</h3>
+
+<p>要实现路由器翻墙，首先需要一个高级的路由器，这种路由器可以刷一些路由器固件（固件我理解就是路由器的操作系统，一般是基于Linux的），我们后面需要在固件上通过脚本配置实现翻墙。我是基于DD-WRT这个固件进行路由翻墙的，所以我选择可以刷DD-WRT固件的路由器，这里有<a href="http://www.dd-wrt.com/wiki/index.php/Supported_Devices">网页</a>可以参考.</p>
+
+<p>我在网上参考了一些资料，觉得Buffalo(巴法洛)的路由器比较好，大部分实现了路由器翻墙的介绍文章都是使用Buffalo的，所以向大家也推荐这个牌子，我用的型号是WZR-HP-G300NH2，淘宝上卖400多。</p>
+
+<p>使用了Buffalo的路由器后，感觉要比以前用的那些路由快很多，同样是打开百度（百度最大的功能，测网络联通）速度明显感觉不一样。</p>
+
+<p><img src="/images/post/2014-8/WZR-HP-G300NH2.jpg"></p>
+
+<h3><a href="http://www.dd-wrt.com">DD-WRT</a></h3>
+
+<p>路由器的固件其实不只dd-wrt一种，还有<a href="http://www.polarcloud.com/tomato">Tomato</a>也是一种比较流行的路由器固件，两种固件各有优劣，网上有很多它们的比较，这里就不说了。</p>
+
+<p>dd-wrt对应不同品牌的路由器有不同的固件版本，每个品牌的不同型号也会对应不同的固件版本，要在这么多版本中查找到自己想要的固件版本，需要登录到dd-wrt的官网进行选择。</p>
+
+<p>进入官网首页后，点击Router Database模块，然后在输入框中输入路由器型号，就可以看到对应的dd-wrt版本记录。</p>
+
+<p><img src="/images/post/2014-8/dd-wrt-1.png"></p>
+
+<p>点击查询出来的版本记录，会出现固件版本的详细说明和下载链接。</p>
+
+<p><img src="/images/post/2014-8/dd-wrt-2.png"></p>
+
+<p>这里有2个固件可供选择(不同型号的固件名称会有不同，这里是以我的路由器型号举例):</p>
+
+<ul>
+<li>buffalo_to_ddwrt_webflash-MULTI.bin是指你的路由器固件不是dd-wrt的，需要把固件升级成dd-wrt。</li>
+<li>wzr-hp-g300nh2-dd-wrt-webupgrade-MULTI.bin是说你的固件已经是dd-wrt了，但固件版本太老了要升级。</li>
+</ul>
+
+
+<p>用上面的方法查出来的固件版本其实不是最新的，这里有个dd-wrt版本的<a href="ftp://ftp.dd-wrt.com/betas/">ftp链接</a>，打开连接后，可以看到不同年份的目录，进入某个目录后可以看到不同品牌的路由器的目录，比如<code>ftp://ftp.dd-wrt.com/betas/2014/06-23-2014-r24461/buffalo_wzr-hp-g300nh2/</code>，这里就是最新的固件版本了。</p>
+
+<h3>升级路由器固件</h3>
+
+<p>其实Buffalo也有自己官方的dd-wrt版本，但看网上介绍buffalo官方的dd-wrt版本功能不行，所以建议还是刷正式的dd-wrt版本。在dd-wrt官网上可以看到路由器固件的<a href="http://www.dd-wrt.com/wiki/index.php/Installation">安装介绍</a>(这里是WZR-HP-G300NH2的<a href="http://dd-wrt.com/wiki/index.php/Buffalo_WZR-HP-G300NH">安装介绍</a>），但个人感觉里面的说明太复杂，什么30/30/30硬复位大法，TFTP刷新法等看不大明白，同时也怕太复杂导致失误操作让路由器变砖头。</p>
+
+<p>最简单的方式是在你的路由器的web管理页面直接升级（我只试过Buffalo的，其他的路由器我没试过）:</p>
+
+<ul>
+<li>打开浏览器进入<code>192.168.1.1</code>，如果你的路由器是连接电信路由器网口的，可能ip地址不是这个；</li>
+<li>输入用户名密码后，进入管理配置页面，点击其中的更新，选择dd-wrt的固件文件打开。</li>
+<li>点击<strong>更新固件</strong>按钮，然后大概等个5~6分钟，等看到100%完成，路由器会自动重启；</li>
+<li>重新进入<code>192.168.1.1</code>，可以看到变成dd-wrt的管理页面了，首次登陆需要输入用户名和密码。</li>
+</ul>
+
+
+<p><img src="/images/post/2014-8/dd-wrt-3.png"></p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

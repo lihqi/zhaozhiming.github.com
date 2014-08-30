@@ -1,0 +1,301 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Red Hat系统安装Redis - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="Red Hat系统安装Redis">
+	<meta name="keywords" content="redis">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">Red Hat系统安装Redis</h2>
+	<div class="entry-content"><p><img src="/images/post/2014-5/redis.jpg"></p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>环境</h2>
+
+<p>RHLinux-6.4-64-EN, 红帽6.4 64位，英文正式发布版</p>
+
+<h2>安装</h2>
+
+<p>安装很简单，先下载redis的压缩包，下载地址见<a href="http://redis.io/download">这里</a>，然后拷贝到你的linux机器，接着执行下面的命令。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>tar xzf redis-2.6.14.tar.gz
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14
+</span><span class='line'><span class="nv">$ </span>make
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>启动</h2>
+
+<p>编译完后增加了src目录，执行src下面的redis-server脚本即可启动redis服务。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-server
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>调试</h2>
+
+<p>执行src目录下的redis-cli脚本，这个是redis的客户端。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-cli
+</span><span class='line'>redis&gt; <span class="nb">set </span>foo bar
+</span><span class='line'>OK
+</span><span class='line'>redis&gt; get foo
+</span><span class='line'><span class="s2">&quot;bar&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>java调用</h2>
+
+<ol>
+<li>Redis比较出名的java客户端是jedis，先下载jedis的jar包，可以去maven库搜下jedis就可以下载到，源码是放在github上：<a href="https://github.com/xetorthio/jedis">https://github.com/xetorthio/jedis</a>。</li>
+<li>简单写个main方法就可以调用。</li>
+</ol>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Jedis</span> <span class="n">jedis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Jedis</span><span class="o">(</span><span class="s">&quot;10.20.8.39&quot;</span><span class="o">);</span> <span class="c1">//redis服务器的ip，端口默认6379</span>
+</span><span class='line'>        <span class="n">jedis</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;bar&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">jedis</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>后台进程</h2>
+
+<p>之前的启动方式不是后台进程方式的，终端关了服务也就停了，可以使用下面的命令将Redis作为后台进程启动，并添加到系统启动命名中。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14/utils
+</span><span class='line'><span class="nv">$.</span>/install_server
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>执行命令后，会提示你回答几个问题，可以一路回车过去，选择默认设置。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Please <span class="k">select </span>the redis port <span class="k">for </span>this instance: <span class="o">[</span>6379<span class="o">]</span>
+</span><span class='line'>Selecting default: 6379
+</span><span class='line'>Please <span class="k">select </span>the redis config file name <span class="o">[</span>/etc/redis/6379.conf<span class="o">]</span>
+</span><span class='line'>Selected default - /etc/redis/6379.conf
+</span><span class='line'>Please <span class="k">select </span>the redis log file name <span class="o">[</span>/var/log/redis_6379.log<span class="o">]</span>
+</span><span class='line'>Selected default - /var/log/redis_6379.log
+</span><span class='line'>Please <span class="k">select </span>the data directory <span class="k">for </span>this instance <span class="o">[</span>/var/lib/redis/6379<span class="o">]</span>
+</span><span class='line'>Selected default - /var/lib/redis/6379
+</span><span class='line'>Please <span class="k">select </span>the redis executable path <span class="o">[</span>/usr/local/bin/redis-server<span class="o">]</span>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>后续可以通过下面的方式启停服务。<br/>
+1. /etc/init.d/redis_6379 start &mdash;启动<br/>
+2. /etc/init.d/redis_6379 stop &mdash;服务<br/>
+当然也可在/usr/local/bin目录下使用redis-server来启动。</p>
+
+<p><strong>PS: 我在执行install_server脚本后，发现服务启动不起来，查看/etc/init.d/redis_6379这个文件发现里面的换行符号被替换成了<code>/n</code>符号，手动将这些符号替换成换行就可以了。</strong></p>
+
+<h2>更多资料</h2>
+
+<p>更多资料可以看这里：<a href="http://redis.io/">http://redis.io/</a></p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

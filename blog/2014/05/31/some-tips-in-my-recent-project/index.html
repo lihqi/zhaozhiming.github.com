@@ -1,0 +1,529 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>最近小项目的一些记录（一） - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="hibernate,angularjs,semantic-ui,jsoup">
+	<meta name="keywords" content="hibernate,angularjs">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">最近小项目的一些记录（一）</h2>
+	<div class="entry-content"><p>最近花了2个星期的时间做了一个小网站，用来统计部门同事发布的博客情况。需求比较简单，做这个项目的时候就顺便把以前学到的东西整合到了一起，从前端到后台，从编码到部署（“全栈工程师”？呵呵），虽然事情比较琐碎但也学到了不少东西，下面就记录一下开发过程中遇到的一些问题。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>技术栈</h2>
+
+<p>这里先列举一下项目用到的一些技术，其实这些东西就是自己的工具箱，要慢慢丰富，要及时更新，这样才能做出来好东西。</p>
+
+<ul>
+<li>Spring4 MVC</li>
+<li>Hibernate orm</li>
+<li>Spring Data JPA</li>
+<li>AngularJS(Javascript MVW Framework)</li>
+<li>Semantic UI(CSS Framework)</li>
+<li>Velocity(for mail)</li>
+<li>Gradle</li>
+<li>SAE(Sina App Engine)</li>
+</ul>
+
+
+<h2>Spring JPA</h2>
+
+<p>项目遇到不少的问题都来自JPA，也有一部分原因是由于SAE的MySql数据库是读写分离的两个库，所以要配置多个数据源才能在上面正常读写数据。<br/>
+JPA有个好处就是操作数据库时不用写太多代码，不用像以前一样写一个接口再写一个实现，只需要一个接口就可以完成基本的操作了，如果有特殊的操作则可以通过标签的方式来写sql。</p>
+
+<h3>Spring JPA配置多个persistence-unit(或多个数据源）</h3>
+
+<ul>
+<li>首先增加JPA的多persistence-unit的管理Bean。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;persistenceUnitManager&quot;</span>
+</span><span class='line'>          <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceXmlLocation&quot;</span> <span class="na">value=</span><span class="s">&quot;classpath:META-INF/persistence.xml&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="c">&lt;!--  comment dataSourceLooup to use jndi --&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;dataSourceLookup&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.jdbc.datasource.lookup.BeanFactoryDataSourceLookup&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>然后配置多套DataSource，EntityManagerFactory，TransactionManger和jpa:repository，这里要重点注意jps:repository的配置也要有多套，否则启动就会报<code>No unique bean of type [javax.persistence.EntityManagerFactory] is defined: expected single bean but found 2</code>的错误。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="c">&lt;!--write persistence unit config--&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeJpaVendor&quot;</span>
+</span><span class='line'>          <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;showSql&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;generateDdl&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeDataSource&quot;</span> <span class="na">class=</span><span class="s">&quot;com.mchange.v2.c3p0.ComboPooledDataSource &quot;</span> <span class="na">destroy-method=</span><span class="s">&quot;close&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;driverClass&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jdbcUrl&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;acquireIncrement&quot;</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;initialPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;minPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxStatements&quot;</span> <span class="na">value=</span><span class="s">&quot;100&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;testConnectionOnCheckout&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="na">ref=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitName&quot;</span> <span class="na">value=</span><span class="s">&quot;mainPersistenceUnit&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaVendorAdapter&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeJpaVendor&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;loadTimeWeaver&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeTransactionManager&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.JpaTransactionManager&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;entityManagerFactory&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;qualifier</span> <span class="na">value=</span><span class="s">&quot;writeEm&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;jpa:repositories</span> <span class="na">base-package=</span><span class="s">&quot;com.github.dba.repo.write&quot;</span>
+</span><span class='line'>                      <span class="na">entity-manager-factory-ref=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span>
+</span><span class='line'>                      <span class="na">transaction-manager-ref=</span><span class="s">&quot;writeTransactionManager&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;tx:annotation-driven</span> <span class="na">transaction-manager=</span><span class="s">&quot;writeTransactionManager&quot;</span><span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在persistence.xml文件中增加多个unit,这里以一个unit为例，多个的话只要persistence-unit的name不一样就可以了。下面的例子引用了之前的datasource的配置，可以不需要再配置一次jdbc信息。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;persistence-unit</span> <span class="na">name=</span><span class="s">&quot;mainPersistenceUnit&quot;</span> <span class="na">transaction-type=</span><span class="s">&quot;RESOURCE_LOCAL&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;provider&gt;</span>org.hibernate.ejb.HibernatePersistence<span class="nt">&lt;/provider&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;non-jta-data-source&gt;</span>writeDataSource<span class="nt">&lt;/non-jta-data-source&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.Blog<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepGroup<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepMember<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.BlogView<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;properties&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.driver&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.url&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.dialect&quot;</span> <span class="na">value=</span><span class="s">&quot;org.hibernate.dialect.MySQLDialect&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.show_sql&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.hbm2ddl.auto&quot;</span> <span class="na">value=</span><span class="s">&quot;update&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/properties&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/persistence-unit&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Spring JPA动态查询</h3>
+
+<ul>
+<li>首先在model类中增加一个静态方法，用来生成本次查询的动态条件。
+
+<ul>
+<li>下面的例子假设depGroup, website, startDate, endDate都可能有值。</li>
+<li>where中的&#8221;=&ldquo;,&rdquo;&lt;&ldquo;,&rdquo;>&ldquo;可以在CriteriaBuilder中找到相应的方法，还有比如like等。</li>
+<li>如果是嵌套对象的话，比如Blog对象包含Author对象，要对比Author对象的值，则可以用这种方式来取值: <code>root.&lt;Author&gt;get("author").&lt;String&gt;get("groupName")</code>。</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Specification</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="nf">querySpecification</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">depGroup</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">website</span><span class="o">,</span>
+</span><span class='line'>                                                         <span class="kd">final</span> <span class="n">String</span> <span class="n">startDate</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">endDate</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Specifications</span><span class="o">.</span><span class="na">where</span><span class="o">(</span><span class="k">new</span> <span class="n">Specification</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="nd">@Override</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="n">Predicate</span> <span class="nf">toPredicate</span><span class="o">(</span><span class="n">Root</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="n">root</span><span class="o">,</span> <span class="n">CriteriaQuery</span><span class="o">&lt;?&gt;</span> <span class="n">query</span><span class="o">,</span> <span class="n">CriteriaBuilder</span> <span class="n">cb</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">Predicate</span> <span class="n">predicate</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="na">conjunction</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">depGroup</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">depGroup</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
+</span><span class='line'>                            <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">Author</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;author&quot;</span><span class="o">).&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;groupName&quot;</span><span class="o">),</span> <span class="n">depGroup</span><span class="o">));</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">website</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">website</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
+</span><span class='line'>                            <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;website&quot;</span><span class="o">),</span> <span class="n">website</span><span class="o">));</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">startDate</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">startDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
+</span><span class='line'>                        <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">ge</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
+</span><span class='line'>                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">startDate</span><span class="o">));</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">endDate</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">endDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
+</span><span class='line'>                        <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">le</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
+</span><span class='line'>                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">endDate</span><span class="o">));</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">return</span> <span class="n">predicate</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>写好了动态查询条件后，就要把它放到查询语句里面了，比如要查询所有数据，示例如下，例子还加了一个对时间的排序条件。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="n">blogs</span> <span class="o">=</span> <span class="n">blogReadRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">(</span>
+</span><span class='line'>                <span class="n">Blog</span><span class="o">.</span><span class="na">querySpecification</span><span class="o">(</span><span class="n">depGroup</span><span class="o">,</span> <span class="n">website</span><span class="o">,</span> <span class="n">startDate</span><span class="o">,</span> <span class="n">endDate</span><span class="o">),</span>
+</span><span class='line'>                <span class="k">new</span> <span class="nf">Sort</span><span class="o">(</span><span class="n">Sort</span><span class="o">.</span><span class="na">Direction</span><span class="o">.</span><span class="na">DESC</span><span class="o">,</span> <span class="s">&quot;time&quot;</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>嵌套对象</h3>
+
+<p>这个可能跟JPA没有多大关系，更多是跟Hibernate有关，但都属于db层面的，就写在一起了。</p>
+
+<p>比如有张表是Blog，这样用Hibernate-orm对应到程序就有一个Blog类，如果Blog属性比较多的话，后续就会变成了一个大类。我们想在数据库只对应一张表的情况下，可以对应到程序的多个类，比如Blog类下面有个Author的类，要怎么做呢？可以用<code>@Embedded</code>标签来解决这个问题。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;blogs&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Blog</span> <span class="o">{</span>
+</span><span class='line'>  <span class="nd">@Id</span>
+</span><span class='line'>    <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Embedded</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Author</span> <span class="n">author</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Embeddable</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Author</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Basic</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>分离成多个对象的话，有个好处就是可以在不同的model添加不同的逻辑计算，避免把所有逻辑都放在一个类里面，这也是面向对象设计时要考虑的一个问题。但数据库始终只对应一张表，操作简单。</p>
+
+<p>下一篇: <a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/">最近小项目的一些记录（二）</a></p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

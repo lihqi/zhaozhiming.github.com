@@ -1,0 +1,249 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>在jenkins和sonar中集成jacoco(三)--使用jacoco收集集成测试的覆盖率 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="我们系统使用weblogic做服务器，集成测试框架使用的是junit+selenium。 首先，要把jacoco的jacocoagent.jar包放到部署应用的服务器上，接着在系统服务的JAVA_OPTIONS 后面添加如下参数： 1
+-javaagent:[yourpath/] &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">在jenkins和sonar中集成jacoco(三)--使用jacoco收集集成测试的覆盖率</h2>
+	<div class="entry-content"><p>我们系统使用weblogic做服务器，集成测试框架使用的是junit+selenium。</p>
+
+<p>首先，要把jacoco的jacocoagent.jar包放到部署应用的服务器上，接着在系统服务的JAVA_OPTIONS 后面添加如下参数：</p>
+
+<!--more-->
+
+
+<p></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>-javaagent:<span class="o">[</span>yourpath/<span class="o">]</span>jacocoagent.jar<span class="o">=</span><span class="nv">includes</span><span class="o">=</span>com.xxx.xxx.*,output<span class="o">=</span>tcpserver,address<span class="o">=</span>xxx.xxx.xxx.xxx,port<span class="o">=</span>xxxxx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参数解释：</p>
+
+<ol>
+<li>前面的yourpath是放jacocoagent.jar文件的目录路径；</li>
+<li>includes是指要收集哪些类（注意不要关写包名，最后要写.*)，不写的话默认是*，会收集应用服务上所有的类，包括服务器和其他中间件的类，一般要过滤；</li>
+<li>output有4个值，分别是file,tcpserver,tcpclient,mbean，默认是file。使用file的方式只有在停掉应用服务的时候才能产生覆盖率文件，而使用tcpserver的方式可以在不停止应用服务的情况下下载覆盖率文件，后面会介绍如何使用dump方法来得到覆盖率文件。</li>
+<li>address是ip， port是端口，这是使用tcpserver方式需要的2个参数，也是后面dump方法要用到的。（这里的address我只能使用服务器的ip，如果使用其他ip，服务启动时会报错。）</li>
+</ol>
+
+
+<p>更多参数可以参考<a href="http://www.eclemma.org/jacoco/trunk/doc/agent.html">java agent</a>。<br/>
+配置完应用服务的JAVA_OPTIONS之后，启动服务器，然后可以开始跑你的集成测试，跑完之后，实际上jacocoagent已经将覆盖率数据记录下来了，我们可以使用下面的ant任务来dump出覆盖率文件：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　 <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;downloadUatCoverageData&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:dump</span> <span class="na">address=</span><span class="s">&quot;xxx.xxx.xxx.xxx&quot;</span> <span class="na">port=</span><span class="s">&quot;xxxx&quot;</span> <span class="na">reset=</span><span class="s">&quot;true&quot;</span> <span class="na">destfile=</span><span class="s">&quot;${basedir}/uat.exec&quot;</span> <span class="na">append=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里的address和port是刚才在JAVA_OPTIONS里面写的address和port的值，destfile是指生成的覆盖率文件路径。</p>
+
+<p><strong>注意，这里虽然得到了集成测试的覆盖率文件，但是需要应用服务器上的类文件才能产出相应的覆盖率报告，如果类文件是其他JVM编译的，产出的报告覆盖率是0%。</strong></p>
+
+<p>有2种方法可以得到覆盖率文件所需的class文件：</p>
+
+<ol>
+<li>将应用服务部署的包（ear或war或jar）包下载下来之后解压，即可得到对应的class文件；</li>
+<li>在前面做单元测试之后，可以将class文件打成一个zip包，然后上传到服务器，最后在需要的时候去服务器上取。</li>
+</ol>
+
+
+<p>得到集成测试的覆盖率文件之后，结合之前取到的单元测试覆盖率文件，我们可以将2个文件合并，得到综合的覆盖率文件，命令如下：</p>
+
+<figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;mergeCoverage&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;jacoco:merge</span> <span class="na">destfile=</span><span class="s">&quot;merged.exec&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${basedir}&quot;</span> <span class="na">includes=</span><span class="s">&quot;*.exec&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/jacoco:merge&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

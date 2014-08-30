@@ -6,7 +6,7 @@
 	<title>Hacker and Geeker's Way</title>
     <meta name="author" content="赵芝明">
     
-	<meta name="description" content="Published on: Aug 29th, 2014 Tags: code 最近GFW貌似升级了，现在连Google也无法访问，开发用百度实在搜不到什么东西，用bing也各种不爽(用了几天自己都快病了)。虽说可以用SSH，VPN翻墙，但家里的电子设备如果比较多，要一个一个设置起来就会比较麻烦 &hellip;">
+	<meta name="description" content=" Published on: Nov 30th, 2012 Tags: code 先要在jenkins上安装jacoco的插件，安装完成之后在job的配置项中可以增加这个选项： Read on | Comments ">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -211,9 +211,9 @@
           <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/2014/08/29/let-the-router-cross-great-wall-part-1/">
+		<a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/">
 		
-			让路由飞越长城(一)</a>
+			在jenkins和sonar中集成jacoco(二)&#8211;在jenkins中生成jacoco覆盖率报告</a>
 	</h2>
     <div class="entry-content">
     <div class="meta">
@@ -229,7 +229,7 @@
   
 
 
-<time datetime="2014-08-29T21:13:00+08:00" pubdate data-updated="true">Aug 29<span>th</span>, 2014</time></div>
+<time datetime="2012-11-30T14:45:00+08:00" pubdate data-updated="true">Nov 30<span>th</span>, 2012</time></div>
       <div class="tags">Tags: 
 
 
@@ -238,19 +238,17 @@
 
 </div>
     </div>
-		<p><img src="/images/post/2014-8/greatefw.jpeg"></p>
-
-<p>最近GFW貌似升级了，现在连Google也无法访问，开发用百度实在搜不到什么东西，用bing也各种不爽(用了几天自己都快病了)。虽说可以用SSH，VPN翻墙，但家里的电子设备如果比较多，要一个一个设置起来就会比较麻烦，如果能在路由器上翻墙就好了，这样只要设备只需要接入路由器的WIFI就可以自动翻墙，无需任何设置。</p>
+		<p>先要在jenkins上安装jacoco的插件，安装完成之后在job的配置项中可以增加这个选项：</p>
 
 
 		
-		<a href="/blog/2014/08/29/let-the-router-cross-great-wall-part-1/" class="more-link">Read on</a>
+		<a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/" class="more-link">Read on</a>
 	</div>
 
 <div class="meta">
 	
 	
-          | <a href="/blog/2014/08/29/let-the-router-cross-great-wall-part-1/#comments">Comments</a>
+          | <a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/#comments">Comments</a>
     
 </div>
 </article>
@@ -259,9 +257,9 @@
           <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/2014/06/19/robot-framework-uat-test-with-spring/">
+		<a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/">
 		
-			使用Robot Framework结合Spring进行uat测试</a>
+			在jenkins和sonar中集成jacoco(一)&#8211;使用jacoco收集单元测试的覆盖率</a>
 	</h2>
     <div class="entry-content">
     <div class="meta">
@@ -277,7 +275,7 @@
   
 
 
-<time datetime="2014-06-19T21:50:00+08:00" pubdate data-updated="true">Jun 19<span>th</span>, 2014</time></div>
+<time datetime="2012-11-29T14:45:00+08:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time></div>
       <div class="tags">Tags: 
 
 
@@ -286,17 +284,19 @@
 
 </div>
     </div>
-		<p>在做项目过程中，单元测试是大家经常接触的也是了解的比较多的，但单元测试有时候为了更快的运行，会mock掉数据库或者关联系统来执行测试，这样的话整体的功能就得不到验证，另外单元测试也无法进行页面比如html的测试，这个时候就需要进行UAT自动化测试了。</p>
+		<p>之前系统的持续集成覆盖率工具使用的是cobetura，使用的过程中虽然没什么问题，但感觉配置比较麻烦，现在准备改用jacoco这个覆盖率工具来代替它。接下来我介绍一下jenkins配置jacoco，并且在sonar显示单元测试和集成测试覆盖率的过程。</p>
+
+<p>用jacoco来实现单元测试的覆盖率比较简单，在ant脚本中先增加下面的任务：</p>
 
 
 		
-		<a href="/blog/2014/06/19/robot-framework-uat-test-with-spring/" class="more-link">Read on</a>
+		<a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/" class="more-link">Read on</a>
 	</div>
 
 <div class="meta">
 	
 	
-          | <a href="/blog/2014/06/19/robot-framework-uat-test-with-spring/#comments">Comments</a>
+          | <a href="/blog/2012/11/29/use-jacoco-in-jenkins-and-sonar-part-1/#comments">Comments</a>
     
 </div>
 </article>
@@ -305,9 +305,9 @@
           <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/2014/06/17/spring-mvc-unit-test-part-2/">
+		<a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/">
 		
-			基于Spring MVC做单元测试（二）——使用JMockit</a>
+			持续集成一天一美元</a>
 	</h2>
     <div class="entry-content">
     <div class="meta">
@@ -323,26 +323,27 @@
   
 
 
-<time datetime="2014-06-17T12:24:00+08:00" pubdate data-updated="true">Jun 17<span>th</span>, 2014</time></div>
+<time datetime="2012-09-17T21:53:00+08:00" pubdate data-updated="true">Sep 17<span>th</span>, 2012</time></div>
       <div class="tags">Tags: 
 
 
-	<a class='category' href='/blog/categories/code/'>code</a>
+	<a class='category' href='/blog/categories/translate/'>translate</a>
 
 
 </div>
     </div>
-		<p>上一篇Post讲了如何使用Spring的Test框架来进行单元测试，但在运行单元测试的时候有一个问题，就是每次跑单元测试都需要加载一下配置文件，或者启动web容器，这样的单元测试跑起来就不能达到快的目的。下面再介绍一下通过JMockit这个Java Mock工具来进行spring的单元测试，其特点是不需指定spring的配置文件，任何对象都可以mock出来并进行关联。</p>
+		<p>原文：<a href="http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html">http://jamesshore.com/Blog/Continuous-Integration-on-a-Dollar-a-Day.html</a>
+有一种持续集成，比使用像CruiseControl这样的构建服务来的更容易更便宜。实际上，它是如此简单，你可以从现在开始做这件事，不用为你还没有构建服务而感到不舒服。</p>
 
 
 		
-		<a href="/blog/2014/06/17/spring-mvc-unit-test-part-2/" class="more-link">Read on</a>
+		<a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/" class="more-link">Read on</a>
 	</div>
 
 <div class="meta">
 	
 	
-          | <a href="/blog/2014/06/17/spring-mvc-unit-test-part-2/#comments">Comments</a>
+          | <a href="/blog/2012/09/17/continuous-integration-on-a-dollar-a-day/#comments">Comments</a>
     
 </div>
 </article>
@@ -351,9 +352,9 @@
           <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/2014/06/16/spring-mvc-unit-test-part-1/">
+		<a href="/blog/2012/08/06/read-toyota-product-method/">
 		
-			基于Spring MVC做单元测试（一）——使用Spring Test框架</a>
+			读《丰田生产方式》——联系敏捷开发的思考</a>
 	</h2>
     <div class="entry-content">
     <div class="meta">
@@ -369,195 +370,7 @@
   
 
 
-<time datetime="2014-06-16T10:54:00+08:00" pubdate data-updated="true">Jun 16<span>th</span>, 2014</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/code/'>code</a>
-
-
-</div>
-    </div>
-		<p>最近用Spring Mvc框架做了几个小项目，但都没有做单元测试，最近想恶补一下这方面的东西，包括基于Spring的单元测试，自动化测试和JS单元测试。今天先讲一下基于Spring框架的单元测试，测试使用的是Spring自带的test组件，再结合Mockito一起编写测试案例，以下示例会包括Controller和Service，由于Repository是基于Spring JPA，没有自己的逻辑，所以这里就不涉及Repository的单元测试，以后有需要再介绍。</p>
-
-
-		
-		<a href="/blog/2014/06/16/spring-mvc-unit-test-part-1/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-	
-          | <a href="/blog/2014/06/16/spring-mvc-unit-test-part-1/#comments">Comments</a>
-    
-</div>
-</article>
-      
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/05/31/some-tips-in-my-recent-project-2/">
-		
-			最近小项目的一些记录（二）</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-31T10:40:00+08:00" pubdate data-updated="true">May 31<span>st</span>, 2014</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/code/'>code</a>
-
-
-</div>
-    </div>
-		<p><a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project/">前一篇post</a>主要记录了Spring JPA和Hibernate的问题，接着记录其他一些工具遇到的问题。</p>
-
-
-		
-		<a href="/blog/2014/05/31/some-tips-in-my-recent-project-2/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-	
-          | <a href="/blog/2014/05/31/some-tips-in-my-recent-project-2/#comments">Comments</a>
-    
-</div>
-</article>
-      
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/05/31/some-tips-in-my-recent-project/">
-		
-			最近小项目的一些记录（一）</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-31T09:09:00+08:00" pubdate data-updated="true">May 31<span>st</span>, 2014</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/code/'>code</a>
-
-
-</div>
-    </div>
-		<p>最近花了2个星期的时间做了一个小网站，用来统计部门同事发布的博客情况。需求比较简单，做这个项目的时候就顺便把以前学到的东西整合到了一起，从前端到后台，从编码到部署（“全栈工程师”？呵呵），虽然事情比较琐碎但也学到了不少东西，下面就记录一下开发过程中遇到的一些问题。</p>
-
-
-		
-		<a href="/blog/2014/05/31/some-tips-in-my-recent-project/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-	
-          | <a href="/blog/2014/05/31/some-tips-in-my-recent-project/#comments">Comments</a>
-    
-</div>
-</article>
-      
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/05/11/redis-cluster-env-create/">
-		
-			Redis集群环境安装指南</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-11T20:50:00+08:00" pubdate data-updated="true">May 11<span>th</span>, 2014</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/code/'>code</a>
-
-
-</div>
-    </div>
-		<p><img src="/images/post/2014-5/redis-cluster.jpg"></p>
-
-<h3>环境</h3>
-
-<p>RHLinux-6.4-64-EN, 红帽6.4 64位，英文正式发布版。</p>
-
-
-		
-		<a href="/blog/2014/05/11/redis-cluster-env-create/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-	
-          | <a href="/blog/2014/05/11/redis-cluster-env-create/#comments">Comments</a>
-    
-</div>
-</article>
-      
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/05/09/read-book-note-2014-4/">
-		
-			读书笔记——沸腾十五年，看板方法，精益创业</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-09T06:43:00+08:00" pubdate data-updated="true">May 9<span>th</span>, 2014</time></div>
+<time datetime="2012-08-06T10:16:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2012</time></div>
       <div class="tags">Tags: 
 
 
@@ -566,17 +379,17 @@
 
 </div>
     </div>
-		<p><img src="/images/post/2014-5/april_book.jpg"></p>
+		<p>平时工作和同事讨论敏捷，曾多次听到丰田的精益思想，说是很多敏捷的想法都是从丰田的精益思想中得来的，后来在Kent Beck的《解析极限编程》里看到有这样一本书是讲丰田的精益思想的，找来看了一下，发现书中讲的一些思想或者实践和敏捷开发很相似，下面我就讲讲我对于丰田生产方式和敏捷开发的一些联系。</p>
 
 
 		
-		<a href="/blog/2014/05/09/read-book-note-2014-4/" class="more-link">Read on</a>
+		<a href="/blog/2012/08/06/read-toyota-product-method/" class="more-link">Read on</a>
 	</div>
 
 <div class="meta">
 	
 	
-          | <a href="/blog/2014/05/09/read-book-note-2014-4/#comments">Comments</a>
+          | <a href="/blog/2012/08/06/read-toyota-product-method/#comments">Comments</a>
     
 </div>
 </article>
@@ -585,9 +398,9 @@
           <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/2014/05/07/redis-install-guide-in-redhat/">
+		<a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/">
 		
-			Red Hat系统安装Redis</a>
+			《Agile Web Development With Rails》读后感&#8211;rails基于web设计的best Practices</a>
 	</h2>
     <div class="entry-content">
     <div class="meta">
@@ -603,26 +416,26 @@
   
 
 
-<time datetime="2014-05-07T19:53:00+08:00" pubdate data-updated="true">May 7<span>th</span>, 2014</time></div>
+<time datetime="2012-08-05T18:18:00+08:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time></div>
       <div class="tags">Tags: 
 
 
-	<a class='category' href='/blog/categories/code/'>code</a>
+	<a class='category' href='/blog/categories/read/'>read</a>
 
 
 </div>
     </div>
-		<p><img src="/images/post/2014-5/redis.jpg"></p>
+		<p>最近看完《Agile Web Development with Rails》一书，受益匪浅。书中先是用一个简单的web应用带你进入Rails的世界，然后在你大致熟悉之后，再带你了解Rails的一些细节，比如ActiveRecord，ActiveController等。最让我觉得Rails美的是其中的一些best practices，这些都可以很好地借鉴到平时的开发中去。下面我简单举几个在Rails中我认为比较好的一些best practies。</p>
 
 
 		
-		<a href="/blog/2014/05/07/redis-install-guide-in-redhat/" class="more-link">Read on</a>
+		<a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/" class="more-link">Read on</a>
 	</div>
 
 <div class="meta">
 	
 	
-          | <a href="/blog/2014/05/07/redis-install-guide-in-redhat/#comments">Comments</a>
+          | <a href="/blog/2012/08/05/best-practices-in-rails-with-web-app-design/#comments">Comments</a>
     
 </div>
 </article>
@@ -631,9 +444,9 @@
           <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/2014/05/04/swift-code-explain-3-proxy-controllers-base/">
+		<a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/">
 		
-			swift源码详解（三）——proxy/controllers/base.py</a>
+			在JavaScript中进行文件处理，第五部分：Blobs</a>
 	</h2>
     <div class="entry-content">
     <div class="meta">
@@ -649,36 +462,240 @@
   
 
 
-<time datetime="2014-05-04T21:36:00+08:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time></div>
+<time datetime="2012-08-01T17:28:00+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2012</time></div>
       <div class="tags">Tags: 
 
 
-	<a class='category' href='/blog/categories/code/'>code</a>
+	<a class='category' href='/blog/categories/translate/'>translate</a>
 
 
 </div>
     </div>
-		<h2><a href="http://zhaozhiming.github.io/blog/2014/04/19/swift-code-explain-total/">回swift代码结构目录</a></h2>
+		<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/31/working-with-files-in-javascript-part-5-Blobs">这里</a></strong></p>
 
-<h3>update_headers</h3>
+<hr />
+
+<p>到目前为止，这个系列的帖子集中在和这些文件交互——用户指定的文件和通过File对象访问的文件。File对象实际上是Blob的一个特殊版本，表示一块块的二进制数据。Blob对象继承了File对象的size和type属性。</p>
 
 
 		
-		<a href="/blog/2014/05/04/swift-code-explain-3-proxy-controllers-base/" class="more-link">Read on</a>
+		<a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/" class="more-link">Read on</a>
 	</div>
 
 <div class="meta">
 	
 	
-          | <a href="/blog/2014/05/04/swift-code-explain-3-proxy-controllers-base/#comments">Comments</a>
+          | <a href="/blog/2012/08/01/working-with-files-in-javascript-part-5/#comments">Comments</a>
+    
+</div>
+</article>
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/07/30/working-with-files-in-javascript-part-4/">
+		
+			在JavaScript中进行文件处理，第四部分：对象URLs</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-30T22:17:00+08:00" pubdate data-updated="true">Jul 30<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/translate/'>translate</a>
+
+
+</div>
+    </div>
+		<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/31/working-with-files-in-javascript-part-4-object-urls">这里</a></strong></p>
+
+<hr />
+
+<p>学习到这里，你已经了解在传统方式中如何使用文件，你可以上传文件到服务端，可以从磁盘上读取文件，这些都是最常见的文件处理方式。但是，有一种全新的文件处理方式可以简化这些常见的任务，这就是使用对象URLs。</p>
+
+
+		
+		<a href="/blog/2012/07/30/working-with-files-in-javascript-part-4/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/07/30/working-with-files-in-javascript-part-4/#comments">Comments</a>
+    
+</div>
+</article>
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/07/23/working-with-files-in-javascript-part-3/">
+		
+			在JavaScript中进行文件处理，第三部分：处理事件和错误</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-23T21:46:00+08:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/translate/'>translate</a>
+
+
+</div>
+    </div>
+		<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/22/working-with-files-in-javascript-part-3/">这里</a></strong></p>
+
+<hr />
+
+<p>FileReader对象用来读取浏览器可以访问的文件的内容。在我前一篇blog中，你学习到了如何使用FileReader对象轻松读取文件，并将文件内容转换为各种形式。FileReader在很多方面和XMLHttpRequest非常相似。</p>
+
+
+		
+		<a href="/blog/2012/07/23/working-with-files-in-javascript-part-3/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/07/23/working-with-files-in-javascript-part-3/#comments">Comments</a>
+    
+</div>
+</article>
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/07/16/working-with-files-in-javascript-part-2/">
+		
+			在JavaScript中进行文件处理，第二部分：文件读取</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-16T10:09:00+08:00" pubdate data-updated="true">Jul 16<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/translate/'>translate</a>
+
+
+</div>
+    </div>
+		<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/15/working-with-files-in-javascript-part-2/">这里</a></strong></p>
+
+<hr />
+
+<p>在我的前一篇blog中，我介绍了在JavaScript中如何使用文件，具体重点放在如何获得File对象。只有当用户通过上传或者拖拽的方式上传了文件，这些对象才拥有文件的元数据。一旦你有了这些文件，下一步就是从这些文件中读取数据。</p>
+
+
+		
+		<a href="/blog/2012/07/16/working-with-files-in-javascript-part-2/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/07/16/working-with-files-in-javascript-part-2/#comments">Comments</a>
+    
+</div>
+</article>
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/">
+		
+			在JavaScript中进行文件处理，第一部分：基础</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-08T16:26:00+08:00" pubdate data-updated="true">Jul 8<span>th</span>, 2012</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/translate/'>translate</a>
+
+
+</div>
+    </div>
+		<p><strong>译注：原文是《JavaScript高级程序设计》的作者Nicholas Zakas写的，本翻译纯属为自己学习而做，仅供参考。原文链接：<a href="http://www.nczonline.net/blog/2012/05/08/working-with-files-in-javascript-part-1/">这里</a></strong></p>
+
+<hr />
+
+<p>很多年前，我在一次Goole面试被问到，如何在web应用中提供更好的用户体验。浮现在我脑海里的第一个想法是，通过比<code>&lt;input type="file"&gt;</code>标签更好的方式来进行文件操作。虽然web发展一路高歌猛进，但自从该标签引进以来，我们操作文件的方式就一直使用它而从来没有改变过。幸运的是，有了HTML5和相关API，我们在最新版本的浏览器上可以有更多的方式进行文件操作（iOS 仍然不支持File的API）。</p>
+
+
+		
+		<a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+	
+          | <a href="/blog/2012/07/08/working-with-files-in-javascript-part-1/#comments">Comments</a>
     
 </div>
 </article>
       
       <nav id="pagenavi">
           
+              <a href="/blog/page/4/" class="prev">Prev</a>
           
-              <a href="/blog/page/2/" class="next">Next</a>
+          
+              <a href="/blog/page/6/" class="next">Next</a>
           
           <div class="center"><a href="/blog/archives">Blog Archives</a></div>
       </nav>

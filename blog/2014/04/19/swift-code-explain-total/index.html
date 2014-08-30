@@ -1,0 +1,317 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>swift源码详解（一）——开始 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="swift源码详解">
+	<meta name="keywords" content="swift">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">Swift源码详解（一）——开始</h2>
+	<div class="entry-content"><p>从今天开始准备仔细再看一下swift的源码，然后把理解的内容记录下来。下面是swift源码的代码结构，准备每天更新1～2个文件的代码理解，更新好的在文件名上会在下面的代码结构上有链接出现。</p>
+
+<!--more-->
+
+
+<p>
+swift的源码因为不断在更新，笔记记录的代码就以2014-4-18的为准，我已经fork了一份swift源码到我github上，地址是：<a href="https://github.com/zhaozhiming/swift">https://github.com/zhaozhiming/swift</a>，代码结构如下：</p>
+
+<ul>
+<li><h3>swift</h3>
+
+<ul>
+<li><h3>account</h3>
+
+<ul>
+<li>auditor.py</li>
+<li>backend.py</li>
+<li>reaper.py</li>
+<li>replicator.py</li>
+<li>server.py</li>
+<li>utils.py</li>
+</ul>
+</li>
+<li><h3>cli</h3>
+
+<ul>
+<li>info.py</li>
+<li>recon.py</li>
+<li>ringbuilder.py</li>
+<li>ringbuilder.py</li>
+</ul>
+</li>
+<li><h3>common</h3>
+
+<ul>
+<li><h3>middleware</h3>
+
+<ul>
+<li>account_quotas.py</li>
+<li>acl.py</li>
+<li>bulk.py</li>
+<li>catch_errors.py</li>
+<li>cname_lookup.py</li>
+<li>container_quotas.py</li>
+<li>container_sync.py</li>
+<li>crossdomain.py</li>
+<li>dlo.py</li>
+<li>domain_remap.py</li>
+<li>formpost.py</li>
+<li>gatekeeper.py</li>
+<li>healthcheck.py</li>
+<li>list_endpoints.py</li>
+<li>memcache.py</li>
+<li>name_check.py</li>
+<li>proxy_logging.py</li>
+<li>ratelimit.py</li>
+<li>recon.py</li>
+<li>slo.py</li>
+<li>staticweb.py</li>
+<li>tempauth.py</li>
+<li>tempurl.py</li>
+</ul>
+</li>
+<li><h3>ring</h3>
+
+<ul>
+<li>builder.py</li>
+<li>ring.py</li>
+<li>utils.py</li>
+</ul>
+</li>
+<li>bufferedhttp.py</li>
+<li>constraints.py</li>
+<li>container_sync_realms.py</li>
+<li>daemon.py</li>
+<li>db.py</li>
+<li>db_replicator.py</li>
+<li>direct_client.py</li>
+<li>exceptions.py</li>
+<li>http.py</li>
+<li>internal_client.py</li>
+<li>manager.py</li>
+<li>memcached.py</li>
+<li>request_helpers.py</li>
+<li>swob.py</li>
+<li>swob.py</li>
+<li>utils.py</li>
+<li>wsgi.py</li>
+</ul>
+</li>
+<li><h3>container</h3>
+
+<ul>
+<li>auditor.py</li>
+<li>backend.py</li>
+<li>replicator.py</li>
+<li>server.py</li>
+<li>sync.py</li>
+<li>updater.py</li>
+</ul>
+</li>
+<li><h3>obj</h3>
+
+<ul>
+<li>auditor.py</li>
+<li>diskfile.py</li>
+<li>expirer.py</li>
+<li>mem_diskfile.py</li>
+<li>mem_server.py</li>
+<li>replicator.py</li>
+<li>server.py</li>
+<li>ssync_receiver.py</li>
+<li>ssync_sender.py</li>
+<li>updater.py</li>
+</ul>
+</li>
+<li><h3>proxy</h3>
+
+<ul>
+<li>controllers
+
+<ul>
+<li>account.py</li>
+<li><a href="http://zhaozhiming.github.io/blog/2014/05/04/swift-code-explain-3-proxy-controllers-base/">base.py</a></li>
+<li>container.py</li>
+<li>obj.py</li>
+</ul>
+</li>
+<li><a href="http://zhaozhiming.github.io/blog/2014/04/20/swift-code-explain-proxy-server/">server.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

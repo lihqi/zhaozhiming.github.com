@@ -1,0 +1,1380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2014-08-30T13:03:26+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[让路由飞越长城(一)]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1/"/>
+    <updated>2014-08-29T21:13:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-8/greatefw.jpeg"></p>
+
+<p>最近GFW貌似升级了，现在连Google也无法访问，开发用百度实在搜不到什么东西，用bing也各种不爽(用了几天自己都快病了)。虽说可以用SSH，VPN翻墙，但家里的电子设备如果比较多，要一个一个设置起来就会比较麻烦，如果能在路由器上翻墙就好了，这样只要设备只需要接入路由器的WIFI就可以自动翻墙，无需任何设置。</p>
+
+<!--more-->
+
+
+<h3>可以刷固件的路由器</h3>
+
+<p>要实现路由器翻墙，首先需要一个高级的路由器，这种路由器可以刷一些路由器固件（固件我理解就是路由器的操作系统，一般是基于Linux的），我们后面需要在固件上通过脚本配置实现翻墙。我是基于DD-WRT这个固件进行路由翻墙的，所以我选择可以刷DD-WRT固件的路由器，这里有<a href="http://www.dd-wrt.com/wiki/index.php/Supported_Devices">网页</a>可以参考.</p>
+
+<p>我在网上参考了一些资料，觉得Buffalo(巴法洛)的路由器比较好，大部分实现了路由器翻墙的介绍文章都是使用Buffalo的，所以向大家也推荐这个牌子，我用的型号是WZR-HP-G300NH2，淘宝上卖400多。</p>
+
+<p>使用了Buffalo的路由器后，感觉要比以前用的那些路由快很多，同样是打开百度（百度最大的功能，测网络联通）速度明显感觉不一样。</p>
+
+<p><img src="/images/post/2014-8/WZR-HP-G300NH2.jpg"></p>
+
+<h3><a href="http://www.dd-wrt.com">DD-WRT</a></h3>
+
+<p>路由器的固件其实不只dd-wrt一种，还有<a href="http://www.polarcloud.com/tomato">Tomato</a>也是一种比较流行的路由器固件，两种固件各有优劣，网上有很多它们的比较，这里就不说了。</p>
+
+<p>dd-wrt对应不同品牌的路由器有不同的固件版本，每个品牌的不同型号也会对应不同的固件版本，要在这么多版本中查找到自己想要的固件版本，需要登录到dd-wrt的官网进行选择。</p>
+
+<p>进入官网首页后，点击Router Database模块，然后在输入框中输入路由器型号，就可以看到对应的dd-wrt版本记录。</p>
+
+<p><img src="/images/post/2014-8/dd-wrt-1.png"></p>
+
+<p>点击查询出来的版本记录，会出现固件版本的详细说明和下载链接。</p>
+
+<p><img src="/images/post/2014-8/dd-wrt-2.png"></p>
+
+<p>这里有2个固件可供选择(不同型号的固件名称会有不同，这里是以我的路由器型号举例):</p>
+
+<ul>
+<li>buffalo_to_ddwrt_webflash-MULTI.bin是指你的路由器固件不是dd-wrt的，需要把固件升级成dd-wrt。</li>
+<li>wzr-hp-g300nh2-dd-wrt-webupgrade-MULTI.bin是说你的固件已经是dd-wrt了，但固件版本太老了要升级。</li>
+</ul>
+
+
+<p>用上面的方法查出来的固件版本其实不是最新的，这里有个dd-wrt版本的<a href="ftp://ftp.dd-wrt.com/betas/">ftp链接</a>，打开连接后，可以看到不同年份的目录，进入某个目录后可以看到不同品牌的路由器的目录，比如<code>ftp://ftp.dd-wrt.com/betas/2014/06-23-2014-r24461/buffalo_wzr-hp-g300nh2/</code>，这里就是最新的固件版本了。</p>
+
+<h3>升级路由器固件</h3>
+
+<p>其实Buffalo也有自己官方的dd-wrt版本，但看网上介绍buffalo官方的dd-wrt版本功能不行，所以建议还是刷正式的dd-wrt版本。在dd-wrt官网上可以看到路由器固件的<a href="http://www.dd-wrt.com/wiki/index.php/Installation">安装介绍</a>(这里是WZR-HP-G300NH2的<a href="http://dd-wrt.com/wiki/index.php/Buffalo_WZR-HP-G300NH">安装介绍</a>），但个人感觉里面的说明太复杂，什么30/30/30硬复位大法，TFTP刷新法等看不大明白，同时也怕太复杂导致失误操作让路由器变砖头。</p>
+
+<p>最简单的方式是在你的路由器的web管理页面直接升级（我只试过Buffalo的，其他的路由器我没试过）:</p>
+
+<ul>
+<li>打开浏览器进入<code>192.168.1.1</code>，如果你的路由器是连接电信路由器网口的，可能ip地址不是这个；</li>
+<li>输入用户名密码后，进入管理配置页面，点击其中的更新，选择dd-wrt的固件文件打开。</li>
+<li>点击<strong>更新固件</strong>按钮，然后大概等个5~6分钟，等看到100%完成，路由器会自动重启；</li>
+<li>重新进入<code>192.168.1.1</code>，可以看到变成dd-wrt的管理页面了，首次登陆需要输入用户名和密码。</li>
+</ul>
+
+
+<p><img src="/images/post/2014-8/dd-wrt-3.png"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[使用Robot Framework结合Spring进行uat测试]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/06/19/robot-framework-uat-test-with-spring/"/>
+    <updated>2014-06-19T21:50:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/06/19/robot-framework-uat-test-with-spring</id>
+    <content type="html"><![CDATA[<p>在做项目过程中，单元测试是大家经常接触的也是了解的比较多的，但单元测试有时候为了更快的运行，会mock掉数据库或者关联系统来执行测试，这样的话整体的功能就得不到验证，另外单元测试也无法进行页面比如html的测试，这个时候就需要进行UAT自动化测试了。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<p><a href="http://baike.baidu.com/view/1330235.htm?fromTaglist">UAT</a>，(User Acceptance Test),用户接受度测试，即验收测试，这种一般是手工测试，当然重复进行手动测试是一种选择，但如果手工测试很多的话每次执行就比较浪费时间和精力，而且也容易遗漏和出错，所以我们需要将手工测试进行自动化。</p>
+
+<h2><a href="http://robotframework.org/">Robot Framework</a></h2>
+
+<p>Robot是一个自动化测试框架，其可以使用的Lib很多，简单地安装即可使用，也可以自己通过Python和Java来开发自己需要的Lib包，不过现在robot的Lib已经比较多了，可以满足大部分的使用场景。</p>
+
+<h4>安装</h4>
+
+<p>Robot安装十分简单，但首先要安装Python环境（Python安装这里不介绍了，请自行google了解），然后执行以下语句进行安装。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>安装完成后验证是否安装成功。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot &amp;mdash;version
+</span><span class='line'>Robot Framework 2.8.5 <span class="o">(</span>Python 2.7.3 on linux2<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>如果需要安装其他Lib包，同样是通过pip进行安装，下面以安装Selenium2Library为例。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework_Selenium2Library
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>Robot脚本</h4>
+
+<p>Robot安装完成后，就可以开始编写测试脚本了，下面是测试脚本和Resource文件的例子:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>create_recipient.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Settings &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">Selenium2Library</span><span class="p"></span>
+</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">DatabaseLibrary</span><span class="p"></span>
+</span><span class='line'><span class="c">Resource</span><span class="p">   </span><span class="c">resource.robot</span><span class="p"></span>
+</span><span class='line'><span class="c">Test Setup</span><span class="p">      </span><span class="c">Open Browser</span><span class="p">  </span><span class="c">${baseurl}/#/recipients</span><span class="p">  </span><span class="c">${browser}</span><span class="p"></span>
+</span><span class='line'><span class="c">Test Teardown</span><span class="p">   </span><span class="c">Close Browser&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; TestCases &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">create new recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
+</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户成功</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;create exist recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="c">Given execute sql</span><span class="p">  </span><span class="c">insert into recipients(username,email) values(&#39;zhaozhiming&#39;,&#39;zhaozhiming003@gmail.com&#39;)</span><span class="p"></span>
+</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
+</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户失败</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; Keywords &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">execute sql&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${sql}</span><span class="p"></span>
+</span><span class='line'><span class="c">Connect To Database Using Custom Params</span><span class="p">      </span><span class="c">cymysql</span><span class="p">    </span><span class="c">db=&#39;${dbname}&#39;,user=&#39;${dbuser}&#39;,passwd=&#39;${dbpassword}&#39;, host=&#39;${dbhost}&#39;,port=${dbport}</span><span class="p"></span>
+</span><span class='line'><span class="c">Execute Sql String</span><span class="p">    </span><span class="c">${sql}</span><span class="p"></span>
+</span><span class='line'><span class="c">Disconnect from database</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;create recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Input text</span><span class="p">    </span><span class="c">username</span><span class="p">    </span><span class="c">zhaozhiming</span><span class="p"></span>
+</span><span class='line'><span class="c">Input text</span><span class="p">    </span><span class="c">email</span><span class="p">    </span><span class="c">zhaozhiming003@gmail.com</span><span class="p"></span>
+</span><span class='line'><span class="c">click element</span><span class="p">  </span><span class="c">css=.submit</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;verify create recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
+</span><span class='line'><span class="c">sleep</span><span class="p">   </span><span class="c">2s</span><span class="p"></span>
+</span><span class='line'><span class="c">page should contain</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>resource.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Variables &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">${baseurl}</span><span class="p">  </span><span class="c">&lt;a href=&quot;http://localhost:9898/oddemail&quot;&gt;http://localhost:9898/oddemail&lt;/a&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbhost}</span><span class="p">  </span><span class="c">localhost</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbport}</span><span class="p">  </span><span class="c">3306</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbname}</span><span class="p">  </span><span class="c">oms</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbuser}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbpassword}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
+</span><span class='line'><span class="c">${browser}</span><span class="p">  </span><span class="c">chrome</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li><p>Settings下面是测试脚本需要引用的Lib包名，Resource文件，Setup和Teardown方法。</p>
+
+<ul>
+<li>Resource文件可以用来存放一些可以复用的变量，当然也可以将这一部分放到测试脚本中。</li>
+<li>Setup和Teardow跟单元测试一样，是在跑每个Test Case之前和之后会做的事情。注意上面例子里面打开url指定了浏览器Chrome，如果不指定浏览器的话会默认用Firefox打开，如果想使用Chrome来进行web自动化测试的话，则需要下载Chrome驱动<a href="https://code.google.com/p/selenium/wiki/ChromeDriver">chromedriver</a>，下载完后将其解压并设置到PATH路径。</li>
+</ul>
+</li>
+<li><p>TestCases设置了脚本里的测试案例，每个测试案例可以由Given，When，Then组成，每一行除开这几个关键字就是测试案例的步骤，在robot里面叫关键字，关键字可以带参数，可以把关键字理解为程序里面的方法。</p></li>
+<li><p>Keywords就是在Test Case里面定义的关键字了，里面有是每个关键字具体的执行内容。</p>
+
+<ul>
+<li><code>execute sql</code>这个关键字的内容是连接数据库，执行sql，关闭数据库连接。</li>
+<li><code>create recipient</code>这个关键字的内容是在页面输入用户名，输入邮箱地址，点击提交按钮。注意这里的页面元素是通过class来查找的，也可以通过id，tag或其他。</li>
+<li><code>verify create recipient</code>这个关键字的内容是等待2秒，验证页面是否包含期望的内容。</li>
+</ul>
+</li>
+</ul>
+
+
+<p>可以看到Keyword的每个内容描述都很简单易懂，甚至还可以写中文，让不懂开发的人也知道你的测试案例是做什么的。</p>
+
+<h4>执行脚本</h4>
+
+<p>因为这个测试案例是对web页面进行测试，所以在执行测试案例之前需要先将应用服务启起来，服务启起来后，执行下面的 语句:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot /your/robot/scripts/path/create_recipient.robot
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>执行完后会看到系统自动打开浏览器，输入url，自动填写输入框，并验证是否正确，最后会产生几个报告文件，如果测试案例失败，还会自动将失败的页面截图存成文件。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Output:  /home/kingzzm/projects/odde-mail-server/output.xml
+</span><span class='line'>Log:     /home/kingzzm/projects/odde-mail-server/log.html
+</span><span class='line'>Report:  /home/kingzzm/projects/odde-mail-server/report.html
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>另外建议脚本存放到test目录下，建议目录结构如下:</p>
+
+<p><img src="/images/post/2014-6/robot_script_local.png"></p>
+
+<h4>与Gradle集成</h4>
+
+<p>每次跑robot测试都需要手动启一个web服务比较麻烦，可以考虑在Gradle中通过任务的方式来执行robot测试，在跑测试之前先通过gradle启一个本地应用，然后开始跑robot测试，跑完测试后通过Gradle停掉本地服务。<br/>
+因为Gradle自带jetty容器，所以这一步实现起来也比较简单:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="n">em</span><span class="o">&gt;.</span><span class="na">stopPort</span> <span class="o">=</span> <span class="mi">7654</span>
+</span><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="s">/em&gt;.stopKey = &amp;lsquo;oddemail&amp;rsquo;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">task</span> <span class="n">uat</span><span class="o">(</span><span class="nl">type:</span><span class="n">Exec</span><span class="o">,</span> <span class="nl">dependsOn:</span> <span class="n">jettyRun</span><span class="o">)</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;commandLine &#39;/</span><span class="n">usr</span><span class="s">/local/</span><span class="n">bin</span><span class="s">/pybot&#39;, &#39;src/</span><span class="n">test</span><span class="s">/uat/</span><span class="n">testcase</span><span class="err">&#39;</span>
+</span><span class='line'><span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">jettyStop</span><span class="o">.</span><span class="na">execute</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="s">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>以后需要跑uat测试就执行<code>gradle uat</code>这个命令就可以了，这样还可以结合jenkins进行uat自动化测试。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[基于Spring MVC做单元测试（二）——使用JMockit]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/06/17/spring-mvc-unit-test-part-2/"/>
+    <updated>2014-06-17T12:24:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/06/17/spring-mvc-unit-test-part-2</id>
+    <content type="html"><![CDATA[<p>上一篇Post讲了如何使用Spring的Test框架来进行单元测试，但在运行单元测试的时候有一个问题，就是每次跑单元测试都需要加载一下配置文件，或者启动web容器，这样的单元测试跑起来就不能达到快的目的。下面再介绍一下通过JMockit这个Java Mock工具来进行spring的单元测试，其特点是不需指定spring的配置文件，任何对象都可以mock出来并进行关联。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>Controller</h2>
+
+<p>首先我们还是来看一下使用了JMockit的Controller单元测试是怎么写的，Controller的功能代码可以查看上一篇post。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.service.MailService</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Expectations</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Injectable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Tested</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.integration.junit4.JMockit</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">CoreMatchers</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JMockit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailControllerTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Tested</span>
+</span><span class='line'><span class="n">MailController</span> <span class="n">mailController</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Injectable</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">MailService</span> <span class="n">mailService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_status_success_when_send_mail_success</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">new</span> <span class="nf">Expectations</span><span class="o">()</span> <span class="o">{</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mailService</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Result</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mailController</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;{\&quot;status\&quot;:\&quot;成功\&quot;}&quot;</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>@RunWith(JMockit.class): 指定单元测试的执行类为JMockit.class;</li>
+<li>@Tested: 这个Annotate是指被测试类，在这个测试案例中我们要测试的是MailController，所以我们给其打上这个标签;</li>
+<li>@Injectable: 这个Annotate可以将对象进行mock并自动关联到被测试类，而不需要通过其他文件类似spring的配置文件等来进行关联;</li>
+<li>@Expectations: mock对象mailService的send方法，让其返回一个Result对象;</li>
+</ul>
+
+
+<p>做完上面这些基本就可以了，后面的被测方法调用和验证都跟原来的一样。这样看起来是不是比原来的单元测试代码少了一些，也更简洁了一些，最重要的一点是这样的单元测试不依赖spring的bean定义文件，不需要启动web服务，执行起来速度很快。</p>
+
+<h2>Service</h2>
+
+<p>再来看一下Service的单元测试要怎么改写，同样Service的功能代码可以看上一篇Post。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Recipient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.repo.RecipientRepository</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Injectable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.NonStrictExpectations</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Tested</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.integration.junit4.JMockit</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">Is</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JMockit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RecipientServiceTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Tested</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RecipientService</span> <span class="n">recipientService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Injectable</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RecipientRepository</span> <span class="n">recipientRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_success_when_add_recipient_not_exist</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Result</span> <span class="n">result</span> <span class="o">=</span> <span class="n">recipientService</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;Tom&quot;</span><span class="o">,</span> <span class="s">&quot;test@test.com&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">getStatus</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>相对Controller Test这里少了一步对recipientRepository对象findByEmail方法的mock，因为如果不通过Expectations进行方法mock的话，方法会默认返回null，而我们要测试的场景正是需要findByEmail方法返回null，所以mock方法这一步我们也省了。<br/>
+改写后的整体代码也比原来的少了很多，而且速度更快。</p>
+
+<h2>适当使用Mock框架</h2>
+
+<p>JMockit功能非常强大，不仅可以轻松处理上面的这些测试场景，还可以对static,final,private等方法进行mock，可以让你的单元测试毫无阻碍的进行。<br/>
+但是如果过度的使用Mock框架，会让功能代码的坏味道被掩盖。本来单元测试的设计可以让你发现功能代码上的一些设计是否合理，比如有没有紧耦合等，但使用JMockit可以让你在设计不合理的代码上也可以轻松地进行单元测试，这样你就很难发现功能代码上的问题了。<br/>
+所以建议JMockit等类似的mock框架还是要谨慎使用，首先要保证功能代码设计合理，满足面向对象设计的要求，再来考虑提高单元测试效率的问题。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[基于Spring MVC做单元测试（一）——使用Spring Test框架]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/06/16/spring-mvc-unit-test-part-1/"/>
+    <updated>2014-06-16T10:54:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/06/16/spring-mvc-unit-test-part-1</id>
+    <content type="html"><![CDATA[<p>最近用Spring Mvc框架做了几个小项目，但都没有做单元测试，最近想恶补一下这方面的东西，包括基于Spring的单元测试，自动化测试和JS单元测试。今天先讲一下基于Spring框架的单元测试，测试使用的是Spring自带的test组件，再结合Mockito一起编写测试案例，以下示例会包括Controller和Service，由于Repository是基于Spring JPA，没有自己的逻辑，所以这里就不涉及Repository的单元测试，以后有需要再介绍。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>Controller</h2>
+
+<p>首先看一下Controller的代码（如下），代码比较简单，就是接收前端发过来的一些参数，通过这些参数直接调用Service的方法。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.service.MailService</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.commons.logging.Log</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.commons.logging.LogFactory</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.codehaus.jackson.map.ObjectMapper</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMethod</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestParam</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.ResponseBody</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">format</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@Controller</span>
+</span><span class='line'><span class="nd">@RequestMapping</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;/</span><span class="n">mail</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailController</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Log</span> <span class="n">log</span> <span class="o">=</span> <span class="n">LogFactory</span><span class="o">.</span><span class="na">getLog</span><span class="o">(</span><span class="n">MailController</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'><span class="kd">private</span> <span class="kd">final</span> <span class="n">ObjectMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectMapper</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Autowired</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">MailService</span> <span class="n">mailService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/send&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">,</span> <span class="n">produces</span> <span class="o">=</span> <span class="s">&quot;text/plain;charset=UTF-8&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span>
+</span><span class='line'><span class="nd">@ResponseBody</span>
+</span><span class='line'><span class="n">String</span> <span class="nf">send</span><span class="o">(</span><span class="nd">@RequestParam</span><span class="o">(</span><span class="s">&quot;recipients&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">recipients</span><span class="o">,</span>
+</span><span class='line'>            <span class="nd">@RequestParam</span><span class="o">(</span><span class="s">&quot;subject&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">subject</span><span class="o">,</span>
+</span><span class='line'>            <span class="nd">@RequestParam</span><span class="o">(</span><span class="s">&quot;content&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">content</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;mail controller send start&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;recipients:%s&quot;</span><span class="o">,</span> <span class="n">recipients</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;subject:%s&quot;</span><span class="o">,</span> <span class="n">subject</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;content:%s&quot;</span><span class="o">,</span> <span class="n">content</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">Result</span> <span class="n">mailResult</span> <span class="o">=</span> <span class="n">mailService</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">recipients</span><span class="o">,</span> <span class="n">subject</span><span class="o">,</span> <span class="n">content</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">writeValueAsString</span><span class="o">(</span><span class="n">mailResult</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;result:%s&quot;</span><span class="o">,</span> <span class="n">result</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;mail controller send finish&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>再来看对应的单元测试:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.service.MailService</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Before</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.mockito.InjectMocks</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.mockito.Mock</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.mockito.MockitoAnnotations</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.test.context.ContextConfiguration</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.test.context.junit4.SpringJUnit4ClassRunner</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.test.context.web.WebAppConfiguration</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.test.web.servlet.MockMvc</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.test.web.servlet.setup.MockMvcBuilders</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">CoreMatchers</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">mockito</span><span class="o">.</span><span class="na">Mockito</span><span class="o">.</span><span class="na">verify</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">mockito</span><span class="o">.</span><span class="na">Mockito</span><span class="o">.</span><span class="na">when</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">test</span><span class="o">.</span><span class="na">web</span><span class="o">.</span><span class="na">servlet</span><span class="o">.</span><span class="na">request</span><span class="o">.</span><span class="na">MockMvcRequestBuilders</span><span class="o">.</span><span class="na">post</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">test</span><span class="o">.</span><span class="na">web</span><span class="o">.</span><span class="na">servlet</span><span class="o">.</span><span class="na">result</span><span class="o">.</span><span class="na">MockMvcResultHandlers</span><span class="o">.</span><span class="na">print</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">test</span><span class="o">.</span><span class="na">web</span><span class="o">.</span><span class="na">servlet</span><span class="o">.</span><span class="na">result</span><span class="o">.</span><span class="na">MockMvcResultMatchers</span><span class="o">.</span><span class="na">content</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">test</span><span class="o">.</span><span class="na">web</span><span class="o">.</span><span class="na">servlet</span><span class="o">.</span><span class="na">result</span><span class="o">.</span><span class="na">MockMvcResultMatchers</span><span class="o">.</span><span class="na">status</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">SpringJUnit4ClassRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@WebAppConfiguration</span>
+</span><span class='line'><span class="nd">@ContextConfiguration</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="nl">file:</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">webapp</span><span class="o">/</span><span class="n">WEB</span><span class="o">-</span><span class="n">INF</span><span class="o">/</span><span class="n">mvc</span><span class="o">-</span><span class="n">dispatcher</span><span class="o">-</span><span class="n">servlet</span><span class="o">.</span><span class="na">xml</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailControllerTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="n">MockMvc</span> <span class="n">mockMvc</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Mock</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">MailService</span> <span class="n">mailService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@InjectMocks</span>
+</span><span class='line'><span class="n">MailController</span> <span class="n">mailController</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Before</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">setup</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">MockitoAnnotations</span><span class="o">.</span><span class="na">initMocks</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">mockMvc</span> <span class="o">=</span> <span class="n">MockMvcBuilders</span><span class="o">.</span><span class="na">standaloneSetup</span><span class="o">(</span><span class="n">mailController</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_status_success_when_send_mail_success</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">when</span><span class="o">(</span><span class="n">mailService</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">)).</span><span class="na">thenReturn</span><span class="o">(</span><span class="k">new</span> <span class="n">Result</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">mockMvc</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span><span class="n">post</span><span class="o">(</span><span class="s">&quot;/mail/send&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">param</span><span class="o">(</span><span class="s">&quot;recipients&quot;</span><span class="o">,</span> <span class="s">&quot;test@test.com&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">param</span><span class="o">(</span><span class="s">&quot;subject&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">param</span><span class="o">(</span><span class="s">&quot;content&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">))</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">andDo</span><span class="o">(</span><span class="n">print</span><span class="o">())</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">andExpect</span><span class="o">(</span><span class="n">status</span><span class="o">().</span><span class="na">isOk</span><span class="o">()).</span><span class="na">andExpect</span><span class="o">(</span><span class="n">content</span><span class="o">().</span><span class="na">string</span><span class="o">(</span><span class="n">is</span><span class="o">(</span><span class="s">&quot;{\&quot;status\&quot;:\&quot;&quot;</span> <span class="o">+</span> <span class="n">result</span> <span class="o">+</span> <span class="s">&quot;\&quot;}&quot;</span><span class="o">)));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">verify</span><span class="o">(</span><span class="n">mailService</span><span class="o">).</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>首先是Spring的几个Annotate</h4>
+
+<ul>
+<li>RunWith(SpringJUnit4ClassRunner.class): 表示使用Spring Test组件进行单元测试;</li>
+<li>WebAppConfiguration: 使用这个Annotate会在跑单元测试的时候真实的启一个web服务，然后开始调用Controller的Rest API，待单元测试跑完之后再将web服务停掉;</li>
+<li>ContextConfiguration: 指定Bean的配置文件信息，可以有多种方式，这个例子使用的是文件路径形式，如果有多个配置文件，可以将括号中的信息配置为一个字符串数组来表示;</li>
+</ul>
+
+
+<h4>然后是Mockito的Annotate</h4>
+
+<ul>
+<li>Mock: 如果该对象需要mock，则加上此Annotate;</li>
+<li>InjectMocks: 使mock对象的使用类可以注入mock对象，在上面这个例子中，mock对象是MailService，使用了MailService的是MailController，所以在Controller加上该Annotate;</li>
+</ul>
+
+
+<h4>Setup方法</h4>
+
+<ul>
+<li><code>MockitoAnnotations.initMocks(this)</code>: 将打上Mockito标签的对象起作用，使得Mock的类被Mock，使用了Mock对象的类自动与Mock对象关联。</li>
+<li><code>mockMvc</code>: 细心的朋友应该注意到了这个对象，这个对象是Controller单元测试的关键，它的初始化也是在setup方法里面。</li>
+</ul>
+
+
+<h4>Test Case</h4>
+
+<ul>
+<li>首先mock了MailService的send方法，让其返回一个成功的Result对象。</li>
+<li><code>mockMvc.perform</code>: 发起一个http请求。</li>
+<li><code>post(url)</code>: 表示一个post请求，url对应的是Controller中被测方法的Rest url。</li>
+<li><code>param(key, value)</code>: 表示一个request parameter，方法参数是key和value。</li>
+<li><code>andDo（print()）</code>: 表示打印出request和response的详细信息，便于调试。</li>
+<li><code>andExpect（status().isOk()）</code>: 表示期望返回的Response Status是200。</li>
+<li><code>andExpect（content().string(is（expectstring））</code>: 表示期望返回的Response Body内容是期望的字符串。</li>
+</ul>
+
+
+<p>使用print打印处理的信息类似下面显示的内容:
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>MockHttpServletRequest:<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>     HTTP Method = POST
+</span><span class='line'>     Request URI = /mail/send
+</span><span class='line'>      Parameters = {recipients=[test@test.com], subject=[test], content=[test]}
+</span><span class='line'>         Headers = {}
+</span><span class='line'>
+</span><span class='line'>         Handler:
+</span><span class='line'>            Type = com.odde.mail.controller.MailController
+</span><span class='line'>          Method = public java.lang.String com.odde.mail.controller.MailController.send(java.lang.String,java.lang.String,java.lang.String) throws java.lang.Exception
+</span><span class='line'>
+</span><span class='line'>           Async:
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   Was async started = false<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    Async result = null
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  Resolved Exception:<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>            Type = null
+</span><span class='line'>
+</span><span class='line'>    ModelAndView:
+</span><span class='line'>       View name = null
+</span><span class='line'>            View = null
+</span><span class='line'>           Model = null
+</span><span class='line'>
+</span><span class='line'>        FlashMap:
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>MockHttpServletResponse:<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>          Status = 200
+</span><span class='line'>   Error message = null
+</span><span class='line'>         Headers = {Content-Type=[text/plain;charset=UTF-8], Content-Length=[19]}
+</span><span class='line'>    Content type = text/plain;charset=UTF-8
+</span><span class='line'>            Body = {&quot;status&quot;:&quot;成功&quot;}
+</span><span class='line'>   Forwarded URL = null
+</span><span class='line'>  Redirected URL = null
+</span><span class='line'>         Cookies = []
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Service</h2>
+
+<p>照例我们先看一下Service的功能代码，代码也比较简单，就是调用Repository做一些增删改查的动作。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Recipient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.repo.RecipientRepository</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.commons.logging.Log</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.commons.logging.LogFactory</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Service</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@Service</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RecipientService</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Autowired</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RecipientRepository</span> <span class="n">recipientRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="n">Result</span> <span class="nf">add</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">email</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Recipient</span> <span class="n">recipient</span> <span class="o">=</span> <span class="n">recipientRepository</span><span class="o">.</span><span class="na">findByEmail</span><span class="o">(</span><span class="n">email</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">Result</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">recipient</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">recipientRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="k">new</span> <span class="n">Recipient</span><span class="o">(</span><span class="n">username</span><span class="o">,</span> <span class="n">email</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Result</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Result</span><span class="o">(</span><span class="s">&quot;失败&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>再来看对应的测试代码:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Recipient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.repo.RecipientRepository</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Before</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.mockito.InjectMocks</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.mockito.Mock</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.mockito.MockitoAnnotations</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.test.context.ContextConfiguration</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.test.context.junit4.SpringJUnit4ClassRunner</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">Is</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">mockito</span><span class="o">.</span><span class="na">Matchers</span><span class="o">.</span><span class="na">any</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">mockito</span><span class="o">.</span><span class="na">Matchers</span><span class="o">.</span><span class="na">anyString</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">mockito</span><span class="o">.</span><span class="na">Mockito</span><span class="o">.</span><span class="na">verify</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">mockito</span><span class="o">.</span><span class="na">Mockito</span><span class="o">.</span><span class="na">when</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">SpringJUnit4ClassRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@ContextConfiguration</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="nl">file:</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">webapp</span><span class="o">/</span><span class="n">WEB</span><span class="o">-</span><span class="n">INF</span><span class="o">/</span><span class="n">mvc</span><span class="o">-</span><span class="n">dispatcher</span><span class="o">-</span><span class="n">servlet</span><span class="o">.</span><span class="na">xml</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RecipientServiceTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Mock</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RecipientRepository</span> <span class="n">recipientRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@InjectMocks</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RecipientService</span> <span class="n">recipientService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Before</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">setup</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">MockitoAnnotations</span><span class="o">.</span><span class="na">initMocks</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_success_when_add_recipient_not_exist</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">when</span><span class="o">(</span><span class="n">recipientRepository</span><span class="o">.</span><span class="na">findByEmail</span><span class="o">(</span><span class="n">anyString</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">when</span><span class="o">(</span><span class="n">recipientRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">any</span><span class="o">(</span><span class="n">Recipient</span><span class="o">.</span><span class="na">class</span><span class="o">))).</span><span class="na">thenReturn</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">recipientService</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;Tom&quot;</span><span class="o">,</span> <span class="s">&quot;test@test.com&quot;</span><span class="o">).</span><span class="na">getStatus</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">verify</span><span class="o">(</span><span class="n">recipientRepository</span><span class="o">).</span><span class="na">findByEmail</span><span class="o">(</span><span class="n">anyString</span><span class="o">());</span>
+</span><span class='line'>    <span class="n">verify</span><span class="o">(</span><span class="n">recipientRepository</span><span class="o">).</span><span class="na">save</span><span class="o">(</span><span class="n">any</span><span class="o">(</span><span class="n">Recipient</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Service的单元测试就比较简单了，大部分内容都在Controller里面讲过，不同的地方就是Controller是使用mockMvc对象来模拟Controler的被测方法，而在Service的单元测试中则是直接调用Service的方法（比如上面例子中的findByEmail和add）。</p>
+
+<h2>Reponsitory</h2>
+
+<p>最后再说一下Reponsitory的单元测试，刚才讲过这里不涉及这块的介绍，因为Reponsitory没有具体的实现代码，基本上调用的是Spring JPA的功能。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Recipient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">RecipientRepository</span> <span class="kd">extends</span> <span class="n">JpaRepository</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Recipient</span><span class="o">,</span> <span class="n">Long</span><span class="o">&gt;</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="n">Recipient</span> <span class="n">findByEmail</span><span class="o">(</span><span class="n">String</span> <span class="n">email</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>如果你的项目里面有自定义的Reponsitory具体实现，则需要做单元测试，这个可以上网自行搜索相关资料。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[最近小项目的一些记录（二）]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/"/>
+    <updated>2014-05-31T10:40:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2</id>
+    <content type="html"><![CDATA[<p><a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project/">前一篇post</a>主要记录了Spring JPA和Hibernate的问题，接着记录其他一些工具遇到的问题。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>Jsoup</h2>
+
+<p><a href="https://github.com/jhy/jsoup">Jsoup</a>是一个比较火的Java解析Html工具，简单易用，功能强大，在github上有不少星星。</p>
+
+<h3>使用Jsoup连接url时报403</h3>
+
+<p>一般使用Jsoup连接url都不会有什么问题，正常的写法如下：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>但有些网站会获取用户的浏览器信息，而上面的写法是没有浏览器信息的，这个时候就会报403的错误，需要在连接时加上userAngent。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">userAgent</span><span class="o">(</span><span class="s">&quot;Mozilla&quot;</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Css Selector</h3>
+
+<p>使用Jsoup来抓取网页信息，最简单的一种方式就是通过Css selector，这样可以让你少写很多代码。比如下面的一段html:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div id=&quot;main&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;header&quot;<span class="ni">&amp;gt;&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>使用css selector可以这样简单的获得。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">doc</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="s">&quot;#main div.header&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Velocity</h2>
+
+<p>项目用到了Velocity来定制邮件模板，这样可以方便的修改邮件格式。在网上可以搜到很多关于Spring和Velocity集成的文章，但大部分是讲如何使用Velocity来生成页面的，而如何生成其他文件的说明比较少，下面我们就来看一下如何配置的。</p>
+
+<ul>
+<li><p>先配置velocityConfigurer的bean，这里定义了模板文件的路径，属性和编码等信息。
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;velocityConfigurer&quot;</span>
+</span><span class='line'>        <span class="na">class=</span><span class="s">&quot;org.springframework.web.servlet.view.velocity.VelocityConfigurer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;resourceLoaderPath&quot;</span> <span class="na">value=</span><span class="s">&quot;WEB-INF/velocity&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;velocityProperties&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;props&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.name&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                  loopCounter
+</span><span class='line'>              <span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.initial.value&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                  0
+</span><span class='line'>              <span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;input.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;output.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/props&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
+<li><p>在需要使用的Sevice里面引入，这样就可以在service里面使用到Velocity的配置信息了。
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Service</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailService</span> <span class="o">{</span>
+</span><span class='line'>  <span class="nd">@Resource</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">velocityConfigurer</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">VelocityConfigurer</span> <span class="n">velocityConfigurer</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span> <span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
+<li><p>使用Velocity的工具类来得到生成的文件信息。</p>
+
+<ul>
+<li>temple是模板文件的名称。</li>
+<li>model是生成文件所需的参数。
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">content</span> <span class="o">=</span> <span class="n">VelocityEngineUtils</span><span class="o">.</span><span class="na">mergeTemplateIntoString</span><span class="o">(</span>
+</span><span class='line'>          <span class="n">velocityConfigurer</span><span class="o">.</span><span class="na">getVelocityEngine</span><span class="o">(),</span> <span class="n">temple</span><span class="o">,</span>
+</span><span class='line'>          <span class="n">MAIL_ENCODING</span><span class="o">,</span> <span class="n">model</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Angularjs</h3>
+
+<p>Angularjs功能比较强大，使用它之后基本可以不用使用JQuery了，这里记录一下使用遇到的一个比较奇怪的问题。</p>
+
+<ul>
+<li>问题: 使用Angularjs发起一个post请求，带了几个请求的参数，后台接收请求时获取不到参数。开始的写法如下：</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">queryData</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>            <span class="s2">&quot;depGroup&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#dep_group&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s2">&quot;website&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#website&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s2">&quot;startDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#start_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s2">&quot;endDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#end_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>        <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">});</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>接收不到参数的原因是angularjs把参数转成了json导致后台接收不到，需要在发起请求时将参数转换一下，修改后的代码如下：</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">postConfig</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">},</span>
+</span><span class='line'>    <span class="nx">transformRequest</span><span class="o">:</span> <span class="nx">transform</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="err">，</span><span class="nx">postConfig</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Semantic-ui</h3>
+
+<p>这个是我比较喜欢的一个css框架，这里要注意的地方是有些功能和Angularjs结合起来会发现不起作用，如果不起作用可以尝试使用<a href="https://github.com/caitp/angular-semantic">angular-semantic</a>这个工具看看能否解决问题。</p>
+
+<ul>
+<li>semantic-ui的表单规则和行为设置，简单的示例如下，需要设置规则(rules)和配置(setting即校验通过后的行为)。</li>
+</ul>
+
+
+<p>js代码:<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">rules</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">searchKeyword</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">identifier</span><span class="o">:</span> <span class="s1">&#39;searchKeyword&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">rules</span><span class="o">:</span> <span class="p">[</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;empty&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="nx">prompt</span><span class="o">:</span> <span class="s1">&#39;请输入查询关键字&#39;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">]</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">setting</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">onSuccess</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// 发http请求</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#searchForm&#39;</span><span class="p">).</span><span class="nx">form</span><span class="p">(</span><span class="nx">rules</span><span class="p">,</span> <span class="nx">setting</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>html代码:
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div id=&quot;searchForm&quot; class=&quot;ui form&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;two fields&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>div class=&quot;field&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>div class=&quot;ui icon input&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>input id=&quot;searchKeyword&quot; type=&quot;text&quot; name=&quot;searchKeyword&quot; placeholder=&quot;请输入查询关键字...&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>i class=&quot;search icon&quot;<span class="ni">&amp;gt;&amp;lt;</span>/i<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>div class=&quot;field&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>div id=&quot;searchBtn&quot; class=&quot;ui blue submit button&quot;<span class="ni">&amp;gt;</span>查询<span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;ui error message&quot;<span class="ni">&amp;gt;&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,248 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>在ubunut下使用pycharm和eclipse进行python远程调试 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="在ubunut下使用pycharm和eclipse进行python远程调试">
+	<meta name="keywords" content="python,remote debug,pycharm,eclipse,ubuntu">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">在ubunut下使用pycharm和eclipse进行python远程调试</h2>
+	<div class="entry-content"><p><img src="/images/post/2014-4/pycharm_and_eclipse.jpg"></p>
+
+<p>我比较喜欢Pycharm，因为这个是JetBrains公司出的python IDE工具，该公司下的java IDE工具——IDEA，无论从界面还是操作上都甩eclipse几条街，但项目组里有些人使用eclipse比较久了，一时让他们转pycharm比较困难，所以还是两边的设置都介绍一下吧。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>pycharm远程调试</h2>
+
+<p>pycharmd的远程调试比eclipse的简单多了，而且调试程序也比较稳定，不像eclipse那样容易出一些莫名其妙的问题，步骤如下。</p>
+
+<ol>
+<li>将pycharm安装目录下的pycharm-debug.egg文件拷贝到远程机器上（如果是python3的话就拷贝pycharm-debug-py3k.egg文件）。</li>
+<li>在远程机器上安装pycharm-debug.egg，安装命令： <code>easy_install pycharm-debug.egg</code>。</li>
+<li><p>在pycharm中设置断点监听配置。<br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-1.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-2.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-3.png"></p></li>
+<li><p>启动调试监听程序。<br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-4.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-5.png"></p></li>
+<li><p>在远程机器上启动服务并发起http请求。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
+<li><p>pycharm监听到请求会进入断点。
+<img src="/images/post/2014-4/pycharm-debug/pycharm-6.png"></p></li>
+</ol>
+
+
+<p>更多关于pycharm远程调试的信息可以参阅<a href="http://www.jetbrains.com/pycharm/webhelp/remote-debugging.html">这里</a>。</p>
+
+<h2>eclipse远程调试</h2>
+
+<p>使用eclipse进行python远程调试，需要先在ubuntu下面安装eclipse和eclipse的python插件PyDev。</p>
+
+<ul>
+<li>Eclipse安装比较简单，直接解压下载后的eclipse包即可使用。</li>
+<li><p>PyDev可以按照<a href="http://pydev.org/manual_101_install.html">官网的向导</a>进行安装。<br/>
+安装完后按照下面的步骤进行远程调试。</p></li>
+<li><p>在window->Preperences->PyDev->Debug中，设置debug端口，比如12306。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-1.png"></p></li>
+<li><p>新增PyDev视图。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-2.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-3.png"></p></li>
+<li><p>在Pydev试图中增加remote debug菜单。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-4.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-5.png"></p></li>
+<li><p>在远程机器的源码里面添加调试代码和断点。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-6.png"></p></li>
+<li><p>断点设置语句：<br/>
+<code>pydevd.settrace('192.168.8.128', port=12306, stdoutToServer=True, stderrToServer=True)</code><br/>
+注意：这里的ip是指设置了调试监听的机器ip。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-7.png"></p></li>
+<li><p>通过Pydev菜单打开调试监听。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-8.png"><br/>
+开始监听显示信息如下：<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-9.png"></p></li>
+<li><p>启动远程服务并发起http请求。
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
+<li><p>Pydev监听到请求后就会进入断点。
+<img src="/images/post/2014-4/eclipse-debug/eclipse-11.png"></p></li>
+</ul>
+
+
+<p>更多远程调试的内容可以参照Pydev的<a href="http://pydev.org/manual_adv_remote_debugger.html">官网步骤</a>。</p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

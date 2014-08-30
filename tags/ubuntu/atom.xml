@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: ubuntu | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/tags/ubuntu/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2014-08-30T13:03:26+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在ubunut下使用pycharm和eclipse进行python远程调试]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu/"/>
+    <updated>2014-04-13T15:54:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-4/pycharm_and_eclipse.jpg"></p>
+
+<p>我比较喜欢Pycharm，因为这个是JetBrains公司出的python IDE工具，该公司下的java IDE工具——IDEA，无论从界面还是操作上都甩eclipse几条街，但项目组里有些人使用eclipse比较久了，一时让他们转pycharm比较困难，所以还是两边的设置都介绍一下吧。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>pycharm远程调试</h2>
+
+<p>pycharmd的远程调试比eclipse的简单多了，而且调试程序也比较稳定，不像eclipse那样容易出一些莫名其妙的问题，步骤如下。</p>
+
+<ol>
+<li>将pycharm安装目录下的pycharm-debug.egg文件拷贝到远程机器上（如果是python3的话就拷贝pycharm-debug-py3k.egg文件）。</li>
+<li>在远程机器上安装pycharm-debug.egg，安装命令： <code>easy_install pycharm-debug.egg</code>。</li>
+<li><p>在pycharm中设置断点监听配置。<br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-1.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-2.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-3.png"></p></li>
+<li><p>启动调试监听程序。<br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-4.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-5.png"></p></li>
+<li><p>在远程机器上启动服务并发起http请求。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
+<li><p>pycharm监听到请求会进入断点。
+<img src="/images/post/2014-4/pycharm-debug/pycharm-6.png"></p></li>
+</ol>
+
+
+<p>更多关于pycharm远程调试的信息可以参阅<a href="http://www.jetbrains.com/pycharm/webhelp/remote-debugging.html">这里</a>。</p>
+
+<h2>eclipse远程调试</h2>
+
+<p>使用eclipse进行python远程调试，需要先在ubuntu下面安装eclipse和eclipse的python插件PyDev。</p>
+
+<ul>
+<li>Eclipse安装比较简单，直接解压下载后的eclipse包即可使用。</li>
+<li><p>PyDev可以按照<a href="http://pydev.org/manual_101_install.html">官网的向导</a>进行安装。<br/>
+安装完后按照下面的步骤进行远程调试。</p></li>
+<li><p>在window->Preperences->PyDev->Debug中，设置debug端口，比如12306。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-1.png"></p></li>
+<li><p>新增PyDev视图。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-2.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-3.png"></p></li>
+<li><p>在Pydev试图中增加remote debug菜单。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-4.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-5.png"></p></li>
+<li><p>在远程机器的源码里面添加调试代码和断点。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-6.png"></p></li>
+<li><p>断点设置语句：<br/>
+<code>pydevd.settrace('192.168.8.128', port=12306, stdoutToServer=True, stderrToServer=True)</code><br/>
+注意：这里的ip是指设置了调试监听的机器ip。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-7.png"></p></li>
+<li><p>通过Pydev菜单打开调试监听。<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-8.png"><br/>
+开始监听显示信息如下：<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-9.png"></p></li>
+<li><p>启动远程服务并发起http请求。
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
+<li><p>Pydev监听到请求后就会进入断点。
+<img src="/images/post/2014-4/eclipse-debug/eclipse-11.png"></p></li>
+</ul>
+
+
+<p>更多远程调试的内容可以参照Pydev的<a href="http://pydev.org/manual_adv_remote_debugger.html">官网步骤</a>。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[安装win7和ubuntu双系统]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer/"/>
+    <updated>2012-04-16T16:53:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2012/04/16/install-windows-and-ubuntu-os-at-one-computer</id>
+    <content type="html"><![CDATA[<p>最近买了新的笔记本电脑，发现新买的电脑上面安装的是win7用户版，在网上查了一下这个版本的win7是功能最少的。。。另外又发现偌大的500G硬盘居然只给分成2个区，每个250。。。各种不爽，于是决定格式化硬盘重新安装系统。</p>
+
+<!--more-->
+
+
+<p><strong>1.安装win7</strong></p>
+
+<p>在网上找了下win7的iso映像，有各种版本，说是旗舰版的win7功能是比较多比较好的。另外目前的cpu都是64位的，所以我打算安装64位的系统，64位系统和32位最大区别是可以支持4G以上的内存，刚好我买电脑的时候加了根内存条，现在总内存是6G，所以64位旗舰版的win7最满足我的需求了：）</p>
+
+<p>我下载的是青苹果的一个iso镜像，下载下来之后刻录成启动光盘，然后用光盘启动系统，发现里面只有winPE选项有用，其他选项都是废的。。。进入PE后，用里面的工具重新分了下区，然后用ghost安装了win7。这个版本的镜像里面没有offic软件，没办法只好上网找了office2007，找到一个石油学院的office iso镜像，兼容win7 64位，又免序列号的。安装成功之后将C盘系统用ghost克隆了一个备份保存，win7安装完成。</p>
+
+<p><strong>2.安装ubuntu</strong></p>
+
+<p>开始我安装的是ubuntu11，用的是以前的安装盘，这里纠结了一下是用wubi装还是正规安装，网上说是wubi安装属体验系统，功能可能不全，最后用ubuntu的启动光盘正常安装了ubuntu11。</p>
+
+<p>安装ubuntu时，开始有3个选项，一是跟win7一起安装，一个是替代wiin7，一个是自定义。看了网上攻略我选择了自定义，选择自定义时要自己划分ubuntu分区。我划分了3个，一个是主分区，这个分区相当与windows的系统C盘，大小10G，挂载点“/”。第二个是交换空间，相当是win7的虚拟内存空间，我划分了4G。最后一个是home区，这个相当与windows系统的其他分区（比如D盘，E盘。。。)，我划分了20个G，挂载点是“/home"。</p>
+
+<p>安装完后重启系统，就可以看到ubuntu的启动引导菜单了。如果你想将win7放在菜单首位，可以进入ubuntu系统修改/boot/grub/grub.cfg文件，将里面的win7菜单移到ubuntu菜单前面就可以了。</p>
+
+<p><strong>3.重装ubuntu</strong></p>
+
+<p>后来发现ubuntu11上网网速极慢，查了很多都不知道是哪里出问题，就重新下载了ubuntu12，安装过程与上面一样。安装完成之后重启电脑发现ubuntu引导目录不见了，要重新做ubuntu的菜单引导。</p>
+
+<p>先用ubuntu的启动光盘进入试用版ubuntu，然后打开终端，输入下面命令查询ubuntu的安装区，我的是sda9。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo fdisk -l
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>然后创建了一个临时目录，这个目录是为了后面mount ubuntu启动分区用的，命令如下：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>mkdir /media/tmpdir
+</span><span class='line'>mount  /dev/sda8  /media/tmpdir
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>接下来是最重要的一步，输入命令下面命令：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo grub-install &amp;mdash;root-directory<span class="o">=</span>/media/tmpdir /dev/sda
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>注意，这里就是sda，后面不要写成sda9，如果显示no error report，则表示基本成功了。然后保存重启系统，会发现ubuntu的菜单已经有了，但是看起来比较乱，版本信息也不是安装的系统版本信息，所以接下来进入ubuntu系统，打开终端，输入：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo update-grub2
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>完了之后再次重启系统就会发现ubuntu正常的启动引导菜单了。如果想把win放在前面，就照之前说的方法改下ubuntu的配置文件就OK了。</p>
+
+<p>就这样折腾了一个星期，最后终于把系统都装好了，好累。。。不过也学到了很多系统知识。下次再装系统就轻车熟路了：）</p>
+]]></content>
+  </entry>
+  
+</feed>
