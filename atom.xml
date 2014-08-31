@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-08-31T10:29:23+08:00</updated>
+  <updated>2014-08-31T16:05:02+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,303 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[让你的安卓开发更容易(一)——Intellij IDEA]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1/"/>
+    <updated>2014-08-31T10:59:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-8/intellijidea_android.gif"></p>
+
+<blockquote><p>工欲善其事，必先利其器</p><footer><strong>孔子 ——《春秋》</strong></footer></blockquote>
+
+
+<p>介绍一下安卓开发的一些好用工具，可以让你的开发事半功倍。如果你是一个安卓新手，那么准备一套高效率的开发工具，会让你从一开始就养成使用好工具的习惯，从开始就比别人更快；如果你是一名安卓开发高手，也可以看看这些工具，说不定你已经在使用其中的一些工具了。</p>
+
+<!--more-->
+
+
+<h2>Intellij IDEA</h2>
+
+<p>虽然IntelliJ IDEA是一款收费的软件，但收费有它收费的道理，跟eclipse相比，它多了更多重构，代码错误提示，与更多工具集成的功能。IntelliJ IDEA被认为是当前Java开发效率最快的IDE工具，它集成了开发过程中实用的众多功能，几乎可以不用鼠标可以方便的完成你要做的任何事情，最大程度的加快开发的速度。简单而又功能强大。</p>
+
+<p>从版本10开始，IntelliJ IDEA就集成了Android的开发功能，发展到现在版本13，不仅具备了流畅开发Android项目的能力，而且还集成了最新的构建工具Gradle，Android lint等工具。</p>
+
+<h3>Android Hello World</h3>
+
+<p>现在我们使用IntelliJ IDEA来创建一个使用Gradle构建的Android项目。</p>
+
+<ul>
+<li>首先点击创建新工程，在左边的项目类型栏中选择<code>Android</code>，可以看到右边有4个选项可以选，我们选择<code>Gradle: Android Mondule</code>，然后点击下面的Next;</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-1.png"></p>
+
+<ul>
+<li>进入项目信息配置页面，可以看到有如下的选项，填写后点击Next；
+
+<ul>
+<li>Application name: 应用名</li>
+<li>Module name: 模块名</li>
+<li>Package name: 包名</li>
+<li>Minimum required SDK: 可支持的最小Android SDK版本</li>
+<li>Target SDK: 可支持的最大Android SDK版本</li>
+<li>Compile with: 用哪个Android SDK版本编译</li>
+<li>Theme: app主题，全黑，全白，半黑半百，是否要GridLayou，是否要action bar等</li>
+</ul>
+</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-2.png"></p>
+
+<ul>
+<li>选择main_activity的样式，有9种可以选择，样式的效果在右边可以预览，我们可以选择最简单的<code>Blank Activity</code>，选择好了Next；</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-3.png"></p>
+
+<ul>
+<li>填写Activity名字和对应的展示层layout名字，填完Next；</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-4.png"></p>
+
+<ul>
+<li>填写工程名和选择工程文件路径，注意最下面的<code>Project format</code>，有2种格式，一种是<code>.idea</code>文件夹，一个是ipr文件，选择ipr文件的方式可以减少很多文件的生成，最后Finish；</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-5.png"></p>
+
+<p>生成的代码如下:</p>
+
+<figure class='code'><figcaption><span>MainActivity.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">ActionBarActivity</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onCreateOptionsMenu</span><span class="o">(</span><span class="n">Menu</span> <span class="n">menu</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// Inflate the menu; this adds items to the action bar if it is present.</span>
+</span><span class='line'>        <span class="n">getMenuInflater</span><span class="o">().</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">menu</span><span class="o">.</span><span class="na">main</span><span class="o">,</span> <span class="n">menu</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onOptionsItemSelected</span><span class="o">(</span><span class="n">MenuItem</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// Handle action bar item clicks here. The action bar will</span>
+</span><span class='line'>        <span class="c1">// automatically handle clicks on the Home/Up button, so long</span>
+</span><span class='line'>        <span class="c1">// as you specify a parent activity in AndroidManifest.xml.</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemId</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">id</span> <span class="o">==</span> <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">action_settings</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">onOptionsItemSelected</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>activity_main.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;RelativeLayout</span> <span class="na">xmlns:android=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:tools=</span><span class="s">&quot;http://schemas.android.com/tools&quot;</span>
+</span><span class='line'>    <span class="na">android:layout_width=</span><span class="s">&quot;match_parent&quot;</span>
+</span><span class='line'>    <span class="na">android:layout_height=</span><span class="s">&quot;match_parent&quot;</span>
+</span><span class='line'>    <span class="na">android:paddingLeft=</span><span class="s">&quot;@dimen/activity_horizontal_margin&quot;</span>
+</span><span class='line'>    <span class="na">android:paddingRight=</span><span class="s">&quot;@dimen/activity_horizontal_margin&quot;</span>
+</span><span class='line'>    <span class="na">android:paddingTop=</span><span class="s">&quot;@dimen/activity_vertical_margin&quot;</span>
+</span><span class='line'>    <span class="na">android:paddingBottom=</span><span class="s">&quot;@dimen/activity_vertical_margin&quot;</span>
+</span><span class='line'>    <span class="na">tools:context=</span><span class="s">&quot;com.github.zzm.myapplication1.app.MainActivity&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;TextView</span>
+</span><span class='line'>        <span class="na">android:text=</span><span class="s">&quot;@string/hello_world&quot;</span>
+</span><span class='line'>        <span class="na">android:layout_width=</span><span class="s">&quot;wrap_content&quot;</span>
+</span><span class='line'>        <span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/RelativeLayout&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行的效果如下:</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-6.png" width="250" height="350"></p>
+
+<h3>Gradle脚本</h3>
+
+<p>可以看到工程目录下有2个build.gradle脚本，一个是根目录的构建文件(如下)，如果想提高构建速度，可以将脚本中的mavenCentral()改为<code>maven {url "http://maven.oschina.net/content/groups/public/"}</code>，就是将maven的国外镜像库改成国内的库。</p>
+
+<figure class='code'><figcaption><span>root/build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// Top-level build file where you can add configuration options common to all sub-projects/modules.</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">buildscript</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mavenCentral</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">classpath</span> <span class="s1">&#39;com.android.tools.build:gradle:0.9.+&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">allprojects</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mavenCentral</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外一个是app目录下的构建文件，可以看到指定了sdk的最小最大版本，需要的依赖包等。</p>
+
+<figure class='code'><figcaption><span>app/build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">buildscript</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mavenCentral</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">classpath</span> <span class="s1">&#39;com.android.tools.build:gradle:0.9.+&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;android&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">mavenCentral</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">android</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">compileSdkVersion</span> <span class="mi">20</span>
+</span><span class='line'>    <span class="n">buildToolsVersion</span> <span class="s2">&quot;20.0.0&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">defaultConfig</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">minSdkVersion</span> <span class="mi">8</span>
+</span><span class='line'>        <span class="n">targetSdkVersion</span> <span class="mi">20</span>
+</span><span class='line'>        <span class="n">versionCode</span> <span class="mi">1</span>
+</span><span class='line'>        <span class="n">versionName</span> <span class="s2">&quot;1.0&quot;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">buildTypes</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">release</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">runProguard</span> <span class="kc">false</span>
+</span><span class='line'>            <span class="n">proguardFiles</span> <span class="nf">getDefaultProguardFile</span><span class="o">(</span><span class="s1">&#39;proguard-android.txt&#39;</span><span class="o">),</span> <span class="s1">&#39;proguard-rules.txt&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">compile</span> <span class="nf">fileTree</span><span class="o">(</span><span class="nl">dir:</span> <span class="s1">&#39;libs&#39;</span><span class="o">,</span> <span class="nl">include:</span> <span class="o">[</span><span class="s1">&#39;*.jar&#39;</span><span class="o">])</span>
+</span><span class='line'>    <span class="n">compile</span> <span class="s1">&#39;com.android.support:appcompat-v7:20.0.0&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[让路由飞越长城(二)]]></title>
@@ -7486,117 +7783,6 @@ swift的源码因为不断在更新，笔记记录的代码就以2014-4-18的为
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[《黑客》读书笔记]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/02/10/make-harker-booke-note/"/>
-    <updated>2014-02-10T21:41:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/02/10/make-harker-booke-note</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/hacker.jpg"></p>
-
-<h2>简介</h2>
-
-<p>《黑客》这本书介绍的是上世纪50～80年代的一段计算机历史，介绍第一代黑客的起源，第二代硬件黑客对世界的影响，第三代游戏黑客如何让电脑融入大众生活，类似“魔戒三部曲”一样宏伟的一部计算机编年史。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>黑客的起源</h2>
-
-<p>MIT AI实验室第九大楼是黑客的发源地，&#8221;hack&#8221;一词大概最早就是由MIT的学生提出的，原来是用来形容本校学生的一些精心策划的恶作剧，但AI实验室的黑客们对&#8221;hack&#8221;却有着极大的尊敬。一般一项技艺能称为&#8221;hack&#8221;，它必须有创新，有风格，有技术含量，AI实验室里面效率最高的人就非常骄傲的称自己为&#8221;hacker&#8221;。</p>
-
-<h2>黑客马拉松</h2>
-
-<p>熟悉Facebook的人对黑客马拉松都会有所了解，Facebook每年都会举办几场黑客马拉松编程比赛，在这些比赛中也诞生了很多伟大的产品，在《黑客》这本书里面讲到这一活动的早期雏形。在上个世纪50年代，个人电脑还没有普及，在MIT学校里面接触电脑的那一帮最早的黑客只能通过大型机编程。但是大型机就那么几台，所以喜欢编程的黑客们的上机时间非常有限，一般是一个人刚上完机，另外一个人就迫不及待地顶替他的位置编写自己的代码，甚至有些黑客觉得白天上机的时间不够，会晚上偷偷溜进实验室继续编程。虽然现在个人电脑已经很普遍了，但黑客们还是很喜欢这种长时间编程活动。</p>
-
-<h2>黑客道德与敏捷开发</h2>
-
-<p>敏捷开发中有什么？有快速迭代，代码所有制，团队自组织，了解敏捷开发的同学对此都比较清楚，而黑客道德里面也有一些很相似的共同点，我因此觉得黑客道德是敏捷开发的原型。</p>
-
-<h4>信息应该免费</h4>
-
-<p>黑客普遍认为信息应该免费共享（为什么说普遍？因为比尔盖茨不是这样认为的，他认为软件也是脑力劳动的成果，所有人应该尊重劳动成果，所以他写了那一封很著名的信——<a href="http://en.wikipedia.org/wiki/Open_Letter_to_Hobbyists">给电脑爱好者的公开信</a>），他们认为计算机（包括软件和硬件）应该公开其中的黑盒，让所有人参与到其中的开发并对其进行完善，这样计算机才能取得更大的进步。敏捷开发中的代码所有制与此观点相同，认为团队中的代码不应该为个人所有，应该所有人都有权对代码进行修改。</p>
-
-<h4>快速开发产品原型</h4>
-
-<p>在Facebook崇尚的黑客之道中，就有<code>Done is better than Perfect</code>的说法，就是说一开始不要追求产品的完美，先做出产品的原型得到市场的反馈，再慢慢根据反馈来完善产品。黑客们一直以来也是这样做的，遇到感兴趣的问题不会想太多，做了再说，快速把核心功能开发出来验证自己的想法，很多伟大的产品都源自于此。敏捷开发中的快速迭代也是类似的原理，甚至最近比较火的精益创业也是此种观点。</p>
-
-<h4>对权威挑战</h4>
-
-<p>黑客希望信息共享，能快速开发产品，对开发的效率要求是十分严格，他们对工具的追求像对完美艺术追求一样。但大部分权威机构的产品都不能满足黑客们的要求，它们笨重、不开放、设计保守。黑客们更倾向于自己开发工具，自给自足，然后开放给其他黑客一起使用，大家一起完善。这是一种对权威的挑战、蔑视，黑客与生俱来的叛逆精神。</p>
-
-<h4>优雅简洁的代码</h4>
-
-<p>在还是大型机的时代，电脑的内存和容量非常小，黑客在编程的时候需要让自己的代码尽可能的少，这样才能“塞进”机器里面运行。比如实现某个功能，如果某人只是按部就班的实现这个功能，大家可能会觉得他只是靠蛮力解决了问题，勉强算是一个程序员，但如果他使用了一种奇妙的算法，让代码量大大减少了，那么大家会觉得他是一个黑客，是一位追求完美的艺术家，比如比尔盖茨编写的4KB大小的BASIC程序就经常为黑客们所津津乐道。敏捷开发中对代码的重构推崇有加，介绍重构的资料最经典的是Martin.Flower<a href="http://book.douban.com/subject/1229923/">重构</a>一书，技术背后的思想我觉得跟这些早期黑客是一致的，要像艺术家一样对待自己的代码，追求优雅和完美，是一种对自我的超越。有个说法是，如果你看自己以前的代码觉得很烂，证明你已经进步了，看自己代码的时间间隔越短，证明你进步的越快，比如上午写完的代码，下午review时觉得太糟糕了，那恭喜你，你已经进步了。</p>
-
-<h2>防御性编程</h2>
-
-<p>最后说一下防御性编程，比较有意思。以前有一位外号叫“嘎吱船长”的黑客约翰.德拉浦，他是位天才的技术家，他喜欢的编程风格就是“防御式编程”。大部分人在修复bug时，一般都会找到出错的代码，然后改正它，而船长的改法比较特别，不修改出错的代码，而是加上另外一段代码来让程序自己发现问题后自己修复。比如下面的一段有错误的代码：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>   <span class="k">def</span> <span class="nf">method_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>      <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span class='line'>      <span class="nb">sum</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-</span><span class='line'>      <span class="k">if</span> <span class="nb">sum</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
-</span><span class='line'>          <span class="c"># do something</span>
-</span><span class='line'>          <span class="o">...</span>      
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>正常人会这样改：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>   <span class="k">def</span> <span class="nf">method_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>      <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span class='line'>      <span class="nb">sum</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-</span><span class='line'>      <span class="k">if</span> <span class="nb">sum</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span> <span class="c">#一般会改这里</span>
-</span><span class='line'>          <span class="c"># do something</span>
-</span><span class='line'>          <span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但是船长是这样来修复：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>   <span class="k">def</span> <span class="nf">method_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>      <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span class='line'>      <span class="nb">sum</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="c">#在这里加代码...  </span>
-</span><span class='line'>      <span class="k">if</span> <span class="nb">sum</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">:</span>
-</span><span class='line'>          <span class="nb">sum</span> <span class="o">=</span> <span class="mi">5</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="k">if</span> <span class="nb">sum</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
-</span><span class='line'>          <span class="c"># do something</span>
-</span><span class='line'>          <span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>让程序完成自我救赎~~~^_^</p>
 ]]></content>
   </entry>
   
