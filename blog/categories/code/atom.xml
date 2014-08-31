@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-08-30T13:03:26+08:00</updated>
+  <updated>2014-08-31T10:29:23+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,247 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[让路由飞越长城(二)]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2/"/>
+    <updated>2014-08-30T19:30:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-8/greatefw.jpg"></p>
+
+<p>配置好了高级的路由器，安装了dd-wrt版本的固件，现在还不忙着让路由器翻墙，先在一台机器上测试能通过新路由器能正常上网和翻墙，可以了之后我们再来配置路由器的翻墙功能。</p>
+
+<!--more-->
+
+
+<h3>VPN</h3>
+
+<p>翻墙基本是两种方式:SSH和VPN。SSH是在浏览器上连接国外的服务器从而可以浏览被和谐的网站，而VPN是让整个设备的网络都连上国外的服务器，包括浏览器和其他任何软件。VPN的好处是可以让其他软件更快速地连接国外服务器，比如要下载android的sdk，国内网络经常半天没有反应，翻墙后下载速度就快多了，但缺点也比较明显，就是访问国内网站的时候会比较慢，使用国内软件比如QQ的时候时不时会掉线。</p>
+
+<p>这里有个比较好的VPN推荐一下<a href="http://www.strongvpn.com/">Strong VPN</a>(需要翻墙才能访问)，这个是一个美国比较好的VPN，连接稳定，访问快速，24小时技术支持，价格也比较合适，有个55美刀/年的套餐，支持PPTP,L2TP和SSTP连接。国内的VPN和SSH我用了几个都不大满意，不是有些网站不能上，就是经常掉线连不上。如果有米的话，还可以去租VPS(虚拟专用服务器)，自己搭VPN服务，那速度绝对比直接买的VPN快，甚至还可以自己卖VPN账号。</p>
+
+<p>不管怎样，我们需要一个VPN账号，而且可以支持PPTP连接的，下面会用到。</p>
+
+<p><img src="/images/post/2014-8/strong-vpn.png"></p>
+
+<h3><a href="https://code.google.com/p/autoddvpn/">autoddvpn</a>(需要翻墙才能访问)</h3>
+
+<p>autoddvpn是一个解决方案，主要有下面几大功能:</p>
+
+<ul>
+<li>让你的dd-wrt路由器可以自由翻墙，路由下的所有设备仿佛在墙外一样，完全感觉不到墙的存在；</li>
+<li>智能路由，可以自动判断访问的网站是墙内还是墙外的，如果是墙内的就不走VPN，如果是墙外的走VPN；</li>
+<li>守护进程，监控你的VPN服务是否正常，如果VPN断了可以随时重连。</li>
+</ul>
+
+
+<p>autoddvpn有2种设置模式:传统模式(classicMode)和优雅模式(graceMode)，这里我们主要介绍<a href="https://code.google.com/p/autoddvpn/wiki/graceMode">graceMode</a>。在gracemode中，我们主要看PPTP这一块的内容，因为我们的VPN账号只支持PPTP，不支持OpenVPN(Strong VPN支持PPTP,L2TP,SSTP连接，但dd-wrt不支持L2TP和SSTP)。</p>
+
+<ul>
+<li>首先开启路由器的<a href="https://code.google.com/p/autoddvpn/wiki/jffs">JFFS</a>，这样可以将我们的脚本放到jffs里面(jffs我理解是一块可以挂载的小硬盘)；</li>
+<li>接着按照文档设置DNS(<a href="https://code.google.com/p/autoddvpn/wiki/graceMode#%E8%A8%AD%E7%BD%AE%E6%96%B9%E5%BC%8F(%E4%BB%A5PPTP%E7%82%BA%E4%BE%8B)">PPTP设置</a>)；</li>
+<li>ssh或telnet到你的路由器，登录名和密码是你刷了dd-wrt版本后进入web页面设置的用户名和密码；</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>telnet 192.168.11.1
+</span><span class='line'>Trying 192.168.11.1&amp;hellip;
+</span><span class='line'>Connected to 192.168.1.1.
+</span><span class='line'>Escape character is &amp;lsquo;^<span class="o">]</span>&amp;rsquo;.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;DD-WRT v24-sp2 std &amp;copy; 2014 NewMedia-NET GmbH
+</span><span class='line'>Release: 06/23/14 <span class="o">(</span>SVN revision: 24461<span class="o">)</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;DD-WRT login: root&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Password: &lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;hr /&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt; | _ <span class="se">\|</span> _ <span class="se">\ </span>  <span class="se">\ \ </span>     / /  _ _   &lt;em&gt;| __   &lt;/em&gt;|&lt;em&gt;&lt;strong&gt; <span class="se">\|</span> <span class="o">||</span> |
+</span><span class='line'> <span class="o">||</span> | <span class="o">||</span> <span class="o">||</span>&lt;/strong&gt;__<span class="se">\ \ </span>/<span class="se">\ </span>/ /| |&lt;/em&gt;<span class="o">)</span> <span class="o">||</span> |   <span class="se">\ \ </span>/ / &lt;strong&gt;<span class="o">)</span> | <span class="o">||</span> |&lt;em&gt;
+</span><span class='line'> <span class="o">||</span>&lt;/em&gt;| <span class="o">||</span>&lt;em&gt;||&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;<span class="se">\ </span>V  V / |  _ &amp;lt; | |    <span class="se">\ </span>V / / &lt;/strong&gt;/|&lt;strong&gt;   &lt;em&gt;|
+</span><span class='line'> |&lt;/em&gt;&lt;/strong&gt;/|&lt;strong&gt;&lt;em&gt;/      _/_/  |&lt;/em&gt;| _<span class="se">\|</span>&lt;em&gt;|     _/ |&lt;/em&gt;&lt;/strong&gt;&lt;em&gt;_|  |&lt;/em&gt;|&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;                   DD-WRT v24-sp2
+</span><span class='line'>               http://www.dd-wrt.com
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">==========================================================</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;BusyBox v1.22.1 <span class="o">(</span>2014-06-23 03:23:41 CEST<span class="o">)</span> built-in shell <span class="o">(</span>ash<span class="o">)</span>
+</span><span class='line'>Enter &amp;lsquo;help&amp;rsquo; <span class="k">for </span>a list of built-in commands.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;root@DD-WRT:~#
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>登陆后执行下面的命令；</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;mkdir /jffs/pptp&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;cd /jffs/pptp&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpnup.sh&quot;</span>&gt;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpnup.sh&lt;/a&gt;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpndown.sh&quot;</span>&gt;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpndown.sh&lt;/a&gt;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://autoddvpn.googlecode.com/svn/trunk/pptp/jffs/run.sh&quot;</span>&gt;http://autoddvpn.googlecode.com/svn/trunk/pptp/jffs/run.sh&lt;/a&gt;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;chmod a+x *.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;nvram <span class="nb">set </span><span class="nv">rc_startup</span><span class="o">=</span>&amp;lsquo;/jffs/pptp/run.sh&amp;rsquo;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;nvram commit&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>一般执行上面的wget命令都是不行的，因为autoddvpn网站要翻墙才能访问，所以可以在pptp目录下创建那3个脚本文件，然后将网站上脚本的内容copy到脚本文件里面，命令更新如下。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;mkdir /jffs/pptp&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;cd /jffs/pptp&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;touch vpnup.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;touch vpndown.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;touch run.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;&amp;hellip;直接从网站上复制脚本内容，再拷贝到文件里面&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;chmod a+x *.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;nvram <span class="nb">set </span><span class="nv">rc_startup</span><span class="o">=</span>&amp;lsquo;/jffs/pptp/run.sh&amp;rsquo;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;nvram commit&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>参考<a href="https://code.google.com/p/autoddvpn/wiki/HOWTO#%E8%A8%AD%E7%BD%AEPPTP_client">文档</a>的<code>设置PPTP client</code>部分进行dd-wrt的PPTP客户端设置;</li>
+<li>重启dd-wrt路由器，启动后会产生一个Log文件<code>/tmp/autoddvpn.log 這是autoddvpn的log</code>;</li>
+<li>最后关于守护进程的脚本，autoddvpn没有提供，其实就是定时检查一下PPTP连接是否通的，不通的话就重连，下面给一个openvpn的检查脚本，pptp的上网自己查一下；</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/jffs/pptp/openvpnDaemon.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;ISRUN<span class="o">=</span>&lt;code&gt;ps|grep <span class="s2">&quot;openvpn&quot;</span>|wc -l&lt;/code&gt;
+</span><span class='line'><span class="k">if</span> <span class="o">[[</span> <span class="nv">$ISRUN</span> -lt 4 <span class="o">]]</span>
+</span><span class='line'><span class="k">then</span>
+</span><span class='line'><span class="nb">echo</span> &amp;ldquo;Not running, start!&amp;rdquo;
+</span><span class='line'>openvpn &amp;mdash;config /jffs/openvpn/openvpn.conf &amp;mdash;daemon
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'><span class="nb">echo</span> &amp;ldquo;Openvpn is already running.&amp;rdquo;
+</span><span class='line'><span class="nb">exit</span>
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>然后在dd-wrt的web界面的“管理”->“管理”下启用Cron，并且在附加任务中输入：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>*/2 * * * * /jffs/openvpn/openvpnDaemon.sh
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>悬而未决的问题——PPTP无法连接</h3>
+
+<p>可能有的人使用VPN进行PPTP连接时会发现连接不上，在windows下是报一个<code>806</code>的异常，这种可能是你的ISP(网络服务提供商——电信或联通)没有提供这个服务，这种情况下还不知道怎么解决。在网上查过不少资料，说什么设置路由器的PPTP穿透功能，配置1723端口开启等，这些都没有什么效果，希望有高手告知这种情况要怎么解决。谢谢</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[让路由飞越长城(一)]]></title>
@@ -1041,339 +1282,6 @@
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>如果你的项目里面有自定义的Reponsitory具体实现，则需要做单元测试，这个可以上网自行搜索相关资料。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[最近小项目的一些记录（二）]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/"/>
-    <updated>2014-05-31T10:40:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2</id>
-    <content type="html"><![CDATA[<p><a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project/">前一篇post</a>主要记录了Spring JPA和Hibernate的问题，接着记录其他一些工具遇到的问题。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>Jsoup</h2>
-
-<p><a href="https://github.com/jhy/jsoup">Jsoup</a>是一个比较火的Java解析Html工具，简单易用，功能强大，在github上有不少星星。</p>
-
-<h3>使用Jsoup连接url时报403</h3>
-
-<p>一般使用Jsoup连接url都不会有什么问题，正常的写法如下：</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>但有些网站会获取用户的浏览器信息，而上面的写法是没有浏览器信息的，这个时候就会报403的错误，需要在连接时加上userAngent。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">userAgent</span><span class="o">(</span><span class="s">&quot;Mozilla&quot;</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h3>Css Selector</h3>
-
-<p>使用Jsoup来抓取网页信息，最简单的一种方式就是通过Css selector，这样可以让你少写很多代码。比如下面的一段html:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div id=&quot;main&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;header&quot;<span class="ni">&amp;gt;&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>使用css selector可以这样简单的获得。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">doc</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="s">&quot;#main div.header&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>Velocity</h2>
-
-<p>项目用到了Velocity来定制邮件模板，这样可以方便的修改邮件格式。在网上可以搜到很多关于Spring和Velocity集成的文章，但大部分是讲如何使用Velocity来生成页面的，而如何生成其他文件的说明比较少，下面我们就来看一下如何配置的。</p>
-
-<ul>
-<li><p>先配置velocityConfigurer的bean，这里定义了模板文件的路径，属性和编码等信息。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;velocityConfigurer&quot;</span>
-</span><span class='line'>        <span class="na">class=</span><span class="s">&quot;org.springframework.web.servlet.view.velocity.VelocityConfigurer&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;resourceLoaderPath&quot;</span> <span class="na">value=</span><span class="s">&quot;WEB-INF/velocity&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;velocityProperties&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;props&gt;</span>
-</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.name&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                  loopCounter
-</span><span class='line'>              <span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.initial.value&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                  0
-</span><span class='line'>              <span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;input.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;output.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;/props&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
-<li><p>在需要使用的Sevice里面引入，这样就可以在service里面使用到Velocity的配置信息了。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Service</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailService</span> <span class="o">{</span>
-</span><span class='line'>  <span class="nd">@Resource</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">velocityConfigurer</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
-</span><span class='line'>  <span class="kd">private</span> <span class="n">VelocityConfigurer</span> <span class="n">velocityConfigurer</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span> <span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
-<li><p>使用Velocity的工具类来得到生成的文件信息。</p>
-
-<ul>
-<li>temple是模板文件的名称。</li>
-<li>model是生成文件所需的参数。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">content</span> <span class="o">=</span> <span class="n">VelocityEngineUtils</span><span class="o">.</span><span class="na">mergeTemplateIntoString</span><span class="o">(</span>
-</span><span class='line'>          <span class="n">velocityConfigurer</span><span class="o">.</span><span class="na">getVelocityEngine</span><span class="o">(),</span> <span class="n">temple</span><span class="o">,</span>
-</span><span class='line'>          <span class="n">MAIL_ENCODING</span><span class="o">,</span> <span class="n">model</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></li>
-</ul>
-</li>
-</ul>
-
-
-<h3>Angularjs</h3>
-
-<p>Angularjs功能比较强大，使用它之后基本可以不用使用JQuery了，这里记录一下使用遇到的一个比较奇怪的问题。</p>
-
-<ul>
-<li>问题: 使用Angularjs发起一个post请求，带了几个请求的参数，后台接收请求时获取不到参数。开始的写法如下：</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">queryData</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>            <span class="s2">&quot;depGroup&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#dep_group&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s2">&quot;website&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#website&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s2">&quot;startDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#start_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s2">&quot;endDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#end_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span>
-</span><span class='line'>        <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-</span><span class='line'>            <span class="p">});</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>接收不到参数的原因是angularjs把参数转成了json导致后台接收不到，需要在发起请求时将参数转换一下，修改后的代码如下：</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">postConfig</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">},</span>
-</span><span class='line'>    <span class="nx">transformRequest</span><span class="o">:</span> <span class="nx">transform</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="err">，</span><span class="nx">postConfig</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h3>Semantic-ui</h3>
-
-<p>这个是我比较喜欢的一个css框架，这里要注意的地方是有些功能和Angularjs结合起来会发现不起作用，如果不起作用可以尝试使用<a href="https://github.com/caitp/angular-semantic">angular-semantic</a>这个工具看看能否解决问题。</p>
-
-<ul>
-<li>semantic-ui的表单规则和行为设置，简单的示例如下，需要设置规则(rules)和配置(setting即校验通过后的行为)。</li>
-</ul>
-
-
-<p>js代码:<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">rules</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">searchKeyword</span><span class="o">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">identifier</span><span class="o">:</span> <span class="s1">&#39;searchKeyword&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">rules</span><span class="o">:</span> <span class="p">[</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;empty&#39;</span><span class="p">,</span>
-</span><span class='line'>                <span class="nx">prompt</span><span class="o">:</span> <span class="s1">&#39;请输入查询关键字&#39;</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">]</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">var</span> <span class="nx">setting</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">onSuccess</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// 发http请求</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#searchForm&#39;</span><span class="p">).</span><span class="nx">form</span><span class="p">(</span><span class="nx">rules</span><span class="p">,</span> <span class="nx">setting</span><span class="p">);</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>html代码:
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div id=&quot;searchForm&quot; class=&quot;ui form&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;two fields&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>div class=&quot;field&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>            <span class="ni">&amp;lt;</span>div class=&quot;ui icon input&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>                <span class="ni">&amp;lt;</span>input id=&quot;searchKeyword&quot; type=&quot;text&quot; name=&quot;searchKeyword&quot; placeholder=&quot;请输入查询关键字...&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>                <span class="ni">&amp;lt;</span>i class=&quot;search icon&quot;<span class="ni">&amp;gt;&amp;lt;</span>/i<span class="ni">&amp;gt;</span>
-</span><span class='line'>            <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>div class=&quot;field&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>            <span class="ni">&amp;lt;</span>div id=&quot;searchBtn&quot; class=&quot;ui blue submit button&quot;<span class="ni">&amp;gt;</span>查询<span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;ui error message&quot;<span class="ni">&amp;gt;&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

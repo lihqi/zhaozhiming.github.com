@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ddwrt | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/ddwrt/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-08-30T13:03:26+08:00</updated>
+  <updated>2014-08-31T10:29:23+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,247 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[让路由飞越长城(二)]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2/"/>
+    <updated>2014-08-30T19:30:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-8/greatefw.jpg"></p>
+
+<p>配置好了高级的路由器，安装了dd-wrt版本的固件，现在还不忙着让路由器翻墙，先在一台机器上测试能通过新路由器能正常上网和翻墙，可以了之后我们再来配置路由器的翻墙功能。</p>
+
+<!--more-->
+
+
+<h3>VPN</h3>
+
+<p>翻墙基本是两种方式:SSH和VPN。SSH是在浏览器上连接国外的服务器从而可以浏览被和谐的网站，而VPN是让整个设备的网络都连上国外的服务器，包括浏览器和其他任何软件。VPN的好处是可以让其他软件更快速地连接国外服务器，比如要下载android的sdk，国内网络经常半天没有反应，翻墙后下载速度就快多了，但缺点也比较明显，就是访问国内网站的时候会比较慢，使用国内软件比如QQ的时候时不时会掉线。</p>
+
+<p>这里有个比较好的VPN推荐一下<a href="http://www.strongvpn.com/">Strong VPN</a>(需要翻墙才能访问)，这个是一个美国比较好的VPN，连接稳定，访问快速，24小时技术支持，价格也比较合适，有个55美刀/年的套餐，支持PPTP,L2TP和SSTP连接。国内的VPN和SSH我用了几个都不大满意，不是有些网站不能上，就是经常掉线连不上。如果有米的话，还可以去租VPS(虚拟专用服务器)，自己搭VPN服务，那速度绝对比直接买的VPN快，甚至还可以自己卖VPN账号。</p>
+
+<p>不管怎样，我们需要一个VPN账号，而且可以支持PPTP连接的，下面会用到。</p>
+
+<p><img src="/images/post/2014-8/strong-vpn.png"></p>
+
+<h3><a href="https://code.google.com/p/autoddvpn/">autoddvpn</a>(需要翻墙才能访问)</h3>
+
+<p>autoddvpn是一个解决方案，主要有下面几大功能:</p>
+
+<ul>
+<li>让你的dd-wrt路由器可以自由翻墙，路由下的所有设备仿佛在墙外一样，完全感觉不到墙的存在；</li>
+<li>智能路由，可以自动判断访问的网站是墙内还是墙外的，如果是墙内的就不走VPN，如果是墙外的走VPN；</li>
+<li>守护进程，监控你的VPN服务是否正常，如果VPN断了可以随时重连。</li>
+</ul>
+
+
+<p>autoddvpn有2种设置模式:传统模式(classicMode)和优雅模式(graceMode)，这里我们主要介绍<a href="https://code.google.com/p/autoddvpn/wiki/graceMode">graceMode</a>。在gracemode中，我们主要看PPTP这一块的内容，因为我们的VPN账号只支持PPTP，不支持OpenVPN(Strong VPN支持PPTP,L2TP,SSTP连接，但dd-wrt不支持L2TP和SSTP)。</p>
+
+<ul>
+<li>首先开启路由器的<a href="https://code.google.com/p/autoddvpn/wiki/jffs">JFFS</a>，这样可以将我们的脚本放到jffs里面(jffs我理解是一块可以挂载的小硬盘)；</li>
+<li>接着按照文档设置DNS(<a href="https://code.google.com/p/autoddvpn/wiki/graceMode#%E8%A8%AD%E7%BD%AE%E6%96%B9%E5%BC%8F(%E4%BB%A5PPTP%E7%82%BA%E4%BE%8B)">PPTP设置</a>)；</li>
+<li>ssh或telnet到你的路由器，登录名和密码是你刷了dd-wrt版本后进入web页面设置的用户名和密码；</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>telnet 192.168.11.1
+</span><span class='line'>Trying 192.168.11.1&amp;hellip;
+</span><span class='line'>Connected to 192.168.1.1.
+</span><span class='line'>Escape character is &amp;lsquo;^<span class="o">]</span>&amp;rsquo;.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;DD-WRT v24-sp2 std &amp;copy; 2014 NewMedia-NET GmbH
+</span><span class='line'>Release: 06/23/14 <span class="o">(</span>SVN revision: 24461<span class="o">)</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;DD-WRT login: root&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Password: &lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;hr /&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt; | _ <span class="se">\|</span> _ <span class="se">\ </span>  <span class="se">\ \ </span>     / /  _ _   &lt;em&gt;| __   &lt;/em&gt;|&lt;em&gt;&lt;strong&gt; <span class="se">\|</span> <span class="o">||</span> |
+</span><span class='line'> <span class="o">||</span> | <span class="o">||</span> <span class="o">||</span>&lt;/strong&gt;__<span class="se">\ \ </span>/<span class="se">\ </span>/ /| |&lt;/em&gt;<span class="o">)</span> <span class="o">||</span> |   <span class="se">\ \ </span>/ / &lt;strong&gt;<span class="o">)</span> | <span class="o">||</span> |&lt;em&gt;
+</span><span class='line'> <span class="o">||</span>&lt;/em&gt;| <span class="o">||</span>&lt;em&gt;||&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;<span class="se">\ </span>V  V / |  _ &amp;lt; | |    <span class="se">\ </span>V / / &lt;/strong&gt;/|&lt;strong&gt;   &lt;em&gt;|
+</span><span class='line'> |&lt;/em&gt;&lt;/strong&gt;/|&lt;strong&gt;&lt;em&gt;/      _/_/  |&lt;/em&gt;| _<span class="se">\|</span>&lt;em&gt;|     _/ |&lt;/em&gt;&lt;/strong&gt;&lt;em&gt;_|  |&lt;/em&gt;|&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;                   DD-WRT v24-sp2
+</span><span class='line'>               http://www.dd-wrt.com
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">==========================================================</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;BusyBox v1.22.1 <span class="o">(</span>2014-06-23 03:23:41 CEST<span class="o">)</span> built-in shell <span class="o">(</span>ash<span class="o">)</span>
+</span><span class='line'>Enter &amp;lsquo;help&amp;rsquo; <span class="k">for </span>a list of built-in commands.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;root@DD-WRT:~#
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>登陆后执行下面的命令；</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;mkdir /jffs/pptp&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;cd /jffs/pptp&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpnup.sh&quot;</span>&gt;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpnup.sh&lt;/a&gt;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpndown.sh&quot;</span>&gt;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpndown.sh&lt;/a&gt;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://autoddvpn.googlecode.com/svn/trunk/pptp/jffs/run.sh&quot;</span>&gt;http://autoddvpn.googlecode.com/svn/trunk/pptp/jffs/run.sh&lt;/a&gt;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;chmod a+x *.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;nvram <span class="nb">set </span><span class="nv">rc_startup</span><span class="o">=</span>&amp;lsquo;/jffs/pptp/run.sh&amp;rsquo;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;nvram commit&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>一般执行上面的wget命令都是不行的，因为autoddvpn网站要翻墙才能访问，所以可以在pptp目录下创建那3个脚本文件，然后将网站上脚本的内容copy到脚本文件里面，命令更新如下。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;mkdir /jffs/pptp&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;cd /jffs/pptp&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;touch vpnup.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;touch vpndown.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;touch run.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;&amp;hellip;直接从网站上复制脚本内容，再拷贝到文件里面&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;chmod a+x *.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;nvram <span class="nb">set </span><span class="nv">rc_startup</span><span class="o">=</span>&amp;lsquo;/jffs/pptp/run.sh&amp;rsquo;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;nvram commit&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>参考<a href="https://code.google.com/p/autoddvpn/wiki/HOWTO#%E8%A8%AD%E7%BD%AEPPTP_client">文档</a>的<code>设置PPTP client</code>部分进行dd-wrt的PPTP客户端设置;</li>
+<li>重启dd-wrt路由器，启动后会产生一个Log文件<code>/tmp/autoddvpn.log 這是autoddvpn的log</code>;</li>
+<li>最后关于守护进程的脚本，autoddvpn没有提供，其实就是定时检查一下PPTP连接是否通的，不通的话就重连，下面给一个openvpn的检查脚本，pptp的上网自己查一下；</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/jffs/pptp/openvpnDaemon.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;ISRUN<span class="o">=</span>&lt;code&gt;ps|grep <span class="s2">&quot;openvpn&quot;</span>|wc -l&lt;/code&gt;
+</span><span class='line'><span class="k">if</span> <span class="o">[[</span> <span class="nv">$ISRUN</span> -lt 4 <span class="o">]]</span>
+</span><span class='line'><span class="k">then</span>
+</span><span class='line'><span class="nb">echo</span> &amp;ldquo;Not running, start!&amp;rdquo;
+</span><span class='line'>openvpn &amp;mdash;config /jffs/openvpn/openvpn.conf &amp;mdash;daemon
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'><span class="nb">echo</span> &amp;ldquo;Openvpn is already running.&amp;rdquo;
+</span><span class='line'><span class="nb">exit</span>
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>然后在dd-wrt的web界面的“管理”->“管理”下启用Cron，并且在附加任务中输入：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>*/2 * * * * /jffs/openvpn/openvpnDaemon.sh
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>悬而未决的问题——PPTP无法连接</h3>
+
+<p>可能有的人使用VPN进行PPTP连接时会发现连接不上，在windows下是报一个<code>806</code>的异常，这种可能是你的ISP(网络服务提供商——电信或联通)没有提供这个服务，这种情况下还不知道怎么解决。在网上查过不少资料，说什么设置路由器的PPTP穿透功能，配置1723端口开启等，这些都没有什么效果，希望有高手告知这种情况要怎么解决。谢谢</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[让路由飞越长城(一)]]></title>
