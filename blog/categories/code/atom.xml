@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-08-31T16:05:02+08:00</updated>
+  <updated>2014-09-14T17:32:22+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,368 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ceph认证原理]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/09/13/ceph-authentication-theory/"/>
+    <updated>2014-09-13T09:11:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/09/13/ceph-authentication-theory</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-9/rados-arch.png"></p>
+
+<p>为识别用户和防范攻击，ceph提供了cephx来进行用户和后台进程认证。</p>
+
+<!--more-->
+
+
+<h2>原理介绍</h2>
+
+<p>Cephx使用共享密钥的方式进行认证，意思是客户端和monitor集群都有一份客户端的密钥。它提供了一个相互认证的机制，集群确定用户拥有密钥，而用户确定集群拥有密钥的备份。</p>
+
+<p>Ceph不提供统一的认证接口给对象存储，所以客户端必须直接跟OSD交互。为了保护数据，ceph提供了cephx认证系统，用来对用户在客户端的操作进行认证。Cephx认证协议与<a href="http://en.wikipedia.org/wiki/Kerberos_(protocol)">Kerberos</a>相类似。</p>
+
+<p>用户调用客户端连接monitor。跟Kerberos不同，每个monitor都可以进行认证，所以没有单点和性能瓶颈的问题。Monitor返回一个类似Kerberos的数据结构，包含了一个session key来访问ceph服务。Session key是通过加密用户自己的密钥来生成的，所以只有该用户能请求monitor服务。然后客户端使用session key向monitor发起请求，monitor于是提供给客户端一个ticket来使客户端和OSD进行认证。Monitor和OSD共享密钥，所以客户端可以使用Monitor提供的ticket来和OSD进行交互。跟Kerberos一样，cephx的ticket会过期，所以攻击者不能使用过期的ticket或session key来做不正当的事情。这种认证形式将阻止攻击者通过修改用户已泄露信息的方式，或者伪造消息进行通讯访问的方式来进行攻击，只要用户的密钥不要在失效前泄露就没有什么问题。</p>
+
+<p>使用cephx时，管理员需要先创建user。在下面的图表中，client.admin用户调用<code>ceph auth get-or-create-key</code>的命令来生成用户名和密钥，ceph的auth子系统来生成用户名和密钥，保存一份密钥在monitor并将用户的密钥传回给client.admin用户。这使得客户端和monitor共享了一份密钥。</p>
+
+<p><img src="/images/post/2014-9/rados-auth-1.png"></p>
+
+<p>为了能通过monitor的认证，客户端将用户名传给monitor，然后monitor产生一个session key并且通过密钥将其加密，并使之与用户名关联。然后monitor将加密session key回传给客户端，客户端再通过共享密钥进行解密，从而获取到seesion key。session key标示当前用户的当前回话。然后客户端再发起请求要求一个代表用户会话密钥的ticket，monitor产生ticket并通过用户密钥进行加密，并将其回传给客户端。客户端对ticket进行解密，以后客户端向OSD或MDS发起请求时，就用它来对请求进行签名。</p>
+
+<p><img src="/images/post/2014-9/rados-auth-2.png"></p>
+
+<p>cephx协议验证客户端和Ceph服务器之间的通信。在初始化认证之后，在客户端和服务器间的每一条信息，都会使用ticket进行签名，这样monitor，OSD和MDS服务就可以使用他们的共享密钥进行验证。</p>
+
+<p><img src="/images/post/2014-9/rados-auth-3.png"></p>
+
+<p>认证提供的保护是在ceph客户端和服务器之间。认证不能超过客户端，比如用户从一台远程服务器上访问cpeh客户端，ceph的认证就不能适用于远程主机和客户端了。</p>
+
+<h2>生成存储集群的keyring</h2>
+
+<ul>
+<li>生成client.admin的key</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ceph auth get-or-create client.admin mon &amp;lsquo;allow &lt;em&gt;&amp;rsquo; mds &amp;lsquo;allow &lt;/em&gt;&amp;rsquo; osd &amp;lsquo;allow *&amp;rsquo; -o /etc/ceph/ceph.client.admin.keyring
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><code>注意：这个操作会覆盖原有的ceph.client.admin.keyring文件，请谨慎操作。</code></p>
+
+<ul>
+<li>创建monitor的keyring</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ceph-authtool &amp;mdash;create-keyring /tmp/ceph.mon.keyring &amp;mdash;gen-key -n mon. &amp;mdash;cap mon &amp;lsquo;allow *&amp;rsquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>复制monitor的keyring文件到每个monitor的data目录</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>cp /tmp/ceph.mon.keyring /var/lib/ceph/mon/ceph-a/keyring
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>为每个OSD产生keyring，id是OSD的编号</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ceph auth get-or-create osd.<span class="o">{</span><span class="nv">$id</span><span class="o">}</span> mon &amp;lsquo;allow rwx&amp;rsquo; osd &amp;lsquo;allow *&amp;rsquo; -o /var/lib/ceph/osd/ceph-<span class="o">{</span><span class="nv">$id</span><span class="o">}</span>/keyring
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>为每个MDS产生keyring，id是MDS编号</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ceph auth get-or-create mds.<span class="o">{</span><span class="nv">$id</span><span class="o">}</span> mon &amp;lsquo;allow rwx&amp;rsquo; osd &amp;lsquo;allow &lt;em&gt;&amp;rsquo; mds &amp;lsquo;allow &lt;/em&gt;&amp;rsquo; -o /var/lib/ceph/mds/ceph-<span class="o">{</span><span class="nv">$id</span><span class="o">}</span>/keyring
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>在ceph.conf的global中增加认证开关</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="na">auth cluster required</span> <span class="o">=</span> <span class="s">cephx</span>
+</span><span class='line'><span class="na">auth service required</span> <span class="o">=</span> <span class="s">cephx</span>
+</span><span class='line'><span class="na">auth client required</span> <span class="o">=</span> <span class="s">cephx</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>重启存储服务</li>
+</ul>
+
+
+<h2>认证配置</h2>
+
+<ul>
+<li>auth cluster required：[cephx | none]:如果打开，表示存储集群（mon,osd,mds）相互之间需要通过keyring认证。</li>
+<li>auth service required：[cephx | none]:如果打开，表示客户端（比如gateway）到存储集群（mon,osd,mds）需要通过keyring认证。</li>
+<li>auth client required：[cephx | none]:如果打开，表示存储集群（mon,osd,mds）到客户端（比如gateway）需要通过keyring认证。</li>
+</ul>
+
+
+<h2>Rados gateway创建keyring</h2>
+
+<p>需要使用一台管理节点的机器来生成keyring文件，管理节点是使用ceph-deploy才有的机器，我理解没有管理节点的话，使用mon或osd的机器可以创建keyring。</p>
+
+<ul>
+<li>创建文件并增加权限</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo ceph-authtool &amp;mdash;create-keyring /etc/ceph/ceph.client.radosgw.keyring
+</span><span class='line'>sudo chmod +r /etc/ceph/ceph.client.radosgw.keyring
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>使用ceph-authtool在keyring文件中生成随机密码</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.gateway &amp;mdash;gen-key
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>在keyring中增加存储集群的操作权限；</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo ceph-authtool -n client.radosgw.gateway &amp;mdash;cap osd &amp;lsquo;allow rwx&amp;rsquo; &amp;mdash;cap mon &amp;lsquo;allow rwx&amp;rsquo; /etc/ceph/ceph.client.radosgw.keyring
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>将gateway的key添加到存储集群（-k不知道是什么参数）</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.gateway -i /etc/ceph/ceph.client.radosgw.keyring
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>将生成的keyring文件上传到gateway的机器</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo scp /etc/ceph/ceph.client.radosgw.keyring  ceph@<span class="o">{</span>hostname<span class="o">}</span>:/home/ceph
+</span><span class='line'>ssh <span class="o">{</span>hostname<span class="o">}</span>
+</span><span class='line'>sudo mv ceph.client.radosgw.keyring /etc/ceph/ceph.client.radosgw.keyring
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>在ceph.conf中配置gateway的keyring文件路径</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="err">[client.radosgw.{instance-name}]</span>
+</span><span class='line'><span class="na">host</span> <span class="o">=</span> <span class="s">{host-name}</span>
+</span><span class='line'><span class="na">keyring</span> <span class="o">=</span> <span class="s">/etc/ceph/ceph.client.radosgw.keyring</span>
+</span><span class='line'><span class="na">rgw socket path</span> <span class="o">=</span> <span class="s">/var/run/ceph/ceph.radosgw.{instance-name}.fastcgi.sock</span>
+</span><span class='line'><span class="na">log file</span> <span class="o">=</span> <span class="s">/var/log/ceph/client.radosgw.{instance-name}.log</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[让你的安卓开发更容易(二)——Genymotion]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-2/"/>
+    <updated>2014-08-31T17:29:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-2</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-8/genymotion-logo.jpg"></p>
+
+<p>以前听过一个笑话，说是一个App好不容易拿到100万的融资，但是没几天就花完了，问创始人这钱怎么花的？创始人说:没什么，就是每个型号的Android手机各买了一个来做测试，钱就花完了。</p>
+
+<p>Android开发需要有强大的模拟器来避免这种尴尬，<a href="http://www.genymotion.com/">Genymotion</a>是一个Android模拟器，比起Google官方的AVD(Android Virtual Devices)，它有着启动快速，安装方便，简单上手的特点。</p>
+
+<!--more-->
+
+
+<h2>注册安装</h2>
+
+<ul>
+<li>进入官网首页，点击<code>GET GENYMOTION</code>按钮（官网需要翻墙访问，不过有genymotion的<a href="http://www.genymotion.cn/">中文网</a>也可以访问）;</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-install-2.png"></p>
+
+<ul>
+<li>有3个套餐让你选择，我们当然选择免费的先试用一下，点击download按钮;</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-install-3.png"></p>
+
+<ul>
+<li>下载要求你先注册一个账号，注册完成后需要到注册邮箱接收邮件，激活你的genymotion账号;</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-install-1.png"></p>
+
+<ul>
+<li>激活账号后，可以看到网站提示你可以下载了;</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-install-4.png"></p>
+
+<ul>
+<li>下载页面中，可以看到最上面的genymotion版本包含了Oracle VirtualBox4.2.12这个虚拟机工具，如果是选择下面的genymotion，则需要先下载<a href="https://www.virtualbox.org/">VirtualBox</a>并安装;</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-install-5.png"></p>
+
+<ul>
+<li>下载页面的下方，还有流行的Java IDE——Intellij IDEA和Eclipse的插件，看你用的IDE是哪个就下载哪个插件，这个后面会用到;</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-install-6.png"></p>
+
+<ul>
+<li>下载genymotion的安装文件后，安装安装提示进行安装即可。</li>
+</ul>
+
+
+<h2>使用说明</h2>
+
+<ul>
+<li>点击安装完成后的genymotion图标，下图的中间那个图标；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-use-1.png"></p>
+
+<ul>
+<li>启动后是genymotion客户端的主界面；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-use-2.jpg"></p>
+
+<ul>
+<li>初次启动会提示你没有虚拟设备，是否添加一个？选择yes；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-use-3.jpg"></p>
+
+<ul>
+<li>这时会弹出一个登陆框，输入注册的用户名（或邮箱）和密码，点击Connect按钮（这一步需要用VPN翻墙）；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-use-4.jpg"></p>
+
+<ul>
+<li>验证通过后就可以添加虚拟设备了，下图是虚拟设备列表，可以选择Android版本和设备型号进行过滤查询（有些比较老的手机型号会查不到），选择你需要的虚拟设备，点击Next；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-use-6.png" width="150" height="250"><br/>
+<img src="/images/post/2014-9/genymotion-use-7.png" width="150" height="250">
+<img src="/images/post/2014-9/genymotion-use-5.png"></p>
+
+<ul>
+<li>genymotion会显示虚拟设备的详细信息，你确定无误后点击Next就会进行下载；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-use-8.png"></p>
+
+<ul>
+<li>虚拟机下载中；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-use-9.png"></p>
+
+<ul>
+<li>下载完成后回到主窗口，选择下载后的虚拟设备，点击Play按钮；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-use-10.png"></p>
+
+<ul>
+<li>你马上就可以看到你的虚拟设备已经启动，速度很快。</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-use-11.png" width="300" height="500"></p>
+
+<h2>与Intellij IDEA集成</h2>
+
+<p>现在我们来看看如何在IDE里面启动虚拟设备，这里以Intellij IDEA为例。</p>
+
+<ul>
+<li>刚才我们下载了genymotion的IDE插件，在IDEA中打开插件管理设置界面，选择<code>install plugin from disk...</code>进行安装，安装完后重启IDEA；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-idea-1.png"></p>
+
+<ul>
+<li>重启IDEA后看到工具栏里面多了一个红色手机状的图标，图中工具栏的最后面一个图标；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-idea-2.png"></p>
+
+<ul>
+<li>点击图标出现genymotion设备列表窗口，可以看到现在设备的状态都是关机的(off)；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-idea-3.png"></p>
+
+<ul>
+<li>选择一个设备点击Start按钮，设备和在genymotion客户端一样启动了；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-idea-4.png"></p>
+
+<ul>
+<li>关掉IDEA中的设备列表窗口，运行你的App，会提示你是否需要在刚才启动的设备里面运行，选择OK；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-idea-5.png"></p>
+
+<ul>
+<li>可以看到你的App已经在genymotion的虚拟设备中运行了；</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/genymotion-idea-6.png" width="300" height="500"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[让你的安卓开发更容易(一)——Intellij IDEA]]></title>
@@ -650,426 +1012,6 @@
 
 
 <p><img src="/images/post/2014-8/dd-wrt-3.png"></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用Robot Framework结合Spring进行uat测试]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/06/19/robot-framework-uat-test-with-spring/"/>
-    <updated>2014-06-19T21:50:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/06/19/robot-framework-uat-test-with-spring</id>
-    <content type="html"><![CDATA[<p>在做项目过程中，单元测试是大家经常接触的也是了解的比较多的，但单元测试有时候为了更快的运行，会mock掉数据库或者关联系统来执行测试，这样的话整体的功能就得不到验证，另外单元测试也无法进行页面比如html的测试，这个时候就需要进行UAT自动化测试了。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<p><a href="http://baike.baidu.com/view/1330235.htm?fromTaglist">UAT</a>，(User Acceptance Test),用户接受度测试，即验收测试，这种一般是手工测试，当然重复进行手动测试是一种选择，但如果手工测试很多的话每次执行就比较浪费时间和精力，而且也容易遗漏和出错，所以我们需要将手工测试进行自动化。</p>
-
-<h2><a href="http://robotframework.org/">Robot Framework</a></h2>
-
-<p>Robot是一个自动化测试框架，其可以使用的Lib很多，简单地安装即可使用，也可以自己通过Python和Java来开发自己需要的Lib包，不过现在robot的Lib已经比较多了，可以满足大部分的使用场景。</p>
-
-<h4>安装</h4>
-
-<p>Robot安装十分简单，但首先要安装Python环境（Python安装这里不介绍了，请自行google了解），然后执行以下语句进行安装。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>安装完成后验证是否安装成功。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot &amp;mdash;version
-</span><span class='line'>Robot Framework 2.8.5 <span class="o">(</span>Python 2.7.3 on linux2<span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>如果需要安装其他Lib包，同样是通过pip进行安装，下面以安装Selenium2Library为例。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework_Selenium2Library
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h4>Robot脚本</h4>
-
-<p>Robot安装完成后，就可以开始编写测试脚本了，下面是测试脚本和Resource文件的例子:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>create_recipient.robot</span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Settings &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
-</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">Selenium2Library</span><span class="p"></span>
-</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">DatabaseLibrary</span><span class="p"></span>
-</span><span class='line'><span class="c">Resource</span><span class="p">   </span><span class="c">resource.robot</span><span class="p"></span>
-</span><span class='line'><span class="c">Test Setup</span><span class="p">      </span><span class="c">Open Browser</span><span class="p">  </span><span class="c">${baseurl}/#/recipients</span><span class="p">  </span><span class="c">${browser}</span><span class="p"></span>
-</span><span class='line'><span class="c">Test Teardown</span><span class="p">   </span><span class="c">Close Browser&lt;/p&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; TestCases &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
-</span><span class='line'><span class="c">create new recipient&lt;/p&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
-</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
-</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户成功</span><span class="p"></span>
-</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;p&gt;create exist recipient&lt;/p&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
-</span><span class='line'><span class="c">Given execute sql</span><span class="p">  </span><span class="c">insert into recipients(username,email) values(&#39;zhaozhiming&#39;,&#39;zhaozhiming003@gmail.com&#39;)</span><span class="p"></span>
-</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
-</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户失败</span><span class="p"></span>
-</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; Keywords &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
-</span><span class='line'><span class="c">execute sql&lt;/p&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${sql}</span><span class="p"></span>
-</span><span class='line'><span class="c">Connect To Database Using Custom Params</span><span class="p">      </span><span class="c">cymysql</span><span class="p">    </span><span class="c">db=&#39;${dbname}&#39;,user=&#39;${dbuser}&#39;,passwd=&#39;${dbpassword}&#39;, host=&#39;${dbhost}&#39;,port=${dbport}</span><span class="p"></span>
-</span><span class='line'><span class="c">Execute Sql String</span><span class="p">    </span><span class="c">${sql}</span><span class="p"></span>
-</span><span class='line'><span class="c">Disconnect from database</span><span class="p"></span>
-</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;p&gt;create recipient&lt;/p&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Input text</span><span class="p">    </span><span class="c">username</span><span class="p">    </span><span class="c">zhaozhiming</span><span class="p"></span>
-</span><span class='line'><span class="c">Input text</span><span class="p">    </span><span class="c">email</span><span class="p">    </span><span class="c">zhaozhiming003@gmail.com</span><span class="p"></span>
-</span><span class='line'><span class="c">click element</span><span class="p">  </span><span class="c">css=.submit</span><span class="p"></span>
-</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;p&gt;verify create recipient&lt;/p&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
-</span><span class='line'><span class="c">sleep</span><span class="p">   </span><span class="c">2s</span><span class="p"></span>
-</span><span class='line'><span class="c">page should contain</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
-</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;p&gt;</span><span class="p"></span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>resource.robot</span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Variables &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
-</span><span class='line'><span class="c">${baseurl}</span><span class="p">  </span><span class="c">&lt;a href=&quot;http://localhost:9898/oddemail&quot;&gt;http://localhost:9898/oddemail&lt;/a&gt;</span><span class="p"></span>
-</span><span class='line'><span class="c">${dbhost}</span><span class="p">  </span><span class="c">localhost</span><span class="p"></span>
-</span><span class='line'><span class="c">${dbport}</span><span class="p">  </span><span class="c">3306</span><span class="p"></span>
-</span><span class='line'><span class="c">${dbname}</span><span class="p">  </span><span class="c">oms</span><span class="p"></span>
-</span><span class='line'><span class="c">${dbuser}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
-</span><span class='line'><span class="c">${dbpassword}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
-</span><span class='line'><span class="c">${browser}</span><span class="p">  </span><span class="c">chrome</span><span class="p"></span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li><p>Settings下面是测试脚本需要引用的Lib包名，Resource文件，Setup和Teardown方法。</p>
-
-<ul>
-<li>Resource文件可以用来存放一些可以复用的变量，当然也可以将这一部分放到测试脚本中。</li>
-<li>Setup和Teardow跟单元测试一样，是在跑每个Test Case之前和之后会做的事情。注意上面例子里面打开url指定了浏览器Chrome，如果不指定浏览器的话会默认用Firefox打开，如果想使用Chrome来进行web自动化测试的话，则需要下载Chrome驱动<a href="https://code.google.com/p/selenium/wiki/ChromeDriver">chromedriver</a>，下载完后将其解压并设置到PATH路径。</li>
-</ul>
-</li>
-<li><p>TestCases设置了脚本里的测试案例，每个测试案例可以由Given，When，Then组成，每一行除开这几个关键字就是测试案例的步骤，在robot里面叫关键字，关键字可以带参数，可以把关键字理解为程序里面的方法。</p></li>
-<li><p>Keywords就是在Test Case里面定义的关键字了，里面有是每个关键字具体的执行内容。</p>
-
-<ul>
-<li><code>execute sql</code>这个关键字的内容是连接数据库，执行sql，关闭数据库连接。</li>
-<li><code>create recipient</code>这个关键字的内容是在页面输入用户名，输入邮箱地址，点击提交按钮。注意这里的页面元素是通过class来查找的，也可以通过id，tag或其他。</li>
-<li><code>verify create recipient</code>这个关键字的内容是等待2秒，验证页面是否包含期望的内容。</li>
-</ul>
-</li>
-</ul>
-
-
-<p>可以看到Keyword的每个内容描述都很简单易懂，甚至还可以写中文，让不懂开发的人也知道你的测试案例是做什么的。</p>
-
-<h4>执行脚本</h4>
-
-<p>因为这个测试案例是对web页面进行测试，所以在执行测试案例之前需要先将应用服务启起来，服务启起来后，执行下面的 语句:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot /your/robot/scripts/path/create_recipient.robot
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>执行完后会看到系统自动打开浏览器，输入url，自动填写输入框，并验证是否正确，最后会产生几个报告文件，如果测试案例失败，还会自动将失败的页面截图存成文件。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Output:  /home/kingzzm/projects/odde-mail-server/output.xml
-</span><span class='line'>Log:     /home/kingzzm/projects/odde-mail-server/log.html
-</span><span class='line'>Report:  /home/kingzzm/projects/odde-mail-server/report.html
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>另外建议脚本存放到test目录下，建议目录结构如下:</p>
-
-<p><img src="/images/post/2014-6/robot_script_local.png"></p>
-
-<h4>与Gradle集成</h4>
-
-<p>每次跑robot测试都需要手动启一个web服务比较麻烦，可以考虑在Gradle中通过任务的方式来执行robot测试，在跑测试之前先通过gradle启一个本地应用，然后开始跑robot测试，跑完测试后通过Gradle停掉本地服务。<br/>
-因为Gradle自带jetty容器，所以这一步实现起来也比较简单:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="n">em</span><span class="o">&gt;.</span><span class="na">stopPort</span> <span class="o">=</span> <span class="mi">7654</span>
-</span><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="s">/em&gt;.stopKey = &amp;lsquo;oddemail&amp;rsquo;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">task</span> <span class="n">uat</span><span class="o">(</span><span class="nl">type:</span><span class="n">Exec</span><span class="o">,</span> <span class="nl">dependsOn:</span> <span class="n">jettyRun</span><span class="o">)</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;commandLine &#39;/</span><span class="n">usr</span><span class="s">/local/</span><span class="n">bin</span><span class="s">/pybot&#39;, &#39;src/</span><span class="n">test</span><span class="s">/uat/</span><span class="n">testcase</span><span class="err">&#39;</span>
-</span><span class='line'><span class="n">doLast</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">jettyStop</span><span class="o">.</span><span class="na">execute</span><span class="o">()</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="s">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>以后需要跑uat测试就执行<code>gradle uat</code>这个命令就可以了，这样还可以结合jenkins进行uat自动化测试。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[基于Spring MVC做单元测试（二）——使用JMockit]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/06/17/spring-mvc-unit-test-part-2/"/>
-    <updated>2014-06-17T12:24:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/06/17/spring-mvc-unit-test-part-2</id>
-    <content type="html"><![CDATA[<p>上一篇Post讲了如何使用Spring的Test框架来进行单元测试，但在运行单元测试的时候有一个问题，就是每次跑单元测试都需要加载一下配置文件，或者启动web容器，这样的单元测试跑起来就不能达到快的目的。下面再介绍一下通过JMockit这个Java Mock工具来进行spring的单元测试，其特点是不需指定spring的配置文件，任何对象都可以mock出来并进行关联。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>Controller</h2>
-
-<p>首先我们还是来看一下使用了JMockit的Controller单元测试是怎么写的，Controller的功能代码可以查看上一篇post。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.service.MailService</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Expectations</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Injectable</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Tested</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.integration.junit4.JMockit</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">CoreMatchers</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JMockit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailControllerTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Tested</span>
-</span><span class='line'><span class="n">MailController</span> <span class="n">mailController</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Injectable</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">MailService</span> <span class="n">mailService</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Test</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_status_success_when_send_mail_success</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">new</span> <span class="nf">Expectations</span><span class="o">()</span> <span class="o">{</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">mailService</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Result</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span> <span class="o">};</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mailController</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;{\&quot;status\&quot;:\&quot;成功\&quot;}&quot;</span><span class="o">));</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>@RunWith(JMockit.class): 指定单元测试的执行类为JMockit.class;</li>
-<li>@Tested: 这个Annotate是指被测试类，在这个测试案例中我们要测试的是MailController，所以我们给其打上这个标签;</li>
-<li>@Injectable: 这个Annotate可以将对象进行mock并自动关联到被测试类，而不需要通过其他文件类似spring的配置文件等来进行关联;</li>
-<li>@Expectations: mock对象mailService的send方法，让其返回一个Result对象;</li>
-</ul>
-
-
-<p>做完上面这些基本就可以了，后面的被测方法调用和验证都跟原来的一样。这样看起来是不是比原来的单元测试代码少了一些，也更简洁了一些，最重要的一点是这样的单元测试不依赖spring的bean定义文件，不需要启动web服务，执行起来速度很快。</p>
-
-<h2>Service</h2>
-
-<p>再来看一下Service的单元测试要怎么改写，同样Service的功能代码可以看上一篇Post。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Recipient</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.repo.RecipientRepository</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Injectable</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.NonStrictExpectations</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Tested</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.integration.junit4.JMockit</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">Is</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JMockit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RecipientServiceTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Tested</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">RecipientService</span> <span class="n">recipientService</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Injectable</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">RecipientRepository</span> <span class="n">recipientRepository</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Test</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_success_when_add_recipient_not_exist</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">Result</span> <span class="n">result</span> <span class="o">=</span> <span class="n">recipientService</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;Tom&quot;</span><span class="o">,</span> <span class="s">&quot;test@test.com&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">getStatus</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">));</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>相对Controller Test这里少了一步对recipientRepository对象findByEmail方法的mock，因为如果不通过Expectations进行方法mock的话，方法会默认返回null，而我们要测试的场景正是需要findByEmail方法返回null，所以mock方法这一步我们也省了。<br/>
-改写后的整体代码也比原来的少了很多，而且速度更快。</p>
-
-<h2>适当使用Mock框架</h2>
-
-<p>JMockit功能非常强大，不仅可以轻松处理上面的这些测试场景，还可以对static,final,private等方法进行mock，可以让你的单元测试毫无阻碍的进行。<br/>
-但是如果过度的使用Mock框架，会让功能代码的坏味道被掩盖。本来单元测试的设计可以让你发现功能代码上的一些设计是否合理，比如有没有紧耦合等，但使用JMockit可以让你在设计不合理的代码上也可以轻松地进行单元测试，这样你就很难发现功能代码上的问题了。<br/>
-所以建议JMockit等类似的mock框架还是要谨慎使用，首先要保证功能代码设计合理，满足面向对象设计的要求，再来考虑提高单元测试效率的问题。</p>
 ]]></content>
   </entry>
   
