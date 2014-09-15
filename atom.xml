@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-09-14T17:32:22+08:00</updated>
+  <updated>2014-09-15T16:44:55+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,73 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[快速找到你想要的jar包]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/09/14/find-your-jar-quickly/"/>
+    <updated>2014-09-14T17:41:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/09/14/find-your-jar-quickly</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-9/class-not-found.jpeg"></p>
+
+<p>在做Java开发时，经常遇到<code>Class not found</code>的错误，一般的做法就是在google上搜索class名字，然后再搜索这个class所在的jar包是哪个，最后才找到可以下载jar包的链接。过程比较繁琐，有没有更好的方法可以快速的找到缺少的class所在的jar包呢？答案是肯定的。</p>
+
+<!--more-->
+
+
+<h2><a href="http://grepcode.com/">Grepcode</a></h2>
+
+<p>这个网站可以通过class名称直接搜索到拥有这个class的所有的jar包，比如说我们运行Java程序时报下面的错误，发现<code>cn/com/starit/io/SystemDemo02</code>找不到。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>java.lang.NoClassDefFoundError: cn/com/starit/io/SystemDemo02
+</span><span class='line'>Caused by: java.lang.ClassNotFoundException: cn.com.starit.io.SystemDemo02
+</span><span class='line'>    at java.net.URLClassLoader<span class="nv">$1</span>.run<span class="o">(</span>URLClassLoader.java:200<span class="o">)</span>
+</span><span class='line'>    at java.security.AccessController.doPrivileged<span class="o">(</span>Native Method<span class="o">)</span>
+</span><span class='line'>    at java.net.URLClassLoader.findClass<span class="o">(</span>URLClassLoader.java:188<span class="o">)</span>
+</span><span class='line'>    at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:307<span class="o">)</span>
+</span><span class='line'>    at sun.misc.Launcher<span class="nv">$AppClassLoader</span>.loadClass<span class="o">(</span>Launcher.java:301<span class="o">)</span>
+</span><span class='line'>    at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:252<span class="o">)</span>
+</span><span class='line'>    at java.lang.ClassLoader.loadClassInternal<span class="o">(</span>ClassLoader.java:320<span class="o">)</span>
+</span><span class='line'>Exception in thread <span class="s2">&quot;main&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>进入grepcode首页，输入<code>cn/com/starit/io/SystemDemo02</code>进行查询。</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-9/grepcode-1.png"></p>
+
+<ul>
+<li>可以看到查询结果涵盖了所有可能包含这个class的jar包，最前面的是相似度最接近的jar包名称，点开版本号还可以看到具体的源码。</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-9/grepcode-2.png"></p>
+
+<h2><a href="http://mvnrepository.com/">mvnrepository</a></h2>
+
+<p>知道Jar包的名称后，我们就可以通过mvnrepository这个网站来下载对应的jar包了，操作也很简单，输入jar名称就可以查询到相关的jar版本信息，里面还有maven，gradle等构建工具的配置脚本信息。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-9/mvn-repository-1.png"></p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-9/mvn-repository-2.png"></p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-9/mvn-repository-3.png"></p>
+
+<p>结合这两个网站就可以很方便的找到缺失的Jar包了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ceph认证原理]]></title>
@@ -7747,104 +7814,6 @@ swift的源码因为不断在更新，笔记记录的代码就以2014-4-18的为
 <p>共创式教练相信每个人都是可以自己解决问题的，每个人都是有资源的，教练不是给客户解决方案，而是通过各种技能技巧让用户知道如何自己解决问题，并在解决问题的过程中得到成长，同时教练和客户一起成长。</p>
 
 <p>共创式教练的三大原则：自我实现，自觉选择，活在当下。这些原则的目的就是帮助客户提高潜能自己解决问题。另外还有各种比较有用的技巧，比如“强有力的问题”，“好奇心”，“聆听”，“直觉”等。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[压力测试工具——Galting]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/02/28/hello-galting/"/>
-    <updated>2014-02-28T07:30:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/02/28/hello-galting</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-2/gatling.png"></p>
-
-<p>为什么要写Gatling呢？网上已经有一些介绍Gatling的好文章了，比如两位TW同事的文章，可以看<a href="http://www.infoq.com/cn/articles/new-generation-server-testing-tool-gatling">这里</a>（我知道Gatling也是因为这位作者介绍的），还有<a href="http://www.cnblogs.com/huang0925/p/3488313.html">这里</a>。主要是因为最近在使用Gatling做压力测试，感觉这个工具非常好用，所以想结合自己的使用情况也推荐一下。Gatling是基于scala写的一个开源的压力测试工具，它的特点是简单易用，测试报告简洁漂亮，api通俗易懂。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>JDK1.7</h2>
-
-<p>Gatling是基于jdk1.7开发的，所以还在用jdk1.6的同学需要先下载jdk1.7，才可以启动Gatling。顺便说一下，JDK1.7以后肯定是会替换JDK1.6的，但由于历史原因（主要是JDK1.6用的人实在太多了，我想也是由于JDK1.7升级的太晚了）大家都不想升级，我也这也是JAVA走下坡路的原因。</p>
-
-<h2>Scala</h2>
-
-<p>前面讲过Gatling是用scala写的，像scala、groovy和clojuer都是基于jvm开发的一种语言，不仅继承了java众多成熟的api和稳定的jvm，而且提供了更佳简洁易用的语法。基于某种语言的内核来重新设计一门新语言的这种做法，现在慢慢多了起来，这种做法的最大好处就是不用自己再重新设计编程语言底层相关的一些东西，而且可以使用原有语言大量的成熟api，让新语言就只专注地实现自己的功能，从而使新的语言性能稳定，易用性更高，甚至可以吸引一些原有语言的开发人员。</p>
-
-<h2>DSL</h2>
-
-<p>看过Galting的api的人就会发现，它的语法很像自然语言，比如测试一个get类型的http请求，它可能会这样写：</p>
-
-<figure class='code'><figcaption><span>demo </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;demo&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;http://www.myweb.com/helloworld&quot;</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>是不是很容易懂，这种就是基于DSL来写的代码，关于DSL可以看<a href="http://book.douban.com/subject/21964984/">这本书</a>，这本书我还没怎么看，等看完了以后再做分享，DSL不单单只是把代码写得像自然语言那样简单。</p>
-
-<h2>API</h2>
-
-<p>要想了解Gatling的各种api，这里推荐看Gatling源码里面的HttpCompileTest这个测试类，这里包含了http几乎所有的api使用示例。下面是截取的代码片段，全部代码可以看<a href="https://github.com/excilys/gatling/blob/f5aeee2492dedd665b0dcf0b5b60f0a2227a53b6/gatling-bundle/src/test/scala/io/gatling/bundle/test/HTTPCompileTest.scala">这里</a>。</p>
-
-<figure class='code'><figcaption><span>demo </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="o">.</span><span class="n">group</span><span class="o">(</span><span class="s">&quot;C&#39;est ici qu&#39;on trouve des Poneys&quot;</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>          <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">post</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)</span>
-</span><span class='line'>              <span class="o">.</span><span class="n">param</span><span class="o">(</span><span class="s">&quot;baz&quot;</span><span class="o">,</span> <span class="s">&quot;${qix}&quot;</span><span class="o">)</span>
-</span><span class='line'>              <span class="o">.</span><span class="n">multivaluedParam</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">&quot;bar&quot;</span><span class="o">)))</span>
-</span><span class='line'>              <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">post</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">multivaluedParam</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;${bar}&quot;</span><span class="o">))</span>
-</span><span class='line'>              <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">queryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">))</span>
-</span><span class='line'>              <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">queryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="s">&quot;${foo}&quot;</span><span class="o">))</span>
-</span><span class='line'>              <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">queryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="n">session</span> <span class="k">=&gt;</span> <span class="s">&quot;foo&quot;</span><span class="o">))</span>
-</span><span class='line'>              <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">multivaluedQueryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="nc">List</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)))</span>
-</span><span class='line'>              <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">multivaluedQueryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="s">&quot;${foo}&quot;</span><span class="o">))</span>
-</span><span class='line'>              <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">multivaluedQueryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="nc">List</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)))</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>      <span class="o">.</span><span class="n">uniformRandomSwitch</span><span class="o">(</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)),</span> <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Licorne&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)))</span>
-</span><span class='line'>      <span class="o">.</span><span class="n">randomSwitch</span><span class="o">(</span>
-</span><span class='line'>          <span class="mi">40</span><span class="n">d</span> <span class="o">-&gt;</span> <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)),</span>
-</span><span class='line'>          <span class="mi">50</span><span class="n">d</span> <span class="o">-&gt;</span> <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Licorne&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)))</span>
-</span><span class='line'>      <span class="o">.</span><span class="n">randomSwitch</span><span class="o">(</span><span class="mi">40</span><span class="n">d</span> <span class="o">-&gt;</span> <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)))</span>
-</span><span class='line'>      <span class="o">.</span><span class="n">pause</span><span class="o">(</span><span class="n">pause2</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里说下randomSwitch这个方法，这个方法可以模拟负载均衡，比如上面40d和50d的两行代码，会有40%的几率执行上面一行代码，50%的几率执行下面一行代码。</p>
-
-<h2>Question</h2>
-
-<p>如果看过上面的示例代码代码，还不知道具体的api怎么用，可以到<a href="https://groups.google.com/d/forum/gatling">google group</a>上面的分组提问题，很快就有人回答你的问题。github上面的问题区是让开发提bug或者feature用的，所以尽量不要在上面提问题。</p>
-
-<h2>Report</h2>
-
-<p>下面是Gatling的报告截图，界面很漂亮，而且参数很齐全，包括全部的请求数，成功/失败的请求数，请求的最大/最小/平均响应时间等。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-2/gatling_report.png"></p>
-
-<h2>Http &amp; JMS</h2>
-
-<p>目前Gatling支持的协议不多，毕竟是一个轻量级的测试工具，目前只支持Http和JMS(以前用的时候还只是支持HTTP)，随着Gatling的发展，以后肯定会支持更多的协议。现在大部分的系统和应用都是提供http协议的api，所以基于http协议的测试也能满足大部分的测试场景了。</p>
 ]]></content>
   </entry>
   

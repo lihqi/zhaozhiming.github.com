@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-09-14T17:32:22+08:00</updated>
+  <updated>2014-09-15T16:44:55+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,78 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[快速找到你想要的jar包]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/09/14/find-your-jar-quickly/"/>
+    <updated>2014-09-14T17:41:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/09/14/find-your-jar-quickly</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-9/class-not-found.jpeg"></p>
+
+<p>在做Java开发时，经常遇到<code>Class not found</code>的错误，一般的做法就是在google上搜索class名字，然后再搜索这个class所在的jar包是哪个，最后才找到可以下载jar包的链接。过程比较繁琐，有没有更好的方法可以快速的找到缺少的class所在的jar包呢？答案是肯定的。</p>
+
+<!--more-->
+
+
+<h2><a href="http://grepcode.com/">Grepcode</a></h2>
+
+<p>这个网站可以通过class名称直接搜索到拥有这个class的所有的jar包，比如说我们运行Java程序时报下面的错误，发现<code>cn/com/starit/io/SystemDemo02</code>找不到。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>java.lang.NoClassDefFoundError: cn/com/starit/io/SystemDemo02
+</span><span class='line'>Caused by: java.lang.ClassNotFoundException: cn.com.starit.io.SystemDemo02&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;at java.net.URLClassLoader<span class="nv">$1</span>.run<span class="o">(</span>URLClassLoader.java:200<span class="o">)</span>
+</span><span class='line'>at java.security.AccessController.doPrivileged<span class="o">(</span>Native Method<span class="o">)</span>
+</span><span class='line'>at java.net.URLClassLoader.findClass<span class="o">(</span>URLClassLoader.java:188<span class="o">)</span>
+</span><span class='line'>at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:307<span class="o">)</span>
+</span><span class='line'>at sun.misc.Launcher<span class="nv">$AppClassLoader</span>.loadClass<span class="o">(</span>Launcher.java:301<span class="o">)</span>
+</span><span class='line'>at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:252<span class="o">)</span>
+</span><span class='line'>at java.lang.ClassLoader.loadClassInternal<span class="o">(</span>ClassLoader.java:320<span class="o">)</span>
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Exception in thread &amp;ldquo;main&amp;rdquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>进入grepcode首页，输入<code>cn/com/starit/io/SystemDemo02</code>进行查询。</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/grepcode-1.png"></p>
+
+<ul>
+<li>可以看到查询结果涵盖了所有可能包含这个class的jar包，最前面的是相似度最接近的jar包名称，点开版本号还可以看到具体的源码。</li>
+</ul>
+
+
+<p><img src="/images/post/2014-9/grepcode-2.png"></p>
+
+<h2><a href="http://mvnrepository.com/">mvnrepository</a></h2>
+
+<p>知道Jar包的名称后，我们就可以通过mvnrepository这个网站来下载对应的jar包了，操作也很简单，输入jar名称就可以查询到相关的jar版本信息，里面还有maven，gradle等构建工具的配置脚本信息。</p>
+
+<p><img src="/images/post/2014-9/mvn-repository-1.png"></p>
+
+<p><img src="/images/post/2014-9/mvn-repository-2.png"></p>
+
+<p><img src="/images/post/2014-9/mvn-repository-3.png"></p>
+
+<p>结合这两个网站就可以很方便的找到缺失的Jar包了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ceph认证原理]]></title>
@@ -948,70 +1020,6 @@
 <h3>悬而未决的问题——PPTP无法连接</h3>
 
 <p>可能有的人使用VPN进行PPTP连接时会发现连接不上，在windows下是报一个<code>806</code>的异常，这种可能是你的ISP(网络服务提供商——电信或联通)没有提供这个服务，这种情况下还不知道怎么解决。在网上查过不少资料，说什么设置路由器的PPTP穿透功能，配置1723端口开启等，这些都没有什么效果，希望有高手告知这种情况要怎么解决。谢谢</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[让路由飞越长城(一)]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1/"/>
-    <updated>2014-08-29T21:13:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-8/greatefw.jpeg"></p>
-
-<p>最近GFW貌似升级了，现在连Google也无法访问，开发用百度实在搜不到什么东西，用bing也各种不爽(用了几天自己都快病了)。虽说可以用SSH，VPN翻墙，但家里的电子设备如果比较多，要一个一个设置起来就会比较麻烦，如果能在路由器上翻墙就好了，这样只要设备只需要接入路由器的WIFI就可以自动翻墙，无需任何设置。</p>
-
-<!--more-->
-
-
-<h3>可以刷固件的路由器</h3>
-
-<p>要实现路由器翻墙，首先需要一个高级的路由器，这种路由器可以刷一些路由器固件（固件我理解就是路由器的操作系统，一般是基于Linux的），我们后面需要在固件上通过脚本配置实现翻墙。我是基于DD-WRT这个固件进行路由翻墙的，所以我选择可以刷DD-WRT固件的路由器，这里有<a href="http://www.dd-wrt.com/wiki/index.php/Supported_Devices">网页</a>可以参考.</p>
-
-<p>我在网上参考了一些资料，觉得Buffalo(巴法洛)的路由器比较好，大部分实现了路由器翻墙的介绍文章都是使用Buffalo的，所以向大家也推荐这个牌子，我用的型号是WZR-HP-G300NH2，淘宝上卖400多。</p>
-
-<p>使用了Buffalo的路由器后，感觉要比以前用的那些路由快很多，同样是打开百度（百度最大的功能，测网络联通）速度明显感觉不一样。</p>
-
-<p><img src="/images/post/2014-8/WZR-HP-G300NH2.jpg"></p>
-
-<h3><a href="http://www.dd-wrt.com">DD-WRT</a></h3>
-
-<p>路由器的固件其实不只dd-wrt一种，还有<a href="http://www.polarcloud.com/tomato">Tomato</a>也是一种比较流行的路由器固件，两种固件各有优劣，网上有很多它们的比较，这里就不说了。</p>
-
-<p>dd-wrt对应不同品牌的路由器有不同的固件版本，每个品牌的不同型号也会对应不同的固件版本，要在这么多版本中查找到自己想要的固件版本，需要登录到dd-wrt的官网进行选择。</p>
-
-<p>进入官网首页后，点击Router Database模块，然后在输入框中输入路由器型号，就可以看到对应的dd-wrt版本记录。</p>
-
-<p><img src="/images/post/2014-8/dd-wrt-1.png"></p>
-
-<p>点击查询出来的版本记录，会出现固件版本的详细说明和下载链接。</p>
-
-<p><img src="/images/post/2014-8/dd-wrt-2.png"></p>
-
-<p>这里有2个固件可供选择(不同型号的固件名称会有不同，这里是以我的路由器型号举例):</p>
-
-<ul>
-<li>buffalo_to_ddwrt_webflash-MULTI.bin是指你的路由器固件不是dd-wrt的，需要把固件升级成dd-wrt。</li>
-<li>wzr-hp-g300nh2-dd-wrt-webupgrade-MULTI.bin是说你的固件已经是dd-wrt了，但固件版本太老了要升级。</li>
-</ul>
-
-
-<p>用上面的方法查出来的固件版本其实不是最新的，这里有个dd-wrt版本的<a href="ftp://ftp.dd-wrt.com/betas/">ftp链接</a>，打开连接后，可以看到不同年份的目录，进入某个目录后可以看到不同品牌的路由器的目录，比如<code>ftp://ftp.dd-wrt.com/betas/2014/06-23-2014-r24461/buffalo_wzr-hp-g300nh2/</code>，这里就是最新的固件版本了。</p>
-
-<h3>升级路由器固件</h3>
-
-<p>其实Buffalo也有自己官方的dd-wrt版本，但看网上介绍buffalo官方的dd-wrt版本功能不行，所以建议还是刷正式的dd-wrt版本。在dd-wrt官网上可以看到路由器固件的<a href="http://www.dd-wrt.com/wiki/index.php/Installation">安装介绍</a>(这里是WZR-HP-G300NH2的<a href="http://dd-wrt.com/wiki/index.php/Buffalo_WZR-HP-G300NH">安装介绍</a>），但个人感觉里面的说明太复杂，什么30/30/30硬复位大法，TFTP刷新法等看不大明白，同时也怕太复杂导致失误操作让路由器变砖头。</p>
-
-<p>最简单的方式是在你的路由器的web管理页面直接升级（我只试过Buffalo的，其他的路由器我没试过）:</p>
-
-<ul>
-<li>打开浏览器进入<code>192.168.1.1</code>，如果你的路由器是连接电信路由器网口的，可能ip地址不是这个；</li>
-<li>输入用户名密码后，进入管理配置页面，点击其中的更新，选择dd-wrt的固件文件打开。</li>
-<li>点击<strong>更新固件</strong>按钮，然后大概等个5~6分钟，等看到100%完成，路由器会自动重启；</li>
-<li>重新进入<code>192.168.1.1</code>，可以看到变成dd-wrt的管理页面了，首次登陆需要输入用户名和密码。</li>
-</ul>
-
-
-<p><img src="/images/post/2014-8/dd-wrt-3.png"></p>
 ]]></content>
   </entry>
   
