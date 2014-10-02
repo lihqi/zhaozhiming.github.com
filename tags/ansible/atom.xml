@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: ansible | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/tags/ansible/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2014-10-02T19:45:32+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用Vagrant和Ansible搭建Ceph环境]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible/"/>
+    <updated>2014-10-02T22:03:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-9/ceph-install.jpg"></p>
+
+<h2><a href="http://ceph.com/">Ceph</a>简介</h2>
+
+<p>Ceph是一个高性能，高可用，高扩展的分布式对象存储框架和文件系统，而且是一个免费开源的项目。</p>
+
+<p>但是Ceph的环境搭建起来比较麻烦，最简单的环境也需要2台VM(虚拟机，1台做mon和osd，另外一台做gateway)，而且按照官方文档上面的指南进行安装，经常报各种莫名其妙的问题，现在给大家介绍一个简单的方法来进行Ceph环境的搭建。下面先介绍几个要用到的工具。</p>
+
+<!--more-->
+
+
+<h2><a href="https://www.vagrantup.com/">Vagrant</a></h2>
+
+<p><img src="/images/post/2014-9/vagrant.png"></p>
+
+<p>以前使用VM情况是这样的:</p>
+
+<ul>
+<li>下载操作系统的iso镜像</li>
+<li>通过VM管理工具(VMWare，VirtualBox等)将iso镜像转换为VM</li>
+<li>登陆到VM进行操作</li>
+</ul>
+
+
+<p>整个过程复杂而且漫长，但是使用了Vagrant之后就非常方便了，一个命令就可以搞定VM的安装，ssh到VM也无需输入用户名密码，还可以查看所有VM的状态等。</p>
+
+<h3>Box</h3>
+
+<p>vagrant通过box来生成VM，box可以理解是一个制作好的VM，这意味着你搭建完自己的开发环境后，也可以将其制作成一个box，供团队其他成员使用。</p>
+
+<p>box的容量非常小，比如Ubuntu12.04的一个iso镜像一般要500多M，制作成VM可能要10G左右，而一个ubuntu12.04的box只有300多M。Vagrant的box可以在<a href="https://vagrantcloud.com/discover/featured">这里</a>下载，除了有各种OS(ubuntu, windosw, CentOS等)的VM外，还有Virtualbox和VMWare各自对应的box，不过要使用VMWare的box，需要安装插件和到购买相关的<a href="https://www.vagrantup.com/VMware">License</a>，毕竟VMWare不是免费的软件。</p>
+
+<p>下载了box后，执行下面命令就可以添加box了，如果直接输入box名称并发现本地没有box的话，会自动下载box文件。(<code>PS: Vagrant默认使用Virtualbox作为虚拟器软件，所以在安装Vagrant还需要先安装Virtualbox。</code>)</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>//添加本地box文件
+</span><span class='line'><span class="nv">$ </span>vagrant box add /your/box/path/xxx.box
+</span><span class='line'>//添加指定名称的box，没有的话会自动下载box文件
+</span><span class='line'><span class="nv">$ </span>vagrant box add hashicorp/precise32
+</span><span class='line'>//列出所有的box
+</span><span class='line'><span class="nv">$ </span>vagrant box list
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Vagrant基本操作</h3>
+
+<p>Vagrant的操作非常简单，现在介绍几个常用的操作指令。(<code>PS: 下面的大部分命令后面可以跟VM名称，不跟的话是对所有的VM进行操作。</code>)</p>
+
+<ul>
+<li>vagrant status: 展示VM的信息。</li>
+<li>vagrant up: 启动VM。</li>
+<li>vagrant ssh [VM]: ssh到某个VM上，无需输入用户名和密码。</li>
+<li>vagrant halt: 关闭VM。</li>
+<li>vagrant destroy: 销毁VM，如果你的VM被你玩残了，销毁它然后重新启动一个就可以了，很方便。</li>
+</ul>
+
+
+<h3>Vagrant共享</h3>
+
+<p>使用<code>vagrant ssh</code>到VM后，可以看到根目录下有个<code>/vagrant</code>文件夹，这个是VM和工程间的共享目录，在这个文件夹里面存放东西，可以在存放Vagrantfile的目录里面看到，反之亦然，在VM里面也可以读取到工程下的文件。</p>
+
+<h3>Vagrantfile</h3>
+
+<p>初始化vagrant工程后可以看到一个<code>Vagrantfile</code>的文件，这个是配置VM的文件，可以看下面的例子:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">VAGRANTFILE_API_VERSION</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="mi">2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|</span>
+</span><span class='line'><span class="sr">  config.VM.box = &amp;ldquo;hashicorp/</span><span class="n">precise64</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  config.VM.define :rgw do |rgw|&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">network</span> <span class="ss">:private_network</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.42.2&quot;</span>
+</span><span class='line'><span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">host_name</span> <span class="o">=</span> <span class="s2">&quot;ceph-rgw&quot;</span>
+</span><span class='line'><span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">vb</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyVM&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--memory&quot;</span><span class="p">,</span> <span class="s2">&quot;192&quot;</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:VMware_fusion</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">v</span><span class="o">.</span><span class="n">VMx</span><span class="o">[</span><span class="s1">&#39;memsize&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;192&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这个Vagrantfile指定了box的名称，然后创建了一个名称为<code>rgw</code>的VM，指定了VM的ip、hostname、内存大小。</p>
+
+<p>关于vagrant就介绍到这里，想要了解更多信息可以查看<a href="https://www.vagrantup.com/">vagrant官网</a>。</p>
+
+<h2><a href="http://www.ansible.com/home">Ansible</a></h2>
+
+<p><img src="/images/post/2014-9/ansible.jpg"></p>
+
+<p>Ansible是一个开源的远程机器管理软件，可以批量操作多台远程服务器。(<code>PS: Ansible只适合操作Linux和Unix机器，如果是Windows系统是不可以的。</code>)</p>
+
+<h3>安装</h3>
+
+<p>要安装Ansible需要先安装Python2.6/7，然后可以通过easy_install或pip进行下载安装。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo esay_install ansible&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;or&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo pip install ansible
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>使用示例</h3>
+
+<p>创建一个文件夹，在文件夹里面创建一个hosts文件，hosts格式如下:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;hosts&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;&lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://ceph.com/&quot;</span>&gt;ceph&lt;/a&gt;
+</span><span class='line'>192.168.42.2
+</span><span class='line'>192.168.42.101
+</span><span class='line'>192.168.42.201
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>可以看到hosts文件里面有几个远程机器的ip(这里是虚拟机)，远程机器可以分组，通过中括号里面的组名来划分。</p>
+
+<p>然后执行下面的命令执行简单的命令。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ansible all -a &amp;lsquo;who&amp;rsquo;
+</span><span class='line'>ceph-mon0 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
+</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;ceph-osd0 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
+</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;ceph-osd1 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
+</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>从输出信息上可以看到这几台远程机器都成功执行了<code>who</code>命令，不过如果要成功执行上面的命令，还需要先在执行机和远程机上面设置无密码ssh连接。</p>
+
+<h3>无密码ssh连接</h3>
+
+<p>假设有2台机器，机器A和机器B，现在想让机器A<code>ssh</code>机器B的时候不需要输入用户和密码，操作如下。</p>
+
+<ul>
+<li>在机器B上创建一个用户，并配置好，下面命令的<code>username</code>指自己要创建的用户名。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo useradd -d /home/<span class="o">{</span>username<span class="o">}</span> -m <span class="o">{</span>username<span class="o">}</span>
+</span><span class='line'><span class="nv">$ </span>sudo passwd <span class="o">{</span>username<span class="o">}</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;输入密码&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span><span class="nb">echo</span> &amp;ldquo;<span class="o">{</span>username<span class="o">}</span> <span class="nv">ALL</span> <span class="o">=</span> <span class="o">(</span>root<span class="o">)</span> NOPASSWD:ALL&amp;rdquo; | sudo tee /etc/sudoers.d/<span class="o">{</span>username<span class="o">}</span>
+</span><span class='line'><span class="nv">$ </span>sudo chmod 0440 /etc/sudoers.d/<span class="o">{</span>username<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>在机器A上生成密钥，并发送给机器B。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh-keygen&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Generating public/private key pair.
+</span><span class='line'>Enter file in which to save the key <span class="o">(</span>/ceph-admin/.ssh/id_rsa<span class="o">)</span>:
+</span><span class='line'>Enter passphrase <span class="o">(</span>empty <span class="k">for </span>no passphrase<span class="o">)</span>:
+</span><span class='line'>Enter same passphrase again:
+</span><span class='line'>Your identification has been saved in /ceph-admin/.ssh/id_rsa.
+</span><span class='line'>Your public key has been saved in /ceph-admin/.ssh/id_rsa.pub.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>ssh-copy-id <span class="o">{</span>username<span class="o">}</span>@<span class="o">{</span>机器B<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>到这里就可以不用输入密码进行ssh了，如果想连用户名也不想输入的话，需要机器A在<code>.ssh</code>文件下创建一个<code>config</code>文件，在里面添加如下内容。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host 机器B
+</span><span class='line'>   Hostname 机器B
+</span><span class='line'>   User <span class="o">{</span>username<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>playbook</h3>
+
+<p>ansible还可以通过一个playbook脚本进行远程机器的操作，playbook的示例如下:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>playbook.yml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;h1&gt;playbook.yml&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;hr /&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;ul&gt;</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;li&gt;hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">all</span>
+</span><span class='line'><span class="l-Scalar-Plain">remote_user</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ceph</span>
+</span><span class='line'><span class="l-Scalar-Plain">tasks</span><span class="p-Indicator">:</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;ul&gt;</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;li&gt;name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">whoami</span>
+</span><span class='line'><span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="nl">&amp;lsquo</span><span class="l-Scalar-Plain">;whoami &gt; whoami.rst&amp;rsquo;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></li>
+</ul>
+</li>
+</ul>
+
+
+<p>创建完playbook文件后执行如下命令可以看到执行结果。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ansible-playbook playbook.yml&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;PLAY <span class="o">[</span>all<span class="o">]</span> ********************************************************************&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;GATHERING FACTS ***************************************************************
+</span><span class='line'>ok: <span class="o">[</span>ceph-mon0<span class="o">]</span>
+</span><span class='line'>ok: <span class="o">[</span>ceph-osd1<span class="o">]</span>
+</span><span class='line'>ok: <span class="o">[</span>ceph-osd0<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;TASK: <span class="o">[</span>whoami<span class="o">]</span> ****************************************************************
+</span><span class='line'>changed: <span class="o">[</span>ceph-mon0<span class="o">]</span>
+</span><span class='line'>changed: <span class="o">[</span>ceph-osd0<span class="o">]</span>
+</span><span class='line'>changed: <span class="o">[</span>ceph-osd1<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;PLAY RECAP ********************************************************************
+</span><span class='line'>ceph-mon0                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0 &lt;br/&gt;
+</span><span class='line'>ceph-osd0                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0 &lt;br/&gt;
+</span><span class='line'>ceph-osd1                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0 &lt;br/&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这时可以在远程机器的用户目录上可以看到新产生了一个<code>whoami.rst</code>的文件。</p>
+
+<p>关于ansible就介绍到这里，想要了解更多信息可以查看<a href="http://docs.ansible.com/">ansible的文档</a>。</p>
+
+<h2><a href="https://github.com/ceph/ceph-ansible">Ceph-ansible</a></h2>
+
+<p>这个github项目主要是利用了上面介绍的2个工具，使用vagrant来创建ceph需要的服务器VM，然后将ceph的环境搭建通过ansible的playbook脚本执行。</p>
+
+<h3>执行步骤</h3>
+
+<ul>
+<li>下载ceph-ansible项目;</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/ceph/ceph-ansible.git&quot;</span>&gt;https://github.com/ceph/ceph-ansible.git&lt;/a&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>一行命令就可以完成环境搭建，完成后ceph的环境是: 3个mon，3个osd，1个rgw;</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>mon0                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>11   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>mon1                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>10   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>mon2                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>11   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>osd0                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>osd1                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>osd2                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>rgw                        : <span class="nv">ok</span><span class="o">=</span>20   <span class="nv">changed</span><span class="o">=</span>17   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+</feed>

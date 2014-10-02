@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-09-17T21:30:01+08:00</updated>
+  <updated>2014-10-02T19:45:32+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,388 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Vagrant和Ansible搭建Ceph环境]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible/"/>
+    <updated>2014-10-02T22:03:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-9/ceph-install.jpg"></p>
+
+<h2><a href="http://ceph.com/">Ceph</a>简介</h2>
+
+<p>Ceph是一个高性能，高可用，高扩展的分布式对象存储框架和文件系统，而且是一个免费开源的项目。</p>
+
+<p>但是Ceph的环境搭建起来比较麻烦，最简单的环境也需要2台VM(虚拟机，1台做mon和osd，另外一台做gateway)，而且按照官方文档上面的指南进行安装，经常报各种莫名其妙的问题，现在给大家介绍一个简单的方法来进行Ceph环境的搭建。下面先介绍几个要用到的工具。</p>
+
+<!--more-->
+
+
+<h2><a href="https://www.vagrantup.com/">Vagrant</a></h2>
+
+<p><img src="/images/post/2014-9/vagrant.png"></p>
+
+<p>以前使用VM情况是这样的:</p>
+
+<ul>
+<li>下载操作系统的iso镜像</li>
+<li>通过VM管理工具(VMWare，VirtualBox等)将iso镜像转换为VM</li>
+<li>登陆到VM进行操作</li>
+</ul>
+
+
+<p>整个过程复杂而且漫长，但是使用了Vagrant之后就非常方便了，一个命令就可以搞定VM的安装，ssh到VM也无需输入用户名密码，还可以查看所有VM的状态等。</p>
+
+<h3>Box</h3>
+
+<p>vagrant通过box来生成VM，box可以理解是一个制作好的VM，这意味着你搭建完自己的开发环境后，也可以将其制作成一个box，供团队其他成员使用。</p>
+
+<p>box的容量非常小，比如Ubuntu12.04的一个iso镜像一般要500多M，制作成VM可能要10G左右，而一个ubuntu12.04的box只有300多M。Vagrant的box可以在<a href="https://vagrantcloud.com/discover/featured">这里</a>下载，除了有各种OS(ubuntu, windosw, CentOS等)的VM外，还有Virtualbox和VMWare各自对应的box，不过要使用VMWare的box，需要安装插件和到购买相关的<a href="https://www.vagrantup.com/VMware">License</a>，毕竟VMWare不是免费的软件。</p>
+
+<p>下载了box后，执行下面命令就可以添加box了，如果直接输入box名称并发现本地没有box的话，会自动下载box文件。(<code>PS: Vagrant默认使用Virtualbox作为虚拟器软件，所以在安装Vagrant还需要先安装Virtualbox。</code>)</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>//添加本地box文件
+</span><span class='line'><span class="nv">$ </span>vagrant box add /your/box/path/xxx.box
+</span><span class='line'>//添加指定名称的box，没有的话会自动下载box文件
+</span><span class='line'><span class="nv">$ </span>vagrant box add hashicorp/precise32
+</span><span class='line'>//列出所有的box
+</span><span class='line'><span class="nv">$ </span>vagrant box list
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Vagrant基本操作</h3>
+
+<p>Vagrant的操作非常简单，现在介绍几个常用的操作指令。(<code>PS: 下面的大部分命令后面可以跟VM名称，不跟的话是对所有的VM进行操作。</code>)</p>
+
+<ul>
+<li>vagrant status: 展示VM的信息。</li>
+<li>vagrant up: 启动VM。</li>
+<li>vagrant ssh [VM]: ssh到某个VM上，无需输入用户名和密码。</li>
+<li>vagrant halt: 关闭VM。</li>
+<li>vagrant destroy: 销毁VM，如果你的VM被你玩残了，销毁它然后重新启动一个就可以了，很方便。</li>
+</ul>
+
+
+<h3>Vagrant共享</h3>
+
+<p>使用<code>vagrant ssh</code>到VM后，可以看到根目录下有个<code>/vagrant</code>文件夹，这个是VM和工程间的共享目录，在这个文件夹里面存放东西，可以在存放Vagrantfile的目录里面看到，反之亦然，在VM里面也可以读取到工程下的文件。</p>
+
+<h3>Vagrantfile</h3>
+
+<p>初始化vagrant工程后可以看到一个<code>Vagrantfile</code>的文件，这个是配置VM的文件，可以看下面的例子:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">VAGRANTFILE_API_VERSION</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="mi">2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|</span>
+</span><span class='line'><span class="sr">  config.VM.box = &amp;ldquo;hashicorp/</span><span class="n">precise64</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  config.VM.define :rgw do |rgw|&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">network</span> <span class="ss">:private_network</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.42.2&quot;</span>
+</span><span class='line'><span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">host_name</span> <span class="o">=</span> <span class="s2">&quot;ceph-rgw&quot;</span>
+</span><span class='line'><span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">vb</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyVM&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--memory&quot;</span><span class="p">,</span> <span class="s2">&quot;192&quot;</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:VMware_fusion</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">v</span><span class="o">.</span><span class="n">VMx</span><span class="o">[</span><span class="s1">&#39;memsize&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;192&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这个Vagrantfile指定了box的名称，然后创建了一个名称为<code>rgw</code>的VM，指定了VM的ip、hostname、内存大小。</p>
+
+<p>关于vagrant就介绍到这里，想要了解更多信息可以查看<a href="https://www.vagrantup.com/">vagrant官网</a>。</p>
+
+<h2><a href="http://www.ansible.com/home">Ansible</a></h2>
+
+<p><img src="/images/post/2014-9/ansible.jpg"></p>
+
+<p>Ansible是一个开源的远程机器管理软件，可以批量操作多台远程服务器。(<code>PS: Ansible只适合操作Linux和Unix机器，如果是Windows系统是不可以的。</code>)</p>
+
+<h3>安装</h3>
+
+<p>要安装Ansible需要先安装Python2.6/7，然后可以通过easy_install或pip进行下载安装。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo esay_install ansible&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;or&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo pip install ansible
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>使用示例</h3>
+
+<p>创建一个文件夹，在文件夹里面创建一个hosts文件，hosts格式如下:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;hosts&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;&lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://ceph.com/&quot;</span>&gt;ceph&lt;/a&gt;
+</span><span class='line'>192.168.42.2
+</span><span class='line'>192.168.42.101
+</span><span class='line'>192.168.42.201
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>可以看到hosts文件里面有几个远程机器的ip(这里是虚拟机)，远程机器可以分组，通过中括号里面的组名来划分。</p>
+
+<p>然后执行下面的命令执行简单的命令。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ansible all -a &amp;lsquo;who&amp;rsquo;
+</span><span class='line'>ceph-mon0 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
+</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;ceph-osd0 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
+</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;ceph-osd1 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
+</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>从输出信息上可以看到这几台远程机器都成功执行了<code>who</code>命令，不过如果要成功执行上面的命令，还需要先在执行机和远程机上面设置无密码ssh连接。</p>
+
+<h3>无密码ssh连接</h3>
+
+<p>假设有2台机器，机器A和机器B，现在想让机器A<code>ssh</code>机器B的时候不需要输入用户和密码，操作如下。</p>
+
+<ul>
+<li>在机器B上创建一个用户，并配置好，下面命令的<code>username</code>指自己要创建的用户名。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo useradd -d /home/<span class="o">{</span>username<span class="o">}</span> -m <span class="o">{</span>username<span class="o">}</span>
+</span><span class='line'><span class="nv">$ </span>sudo passwd <span class="o">{</span>username<span class="o">}</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;输入密码&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span><span class="nb">echo</span> &amp;ldquo;<span class="o">{</span>username<span class="o">}</span> <span class="nv">ALL</span> <span class="o">=</span> <span class="o">(</span>root<span class="o">)</span> NOPASSWD:ALL&amp;rdquo; | sudo tee /etc/sudoers.d/<span class="o">{</span>username<span class="o">}</span>
+</span><span class='line'><span class="nv">$ </span>sudo chmod 0440 /etc/sudoers.d/<span class="o">{</span>username<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>在机器A上生成密钥，并发送给机器B。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh-keygen&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Generating public/private key pair.
+</span><span class='line'>Enter file in which to save the key <span class="o">(</span>/ceph-admin/.ssh/id_rsa<span class="o">)</span>:
+</span><span class='line'>Enter passphrase <span class="o">(</span>empty <span class="k">for </span>no passphrase<span class="o">)</span>:
+</span><span class='line'>Enter same passphrase again:
+</span><span class='line'>Your identification has been saved in /ceph-admin/.ssh/id_rsa.
+</span><span class='line'>Your public key has been saved in /ceph-admin/.ssh/id_rsa.pub.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>ssh-copy-id <span class="o">{</span>username<span class="o">}</span>@<span class="o">{</span>机器B<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>到这里就可以不用输入密码进行ssh了，如果想连用户名也不想输入的话，需要机器A在<code>.ssh</code>文件下创建一个<code>config</code>文件，在里面添加如下内容。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host 机器B
+</span><span class='line'>   Hostname 机器B
+</span><span class='line'>   User <span class="o">{</span>username<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>playbook</h3>
+
+<p>ansible还可以通过一个playbook脚本进行远程机器的操作，playbook的示例如下:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>playbook.yml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;h1&gt;playbook.yml&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;hr /&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;ul&gt;</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;li&gt;hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">all</span>
+</span><span class='line'><span class="l-Scalar-Plain">remote_user</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ceph</span>
+</span><span class='line'><span class="l-Scalar-Plain">tasks</span><span class="p-Indicator">:</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;ul&gt;</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;li&gt;name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">whoami</span>
+</span><span class='line'><span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="nl">&amp;lsquo</span><span class="l-Scalar-Plain">;whoami &gt; whoami.rst&amp;rsquo;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></li>
+</ul>
+</li>
+</ul>
+
+
+<p>创建完playbook文件后执行如下命令可以看到执行结果。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ansible-playbook playbook.yml&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;PLAY <span class="o">[</span>all<span class="o">]</span> ********************************************************************&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;GATHERING FACTS ***************************************************************
+</span><span class='line'>ok: <span class="o">[</span>ceph-mon0<span class="o">]</span>
+</span><span class='line'>ok: <span class="o">[</span>ceph-osd1<span class="o">]</span>
+</span><span class='line'>ok: <span class="o">[</span>ceph-osd0<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;TASK: <span class="o">[</span>whoami<span class="o">]</span> ****************************************************************
+</span><span class='line'>changed: <span class="o">[</span>ceph-mon0<span class="o">]</span>
+</span><span class='line'>changed: <span class="o">[</span>ceph-osd0<span class="o">]</span>
+</span><span class='line'>changed: <span class="o">[</span>ceph-osd1<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;PLAY RECAP ********************************************************************
+</span><span class='line'>ceph-mon0                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0 &lt;br/&gt;
+</span><span class='line'>ceph-osd0                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0 &lt;br/&gt;
+</span><span class='line'>ceph-osd1                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0 &lt;br/&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这时可以在远程机器的用户目录上可以看到新产生了一个<code>whoami.rst</code>的文件。</p>
+
+<p>关于ansible就介绍到这里，想要了解更多信息可以查看<a href="http://docs.ansible.com/">ansible的文档</a>。</p>
+
+<h2><a href="https://github.com/ceph/ceph-ansible">Ceph-ansible</a></h2>
+
+<p>这个github项目主要是利用了上面介绍的2个工具，使用vagrant来创建ceph需要的服务器VM，然后将ceph的环境搭建通过ansible的playbook脚本执行。</p>
+
+<h3>执行步骤</h3>
+
+<ul>
+<li>下载ceph-ansible项目;</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/ceph/ceph-ansible.git&quot;</span>&gt;https://github.com/ceph/ceph-ansible.git&lt;/a&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>一行命令就可以完成环境搭建，完成后ceph的环境是: 3个mon，3个osd，1个rgw;</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>mon0                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>11   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>mon1                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>10   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>mon2                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>11   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>osd0                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>osd1                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>osd2                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>rgw                        : <span class="nv">ok</span><span class="o">=</span>20   <span class="nv">changed</span><span class="o">=</span>17   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Redhat企业版无网环境下安装Dokuwiki]]></title>
@@ -632,341 +1014,6 @@ PCRE安装比较简单，去pcre的网站下载源码包后解压，cd到解压�
 
 
 <p><img src="/images/post/2014-9/genymotion-idea-6.png" width="300" height="500"></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[让你的安卓开发更容易(一)——Intellij IDEA]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1/"/>
-    <updated>2014-08-31T10:59:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-8/intellijidea_android.gif"></p>
-
-<p><blockquote><p>工欲善其事，必先利其器</p><footer><strong>孔子 ——《春秋》</strong></footer></blockquote></p>
-
-<p>介绍一下安卓开发的一些好用工具，可以让你的开发事半功倍。如果你是一个安卓新手，那么准备一套高效率的开发工具，会让你从一开始就养成使用好工具的习惯，从开始就比别人更快；如果你是一名安卓开发高手，也可以看看这些工具，说不定你已经在使用其中的一些工具了。</p>
-
-<!--more-->
-
-
-<h2>Intellij IDEA</h2>
-
-<p>虽然IntelliJ IDEA是一款收费的软件，但收费有它收费的道理，跟eclipse相比，它多了更多重构，代码错误提示，与更多工具集成的功能。IntelliJ IDEA被认为是当前Java开发效率最快的IDE工具，它集成了开发过程中实用的众多功能，几乎可以不用鼠标可以方便的完成你要做的任何事情，最大程度的加快开发的速度。简单而又功能强大。</p>
-
-<p>从版本10开始，IntelliJ IDEA就集成了Android的开发功能，发展到现在版本13，不仅具备了流畅开发Android项目的能力，而且还集成了最新的构建工具Gradle，Android lint等工具。</p>
-
-<h3>Android Hello World</h3>
-
-<p>现在我们使用IntelliJ IDEA来创建一个使用Gradle构建的Android项目。</p>
-
-<ul>
-<li>首先点击创建新工程，在左边的项目类型栏中选择<code>Android</code>，可以看到右边有4个选项可以选，我们选择<code>Gradle: Android Mondule</code>，然后点击下面的Next;</li>
-</ul>
-
-
-<p><img src="/images/post/2014-8/idea-android-project-1.png"></p>
-
-<ul>
-<li>进入项目信息配置页面，可以看到有如下的选项，填写后点击Next；
-
-<ul>
-<li>Application name: 应用名</li>
-<li>Module name: 模块名</li>
-<li>Package name: 包名</li>
-<li>Minimum required SDK: 可支持的最小Android SDK版本</li>
-<li>Target SDK: 可支持的最大Android SDK版本</li>
-<li>Compile with: 用哪个Android SDK版本编译</li>
-<li>Theme: app主题，全黑，全白，半黑半百，是否要GridLayou，是否要action bar等</li>
-</ul>
-</li>
-</ul>
-
-
-<p><img src="/images/post/2014-8/idea-android-project-2.png"></p>
-
-<ul>
-<li>选择main_activity的样式，有9种可以选择，样式的效果在右边可以预览，我们可以选择最简单的<code>Blank Activity</code>，选择好了Next；</li>
-</ul>
-
-
-<p><img src="/images/post/2014-8/idea-android-project-3.png"></p>
-
-<ul>
-<li>填写Activity名字和对应的展示层layout名字，填完Next；</li>
-</ul>
-
-
-<p><img src="/images/post/2014-8/idea-android-project-4.png"></p>
-
-<ul>
-<li>填写工程名和选择工程文件路径，注意最下面的<code>Project format</code>，有2种格式，一种是<code>.idea</code>文件夹，一个是ipr文件，选择ipr文件的方式可以减少很多文件的生成，最后Finish；</li>
-</ul>
-
-
-<p><img src="/images/post/2014-8/idea-android-project-5.png"></p>
-
-<p>生成的代码如下:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MainActivity.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">ActionBarActivity</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Override</span>
-</span><span class='line'><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Override</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onCreateOptionsMenu</span><span class="o">(</span><span class="n">Menu</span> <span class="n">menu</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// Inflate the menu; this adds items to the action bar if it is present.</span>
-</span><span class='line'>    <span class="n">getMenuInflater</span><span class="o">().</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">menu</span><span class="o">.</span><span class="na">main</span><span class="o">,</span> <span class="n">menu</span><span class="o">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Override</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onOptionsItemSelected</span><span class="o">(</span><span class="n">MenuItem</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// Handle action bar item clicks here. The action bar will</span>
-</span><span class='line'>    <span class="c1">// automatically handle clicks on the Home/Up button, so long</span>
-</span><span class='line'>    <span class="c1">// as you specify a parent activity in AndroidManifest.xml.</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemId</span><span class="o">();</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">id</span> <span class="o">==</span> <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">action_settings</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">onOptionsItemSelected</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>activity_main.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>RelativeLayout xmlns:android=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span><span class="nt">&gt;</span>http://schemas.android.com/apk/res/android<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>xmlns:tools=&quot;http://schemas.android.com/tools&quot;
-</span><span class='line'>android:layout_width=&quot;match_parent&quot;
-</span><span class='line'>android:layout_height=&quot;match_parent&quot;
-</span><span class='line'>android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
-</span><span class='line'>android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
-</span><span class='line'>android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
-</span><span class='line'>android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot;
-</span><span class='line'>tools:context=&quot;com.github.zzm.myapplication1.app.MainActivity&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="ni">&amp;lt;</span>TextView
-</span><span class='line'>    android:text=&quot;@string/hello_world&quot;
-</span><span class='line'>    android:layout_width=&quot;wrap_content&quot;
-</span><span class='line'>    android:layout_height=&quot;wrap_content&quot; /<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;/RelativeLayout&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>运行的效果如下:</p>
-
-<p><img src="/images/post/2014-8/idea-android-project-6.png" width="250" height="350"></p>
-
-<h3>Gradle脚本</h3>
-
-<p>可以看到工程目录下有2个build.gradle脚本，一个是根目录的构建文件(如下)，如果想提高构建速度，可以将脚本中的mavenCentral()改为<code>maven {url "http://maven.oschina.net/content/groups/public/"}</code>，就是将maven的国外镜像库改成国内的库。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>root/build.gradle </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// Top-level build file where you can add configuration options common to all sub-projects/modules.&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">buildscript</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;repositories {</span>
-</span><span class='line'><span class="s">    mavenCentral()</span>
-</span><span class='line'><span class="s">}</span>
-</span><span class='line'><span class="s">dependencies {</span>
-</span><span class='line'><span class="s">    classpath &#39;com.android.tools.build:gradle:0.9.+&#39;</span>
-</span><span class='line'><span class="s">}</span>
-</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">allprojects</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;repositories {</span>
-</span><span class='line'><span class="s">    mavenCentral()</span>
-</span><span class='line'><span class="s">}</span>
-</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>另外一个是app目录下的构建文件，可以看到指定了sdk的最小最大版本，需要的依赖包等。<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>app/build.gradle </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">buildscript</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;repositories {</span>
-</span><span class='line'><span class="s">    mavenCentral()</span>
-</span><span class='line'><span class="s">}</span>
-</span><span class='line'><span class="s">dependencies {</span>
-</span><span class='line'><span class="s">    classpath &#39;com.android.tools.build:gradle:0.9.+&#39;</span>
-</span><span class='line'><span class="s">}</span>
-</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;p&gt;}</span>
-</span><span class='line'><span class="s">apply plugin: &amp;lsquo;android&amp;rsquo;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">repositories</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;mavenCentral()</span>
-</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">android</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;compileSdkVersion 20</span>
-</span><span class='line'><span class="s">buildToolsVersion &quot;20.0.0&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">defaultConfig {</span>
-</span><span class='line'><span class="s">    minSdkVersion 8</span>
-</span><span class='line'><span class="s">    targetSdkVersion 20</span>
-</span><span class='line'><span class="s">    versionCode 1</span>
-</span><span class='line'><span class="s">    versionName &quot;1.0&quot;</span>
-</span><span class='line'><span class="s">}</span>
-</span><span class='line'><span class="s">buildTypes {</span>
-</span><span class='line'><span class="s">    release {</span>
-</span><span class='line'><span class="s">        runProguard false</span>
-</span><span class='line'><span class="s">        proguardFiles getDefaultProguardFile(&#39;proguard-android.txt&#39;), &#39;proguard-rules.txt&#39;</span>
-</span><span class='line'><span class="s">    }</span>
-</span><span class='line'><span class="s">}</span>
-</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">dependencies</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;compile fileTree(dir: &#39;libs&#39;, include: [&#39;*.jar&#39;])</span>
-</span><span class='line'><span class="s">compile &#39;com.android.support:appcompat-v7:20.0.0&#39;</span>
-</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

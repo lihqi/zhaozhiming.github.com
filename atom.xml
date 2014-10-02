@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-09-17T21:30:01+08:00</updated>
+  <updated>2014-10-02T19:45:32+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,364 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Vagrant和Ansible搭建Ceph环境]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible/"/>
+    <updated>2014-10-02T22:03:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-9/ceph-install.jpg"></p>
+
+<h2><a href="http://ceph.com/">Ceph</a>简介</h2>
+
+<p>Ceph是一个高性能，高可用，高扩展的分布式对象存储框架和文件系统，而且是一个免费开源的项目。</p>
+
+<p>但是Ceph的环境搭建起来比较麻烦，最简单的环境也需要2台VM(虚拟机，1台做mon和osd，另外一台做gateway)，而且按照官方文档上面的指南进行安装，经常报各种莫名其妙的问题，现在给大家介绍一个简单的方法来进行Ceph环境的搭建。下面先介绍几个要用到的工具。</p>
+
+<!--more-->
+
+
+<h2><a href="https://www.vagrantup.com/">Vagrant</a></h2>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-9/vagrant.png"></p>
+
+<p>以前使用VM情况是这样的:</p>
+
+<ul>
+<li>下载操作系统的iso镜像</li>
+<li>通过VM管理工具(VMWare，VirtualBox等)将iso镜像转换为VM</li>
+<li>登陆到VM进行操作</li>
+</ul>
+
+
+<p>整个过程复杂而且漫长，但是使用了Vagrant之后就非常方便了，一个命令就可以搞定VM的安装，ssh到VM也无需输入用户名密码，还可以查看所有VM的状态等。</p>
+
+<h3>Box</h3>
+
+<p>vagrant通过box来生成VM，box可以理解是一个制作好的VM，这意味着你搭建完自己的开发环境后，也可以将其制作成一个box，供团队其他成员使用。</p>
+
+<p>box的容量非常小，比如Ubuntu12.04的一个iso镜像一般要500多M，制作成VM可能要10G左右，而一个ubuntu12.04的box只有300多M。Vagrant的box可以在<a href="https://vagrantcloud.com/discover/featured">这里</a>下载，除了有各种OS(ubuntu, windosw, CentOS等)的VM外，还有Virtualbox和VMWare各自对应的box，不过要使用VMWare的box，需要安装插件和到购买相关的<a href="https://www.vagrantup.com/VMware">License</a>，毕竟VMWare不是免费的软件。</p>
+
+<p>下载了box后，执行下面命令就可以添加box了，如果直接输入box名称并发现本地没有box的话，会自动下载box文件。(<code>PS: Vagrant默认使用Virtualbox作为虚拟器软件，所以在安装Vagrant还需要先安装Virtualbox。</code>)</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>//添加本地box文件
+</span><span class='line'><span class="nv">$ </span>vagrant box add /your/box/path/xxx.box
+</span><span class='line'>//添加指定名称的box，没有的话会自动下载box文件
+</span><span class='line'><span class="nv">$ </span>vagrant box add hashicorp/precise32
+</span><span class='line'>//列出所有的box
+</span><span class='line'><span class="nv">$ </span>vagrant box list
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Vagrant基本操作</h3>
+
+<p>Vagrant的操作非常简单，现在介绍几个常用的操作指令。(<code>PS: 下面的大部分命令后面可以跟VM名称，不跟的话是对所有的VM进行操作。</code>)</p>
+
+<ul>
+<li>vagrant status: 展示VM的信息。</li>
+<li>vagrant up: 启动VM。</li>
+<li>vagrant ssh [VM]: ssh到某个VM上，无需输入用户名和密码。</li>
+<li>vagrant halt: 关闭VM。</li>
+<li>vagrant destroy: 销毁VM，如果你的VM被你玩残了，销毁它然后重新启动一个就可以了，很方便。</li>
+</ul>
+
+
+<h3>Vagrant共享</h3>
+
+<p>使用<code>vagrant ssh</code>到VM后，可以看到根目录下有个<code>/vagrant</code>文件夹，这个是VM和工程间的共享目录，在这个文件夹里面存放东西，可以在存放Vagrantfile的目录里面看到，反之亦然，在VM里面也可以读取到工程下的文件。</p>
+
+<h3>Vagrantfile</h3>
+
+<p>初始化vagrant工程后可以看到一个<code>Vagrantfile</code>的文件，这个是配置VM的文件，可以看下面的例子:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">VAGRANTFILE_API_VERSION</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="no">VAGRANTFILE_API_VERSION</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;hashicorp/precise64&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">define</span> <span class="ss">:rgw</span> <span class="k">do</span> <span class="o">|</span><span class="n">rgw</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">network</span> <span class="ss">:private_network</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.42.2&quot;</span>
+</span><span class='line'>    <span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">host_name</span> <span class="o">=</span> <span class="s2">&quot;ceph-rgw&quot;</span>
+</span><span class='line'>    <span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">vb</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyVM&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--memory&quot;</span><span class="p">,</span> <span class="s2">&quot;192&quot;</span><span class="o">]</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:VMware_fusion</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">v</span><span class="o">.</span><span class="n">VMx</span><span class="o">[</span><span class="s1">&#39;memsize&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;192&#39;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个Vagrantfile指定了box的名称，然后创建了一个名称为<code>rgw</code>的VM，指定了VM的ip、hostname、内存大小。</p>
+
+<p>关于vagrant就介绍到这里，想要了解更多信息可以查看<a href="https://www.vagrantup.com/">vagrant官网</a>。</p>
+
+<h2><a href="http://www.ansible.com/home">Ansible</a></h2>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-9/ansible.jpg"></p>
+
+<p>Ansible是一个开源的远程机器管理软件，可以批量操作多台远程服务器。(<code>PS: Ansible只适合操作Linux和Unix机器，如果是Windows系统是不可以的。</code>)</p>
+
+<h3>安装</h3>
+
+<p>要安装Ansible需要先安装Python2.6/7，然后可以通过easy_install或pip进行下载安装。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo esay_install ansible
+</span><span class='line'><span class="c"># or</span>
+</span><span class='line'>sudo pip install ansible
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使用示例</h3>
+
+<p>创建一个文件夹，在文件夹里面创建一个hosts文件，hosts格式如下:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># hosts</span>
+</span><span class='line'><span class="o">[</span>ceph<span class="o">]</span>
+</span><span class='line'>192.168.42.2
+</span><span class='line'>192.168.42.101
+</span><span class='line'>192.168.42.201
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以看到hosts文件里面有几个远程机器的ip(这里是虚拟机)，远程机器可以分组，通过中括号里面的组名来划分。</p>
+
+<p>然后执行下面的命令执行简单的命令。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ansible all -a <span class="s1">&#39;who&#39;</span>
+</span><span class='line'>ceph-mon0 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
+</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>ceph-osd0 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
+</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>ceph-osd1 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
+</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>从输出信息上可以看到这几台远程机器都成功执行了<code>who</code>命令，不过如果要成功执行上面的命令，还需要先在执行机和远程机上面设置无密码ssh连接。</p>
+
+<h3>无密码ssh连接</h3>
+
+<p>假设有2台机器，机器A和机器B，现在想让机器A<code>ssh</code>机器B的时候不需要输入用户和密码，操作如下。</p>
+
+<ul>
+<li>在机器B上创建一个用户，并配置好，下面命令的<code>username</code>指自己要创建的用户名。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo useradd -d /home/<span class="o">{</span>username<span class="o">}</span> -m <span class="o">{</span>username<span class="o">}</span>
+</span><span class='line'><span class="nv">$ </span>sudo passwd <span class="o">{</span>username<span class="o">}</span>
+</span><span class='line'><span class="c"># 输入密码</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">&quot;{username} ALL = (root) NOPASSWD:ALL&quot;</span> | sudo tee /etc/sudoers.d/<span class="o">{</span>username<span class="o">}</span>
+</span><span class='line'><span class="nv">$ </span>sudo chmod 0440 /etc/sudoers.d/<span class="o">{</span>username<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在机器A上生成密钥，并发送给机器B。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh-keygen
+</span><span class='line'>
+</span><span class='line'>Generating public/private key pair.
+</span><span class='line'>Enter file in which to save the key <span class="o">(</span>/ceph-admin/.ssh/id_rsa<span class="o">)</span>:
+</span><span class='line'>Enter passphrase <span class="o">(</span>empty <span class="k">for </span>no passphrase<span class="o">)</span>:
+</span><span class='line'>Enter same passphrase again:
+</span><span class='line'>Your identification has been saved in /ceph-admin/.ssh/id_rsa.
+</span><span class='line'>Your public key has been saved in /ceph-admin/.ssh/id_rsa.pub.
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span>ssh-copy-id <span class="o">{</span>username<span class="o">}</span>@<span class="o">{</span>机器B<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>到这里就可以不用输入密码进行ssh了，如果想连用户名也不想输入的话，需要机器A在<code>.ssh</code>文件下创建一个<code>config</code>文件，在里面添加如下内容。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host 机器B
+</span><span class='line'>   Hostname 机器B
+</span><span class='line'>   User <span class="o">{</span>username<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>playbook</h3>
+
+<p>ansible还可以通过一个playbook脚本进行远程机器的操作，playbook的示例如下:</p>
+
+<figure class='code'><figcaption><span>playbook.yml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># playbook.yml</span>
+</span><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">all</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">remote_user</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ceph</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">tasks</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">whoami</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="s">&#39;whoami</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">whoami.rst&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>创建完playbook文件后执行如下命令可以看到执行结果。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ansible-playbook playbook.yml
+</span><span class='line'>
+</span><span class='line'>PLAY <span class="o">[</span>all<span class="o">]</span> ********************************************************************
+</span><span class='line'>
+</span><span class='line'>GATHERING FACTS ***************************************************************
+</span><span class='line'>ok: <span class="o">[</span>ceph-mon0<span class="o">]</span>
+</span><span class='line'>ok: <span class="o">[</span>ceph-osd1<span class="o">]</span>
+</span><span class='line'>ok: <span class="o">[</span>ceph-osd0<span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>TASK: <span class="o">[</span>whoami<span class="o">]</span> ****************************************************************
+</span><span class='line'>changed: <span class="o">[</span>ceph-mon0<span class="o">]</span>
+</span><span class='line'>changed: <span class="o">[</span>ceph-osd0<span class="o">]</span>
+</span><span class='line'>changed: <span class="o">[</span>ceph-osd1<span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>PLAY RECAP ********************************************************************
+</span><span class='line'>ceph-mon0                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>ceph-osd0                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>ceph-osd1                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这时可以在远程机器的用户目录上可以看到新产生了一个<code>whoami.rst</code>的文件。</p>
+
+<p>关于ansible就介绍到这里，想要了解更多信息可以查看<a href="http://docs.ansible.com/">ansible的文档</a>。</p>
+
+<h2><a href="https://github.com/ceph/ceph-ansible">Ceph-ansible</a></h2>
+
+<p>这个github项目主要是利用了上面介绍的2个工具，使用vagrant来创建ceph需要的服务器VM，然后将ceph的环境搭建通过ansible的playbook脚本执行。</p>
+
+<h3>执行步骤</h3>
+
+<ul>
+<li>下载ceph-ansible项目;</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/ceph/ceph-ansible.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>一行命令就可以完成环境搭建，完成后ceph的环境是: 3个mon，3个osd，1个rgw;</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>mon0                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>11   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>mon1                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>10   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>mon2                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>11   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>osd0                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>osd1                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>osd2                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span><span class='line'>rgw                        : <span class="nv">ok</span><span class="o">=</span>20   <span class="nv">changed</span><span class="o">=</span>17   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Redhat企业版无网环境下安装Dokuwiki]]></title>
@@ -7402,566 +7760,6 @@ swift的源码因为不断在更新，笔记记录的代码就以2014-4-18的为
 
 
 <p>更多远程调试的内容可以参照Pydev的<a href="http://pydev.org/manual_adv_remote_debugger.html">官网步骤</a>。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[swift单节点多dev环境部署]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/04/09/swift-multiply-nodes-deploy-in-one-machine/"/>
-    <updated>2014-04-09T20:45:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/04/09/swift-multiply-nodes-deploy-in-one-machine</id>
-    <content type="html"><![CDATA[<h2>环境目标</h2>
-
-<ul>
-<li>同一台机器</li>
-<li>1台proxy server</li>
-<li>5个storage node</li>
-<li>每个storage node有2个dev</li>
-</ul>
-
-
-<!--more-->
-
-
-<p></p>
-
-<p>安装过程可以按照<a href="http://docs.openstack.org/developer/swift/development_saio.html">swift all in one</a>文档进行搭建，在操作过程中需要修改以下的地方。</p>
-
-<h2>Using a loopback device for storage</h2>
-
-<ol>
-<li>Create the file for the loopback device:<br/>
-<code>(这里的标题和编号是与saio的保持一致，这样方便大家按照saio的编号进行修改，后面的步骤与此相同，不再做说明)</code></li>
-</ol>
-
-
-<p>修改前：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo truncate -s 1GB /srv/swift-disk
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>修改后：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo truncate -s 500GB /srv/swift-disk
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>将xfs文件系统的大小改为500GB，原来的1GB太小不适合做测试。</p>
-
-<ol>
-<li>Create the mount point and the individualized links: <br/>
-将原来的脚本修改为：</li>
-</ol>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo mkdir /mnt/sdb1
-</span><span class='line'>sudo mount /mnt/sdb1
-</span><span class='line'>sudo mkdir /mnt/sdb1/1 /mnt/sdb1/2 /mnt/sdb1/3 /mnt/sdb1/4 /mnt/sdb1/5
-</span><span class='line'>sudo chown <span class="k">${</span><span class="nv">USER</span><span class="k">}</span>:<span class="k">${</span><span class="nv">USER</span><span class="k">}</span> /mnt/sdb1/*
-</span><span class='line'><span class="k">for </span>x in <span class="o">{</span>1..5<span class="o">}</span>; <span class="k">do </span>sudo ln -s /mnt/sdb1/<span class="nv">$x</span> /srv/<span class="nv">$x</span>; <span class="k">done</span>
-</span><span class='line'>sudo mkdir -p /srv/1/node/dev1 /srv/1/node/dev2 /srv/2/node/dev3 /srv/2/node/dev4 /srv/3/node/dev5 /srv/3/node/dev6 /srv/4/node/dev7 /srv/4/node/dev8 /srv/5/node/dev9 /srv/5/node/dev10 /var/run/swift
-</span><span class='line'>sudo chown -R <span class="k">${</span><span class="nv">USER</span><span class="k">}</span>:<span class="k">${</span><span class="nv">USER</span><span class="k">}</span> /var/run/swift
-</span><span class='line'><span class="c"># **Make sure to include the trailing slash after /srv/$x/**</span>
-</span><span class='line'><span class="k">for </span>x in <span class="o">{</span>1..5<span class="o">}</span>; <span class="k">do </span>sudo chown -R <span class="k">${</span><span class="nv">USER</span><span class="k">}</span>:<span class="k">${</span><span class="nv">USER</span><span class="k">}</span> /srv/<span class="nv">$x</span>/; <span class="k">done</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>创建属于5个节点的文件夹，在每个节点文件夹下创建2个dev文件夹，表示1个节点有2个dev，其中region1有6台dev(1~6)，region2有4台dev(7~10)。</p>
-
-<h2>Common Post-Device Setup</h2>
-
-<p>Add the following lines to /etc/rc.local (before the exit 0): <br/>
-修改前：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /var/cache/swift /var/cache/swift2 /var/cache/swift3 /var/cache/swift4
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>修改后：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /var/cache/swift /var/cache/swift2 /var/cache/swift3 /var/cache/swift4 /var/cache/swift5
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因为有5个节点，所以增加了1个新节点的缓存文件夹。</p>
-
-<h2>Setting up rsync</h2>
-
-<p>Here is the default rsyncd.conf file contents maintained in the repo that is copied and fixed up above:</p>
-
-<p>在/etc/rsyncd.conf文件追加以下内容：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>account6052<span class="o">]</span>
-</span><span class='line'>max <span class="nv">connections</span> <span class="o">=</span> 25
-</span><span class='line'><span class="nv">path</span> <span class="o">=</span> /srv/5/node/
-</span><span class='line'><span class="nb">read </span><span class="nv">only</span> <span class="o">=</span> <span class="nb">false</span>
-</span><span class='line'>lock <span class="nv">file</span> <span class="o">=</span> /var/lock/account6052.lock
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>container6051<span class="o">]</span>
-</span><span class='line'>max <span class="nv">connections</span> <span class="o">=</span> 25
-</span><span class='line'><span class="nv">path</span> <span class="o">=</span> /srv/5/node/
-</span><span class='line'><span class="nb">read </span><span class="nv">only</span> <span class="o">=</span> <span class="nb">false</span>
-</span><span class='line'>lock <span class="nv">file</span> <span class="o">=</span> /var/lock/container6051.lock
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>object6050<span class="o">]</span>
-</span><span class='line'>max <span class="nv">connections</span> <span class="o">=</span> 25
-</span><span class='line'><span class="nv">path</span> <span class="o">=</span> /srv/5/node/
-</span><span class='line'><span class="nb">read </span><span class="nv">only</span> <span class="o">=</span> <span class="nb">false</span>
-</span><span class='line'>lock <span class="nv">file</span> <span class="o">=</span> /var/lock/object6050.lock
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>增加了新节点的account, container, object服务的同步配置。</p>
-
-<p>You should see the following output from the above command:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>account6012
-</span><span class='line'>account6022
-</span><span class='line'>account6032
-</span><span class='line'>account6042
-</span><span class='line'>account6052
-</span><span class='line'>container6011
-</span><span class='line'>container6021
-</span><span class='line'>container6031
-</span><span class='line'>container6041
-</span><span class='line'>container6051
-</span><span class='line'>object6010
-</span><span class='line'>object6020
-</span><span class='line'>object6030
-</span><span class='line'>object6040
-</span><span class='line'>object6050
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>验证rsync可以看到新增的account, container, object信息。</p>
-
-<h2>Optional: Setting up rsyslog for individual logging</h2>
-
-<p>将/etc/rsyslog.d/10-swift.conf文件内容修改为：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Uncomment the following to have a log containing all logs together</span>
-</span><span class='line'><span class="c">#local1,local2,local3,local4,local5.*   /var/log/swift/all.log</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Uncomment the following to have hourly proxy logs for stats processing</span>
-</span><span class='line'><span class="c">#$template HourlyProxyLog,&quot;/var/log/swift/hourly/%$YEAR%%$MONTH%%$DAY%%$HOUR%&quot;</span>
-</span><span class='line'><span class="c">#local1.*;local1.!notice ?HourlyProxyLog</span>
-</span><span class='line'>
-</span><span class='line'>local1.*;local1.!notice /var/log/swift/proxy.log
-</span><span class='line'>local1.notice           /var/log/swift/proxy.error
-</span><span class='line'>local1.*                ~
-</span><span class='line'>
-</span><span class='line'>local2.*;local2.!notice /var/log/swift/storage1.log
-</span><span class='line'>local2.notice           /var/log/swift/storage1.error
-</span><span class='line'>local2.*                ~
-</span><span class='line'>
-</span><span class='line'>local3.*;local3.!notice /var/log/swift/storage2.log
-</span><span class='line'>local3.notice           /var/log/swift/storage2.error
-</span><span class='line'>local3.*                ~
-</span><span class='line'>
-</span><span class='line'>local4.*;local4.!notice /var/log/swift/storage3.log
-</span><span class='line'>local4.notice           /var/log/swift/storage3.error
-</span><span class='line'>local4.*                ~
-</span><span class='line'>
-</span><span class='line'>local5.*;local5.!notice /var/log/swift/storage4.log
-</span><span class='line'>local5.notice           /var/log/swift/storage4.error
-</span><span class='line'>local5.*                ~
-</span><span class='line'>
-</span><span class='line'>local6.*;local6.!notice /var/log/swift/storage5.log
-</span><span class='line'>local6.notice           /var/log/swift/storage5.error
-</span><span class='line'>local6.*                ~
-</span><span class='line'>
-</span><span class='line'>local7.*;local7.!notice /var/log/swift/expirer.log
-</span><span class='line'>local7.notice           /var/log/swift/expirer.error
-</span><span class='line'>local7.*                ~
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>修改日志配置，将原来的local6指向storage node 5, 原来的expirer用local7来记录日志（<code>注意：后面在修改各个节点的服务配置文件时需要知道这些日志配置信息</code>）。</p>
-
-<h2>Configuring each node</h2>
-
-<ol>
-<li>/etc/swift/object-expirer.conf</li>
-</ol>
-
-
-<p>修改前：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL6
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>修改后：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL7
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>新增account5的配置文件 /etc/swift/account-server/5.conf：</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>DEFAULT<span class="o">]</span>
-</span><span class='line'><span class="nv">devices</span> <span class="o">=</span> /srv/5/node
-</span><span class='line'><span class="nv">mount_check</span> <span class="o">=</span> <span class="nb">false</span>
-</span><span class='line'><span class="nv">disable_fallocate</span> <span class="o">=</span> <span class="nb">true</span>
-</span><span class='line'><span class="nv">bind_port</span> <span class="o">=</span> 6052
-</span><span class='line'><span class="nv">workers</span> <span class="o">=</span> 1
-</span><span class='line'><span class="nv">user</span> <span class="o">=</span> swift
-</span><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL6
-</span><span class='line'><span class="nv">recon_cache_path</span> <span class="o">=</span> /var/cache/swift5
-</span><span class='line'><span class="nv">eventlet_debug</span> <span class="o">=</span> <span class="nb">true</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>pipeline:main<span class="o">]</span>
-</span><span class='line'><span class="nv">pipeline</span> <span class="o">=</span> recon account-server
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>app:account-server<span class="o">]</span>
-</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#account
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>filter:recon<span class="o">]</span>
-</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#recon
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>account-replicator<span class="o">]</span>
-</span><span class='line'><span class="nv">vm_test_mode</span> <span class="o">=</span> yes
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>account-auditor<span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>account-reaper<span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>新增container5的配置文件/etc/swift/container-server/5.conf：</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>DEFAULT<span class="o">]</span>
-</span><span class='line'><span class="nv">devices</span> <span class="o">=</span> /srv/5/node
-</span><span class='line'><span class="nv">mount_check</span> <span class="o">=</span> <span class="nb">false</span>
-</span><span class='line'><span class="nv">disable_fallocate</span> <span class="o">=</span> <span class="nb">true</span>
-</span><span class='line'><span class="nv">bind_port</span> <span class="o">=</span> 6051
-</span><span class='line'><span class="nv">workers</span> <span class="o">=</span> 1
-</span><span class='line'><span class="nv">user</span> <span class="o">=</span> swift
-</span><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL6
-</span><span class='line'><span class="nv">recon_cache_path</span> <span class="o">=</span> /var/cache/swift5
-</span><span class='line'><span class="nv">eventlet_debug</span> <span class="o">=</span> <span class="nb">true</span>
-</span><span class='line'><span class="nv">allow_versions</span> <span class="o">=</span> <span class="nb">true</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>pipeline:main<span class="o">]</span>
-</span><span class='line'><span class="nv">pipeline</span> <span class="o">=</span> recon container-server
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>app:container-server<span class="o">]</span>
-</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#container
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>filter:recon<span class="o">]</span>
-</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#recon
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>container-replicator<span class="o">]</span>
-</span><span class='line'><span class="nv">vm_test_mode</span> <span class="o">=</span> yes
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>container-updater<span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>container-auditor<span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>container-sync<span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>新增object5的配置文件/etc/swift/object-server/5.conf：</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>DEFAULT<span class="o">]</span>
-</span><span class='line'><span class="nv">devices</span> <span class="o">=</span> /srv/5/node
-</span><span class='line'><span class="nv">mount_check</span> <span class="o">=</span> <span class="nb">false</span>
-</span><span class='line'><span class="nv">disable_fallocate</span> <span class="o">=</span> <span class="nb">true</span>
-</span><span class='line'><span class="nv">bind_port</span> <span class="o">=</span> 6050
-</span><span class='line'><span class="nv">workers</span> <span class="o">=</span> 1
-</span><span class='line'><span class="nv">user</span> <span class="o">=</span> swift
-</span><span class='line'><span class="nv">log_facility</span> <span class="o">=</span> LOG_LOCAL6
-</span><span class='line'><span class="nv">recon_cache_path</span> <span class="o">=</span> /var/cache/swift5
-</span><span class='line'><span class="nv">eventlet_debug</span> <span class="o">=</span> <span class="nb">true</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>pipeline:main<span class="o">]</span>
-</span><span class='line'><span class="nv">pipeline</span> <span class="o">=</span> recon object-server
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>app:object-server<span class="o">]</span>
-</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#object
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>filter:recon<span class="o">]</span>
-</span><span class='line'><span class="nv">use</span> <span class="o">=</span> egg:swift#recon
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>object-replicator<span class="o">]</span>
-</span><span class='line'><span class="nv">vm_test_mode</span> <span class="o">=</span> yes
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>object-updater<span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">[</span>object-auditor<span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Setting up scripts for running Swift</h2>
-
-<ol>
-<li>Construct the initial rings using the provided script:</li>
-</ol>
-
-
-<p>先修改bin/remakerings文件，在执行remakerings命令：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
-</span><span class='line'>
-</span><span class='line'><span class="nb">cd</span> /etc/swift
-</span><span class='line'>
-</span><span class='line'>rm -f *.builder *.ring.gz backups/*.builder backups/*.ring.gz
-</span><span class='line'>
-</span><span class='line'>swift-ring-builder object.builder create 19 6 1
-</span><span class='line'>swift-ring-builder object.builder add r1z1-127.0.0.1:6010/dev1 1
-</span><span class='line'>swift-ring-builder object.builder add r1z1-127.0.0.1:6010/dev2 1
-</span><span class='line'>swift-ring-builder object.builder add r1z2-127.0.0.1:6020/dev3 1
-</span><span class='line'>swift-ring-builder object.builder add r1z2-127.0.0.1:6020/dev4 1
-</span><span class='line'>swift-ring-builder object.builder add r1z3-127.0.0.1:6030/dev5 1
-</span><span class='line'>swift-ring-builder object.builder add r1z3-127.0.0.1:6030/dev6 1
-</span><span class='line'>swift-ring-builder object.builder add r2z1-127.0.0.1:6040/dev7 1
-</span><span class='line'>swift-ring-builder object.builder add r2z1-127.0.0.1:6040/dev8 1
-</span><span class='line'>swift-ring-builder object.builder add r2z2-127.0.0.1:6050/dev9 1
-</span><span class='line'>swift-ring-builder object.builder add r2z2-127.0.0.1:6050/dev10 1
-</span><span class='line'>swift-ring-builder object.builder rebalance
-</span><span class='line'>swift-ring-builder container.builder create 19 6 1
-</span><span class='line'>swift-ring-builder container.builder add r1z1-127.0.0.1:6011/dev1 1
-</span><span class='line'>swift-ring-builder container.builder add r1z1-127.0.0.1:6011/dev2 1
-</span><span class='line'>swift-ring-builder container.builder add r1z2-127.0.0.1:6021/dev3 1
-</span><span class='line'>swift-ring-builder container.builder add r1z2-127.0.0.1:6021/dev4 1
-</span><span class='line'>swift-ring-builder container.builder add r1z3-127.0.0.1:6031/dev5 1
-</span><span class='line'>swift-ring-builder container.builder add r1z3-127.0.0.1:6031/dev6 1
-</span><span class='line'>swift-ring-builder container.builder add r2z1-127.0.0.1:6041/dev7 1
-</span><span class='line'>swift-ring-builder container.builder add r2z1-127.0.0.1:6041/dev8 1
-</span><span class='line'>swift-ring-builder container.builder add r2z2-127.0.0.1:6051/dev9 1
-</span><span class='line'>swift-ring-builder container.builder add r2z2-127.0.0.1:6051/dev10 1
-</span><span class='line'>swift-ring-builder container.builder rebalance
-</span><span class='line'>swift-ring-builder account.builder create 19 6 1
-</span><span class='line'>swift-ring-builder account.builder add r1z1-127.0.0.1:6012/dev1 1
-</span><span class='line'>swift-ring-builder account.builder add r1z1-127.0.0.1:6012/dev2 1
-</span><span class='line'>swift-ring-builder account.builder add r1z2-127.0.0.1:6022/dev3 1
-</span><span class='line'>swift-ring-builder account.builder add r1z2-127.0.0.1:6022/dev4 1
-</span><span class='line'>swift-ring-builder account.builder add r1z3-127.0.0.1:6032/dev5 1
-</span><span class='line'>swift-ring-builder account.builder add r1z3-127.0.0.1:6032/dev6 1
-</span><span class='line'>swift-ring-builder account.builder add r2z1-127.0.0.1:6042/dev7 1
-</span><span class='line'>swift-ring-builder account.builder add r2z1-127.0.0.1:6042/dev8 1
-</span><span class='line'>swift-ring-builder account.builder add r2z2-127.0.0.1:6052/dev9 1
-</span><span class='line'>swift-ring-builder account.builder add r2z2-127.0.0.1:6052/dev10 1
-</span><span class='line'>swift-ring-builder account.builder rebalance
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>新ring环有2的19次方，6个副本，修改后重新生成ring环即可。</p>
 ]]></content>
   </entry>
   
