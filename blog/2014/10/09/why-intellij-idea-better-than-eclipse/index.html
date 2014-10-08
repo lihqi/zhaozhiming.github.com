@@ -1,0 +1,408 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>为什么Intellij-IDEA比Eclipse好 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="为什么Intellij-IDEA比Eclipse好">
+	<meta name="keywords" content="intellij-idea,eclipse">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='/stylesheets/slackey.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/fjalla_one.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/amethysta.css' rel='stylesheet' type='text/css'>
+	<script src="http://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">为什么Intellij-IDEA比Eclipse好</h2>
+	<div class="entry-content"><p><img src="/images/post/2014-10/idea-vs-eclipse.jpeg"></p>
+
+<p>经常有人问我Intellij IDEA比Eclipse好用在哪里？问我的人大部分都是没用过IDEA的，因为用过IDEA的大部分人都知道好在哪里。IDEA和Eclipse之争不像Vim vs. Emacs、IOS vs. Android、Java vs. C++等，因为后面这些<code>vs</code>都没有绝对的优胜者，都各自有各自的优缺点，但IDEA vs. Eclipse是有结果的，那就是:</p>
+
+<blockquote><p>Intellij IDEA明显比Eclipse好&#8230;很多。</p></blockquote>
+
+
+
+
+<!--more-->
+
+
+<h2>为什么我从Eclipse转向IDEA</h2>
+
+<p>我在开始接触Java的时候就使用Eclipse，用了将近6~7年，那个时候几乎熟悉了Eclipse的所有快捷键，当时感觉用Eclipse写Java，JSP神马的都挺方便的。后来我加入一个新项目，项目强制要求我们使用IDEA做为开发工具，使用一段时间后发现IDEA各方面都比Eclipse强大，让你写Java代码更加行云流水，我从此欲罢不能的爱上IDEA，一直使用至今。因为这两个IDE我都使用过蛮长时间，所以还是可以讲讲两者的一些不同。</p>
+
+<h2>IDEA的优点</h2>
+
+<p>IDEA的优点有很多，在开始使用到慢慢熟悉的过程中，基本每隔一段时间你就会被IDEA的一些神奇功能震惊到，经常让你惊喜不断，从而慢慢爱上它。</p>
+
+<h4>自动补全</h4>
+
+<p>IDEA的自动补全很强大，不仅仅是Java代码可以补全，还可以补全其他代码比如Html，JavaScript等，敲打每个字母IDEA都会马上列出各种可能需要补全的代码。</p>
+
+<p>比如下面这段代码:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="nd">@Test</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">Assert</span><span class="o">.</span><span class="na">null</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>IDEA会提示assertNull, assertNotnull等方法，而Eclipse则完全没有提示。</p>
+
+<p><img src="/images/post/2014-10/idea-auto-complete-2.png" title="idea" ></p>
+
+<p><img src="/images/post/2014-10/eclipse-auto-complete-2.png" title="eclipse" ></p>
+
+<p>又比如下面这段代码:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="nd">@Test</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">assertThat</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>IDEA按下<code>alt + Enter</code>IDEA会自动提示你是否要静态导入<code>assertThat</code>这个方法，而Eclipse按<code>ctrl + 1</code>只会提示你创建新方法。</p>
+
+<p><img src="/images/post/2014-10/idea-auto-complete.png" title="idea" ></p>
+
+<p><img src="/images/post/2014-10/eclipse-auto-complete.png" title="eclipse" ></p>
+
+<p>IDEA不仅对Java有自动补全，对其他类型的文件也有自动补全的功能，而Eclipse我只能呵呵了。</p>
+
+<p><img src="/images/post/2014-10/idea-auto-complete-xml.png"></p>
+
+<p><img src="/images/post/2014-10/idea-auto-complete-html.png"></p>
+
+<h4>重构</h4>
+
+<p>IDEA从一开始就拥有很强大的重构功能，而Eclipse以前基本上没有什么重构的功能，后面才慢慢加上的。</p>
+
+<p>比如我们要抽取下面name和age那2行为一个方法。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="nd">@Test</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Tom&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">11</span><span class="o">;</span>
+</span><span class='line'>      
+</span><span class='line'>      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="n">age</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>IDEA可以自动将其封装成为一个对象。</p>
+
+<p><img src="/images/post/2014-10/idea-refactor-1.png">
+<img src="/images/post/2014-10/idea-refactor-2.png"></p>
+
+<p>重构后的结果:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">().</span><span class="na">invoke</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="na">getAge</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="n">age</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getAge</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">public</span> <span class="n">Person</span> <span class="nf">invoke</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Tom&quot;</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">age</span> <span class="o">=</span> <span class="mi">11</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>而Eclipse则告诉你我办不到。</p>
+
+<p><img src="/images/post/2014-10/eclipse-refactor-1.png"></p>
+
+<p>IDEA还可以通过重构自动创建工厂方法、builder，Eclipse则无能为力。</p>
+
+<p><img src="/images/post/2014-10/idea-refactor-3.png"></p>
+
+<p><img src="/images/post/2014-10/eclipse-refactor-2.png"></p>
+
+<h4>导航</h4>
+
+<p>IDEA可以从任何地方导航到你想要去的地方，<code>ctrl + shift + A</code>可以进到任何你要去的地方(包括配置)，最新的功能连续2次<code>shift</code>可以选择跳转到相关的文件。</p>
+
+<p><img src="/images/post/2014-10/idea-navigate-1.png">
+<img src="/images/post/2014-10/idea-navigate-2.png"></p>
+
+<p>IDEA文件间的跳转不限于Java，XML、JavaScript等文件也可以通过<code>ctrl + 鼠标左键</code>进入目标，而Eclipse只能在Java文件里面做到。</p>
+
+<p><img src="/images/post/2014-10/idea-navigate-3.png"></p>
+
+<h4>静态代码检查</h4>
+
+<p>IDEA有很强大的静态代码检查功能，能帮助你改掉一些不好的编码习惯，比如下面的代码IDEA会提示if分支可以简化，直接返回equal结果就可以，但Eclipse则是持着你代码烂关我P事的态度对待你的代码。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">check</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">name</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/post/2014-10/idea-static-code-1.png"></p>
+
+<p>方法没有被其他类用到也会有提示。</p>
+
+<p><img src="/images/post/2014-10/idea-static-code-2.png"></p>
+
+<p>老的for循环提示使用foreach。</p>
+
+<p><img src="/images/post/2014-10/idea-static-code-3.png"></p>
+
+<h4>集成众多成熟插件</h4>
+
+<p>IDEA不像Eclipse需要安装很多插件，标准的安装已经包含了很多成熟的插件，比如版本管理工具就包含了SVN，GIT，ClearCase等。这有点像苹果的个人电脑，不需要用户了解其中的各种细节，安装好之后就能舒舒服服的使用，但IDEA又不像苹果那么封闭，它还是可以安装插件，但其本身的插件就已经很够用了，没有太大必要再去安装其他插件。</p>
+
+<p><img src="/images/post/2014-10/idea-plugin.png"></p>
+
+<h2>Eclipse的优点</h2>
+
+<p>黑了这么多Eclipse，说实话Eclipse还是有其优点的，比如:</p>
+
+<ul>
+<li>免费。这个是Eclipse最大的优势，也是大部分Java开发还在使用Eclipse的原因，虽然IDEA有免费的社区版，但如果要用到更多高级功能，还是推荐使用无限制版本。</li>
+<li>插件多。Eclipse的插件多如牛毛，各种需要的功能都可以通过搜索相关插件获得，而且其插件的开发也相对比较简单，如果找不到想要的可以自己开发。</li>
+<li>占用内存少。这个可以从进程管理工具看出来，但从我实际的使用结果来看，Eclipse经常会卡顿，而IDEA则大部分时间都很流畅。</li>
+<li>可以一个窗口同时显示几个工程。IDEA一个窗口只能显示一个工程，多个项目需要多开几个IDEA窗口，但可以通过加载module的方式在一个项目里面关联多个工程。</li>
+</ul>
+
+
+<h2>总结</h2>
+
+<p>IDEA和Eclipse的定位本身是不一样的，Eclipse将其定位为一个平台，可以通过安装各种插件来编写各种语言的代码，包括C++等，而IDEA将自己定位为<em>最智能的Java集成开发编辑器</em>，如果你不是开发Java代码的，建议不要选用IDEA。</p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>
