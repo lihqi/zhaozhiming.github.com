@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-10-09T06:31:58+08:00</updated>
+  <updated>2014-10-29T13:12:06+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,621 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在Ubuntu12.04上安装Ceph Calamari]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/10/28/install-ceph-calamari-on-ubuntu/"/>
+    <updated>2014-10-28T15:56:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/10/28/install-ceph-calamari-on-ubuntu</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-10/calamari.png"></p>
+
+<p>Calamari是<a href="http://ceph.com/">Ceph</a>的一个监控和管理工具，它提供了一些定义好的REST API。Calamari包括服务端和客户端，服务端是使用Python的web框架<a href="https://www.djangoproject.com/">Django</a>开发的，提供了供客户端调用的REST API接口。客户端使用了<a href="http://nodejs.org/">NodeJS</a>,<a href="https://angularjs.org/">AngularJS</a>,<a href="http://getbootstrap.com/">Bootstrap3</a>，每个模块可以独立部署更新，其界面十分简洁清晰，几乎涵盖了所有监控要求。</p>
+
+<p>下面介绍一下Calamari在Ubuntu上面的安装过程。</p>
+
+<!--more-->
+
+
+<h2>环境准备</h2>
+
+<ul>
+<li>安装VitrualBox和Vagrant，Vagrant的使用可以参照我之前的blog——<a href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible">使用Vagrant和Ansible搭建Ceph环境</a>。</li>
+<li>下载ubuntu12.04的box文件——<a href="https://vagrantcloud.com/discover/featured">box文件下载地址</a>，我们在虚拟机中安装calamari，不污染我们的本机环境。</li>
+</ul>
+
+
+<h2>生成Calamari安装文件</h2>
+
+<h3>生成server安装文件</h3>
+
+<ul>
+<li>下载calamari工程</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mkdir calamari-node
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>git clone https://github.com/ceph/calamari.git
+</span><span class='line'><span class="nv">$ </span>git clone https://github.com/ceph/Diamond.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>使用vagrant生成server安装文件</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari/vagrant/precise-build
+</span><span class='line'><span class="c"># 首先要保证你的vagrant已经导入名字为precise的box</span>
+</span><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>Copying salt minion config to vm.
+</span><span class='line'>Checking <span class="k">if </span>salt-minion is installed
+</span><span class='line'>salt-minion was not found.
+</span><span class='line'>Checking <span class="k">if </span>salt-call is installed
+</span><span class='line'>salt-call was not found.
+</span><span class='line'>Bootstrapping Salt... <span class="o">(</span>this may take a <span class="k">while</span><span class="o">)</span>
+</span><span class='line'>Salt successfully configured and installed!
+</span><span class='line'>run_overstate <span class="nb">set </span>to false. Not running state.overstate.
+</span><span class='line'>run_highstate <span class="nb">set </span>to false. Not running state.highstate.
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span>vagrant ssh
+</span><span class='line'><span class="nv">$ </span>sudo salt-call state.highstate
+</span><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>Summary
+</span><span class='line'>-------------
+</span><span class='line'>Succeeded: 11
+</span><span class='line'>Failed: 0
+</span><span class='line'>-------------
+</span><span class='line'>Total: 11
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>这里的虚拟机将我们创建的根目录<code>calamari-node</code>和虚拟机中的<code>/git</code>目录关联起来了，我们可以通过在查看这2个目录中的任意一个来查看安装文件是否已经生成。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># 查看calamari-node目录</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>ls -l
+</span><span class='line'>drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
+</span><span class='line'>drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
+</span><span class='line'>-rw-r--r--  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
+</span><span class='line'>-rw-r--r--  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
+</span><span class='line'>-rw-r--r--  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb
+</span><span class='line'>
+</span><span class='line'><span class="c"># 查看虚拟机的/git目录</span>
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node/calamari/vagrant/precise-build
+</span><span class='line'><span class="nv">$ </span>vagrant ssh
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /git
+</span><span class='line'><span class="nv">$ </span>ls -l
+</span><span class='line'>drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
+</span><span class='line'>drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
+</span><span class='line'>-rw-r--r--  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
+</span><span class='line'>-rw-r--r--  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
+</span><span class='line'>-rw-r--r--  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>从上面可以看到安装文件已经生成好了，2个deb文件分别是server和监控服务的安装文件，tar.gz文件是安装服务所需的依赖包安装文件集合，如果是连网安装的话，这个tar.gz文件不需要用到。</li>
+</ul>
+
+
+<h3>生成client安装文件</h3>
+
+<ul>
+<li>下载calamari-client工程</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>git clone https://github.com/ceph/calamari-clients.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>使用vagrant生成client安装文件</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-client/vagrant/precise-build/
+</span><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>Copying salt minion config to vm.
+</span><span class='line'>Checking <span class="k">if </span>salt-minion is installed
+</span><span class='line'>salt-minion was not found.
+</span><span class='line'>Checking <span class="k">if </span>salt-call is installed
+</span><span class='line'>salt-call was not found.
+</span><span class='line'>Bootstrapping Salt... <span class="o">(</span>this may take a <span class="k">while</span><span class="o">)</span>
+</span><span class='line'>Salt successfully configured and installed!
+</span><span class='line'>run_overstate <span class="nb">set </span>to false. Not running state.overstate.
+</span><span class='line'>run_highstate <span class="nb">set </span>to false. Not running state.highstate.
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span>vagrant ssh
+</span><span class='line'><span class="nv">$ </span>sudo salt-call state.highstate
+</span><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>Summary
+</span><span class='line'>-------------
+</span><span class='line'>Succeeded: 13
+</span><span class='line'>Failed: 0
+</span><span class='line'>-------------
+</span><span class='line'>Total: 13
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>查看生成的安装文件，可以看到有1个deb文件和一个tar.gz文件，ubuntu的话直接使用deb文件进行安装就可以了，tar.gz文件不需要。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>ls -l
+</span><span class='line'>drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
+</span><span class='line'>drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
+</span><span class='line'>drwxr-xr-x  22 zhaozhiming  staff      748 Oct 20 16:46 calamari-clients
+</span><span class='line'>-rw-r--r--  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
+</span><span class='line'>-rw-r--r--  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
+</span><span class='line'>-rw-r--r--  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb
+</span><span class='line'>-rw-r--r--   1 zhaozhiming  staff  1711253 Oct 21 12:38 calamari-clients-build-output.tar.gz
+</span><span class='line'>-rw-r--r--   1 zhaozhiming  staff  1705364 Oct 21 12:38 calamari-clients_1.2.1.1-29-g3790c24_all.deb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>安装Calamari</h2>
+
+<ul>
+<li>创建一个ubuntu的虚拟机来安装calamari，首先在根目录下创建一个Vagrantfile文件。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>touch Vagrantfile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Vagrantfile文件内容如下，注意要使用绑定好的IP。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- mode: ruby -*-</span>
+</span><span class='line'><span class="c1"># vi: set ft=ruby :</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Vagrantfile API/syntax version. Don&#39;t touch unless you know what you&#39;re doing!</span>
+</span><span class='line'><span class="no">VAGRANTFILE_API_VERSION</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="no">VAGRANTFILE_API_VERSION</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;precise64&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">define</span> <span class="s2">&quot;manager&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">manager</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">manager</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="s2">&quot;manager-env&quot;</span>
+</span><span class='line'>    <span class="n">manager</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:private_network</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.26.10&quot;</span>
+</span><span class='line'>    <span class="n">manager</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">vb</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="mi">512</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>启动虚拟机并登陆</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'><span class="nv">$ </span>vagrant ssh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在虚拟机上安装salt</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get install python-software-properties
+</span><span class='line'><span class="nv">$ </span>sudo add-apt-repository ppa:saltstack/salt
+</span><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get install salt-master
+</span><span class='line'><span class="nv">$ </span>sudo apt-get install salt-minion
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在虚拟机上安装所需依赖包</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get update <span class="o">&amp;&amp;</span> sudo apt-get install -y apache2 libapache2-mod-wsgi libcairo2 supervisor python-cairo libpq5 postgresql
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>安装calamari</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /vagrant
+</span><span class='line'><span class="nv">$ </span>sudo dpkg -i calamari-server*.deb calamari-clients*.deb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>初始化calamari服务，这里会要求你输入用户名、邮箱、密码，这个用户名密码是在浏览器访问calamari服务需要的。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo calamari-ctl initialize
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Loading configuration..
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Starting/enabling salt...
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Starting/enabling postgres...
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Initializing database...
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Initializing web interface...
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> You will now be prompted <span class="k">for </span>login details <span class="k">for </span>the administrative user account. This is the account you will use to log into the web interface once setup is complete.
+</span><span class='line'>Username <span class="o">(</span>leave blank to use <span class="s1">&#39;root&#39;</span><span class="o">)</span>:
+</span><span class='line'>Email address: karan.singh@csc.fi
+</span><span class='line'>Password:
+</span><span class='line'>Password <span class="o">(</span>again<span class="o">)</span>:
+</span><span class='line'>Superuser created successfully.
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Starting/enabling services...
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Restarting services... - See more at: http://ceph.com/category/calamari/#sthash.qUtbU0mX.dpuf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>登陆浏览器，输入虚拟机的ip(比如<a href="http://192.168.26.10">http://192.168.26.10</a>)，可以看到如下页面。</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-10/calamari-login.png"></p>
+
+<ul>
+<li>输入刚才设置的用户名密码后，可以看到calamari提示你进行ceph集群配置。</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-10/calamari-first.png"></p>
+
+<h2>Ceph集群配置监控服务</h2>
+
+<h3>配置ceph集群</h3>
+
+<ul>
+<li>登陆其中一台ceph集群机器(这里假设ceph集群都是ubuntu环境)，安装监控服务。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo dpkg -i diamond_3.4.67_all.deb <span class="c">#deb文件是之前生成server安装文件时一起生成的，需要将其先考到ceph集群机器上</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>创建默认的监控配置文件</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo mv /etc/diamond/diamond.conf.example /etc/diamond/diamond.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>安装salt-minion服务</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get install python-software-properties
+</span><span class='line'><span class="nv">$ </span>sudo add-apt-repository ppa:saltstack/salt
+</span><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get install salt-minion
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在<code>/etc/hosts</code>文件中增加calamari服务器的映射关系</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>/etc/hosts </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>192.168.26.10 ceph-calamari
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>修改salt-minion的配置文件<code>/etc/salt/minion</code>，将master指向calamari服务器</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>/etc/salt/minion </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>...
+</span><span class='line'>master: ceph-calamari
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>重启服务</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service salt-minion restart
+</span><span class='line'><span class="nv">$ </span>sudo service diamond restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在所有的ceph集群机器上重复以上的步骤。</li>
+</ul>
+
+
+<h3>在calamari服务上添加ceph集群机器</h3>
+
+<ul>
+<li>查看salt-key</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo salt-key -L
+</span><span class='line'>Accepted Keys:
+</span><span class='line'>Unaccepted Keys:
+</span><span class='line'>ceph-mon0
+</span><span class='line'>ceph-mon1
+</span><span class='line'>ceph-mon2
+</span><span class='line'>ceph-osd0
+</span><span class='line'>ceph-osd1
+</span><span class='line'>ceph-osd2
+</span><span class='line'>Rejected Keys:
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>添加ceph集群机器到calamari</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo salt-key -A
+</span><span class='line'>The following keys are going to be accepted:
+</span><span class='line'>Unaccepted Keys:
+</span><span class='line'>ceph-mon0
+</span><span class='line'>ceph-mon1
+</span><span class='line'>ceph-mon2
+</span><span class='line'>ceph-osd0
+</span><span class='line'>ceph-osd1
+</span><span class='line'>ceph-osd2
+</span><span class='line'>Proceed? <span class="o">[</span>n/Y<span class="o">]</span> y
+</span><span class='line'>Key <span class="k">for </span>minion ceph-mon0 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-mon1 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-mon2 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-osd0 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-osd1 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-osd2 accepted.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>再次查看salt-key，可以看到所有节点都已添加。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo salt-key -L
+</span><span class='line'>Accepted Keys:
+</span><span class='line'>ceph-mon0
+</span><span class='line'>ceph-mon1
+</span><span class='line'>ceph-mon2
+</span><span class='line'>ceph-osd0
+</span><span class='line'>ceph-osd1
+</span><span class='line'>ceph-osd2
+</span><span class='line'>Unaccepted Keys:
+</span><span class='line'>Rejected Keys:
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在浏览器中再次登陆calamari服务，可以看到已经能监控ceph集群的信息。</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-10/calamari.png"></p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-10/calamari-page1.png"></p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-10/calamari-page2.png"></p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-10/calamari-page3.png"></p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li>文档1：<a href="http://calamari.readthedocs.org/en/latest/operations/index.html">http://calamari.readthedocs.org/en/latest/operations/index.html</a></li>
+<li>文档2：<a href="http://calamari.readthedocs.org/en/latest/operations/index.html">http://ceph.com/category/calamari/</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[为什么Intellij-IDEA比Eclipse好]]></title>
@@ -6863,1207 +7478,6 @@ JPA有个好处就是操作数据库时不用写太多代码，不用像以前�
 
 <ul>
 <li>在response的header中增加相关header，分别有&#8217;access-control-allow-origin&#8217;,&lsquo;access-control-max-age&rsquo;,&lsquo;access-control-allow-methods&#8217;和&#8217;access-control-allow-headers&#8217;。</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[swift源码详解（二）——proxy/server.py]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/04/20/swift-code-explain-proxy-server/"/>
-    <updated>2014-04-20T20:52:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/04/20/swift-code-explain-proxy-server</id>
-    <content type="html"><![CDATA[<h2><a href="http://zhaozhiming.github.io/blog/2014/04/19/swift-code-explain-total/">回swift代码结构目录</a></h2>
-
-<h3>int方法</h3>
-
-<!--more-->
-
-
-<p></p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-<span class='line-number'>106</span>
-<span class='line-number'>107</span>
-<span class='line-number'>108</span>
-<span class='line-number'>109</span>
-<span class='line-number'>110</span>
-<span class='line-number'>111</span>
-<span class='line-number'>112</span>
-<span class='line-number'>113</span>
-<span class='line-number'>114</span>
-<span class='line-number'>115</span>
-<span class='line-number'>116</span>
-<span class='line-number'>117</span>
-<span class='line-number'>118</span>
-<span class='line-number'>119</span>
-<span class='line-number'>120</span>
-<span class='line-number'>121</span>
-<span class='line-number'>122</span>
-<span class='line-number'>123</span>
-<span class='line-number'>124</span>
-<span class='line-number'>125</span>
-<span class='line-number'>126</span>
-<span class='line-number'>127</span>
-<span class='line-number'>128</span>
-<span class='line-number'>129</span>
-<span class='line-number'>130</span>
-<span class='line-number'>131</span>
-<span class='line-number'>132</span>
-<span class='line-number'>133</span>
-<span class='line-number'>134</span>
-<span class='line-number'>135</span>
-<span class='line-number'>136</span>
-<span class='line-number'>137</span>
-<span class='line-number'>138</span>
-<span class='line-number'>139</span>
-<span class='line-number'>140</span>
-<span class='line-number'>141</span>
-<span class='line-number'>142</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">memcache</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">account_ring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-</span><span class='line'>                 <span class="n">container_ring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">object_ring</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">conf</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">conf</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">log_route</span><span class="o">=</span><span class="s">&#39;proxy-server&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
-</span><span class='line'>        <span class="n">swift_dir</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;swift_dir&#39;</span><span class="p">,</span> <span class="s">&#39;/etc/swift&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">node_timeout</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;node_timeout&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">recoverable_node_timeout</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
-</span><span class='line'>            <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;recoverable_node_timeout&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_timeout</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">conn_timeout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;conn_timeout&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">client_timeout</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;client_timeout&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">put_queue_depth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;put_queue_depth&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">object_chunk_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;object_chunk_size&#39;</span><span class="p">,</span> <span class="mi">65536</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">client_chunk_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;client_chunk_size&#39;</span><span class="p">,</span> <span class="mi">65536</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">trans_id_suffix</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;trans_id_suffix&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">post_quorum_timeout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;post_quorum_timeout&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_interval</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error_suppression_interval&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_limit</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error_suppression_limit&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">recheck_container_existence</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;recheck_container_existence&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">recheck_account_existence</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;recheck_account_existence&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">allow_account_management</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="n">config_true_value</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;allow_account_management&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">object_post_as_copy</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="n">config_true_value</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;object_post_as_copy&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">object_ring</span> <span class="o">=</span> <span class="n">object_ring</span> <span class="ow">or</span> <span class="n">Ring</span><span class="p">(</span><span class="n">swift_dir</span><span class="p">,</span> <span class="n">ring_name</span><span class="o">=</span><span class="s">&#39;object&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">container_ring</span> <span class="o">=</span> <span class="n">container_ring</span> <span class="ow">or</span> <span class="n">Ring</span><span class="p">(</span><span class="n">swift_dir</span><span class="p">,</span>
-</span><span class='line'>                                                     <span class="n">ring_name</span><span class="o">=</span><span class="s">&#39;container&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">account_ring</span> <span class="o">=</span> <span class="n">account_ring</span> <span class="ow">or</span> <span class="n">Ring</span><span class="p">(</span><span class="n">swift_dir</span><span class="p">,</span>
-</span><span class='line'>                                                 <span class="n">ring_name</span><span class="o">=</span><span class="s">&#39;account&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">memcache</span> <span class="o">=</span> <span class="n">memcache</span>
-</span><span class='line'>        <span class="n">mimetypes</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">mimetypes</span><span class="o">.</span><span class="n">knownfiles</span> <span class="o">+</span>
-</span><span class='line'>                       <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">swift_dir</span><span class="p">,</span> <span class="s">&#39;mime.types&#39;</span><span class="p">)])</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">account_autocreate</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="n">config_true_value</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;account_autocreate&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">expiring_objects_account</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;auto_create_account_prefix&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> \
-</span><span class='line'>            <span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;expiring_objects_account_name&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s">&#39;expiring_objects&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">expiring_objects_container_divisor</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;expiring_objects_container_divisor&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">86400</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">max_containers_per_account</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_containers_per_account&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">max_containers_whitelist</span> <span class="o">=</span> <span class="p">[</span>
-</span><span class='line'>            <span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span class='line'>            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_containers_whitelist&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">deny_host_headers</span> <span class="o">=</span> <span class="p">[</span>
-</span><span class='line'>            <span class="n">host</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span>
-</span><span class='line'>            <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;deny_host_headers&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">host</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit_after_segment</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;rate_limit_after_segment&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit_segments_per_sec</span> <span class="o">=</span> \
-</span><span class='line'>            <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;rate_limit_segments_per_sec&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">log_handoffs</span> <span class="o">=</span> <span class="n">config_true_value</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;log_handoffs&#39;</span><span class="p">,</span> <span class="s">&#39;true&#39;</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">cors_allow_origin</span> <span class="o">=</span> <span class="p">[</span>
-</span><span class='line'>            <span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span class='line'>            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;cors_allow_origin&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">strict_cors_mode</span> <span class="o">=</span> <span class="n">config_true_value</span><span class="p">(</span>
-</span><span class='line'>            <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;strict_cors_mode&#39;</span><span class="p">,</span> <span class="s">&#39;t&#39;</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">node_timings</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">timing_expiry</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;timing_expiry&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sorting_method&#39;</span><span class="p">,</span> <span class="s">&#39;shuffle&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">max_large_object_get_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
-</span><span class='line'>            <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;max_large_object_get_time&#39;</span><span class="p">,</span> <span class="s">&#39;86400&#39;</span><span class="p">))</span>
-</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;request_node_count&#39;</span><span class="p">,</span> <span class="s">&#39;2 * replicas&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-</span><span class='line'>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">request_node_count</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">replicas</span><span class="p">:</span> <span class="n">value</span>
-</span><span class='line'>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;*&#39;</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;replicas&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">request_node_count</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">replicas</span><span class="p">:</span> <span class="n">value</span> <span class="o">*</span> <span class="n">replicas</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span class='line'>                <span class="s">&#39;Invalid request_node_count value: </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-</span><span class='line'>        <span class="k">try</span><span class="p">:</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">_read_affinity</span> <span class="o">=</span> <span class="n">read_affinity</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;read_affinity&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">read_affinity_sort_key</span> <span class="o">=</span> <span class="n">affinity_key_function</span><span class="p">(</span><span class="n">read_affinity</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-</span><span class='line'>            <span class="c"># make the message a little more useful</span>
-</span><span class='line'>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid read_affinity value: </span><span class="si">%r</span><span class="s"> (</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span>
-</span><span class='line'>                             <span class="p">(</span><span class="n">read_affinity</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">try</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">write_affinity</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;write_affinity&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">write_affinity_is_local_fn</span> \
-</span><span class='line'>                <span class="o">=</span> <span class="n">affinity_locality_predicate</span><span class="p">(</span><span class="n">write_affinity</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-</span><span class='line'>            <span class="c"># make the message a little more useful</span>
-</span><span class='line'>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid write_affinity value: </span><span class="si">%r</span><span class="s"> (</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span>
-</span><span class='line'>                             <span class="p">(</span><span class="n">write_affinity</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;write_affinity_node_count&#39;</span><span class="p">,</span>
-</span><span class='line'>                         <span class="s">&#39;2 * replicas&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-</span><span class='line'>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">write_affinity_node_count</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">replicas</span><span class="p">:</span> <span class="n">value</span>
-</span><span class='line'>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;*&#39;</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;replicas&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">write_affinity_node_count</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">replicas</span><span class="p">:</span> <span class="n">value</span> <span class="o">*</span> <span class="n">replicas</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span class='line'>                <span class="s">&#39;Invalid write_affinity_node_count value: </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-</span><span class='line'>        <span class="c"># swift_owner_headers are stripped by the account and container</span>
-</span><span class='line'>        <span class="c"># controllers; we should extend header stripping to object controller</span>
-</span><span class='line'>        <span class="c"># when a privileged object header is implemented.</span>
-</span><span class='line'>        <span class="n">swift_owner_headers</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-</span><span class='line'>            <span class="s">&#39;swift_owner_headers&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;x-container-read, x-container-write, &#39;</span>
-</span><span class='line'>            <span class="s">&#39;x-container-sync-key, x-container-sync-to, &#39;</span>
-</span><span class='line'>            <span class="s">&#39;x-account-meta-temp-url-key, x-account-meta-temp-url-key-2, &#39;</span>
-</span><span class='line'>            <span class="s">&#39;x-account-access-control&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">swift_owner_headers</span> <span class="o">=</span> <span class="p">[</span>
-</span><span class='line'>            <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
-</span><span class='line'>            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">swift_owner_headers</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-</span><span class='line'>        <span class="c"># Initialization was successful, so now apply the client chunk size</span>
-</span><span class='line'>        <span class="c"># parameter as the default read / write buffer size for the network</span>
-</span><span class='line'>        <span class="c"># sockets.</span>
-</span><span class='line'>        <span class="c">#</span>
-</span><span class='line'>        <span class="c"># NOTE WELL: This is a class setting, so until we get set this on a</span>
-</span><span class='line'>        <span class="c"># per-connection basis, this affects reading and writing on ALL</span>
-</span><span class='line'>        <span class="c"># sockets, those between the proxy servers and external clients, and</span>
-</span><span class='line'>        <span class="c"># those between the proxy servers and the other internal servers.</span>
-</span><span class='line'>        <span class="c">#</span>
-</span><span class='line'>        <span class="c"># ** Because it affects the client as well, currently, we use the</span>
-</span><span class='line'>        <span class="c"># client chunk size as the govenor and not the object chunk size.</span>
-</span><span class='line'>        <span class="n">socket</span><span class="o">.</span><span class="n">_fileobject</span><span class="o">.</span><span class="n">default_bufsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_chunk_size</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">expose_info</span> <span class="o">=</span> <span class="n">config_true_value</span><span class="p">(</span>
-</span><span class='line'>            <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;expose_info&#39;</span><span class="p">,</span> <span class="s">&#39;yes&#39;</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">disallowed_sections</span> <span class="o">=</span> <span class="n">list_from_csv</span><span class="p">(</span>
-</span><span class='line'>            <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;disallowed_sections&#39;</span><span class="p">))</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">admin_key</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;admin_key&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">register_swift_info</span><span class="p">(</span>
-</span><span class='line'>            <span class="n">version</span><span class="o">=</span><span class="n">swift_version</span><span class="p">,</span>
-</span><span class='line'>            <span class="n">strict_cors_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">strict_cors_mode</span><span class="p">,</span>
-</span><span class='line'>            <span class="o">**</span><span class="n">constraints</span><span class="o">.</span><span class="n">EFFECTIVE_CONSTRAINTS</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>proxy server的初始化函数，具体配置的说明可以参考<a href="http://docs.openstack.org/havana/config-reference/content/proxy-server-conf.html">这里</a>。</p>
-
-<h3>check_config</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">check_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        Check the configuration for possible errors</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_affinity</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">!=</span> <span class="s">&#39;affinity&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;sorting_method is set to &#39;</span><span class="si">%s</span><span class="s">&#39;, not &#39;affinity&#39;; &quot;</span>
-</span><span class='line'>                             <span class="s">&quot;read_affinity setting will have no effect.&quot;</span> <span class="o">%</span>
-</span><span class='line'>                             <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>proxy server初始化后被调用的方法，检查proxy的read_affinity配置和排序方法设置不一致时，记录警告日志。</p>
-
-<h3>call方法</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        WSGI entry point.</span>
-</span><span class='line'><span class="sd">        Wraps env in swob.Request object and passes it down.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :param env: WSGI environment dictionary</span>
-</span><span class='line'><span class="sd">        :param start_response: WSGI callable</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="k">try</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">memcache</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">memcache</span> <span class="o">=</span> <span class="n">cache_from_env</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_request</span><span class="p">(</span><span class="n">Request</span><span class="p">(</span><span class="n">env</span><span class="p">))</span>
-</span><span class='line'>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_request</span><span class="p">(</span><span class="n">req</span><span class="p">)(</span><span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">except</span> <span class="ne">UnicodeError</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">err</span> <span class="o">=</span> <span class="n">HTTPPreconditionFailed</span><span class="p">(</span>
-</span><span class='line'>                <span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid UTF8 or contains NULL&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">err</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">Timeout</span><span class="p">):</span>
-</span><span class='line'>            <span class="n">start_response</span><span class="p">(</span><span class="s">&#39;500 Server Error&#39;</span><span class="p">,</span>
-</span><span class='line'>                           <span class="p">[(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s">&#39;text/plain&#39;</span><span class="p">)])</span>
-</span><span class='line'>            <span class="k">return</span> <span class="p">[</span><span class="s">&#39;Internal server error.</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>9~10: 检查memcache缓存是否为空，如果为空的话就从上下文中获取，由于proxy-server在pipeline中是最后面，如果pipeline前面配置了memcache中间件的话，就可以从上下文中取到。</li>
-<li>12: 调用update_request方法，后面会介绍。</li>
-<li>13: 调用handle_request方法，后面会介绍，最后返回response。</li>
-<li>14~17: 捕获UnicodeError并返回412。</li>
-<li>18~21: 捕获Timeout和其他异常并返回500。</li>
-</ul>
-
-
-<h3>update_request</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">update_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="s">&#39;x-storage-token&#39;</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">headers</span> <span class="ow">and</span> \
-</span><span class='line'>                <span class="s">&#39;x-auth-token&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;x-auth-token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;x-storage-token&#39;</span><span class="p">]</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">req</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>该方法是将requeset中的x-auth-token的header替换为x-storage-token的header。</p>
-
-<h3>handle_request</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">handle_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        Entry point for proxy server.</span>
-</span><span class='line'><span class="sd">        Should return a WSGI-style callable (such as swob.Response).</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :param req: swob.Request object</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="k">try</span><span class="p">:</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">set_statsd_prefix</span><span class="p">(</span><span class="s">&#39;proxy-server&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">content_length</span> <span class="ow">and</span> <span class="n">req</span><span class="o">.</span><span class="n">content_length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">HTTPBadRequest</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span>
-</span><span class='line'>                                      <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid Content-Length&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">try</span><span class="p">:</span>
-</span><span class='line'>                <span class="k">if</span> <span class="ow">not</span> <span class="n">check_utf8</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">path_info</span><span class="p">):</span>
-</span><span class='line'>                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
-</span><span class='line'>                    <span class="k">return</span> <span class="n">HTTPPreconditionFailed</span><span class="p">(</span>
-</span><span class='line'>                        <span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid UTF8 or contains NULL&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">except</span> <span class="ne">UnicodeError</span><span class="p">:</span>
-</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">HTTPPreconditionFailed</span><span class="p">(</span>
-</span><span class='line'>                    <span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid UTF8 or contains NULL&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>8: 在log中设置&#8217;proxy-server&#8217;前缀。</li>
-<li>10~13: 检查request中content length如果有且长度为0，则返回500。</li>
-<li>15~23  : 检查url格式是否utf-8，如果不是则返回412。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>            <span class="k">try</span><span class="p">:</span>
-</span><span class='line'>                <span class="n">controller</span><span class="p">,</span> <span class="n">path_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_controller</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">p</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">path_info</span>
-</span><span class='line'>                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
-</span><span class='line'>                    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">HTTPNotFound</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">if</span> <span class="ow">not</span> <span class="n">controller</span><span class="p">:</span>
-</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">HTTPPreconditionFailed</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Bad URL&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deny_host_headers</span> <span class="ow">and</span> \
-</span><span class='line'>                    <span class="n">req</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">deny_host_headers</span><span class="p">:</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">HTTPForbidden</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s">&#39;Invalid host header&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>2～5: 调用get_controller方法(后面会介绍)，通过url获取对应的controller类和url中通过&#8217;/&lsquo;符号分割的各个部分。</li>
-<li>6~8: 捕获ValueError并返回404。</li>
-<li>9~11: 如果controller类为空则返回404。</li>
-<li>12~14: 如果proxy中有定义deny_host_headers(禁止访问的ip），并且request的ip与禁止访问的ip一致，则返回403。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">set_statsd_prefix</span><span class="p">(</span><span class="s">&#39;proxy-server.&#39;</span> <span class="o">+</span>
-</span><span class='line'>                                          <span class="n">controller</span><span class="o">.</span><span class="n">server_type</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-</span><span class='line'>            <span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">path_parts</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">if</span> <span class="s">&#39;swift.trans_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-</span><span class='line'>                <span class="c"># if this wasn&#39;t set by an earlier middleware, set it now</span>
-</span><span class='line'>                <span class="n">trans_id</span> <span class="o">=</span> <span class="n">generate_trans_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trans_id_suffix</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.trans_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trans_id</span>
-</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">txn_id</span> <span class="o">=</span> <span class="n">trans_id</span>
-</span><span class='line'>            <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;x-trans-id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.trans_id&#39;</span><span class="p">]</span>
-</span><span class='line'>            <span class="n">controller</span><span class="o">.</span><span class="n">trans_id</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.trans_id&#39;</span><span class="p">]</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">client_ip</span> <span class="o">=</span> <span class="n">get_remote_client</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>1～2: 日志加上controller名字前缀。</li>
-<li>3: 通过controller类实例化controller对象。</li>
-<li>4~10: 如果swift.trans_id没有在request的上下文中，则重新生成trans_id，并设置在上下文、日志、header和controller中。</li>
-<li>11: 调用get_remote_client方法(后面介绍)，先判断header中是否有&#8217;x-cluster-client-ip&#8217;，如果没有再去获取header中的&#8217;x-forwarded-for&#8217;，还是没有的话就从request中的remote_addr取值，得到client_ip。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>            <span class="k">try</span><span class="p">:</span>
-</span><span class='line'>                <span class="n">handler</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">getattr</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s">&#39;publicly_accessible&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-</span><span class='line'>                <span class="n">allowed_methods</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="s">&#39;allowed_methods&#39;</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">HTTPMethodNotAllowed</span><span class="p">(</span>
-</span><span class='line'>                    <span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;Allow&#39;</span><span class="p">:</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed_methods</span><span class="p">)})</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>2~3: 通过request的method，在controller得到一个名字相同，并且有&#8217;public&#8217;标签的方法对象handler。</li>
-<li>4~7: 如果获取不到对应的public方法，则打印出controller中所有public方法并返回405。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>            <span class="k">if</span> <span class="s">&#39;swift.authorize&#39;</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-</span><span class='line'>                <span class="c"># We call authorize before the handler, always. If authorized,</span>
-</span><span class='line'>                <span class="c"># we remove the swift.authorize hook so isn&#39;t ever called</span>
-</span><span class='line'>                <span class="c"># again. If not authorized, we return the denial unless the</span>
-</span><span class='line'>                <span class="c"># controller&#39;s method indicates it&#39;d like to gather more</span>
-</span><span class='line'>                <span class="c"># information and try again later.</span>
-</span><span class='line'>                <span class="n">resp</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.authorize&#39;</span><span class="p">](</span><span class="n">req</span><span class="p">)</span>
-</span><span class='line'>                <span class="k">if</span> <span class="ow">not</span> <span class="n">resp</span><span class="p">:</span>
-</span><span class='line'>                    <span class="c"># No resp means authorized, no delayed recheck required.</span>
-</span><span class='line'>                    <span class="k">del</span> <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.authorize&#39;</span><span class="p">]</span>
-</span><span class='line'>                <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>                    <span class="c"># Response indicates denial, but we might delay the denial</span>
-</span><span class='line'>                    <span class="c"># and recheck later. If not delayed, return the error now.</span>
-</span><span class='line'>                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s">&#39;delay_denial&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>                        <span class="k">return</span> <span class="n">resp</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如果request的上下文中有swift.authorize，则调用这个方法进行认证。<br/>
-如果没有返回结果证明之前已经认证通过了，后面的请求不需要再认证，将&#8217;swift.authorize&#8217;从上下文去掉。<br/>
-如果有Response返回则表示认证不通过，会先检查是否有延迟禁止的配置，如果没有返回认证不通过的response，如果有则会等后面再重新确认。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>            <span class="c"># Save off original request method (GET, POST, etc.) in case it</span>
-</span><span class='line'>            <span class="c"># gets mutated during handling.  This way logging can display the</span>
-</span><span class='line'>            <span class="c"># method the client actually sent.</span>
-</span><span class='line'>            <span class="n">req</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;swift.orig_req_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">method</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">except</span> <span class="n">HTTPException</span> <span class="k">as</span> <span class="n">error_response</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">error_response</span>
-</span><span class='line'>        <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">Timeout</span><span class="p">):</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;ERROR Unhandled exception in request&#39;</span><span class="p">))</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">HTTPServerError</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>4~5: 在日志中记录原始的request方法，防止请求在传播过程中发生突变http请求方法发生改变。</li>
-<li>6~10: 捕获异常，记录日志。</li>
-</ul>
-
-
-<h3>get_controller</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">get_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        Get the controller to handle a request.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :param path: path from request</span>
-</span><span class='line'><span class="sd">        :returns: tuple of (controller class, path dictionary)</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :raises: ValueError (thrown by split_path) if given invalid path</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s">&#39;/info&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-</span><span class='line'>                     <span class="n">expose_info</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">expose_info</span><span class="p">,</span>
-</span><span class='line'>                     <span class="n">disallowed_sections</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">disallowed_sections</span><span class="p">,</span>
-</span><span class='line'>                     <span class="n">admin_key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">admin_key</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">InfoController</span><span class="p">,</span> <span class="n">d</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">version</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">split_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
-</span><span class='line'>                 <span class="n">account_name</span><span class="o">=</span><span class="n">account</span><span class="p">,</span>
-</span><span class='line'>                 <span class="n">container_name</span><span class="o">=</span><span class="n">container</span><span class="p">,</span>
-</span><span class='line'>                 <span class="n">object_name</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">obj</span> <span class="ow">and</span> <span class="n">container</span> <span class="ow">and</span> <span class="n">account</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">ObjectController</span><span class="p">,</span> <span class="n">d</span>
-</span><span class='line'>        <span class="k">elif</span> <span class="n">container</span> <span class="ow">and</span> <span class="n">account</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">ContainerController</span><span class="p">,</span> <span class="n">d</span>
-</span><span class='line'>        <span class="k">elif</span> <span class="n">account</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">container</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">obj</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">AccountController</span><span class="p">,</span> <span class="n">d</span>
-</span><span class='line'>        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="n">d</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>10～15: 如果url是&#8217;info&#8217;，则返回InController和controller字典参数，expose_info表示是否暴露信息，disallowed_sections表示不允许暴露的字段列表，比如container_qutoas, tempurl等。</li>
-<li>17～28: 根据url判断是account、container还是object，返回对应的controller和字典参数。</li>
-</ul>
-
-
-<h3>sort_nodes</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">sort_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&#39;&#39;&#39;</span>
-</span><span class='line'><span class="sd">        Sorts nodes in-place (and returns the sorted list) according to</span>
-</span><span class='line'><span class="sd">        the configured strategy. The default &quot;sorting&quot; is to randomly</span>
-</span><span class='line'><span class="sd">        shuffle the nodes. If the &quot;timing&quot; strategy is chosen, the nodes</span>
-</span><span class='line'><span class="sd">        are sorted according to the stored timing data.</span>
-</span><span class='line'><span class="sd">        &#39;&#39;&#39;</span>
-</span><span class='line'>        <span class="c"># In the case of timing sorting, shuffling ensures that close timings</span>
-</span><span class='line'>        <span class="c"># (ie within the rounding resolution) won&#39;t prefer one over another.</span>
-</span><span class='line'>        <span class="c"># Python&#39;s sort is stable (http://wiki.python.org/moin/HowTo/Sorting/)</span>
-</span><span class='line'>        <span class="n">shuffle</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">==</span> <span class="s">&#39;timing&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">def</span> <span class="nf">key_func</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-</span><span class='line'>                <span class="n">timing</span><span class="p">,</span> <span class="n">expires</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_timings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">timing</span> <span class="k">if</span> <span class="n">expires</span> <span class="o">&gt;</span> <span class="n">now</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1.0</span>
-</span><span class='line'>            <span class="n">nodes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key_func</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">==</span> <span class="s">&#39;affinity&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">nodes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">read_affinity_sort_key</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">nodes</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>节点的排序方法，将节点根据配置的排序策略进行排序。<br/>
-* 11: 将节点顺序打乱，确保节点不会按照时间排好序。
-* 12～18: 如果配置的排序策略是按时间排序，则定义一个（节点）按时间排序的方法让节点按照这个方法排序，如果节点已过期则timing为-0.1，即会被排到最后。
-* 19～20: 如果配置的排序策略是按亲和力排序，则节点按照亲和力方法排序。</p>
-
-<h3>set_node_timing</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">set_node_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">timing</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sorting_method</span> <span class="o">!=</span> <span class="s">&#39;timing&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span>
-</span><span class='line'>        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-</span><span class='line'>        <span class="n">timing</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">timing</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c"># sort timings to the millisecond</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">node_timings</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span><span class="n">timing</span><span class="p">,</span> <span class="n">now</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">timing_expiry</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>2～3: 如果配置的排序策略不是&#8217;timing&#8217;，则直接返回不做设置。</li>
-<li>4～6: 设置单个节点的排序时间过期时间。</li>
-</ul>
-
-
-<h3>error_limited</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">error_limited</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        Check if the node is currently error limited.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :param node: dictionary of node to check</span>
-</span><span class='line'><span class="sd">        :returns: True if error limited, False otherwise</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-</span><span class='line'>        <span class="k">if</span> <span class="s">&#39;errors&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span> <span class="bp">False</span>
-</span><span class='line'>        <span class="k">if</span> <span class="s">&#39;last_error&#39;</span> <span class="ow">in</span> <span class="n">node</span> <span class="ow">and</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;last_error&#39;</span><span class="p">]</span> <span class="o">&lt;</span> \
-</span><span class='line'>                <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_interval</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">del</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;last_error&#39;</span><span class="p">]</span>
-</span><span class='line'>            <span class="k">if</span> <span class="s">&#39;errors&#39;</span> <span class="ow">in</span> <span class="n">node</span><span class="p">:</span>
-</span><span class='line'>                <span class="k">del</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;errors&#39;</span><span class="p">]</span>
-</span><span class='line'>            <span class="k">return</span> <span class="bp">False</span>
-</span><span class='line'>        <span class="n">limited</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;errors&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_limit</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">limited</span><span class="p">:</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-</span><span class='line'>                <span class="n">_</span><span class="p">(</span><span class="s">&#39;Node error limited </span><span class="si">%(ip)s</span><span class="s">:</span><span class="si">%(port)s</span><span class="s"> (</span><span class="si">%(device)s</span><span class="s">)&#39;</span><span class="p">),</span> <span class="n">node</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">limited</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>8～10: 如果节点里面没有&#8217;errors&#8217;选项，则返回false。</li>
-<li>11～10: 如果节点里面的&#8217;last_error&#8217;选项不正确，则删除该选项和errors选项，并返回false。</li>
-<li>12～15: 判断节点的错误个数是否超过配置的错误限制，如果超过则记录日志，并返回是否超限制的结果。</li>
-</ul>
-
-
-<h3>error_limit</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">error_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        Mark a node as error limited. This immediately pretends the</span>
-</span><span class='line'><span class="sd">        node received enough errors to trigger error suppression. Use</span>
-</span><span class='line'><span class="sd">        this for errors like Insufficient Storage. For other errors</span>
-</span><span class='line'><span class="sd">        use :func:`error_occurred`.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :param node: dictionary of node to error limit</span>
-</span><span class='line'><span class="sd">        :param msg: error message</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="n">node</span><span class="p">[</span><span class="s">&#39;errors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_suppression_limit</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>        <span class="n">node</span><span class="p">[</span><span class="s">&#39;last_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%(msg)s</span><span class="s"> </span><span class="si">%(ip)s</span><span class="s">:</span><span class="si">%(port)s</span><span class="s">/</span><span class="si">%(device)s</span><span class="s">&#39;</span><span class="p">),</span>
-</span><span class='line'>                          <span class="p">{</span><span class="s">&#39;msg&#39;</span><span class="p">:</span> <span class="n">msg</span><span class="p">,</span> <span class="s">&#39;ip&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span>
-</span><span class='line'>                          <span class="s">&#39;port&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;port&#39;</span><span class="p">],</span> <span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">]})</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>11～14: 记录一个节点的错误信息:错误个数，最后错误的时间，并记录日志。</li>
-</ul>
-
-
-<h3>error_occurred</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">error_occurred</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        Handle logging, and handling of errors.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :param node: dictionary of node to handle errors for</span>
-</span><span class='line'><span class="sd">        :param msg: error message</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="n">node</span><span class="p">[</span><span class="s">&#39;errors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;errors&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>        <span class="n">node</span><span class="p">[</span><span class="s">&#39;last_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%(msg)s</span><span class="s"> </span><span class="si">%(ip)s</span><span class="s">:</span><span class="si">%(port)s</span><span class="s">/</span><span class="si">%(device)s</span><span class="s">&#39;</span><span class="p">),</span>
-</span><span class='line'>                          <span class="p">{</span><span class="s">&#39;msg&#39;</span><span class="p">:</span> <span class="n">msg</span><span class="p">,</span> <span class="s">&#39;ip&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span>
-</span><span class='line'>                          <span class="s">&#39;port&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;port&#39;</span><span class="p">],</span> <span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">]})</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>8～12: 与前面的方法类似，唯一区别是记录节点错误个数是取当前的错误个数，然后+1。</li>
-</ul>
-
-
-<h3>iter_nodes</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">iter_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ring</span><span class="p">,</span> <span class="n">partition</span><span class="p">,</span> <span class="n">node_iter</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        Yields nodes for a ring partition, skipping over error</span>
-</span><span class='line'><span class="sd">        limited nodes and stopping at the configurable number of</span>
-</span><span class='line'><span class="sd">        nodes. If a node yielded subsequently gets error limited, an</span>
-</span><span class='line'><span class="sd">        extra node will be yielded to take its place.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        Note that if you&#39;re going to iterate over this concurrently from</span>
-</span><span class='line'><span class="sd">        multiple greenthreads, you&#39;ll want to use a</span>
-</span><span class='line'><span class="sd">        swift.common.utils.GreenthreadSafeIterator to serialize access.</span>
-</span><span class='line'><span class="sd">        Otherwise, you may get ValueErrors from concurrent access. (You also</span>
-</span><span class='line'><span class="sd">        may not, depending on how logging is configured, the vagaries of</span>
-</span><span class='line'><span class="sd">        socket IO and eventlet, and the phase of the moon.)</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :param ring: ring to get yield nodes from</span>
-</span><span class='line'><span class="sd">        :param partition: ring partition to yield nodes for</span>
-</span><span class='line'><span class="sd">        :param node_iter: optional iterable of nodes to try. Useful if you</span>
-</span><span class='line'><span class="sd">            want to filter or reorder the nodes.</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="n">part_nodes</span> <span class="o">=</span> <span class="n">ring</span><span class="o">.</span><span class="n">get_part_nodes</span><span class="p">(</span><span class="n">partition</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">node_iter</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">node_iter</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">part_nodes</span><span class="p">,</span>
-</span><span class='line'>                                        <span class="n">ring</span><span class="o">.</span><span class="n">get_more_nodes</span><span class="p">(</span><span class="n">partition</span><span class="p">))</span>
-</span><span class='line'>        <span class="n">num_primary_nodes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">part_nodes</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c"># Use of list() here forcibly yanks the first N nodes (the primary</span>
-</span><span class='line'>        <span class="c"># nodes) from node_iter, so the rest of its values are handoffs.</span>
-</span><span class='line'>        <span class="n">primary_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sort_nodes</span><span class="p">(</span>
-</span><span class='line'>            <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">node_iter</span><span class="p">,</span> <span class="n">num_primary_nodes</span><span class="p">)))</span>
-</span><span class='line'>        <span class="n">handoff_nodes</span> <span class="o">=</span> <span class="n">node_iter</span>
-</span><span class='line'>        <span class="n">nodes_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_node_count</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">primary_nodes</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>20～24: 根据partition获取相应的节点，如果node_iter为空，则将之前取到的节点和get_more_nodes节点连接起来为node_iter赋值，并取得节点个数。</li>
-<li>28～31: 将node_iter的节点重新排序，并取前面部分作为主要nodes，handoff_nodes为node_iter剩下的nodes， nodes_left为剩下的节点个数。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">primary_nodes</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_limited</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-</span><span class='line'>                <span class="k">yield</span> <span class="n">node</span>
-</span><span class='line'>                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_limited</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-</span><span class='line'>                    <span class="n">nodes_left</span> <span class="o">-=</span> <span class="mi">1</span>
-</span><span class='line'>                    <span class="k">if</span> <span class="n">nodes_left</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span class='line'>                        <span class="k">return</span>
-</span><span class='line'>        <span class="n">handoffs</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">handoff_nodes</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_limited</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-</span><span class='line'>                <span class="n">handoffs</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span class='line'>                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_handoffs</span><span class="p">:</span>
-</span><span class='line'>                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;handoff_count&#39;</span><span class="p">)</span>
-</span><span class='line'>                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-</span><span class='line'>                        <span class="s">&#39;Handoff requested (</span><span class="si">%d</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">handoffs</span><span class="p">)</span>
-</span><span class='line'>                    <span class="k">if</span> <span class="n">handoffs</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">primary_nodes</span><span class="p">):</span>
-</span><span class='line'>                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&#39;handoff_all_count&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="k">yield</span> <span class="n">node</span>
-</span><span class='line'>                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_limited</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-</span><span class='line'>                    <span class="n">nodes_left</span> <span class="o">-=</span> <span class="mi">1</span>
-</span><span class='line'>                    <span class="k">if</span> <span class="n">nodes_left</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span class='line'>                        <span class="k">return</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>1～7: 遍历每个主节点，如果节点没有错误则返回该节点，剩余节点数-1,如果剩余节点数&lt;=0,则直接返回。</li>
-<li>8～22: 如果主节点中都有错误，则从剩余节点中查找满足条件的节点，查找方法和主节点查找方法雷同，只是多了一些日志的记录。</li>
-</ul>
-
-
-<h3>exception_occurred</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">exception_occurred</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">additional_info</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        Handle logging of generic exceptions.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :param node: dictionary of node to log the error for</span>
-</span><span class='line'><span class="sd">        :param typ: server type</span>
-</span><span class='line'><span class="sd">        :param additional_info: additional information to log</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
-</span><span class='line'>            <span class="n">_</span><span class="p">(</span><span class="s">&#39;ERROR with </span><span class="si">%(type)s</span><span class="s"> server </span><span class="si">%(ip)s</span><span class="s">:</span><span class="si">%(port)s</span><span class="s">/</span><span class="si">%(device)s</span><span class="s"> re: &#39;</span>
-</span><span class='line'>              <span class="s">&#39;</span><span class="si">%(info)s</span><span class="s">&#39;</span><span class="p">),</span>
-</span><span class='line'>            <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">typ</span><span class="p">,</span> <span class="s">&#39;ip&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;ip&#39;</span><span class="p">],</span> <span class="s">&#39;port&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;port&#39;</span><span class="p">],</span>
-</span><span class='line'>             <span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">],</span> <span class="s">&#39;info&#39;</span><span class="p">:</span> <span class="n">additional_info</span><span class="p">})</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>9～13: 当异常发生的时候，记录异常日志。</li>
-</ul>
-
-
-<h3>modify_wsgi_pipeline</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">modify_wsgi_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipe</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="sd">        Called during WSGI pipeline creation. Modifies the WSGI pipeline</span>
-</span><span class='line'><span class="sd">        context to ensure that mandatory middleware is present in the pipeline.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">        :param pipe: A PipelineWrapper object</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="n">pipeline_was_modified</span> <span class="o">=</span> <span class="bp">False</span>
-</span><span class='line'>        <span class="k">for</span> <span class="n">filter_spec</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">required_filters</span><span class="p">):</span>
-</span><span class='line'>            <span class="n">filter_name</span> <span class="o">=</span> <span class="n">filter_spec</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
-</span><span class='line'>            <span class="k">if</span> <span class="n">filter_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipe</span><span class="p">:</span>
-</span><span class='line'>                <span class="n">afters</span> <span class="o">=</span> <span class="n">filter_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;after_fn&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_junk</span><span class="p">:</span> <span class="p">[])(</span><span class="n">pipe</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">insert_at</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>                <span class="k">for</span> <span class="n">after</span> <span class="ow">in</span> <span class="n">afters</span><span class="p">:</span>
-</span><span class='line'>                    <span class="k">try</span><span class="p">:</span>
-</span><span class='line'>                        <span class="n">insert_at</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">insert_at</span><span class="p">,</span> <span class="n">pipe</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">after</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-</span><span class='line'>                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c"># not in pipeline; ignore it</span>
-</span><span class='line'>                        <span class="k">pass</span>
-</span><span class='line'>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-</span><span class='line'>                    <span class="s">&#39;Adding required filter </span><span class="si">%s</span><span class="s"> to pipeline at position </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span>
-</span><span class='line'>                    <span class="p">(</span><span class="n">filter_name</span><span class="p">,</span> <span class="n">insert_at</span><span class="p">))</span>
-</span><span class='line'>                <span class="n">ctx</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">create_filter</span><span class="p">(</span><span class="n">filter_name</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">pipe</span><span class="o">.</span><span class="n">insert_filter</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">insert_at</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">pipeline_was_modified</span> <span class="o">=</span> <span class="bp">True</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">pipeline_was_modified</span><span class="p">:</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Pipeline was modified. New pipeline is </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s">.&quot;</span><span class="p">,</span>
-</span><span class='line'>                             <span class="n">pipe</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Pipeline is </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pipe</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>8～24: 遍历定义好的中间件required_filters，如果该中间件没有在pipeline中，则将该中间件插入到pipeline，插入位置根据中间件的atfer_fn方法得到。</li>
-<li>26～31: 记录人日志信息。</li>
-</ul>
-
-
-<h3>required_filters</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c"># List of entry points for mandatory middlewares.</span>
-</span><span class='line'><span class="c">#</span>
-</span><span class='line'><span class="c"># Fields:</span>
-</span><span class='line'><span class="c">#</span>
-</span><span class='line'><span class="c"># &quot;name&quot; (required) is the entry point name from setup.py.</span>
-</span><span class='line'><span class="c">#</span>
-</span><span class='line'><span class="c"># &quot;after_fn&quot; (optional) a function that takes a PipelineWrapper object as its</span>
-</span><span class='line'><span class="c"># single argument and returns a list of middlewares that this middleware</span>
-</span><span class='line'><span class="c"># should come after. Any middlewares in the returned list that are not present</span>
-</span><span class='line'><span class="c"># in the pipeline will be ignored, so you can safely name optional middlewares</span>
-</span><span class='line'><span class="c"># to come after. For example, [&quot;catch_errors&quot;, &quot;bulk&quot;] would install this</span>
-</span><span class='line'><span class="c"># middleware after catch_errors and bulk if both were present, but if bulk</span>
-</span><span class='line'><span class="c"># were absent, would just install it after catch_errors.</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">required_filters</span> <span class="o">=</span> <span class="p">[</span>
-</span><span class='line'>    <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;catch_errors&#39;</span><span class="p">},</span>
-</span><span class='line'>    <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;gatekeeper&#39;</span><span class="p">,</span>
-</span><span class='line'>     <span class="s">&#39;after_fn&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">pipe</span><span class="p">:</span> <span class="p">([</span><span class="s">&#39;catch_errors&#39;</span><span class="p">]</span>
-</span><span class='line'>                               <span class="k">if</span> <span class="n">pipe</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;catch_errors&quot;</span><span class="p">)</span>
-</span><span class='line'>                               <span class="k">else</span> <span class="p">[])},</span>
-</span><span class='line'>    <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;dlo&#39;</span><span class="p">,</span> <span class="s">&#39;after_fn&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">_junk</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;catch_errors&#39;</span><span class="p">,</span> <span class="s">&#39;gatekeeper&#39;</span><span class="p">,</span>
-</span><span class='line'>                                               <span class="s">&#39;proxy_logging&#39;</span><span class="p">]}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>modify_wsgi_pipeline方法用到的required_filters。</li>
-</ul>
-
-
-<h3>app_factory</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">app_factory</span><span class="p">(</span><span class="n">global_conf</span><span class="p">,</span> <span class="o">**</span><span class="n">local_conf</span><span class="p">):</span>
-</span><span class='line'>    <span class="sd">&quot;&quot;&quot;paste.deploy app factory for creating WSGI proxy apps.&quot;&quot;&quot;</span>
-</span><span class='line'>    <span class="n">conf</span> <span class="o">=</span> <span class="n">global_conf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span class='line'>    <span class="n">conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">local_conf</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">app</span> <span class="o">=</span> <span class="n">Application</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">check_config</span><span class="p">()</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">app</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>proxy server的工厂方法，初始化server对象并检查配置，然后返回创建好的对象。</li>
 </ul>
 
 ]]></content>
