@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-10-29T20:51:38+08:00</updated>
+  <updated>2014-11-12T22:25:06+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,233 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用fullPage美化你的网站]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/11/12/use-full-page-to-make-web-site-beautify/"/>
+    <updated>2014-11-12T20:07:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/11/12/use-full-page-to-make-web-site-beautify</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-11/fullpage.png"></p>
+
+<p>这段时间逛网站，发现有一些网站的页面做的跟手机屏幕一样，大图片大字体铺满整个屏幕，还可以像手机一样通过鼠标上下左右滑动来切换不同的页面，让人感觉很炫很酷很炫。好奇心的驱使下找到了<a href="http://alvarotrigo.com/fullPage/#firstPage">fullPage.js</a>这个jquery插件，它可以让你轻松地制作漂亮的全屏滑动页面。</p>
+
+<!--more-->
+
+
+<h2>支持的浏览器</h2>
+
+<p>可以看到好东西都是不支持IE6的。</p>
+
+<p><img src="/images/post/2014-11/support-brower.gif"></p>
+
+<h2>用法</h2>
+
+<ul>
+<li>fullPage.js使用非常简单，先在你的html页面里面加上fullPage的css和js文件，注意还需要包括jquery的js文件，而且要放在fullPage的js文件前面。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href=</span><span class="s">&quot;jquery.fullPage.css&quot;</span> <span class="nt">/&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;jquery.fullPage.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>然后在html里面定义一个div，id为<code>fullpage</code>，里面再嵌套div，class为<code>section</code>，代码示例如下，这是一个简单的全页滑动页面。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;fullpage&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>最后在对fullPage对象进行初始化。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#fullpage&#39;</span><span class="p">).</span><span class="nx">fullpage</span><span class="p">();</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>fullPage属性</h2>
+
+<p>这是一个比较复杂的fullPage初始化，可以看到fullPage可以设置很多的属性，比如menu(菜单)，设置为<code>true</code>则在屏幕右边会显示导航菜单，其他的属性说明可以参考fullPage的<a href="https://github.com/alvarotrigo/fullPage.js#options">官方说明</a>。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#fullpage&#39;</span><span class="p">).</span><span class="nx">fullpage</span><span class="p">({</span>
+</span><span class='line'>    <span class="c1">//Navigation</span>
+</span><span class='line'>    <span class="nx">menu</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">anchors</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;firstSlide&#39;</span><span class="p">,</span> <span class="s1">&#39;secondSlide&#39;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nx">navigation</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">navigationPosition</span><span class="o">:</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">navigationTooltips</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;firstSlide&#39;</span><span class="p">,</span> <span class="s1">&#39;secondSlide&#39;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nx">slidesNavigation</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">slidesNavPosition</span><span class="o">:</span> <span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//Scrolling</span>
+</span><span class='line'>    <span class="nx">css3</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scrollingSpeed</span><span class="o">:</span> <span class="mi">700</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">autoScrolling</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scrollBar</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">easing</span><span class="o">:</span> <span class="s1">&#39;easeInQuart&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">easingcss3</span><span class="o">:</span> <span class="s1">&#39;ease&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">loopBottom</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">loopTop</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">loopHorizontal</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">continuousVertical</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">normalScrollElements</span><span class="o">:</span> <span class="s1">&#39;#element1, .element2&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scrollOverflow</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">touchSensitivity</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">normalScrollElementTouchThreshold</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//Accessibility</span>
+</span><span class='line'>    <span class="nx">keyboardScrolling</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">animateAnchor</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//Design</span>
+</span><span class='line'>    <span class="nx">verticalCentered</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">resize</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">sectionsColor</span> <span class="o">:</span> <span class="p">[</span><span class="s1">&#39;#ccc&#39;</span><span class="p">,</span> <span class="s1">&#39;#fff&#39;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nx">paddingTop</span><span class="o">:</span> <span class="s1">&#39;3em&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">paddingBottom</span><span class="o">:</span> <span class="s1">&#39;10px&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">fixedElements</span><span class="o">:</span> <span class="s1">&#39;#header, .footer&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">responsive</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//Custom selectors</span>
+</span><span class='line'>    <span class="nx">sectionSelector</span><span class="o">:</span> <span class="s1">&#39;.section&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">slideSelector</span><span class="o">:</span> <span class="s1">&#39;.slide&#39;</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//events</span>
+</span><span class='line'>    <span class="nx">onLeave</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">nextIndex</span><span class="p">,</span> <span class="nx">direction</span><span class="p">){},</span>
+</span><span class='line'>    <span class="nx">afterLoad</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">anchorLink</span><span class="p">,</span> <span class="nx">index</span><span class="p">){},</span>
+</span><span class='line'>    <span class="nx">afterRender</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){},</span>
+</span><span class='line'>    <span class="nx">afterResize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){},</span>
+</span><span class='line'>    <span class="nx">afterSlideLoad</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">anchorLink</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">slideAnchor</span><span class="p">,</span> <span class="nx">slideIndex</span><span class="p">){},</span>
+</span><span class='line'>    <span class="nx">onSlideLeave</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">anchorLink</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">slideIndex</span><span class="p">,</span> <span class="nx">direction</span><span class="p">){}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>参考示例</h2>
+
+<p>在fullPage的github工程里面，有一个example文件夹，主页面是<code>demoPage.html</code>，在浏览器打开它可以看到里面列举了19个fullPage的Demo，有上下翻页，左右翻页，嵌套视频等各种例子，如果想实现自己想要的效果，可以参照对应demo的html文件来进行修改。</p>
+
+<p><img src="/images/post/2014-11/fullpage-demo.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在Ubuntu12.04上安装Ceph Calamari]]></title>
@@ -419,7 +646,7 @@
 </span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Initializing web interface&amp;hellip;
 </span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> You will now be prompted <span class="k">for </span>login details <span class="k">for </span>the administrative user account. This is the account you will use to log into the web interface once setup is complete.
 </span><span class='line'>Username <span class="o">(</span>leave blank to use &amp;lsquo;root&amp;rsquo;<span class="o">)</span>:
-</span><span class='line'>Email address: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#116;&amp;#111;&amp;#58;&amp;#107;&amp;#97;&amp;#x72;&amp;#x61;&amp;#110;&amp;#46;&amp;#x73;&amp;#x69;&amp;#x6e;&amp;#x67;&amp;#104;&amp;#64;&amp;#x63;&amp;#x73;&amp;#99;&amp;#x2e;&amp;#102;&amp;#105;&quot;</span>&gt;&amp;#x6b;&amp;#97;&amp;#114;&amp;#x61;&amp;#110;&amp;#x2e;&amp;#x73;&amp;#105;&amp;#110;&amp;#x67;&amp;#104;&amp;#64;&amp;#x63;&amp;#115;&amp;#99;&amp;#46;&amp;#102;&amp;#105;&lt;/a&gt;
+</span><span class='line'>Email address: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#x6c;&amp;#116;&amp;#x6f;&amp;#x3a;&amp;#107;&amp;#x61;&amp;#114;&amp;#x61;&amp;#x6e;&amp;#x2e;&amp;#115;&amp;#x69;&amp;#110;&amp;#x67;&amp;#x68;&amp;#x40;&amp;#99;&amp;#x73;&amp;#x63;&amp;#46;&amp;#x66;&amp;#105;&quot;</span>&gt;&amp;#107;&amp;#97;&amp;#x72;&amp;#97;&amp;#x6e;&amp;#46;&amp;#115;&amp;#x69;&amp;#110;&amp;#x67;&amp;#x68;&amp;#x40;&amp;#99;&amp;#x73;&amp;#99;&amp;#46;&amp;#102;&amp;#x69;&lt;/a&gt;
 </span><span class='line'>Password:
 </span><span class='line'>Password <span class="o">(</span>again<span class="o">)</span>:
 </span><span class='line'>Superuser created successfully.
@@ -1630,194 +1857,6 @@
 </span><span class='line'>osd1                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
 </span><span class='line'>osd2                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
 </span><span class='line'>rgw                        : <span class="nv">ok</span><span class="o">=</span>20   <span class="nv">changed</span><span class="o">=</span>17   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Redhat企业版无网环境下安装Dokuwiki]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/09/17/red-hat-enterprise-offline-env-install-dokuwiki/"/>
-    <updated>2014-09-17T12:23:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/09/17/red-hat-enterprise-offline-env-install-dokuwiki</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-9/dokuwiki.png"></p>
-
-<h2><a href="https://www.dokuwiki.org">Dokuwiki</a>介绍</h2>
-
-<p>Dokuwiki是一个轻量级，高可用，免费开源的wiki软件，它不需要DB数据库，wiki内容直接以文本文件形式存储在文件系统上。Dokuwiki语法简洁易懂，管理维护简单，支持扩展多种模板展示wiki网站，还可以使用很多开源的插件来增加wiki的功能，比一般的传统wiki更加强大，更容易使用。</p>
-
-<!--more-->
-
-
-<h2>环境与版本</h2>
-
-<ul>
-<li>操作系统: Redhat Enterprise Linux Server release 6.4 (Santiago)</li>
-<li>网络环境: 无法连接网络</li>
-<li>Dokuwiki版本: 最新版</li>
-<li>Apache Http Server版本: 2.4.10</li>
-<li>PHP版本: 5.6.0</li>
-</ul>
-
-
-<p>下面是Dokuwiki的系统要求:</p>
-
-<p><blockquote><p>DokuWiki System Requirements<br/>1. Webserver supporting PHP<br/>2. PHP version 5.2 or later</p></blockquote></p>
-
-<h2>安装Apache Http Server(httpd)</h2>
-
-<p>没有网络安装Linux软件是比较苦逼的，需要先安装该软件依赖的软件，如果依赖层次较深，就需要先安装完很多依赖软件后才能安装该软件。如果有网络的情况下，直接使用<code>yum install</code>或<code>apt-get install</code>就可以把相关依赖的软件都一起安装了。</p>
-
-<p>先看一下httpd的安装要求:</p>
-
-<ul>
-<li>APR和APR-Util</li>
-</ul>
-
-
-<p>先确定系统已经安装了这2个软件，如果没有的话先到<a href="http://apr.apache.org">Apache APR</a>下载源码包，下载完成后分别解压到httpd的<code>scrlib/apr</code>和<code>srclib/apr-util</code>(<code>srclib</code>在httpd的压缩文件解压后的目录里面)，解压后的目录结构如下。后面在安装httpd的时候使用<code>./configure</code>命令时加上<code>--with-included-apr</code>就可以了。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>httpd-2.4.10
-</span><span class='line'>&amp;mdash;|scrlib
-</span><span class='line'>&amp;mdash;&amp;mdash;|apr
-</span><span class='line'>&amp;mdash;&amp;mdash;&amp;mdash;|apr.exp
-</span><span class='line'>&amp;mdash;&amp;mdash;&amp;mdash;|&amp;hellip;other apr files
-</span><span class='line'>&amp;mdash;&amp;mdash;|apr-util
-</span><span class='line'>&amp;mdash;&amp;mdash;&amp;mdash;|aprutil.dep
-</span><span class='line'>&amp;mdash;&amp;mdash;&amp;mdash;|&amp;hellip;other apr-util files
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>Perl-Compatible Regular Expressions Library (<a href="http://www.pcre.org">PCRE</a>)
-PCRE安装比较简单，去pcre的网站下载源码包后解压，cd到解压目录执行下面的命令。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>./configure
-</span><span class='line'>make
-</span><span class='line'>make install
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>安装完依赖的软件后，就可以开始安装httpd了，到Apache的网站下载最新版的<a href="http://httpd.apache.org/download.cgi">Apache Http Server软件</a>，执行以下命令，最后一步是启动httpd服务，如果安装成功的话在浏览器输入<code>http://127.0.0.1</code>可以看到<code>It Works!</code>的字样。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>./configure &amp;mdash;prefix<span class="o">=</span>/usr/local/apache2 &amp;mdash;with-included-apr
-</span><span class='line'>make
-</span><span class='line'>make install
-</span><span class='line'>/usr/local/apache2/bin/apachectl -k start
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>安装<a href="http://php.net">PHP</a></h2>
-
-<p>安装PHP也需要安装其他软件，需要先安装<a href="http://xmlsoft.org">libxml2</a>，先到网站下载源码包，然后执行下面的命令安装。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>./configure &amp;mdash;prefix<span class="o">=</span>/usr/local/libxml2
-</span><span class='line'>make
-</span><span class='line'>make install
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>安装完libxml2后，到PHP网站下载最新版的源码，然后执行下面的命令安装，注意configure要带&mdash;with-apx2参数，指向apache2的apx2命令。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>./configure &amp;mdash;prefix<span class="o">=</span>/usr/local/php &amp;mdash;with-apxs2<span class="o">=</span>/usr/local/apache2/bin/apxs &amp;mdash;with-libxml-dir<span class="o">=</span>/usr/local/libxml2
-</span><span class='line'>make
-</span><span class='line'>make install
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>编辑httpd的配置文件即/usr/local/apache2/conf/httpd.conf，并添加以下内容:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>AddType application/x-httpd-php .php
-</span><span class='line'>AddType application/x-httpd-php-source .phps
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>复制php.ini文件到PHP的安装目录，源码包里有2个php.ini文件，随便哪一个都可以。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>cp ~/tools/php-5.6.0/php.ini-production /usr/local/php/php.ini
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>重启httpd。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>/usr/local/apache2/bin/apachectl -k restart
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>建立test.php文件放在httpd目录(/usr/local/apache2/)下的htdocs下，内容如下，通过浏览器查看<code>http://127.0.0.1/test.php</code>，如果显示了内容就表示PHP安装成功了。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="o">?</span><span class="nx">php</span>
-</span><span class='line'><span class="nb">phpinfo</span><span class="p">();</span>
-</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>安装dokuwiki</h2>
-
-<p>到dokuwiki网站下载源码包，执行下面的命令进行安装。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>mv 下载目录/dokuwiki-xxxx.tgz /usr/local/apache2/htdocs
-</span><span class='line'><span class="nb">cd</span> /usr/local/apache2/htdocs
-</span><span class='line'>tar -xvf dokuwiki-xxxx.tgz
-</span><span class='line'>mv dokuwiki-xxxx dokuwiki
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>查询httpd的用户是什么，这样才可以将dokuwiki的文件夹授权给这个用户，执行下面命令可以看到httpd进程的用户，我查到的是daemon。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>lsof -i | grep :http
-</span><span class='line'>chown -R daemon:daemon dokuwiki
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>在浏览器中输入<code>http://127.0.0.1/dokuwiki/install.php</code>可以看到安装向导页面，根据向导安装dokuwiki即可。</p>
-
-<h2>ubuntu有网络情况下安装dokuwiki</h2>
-
-<p>看完一大篇没有网络的安装后，再来看有网络的情况下安装是多么的简单。</p>
-
-<p>安装系统是Ubuntu 14.04 LTS，执行完下面的命令，dokuwiki就安装完成了。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo apt-get update
-</span><span class='line'>sudo apt-get install apache2
-</span><span class='line'>sudo apt-get install php5
-</span><span class='line'><span class="nb">cd</span> /var/www
-</span><span class='line'>sudo cp ~/Download/dokuwiki-xxx.tgz .
-</span><span class='line'>sudo tar -zxvf dokuwiki-xxxx.tgz
-</span><span class='line'>sudo mv dokuwiki-xxxx dokuwiki
-</span><span class='line'>sudo chown -R www-data:www-data dokuwiki
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
