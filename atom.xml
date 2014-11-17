@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-11-12T22:25:06+08:00</updated>
+  <updated>2014-11-17T16:17:52+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,472 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何在Spring4中配置Mybatis]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/11/15/spring4-and-mybatis/"/>
+    <updated>2014-11-15T21:09:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/11/15/spring4-and-mybatis</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-11/mybatis-spring.png"></p>
+
+<p><a href="http://spring.io/">Spring4</a>已经不支持Ibatis了，但Ibatis的升级版<a href="http://mybatis.github.io/mybatis-3/zh/index.html">Mybatis</a>封装了支持Spring4的组件<a href="http://mybatis.github.io/spring/zh/">mybatis-spring</a>，通过使用它们可以让你在Spring4中轻松地使用Mybatis。</p>
+
+<!--more-->
+
+
+<h2>gradle 设置</h2>
+
+<p>现在基本上新兴的java项目包括android都使用<a href="http://www.gradle.org/">gradle</a>来做构建工具，gradle相比<a href="http://ant.apache.org/">ant</a>来讲多了定义好的task，不需要每次都copy-paste相同的task到构建文件中，而相比<a href="http://maven.apache.org/">maven</a>来说gradle比较灵活，可以像ant那样写简单的命令来进行copy或者mv等操作，总的来讲，gradle是集ant和maven优点于一身的新时代的构建工具。</p>
+
+<p>要在工程中引入Mybatis的组件，需要现在gradle的构建文件中增加Mybatis的依赖包。</p>
+
+<figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">compile</span> <span class="s1">&#39;org.mybatis:mybatis:3.2.8&#39;</span>
+</span><span class='line'>    <span class="n">compile</span> <span class="s1">&#39;org.mybatis:mybatis-spring:1.2.2&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>在spring中配置Mybatis</h2>
+
+<p>引入依赖包之后，需要在spring的配置文件中进行Mybatis的配置。</p>
+
+<ul>
+<li>首先我们定义一个datasource，使用C3PO数据库连接池来进行管理。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;dataSource&quot;</span> <span class="na">class=</span><span class="s">&quot;com.mchange.v2.c3p0.ComboPooledDataSource &quot;</span> <span class="na">destroy-method=</span><span class="s">&quot;close&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;driverClass&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jdbcUrl&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://192.168.36.10:3306/pebms&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;acquireIncrement&quot;</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;initialPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;minPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxStatements&quot;</span> <span class="na">value=</span><span class="s">&quot;100&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;testConnectionOnCheckout&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>接着定义Mybatis的SessionFactory。
+
+<ul>
+<li>dataSource: 我们之前定义的数据源</li>
+<li>transactionFactory: 事务管理配置</li>
+<li>configLocation: Mybatis的具体文件地址</li>
+<li>mapperLocations: Mybatis的SQL映射文件</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;sqlSessionFactory&quot;</span> <span class="na">class=</span><span class="s">&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;dataSource&quot;</span> <span class="na">ref=</span><span class="s">&quot;dataSource&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;transactionFactory&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.apache.ibatis.transaction.managed.ManagedTransactionFactory&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;configLocation&quot;</span> <span class="na">value=</span><span class="s">&quot;classpath:sql-map-config.xml&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;mapperLocations&quot;</span> <span class="na">value=</span><span class="s">&quot;classpath:sql-mapping/farmer.xml&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>sql-map-config.xml简单示例如下，设置了缓存，延迟加载，超时时间等属性，更多的配置可以参照<a href="http://mybatis.github.io/mybatis-3/zh/configuration.html#setting">这里</a>。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>sql-map-config.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE configuration PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;settings&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;setting</span> <span class="na">name=</span><span class="s">&quot;cacheEnabled&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;setting</span> <span class="na">name=</span><span class="s">&quot;lazyLoadingEnabled&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;setting</span> <span class="na">name=</span><span class="s">&quot;multipleResultSetsEnabled&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;setting</span> <span class="na">name=</span><span class="s">&quot;useColumnLabel&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;setting</span> <span class="na">name=</span><span class="s">&quot;defaultExecutorType&quot;</span> <span class="na">value=</span><span class="s">&quot;REUSE&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;setting</span> <span class="na">name=</span><span class="s">&quot;defaultStatementTimeout&quot;</span> <span class="na">value=</span><span class="s">&quot;25000&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/settings&gt;</span>
+</span><span class='line'><span class="nt">&lt;/configuration&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>sql的映射文件简单示例如下。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>farmer.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot; &gt;</span>
+</span><span class='line'><span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">&quot;com.farmer.baton.repo.FarmerMapper&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;insert</span> <span class="na">id=</span><span class="s">&quot;add-new-farmer&quot;</span> <span class="na">parameterType=</span><span class="s">&quot;com.farmer.baton.model.Farmer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      insert into farmers(id, name, age) values (
+</span><span class='line'>        #{id},
+</span><span class='line'>        #{name},
+</span><span class='line'>        #{age}
+</span><span class='line'>      )
+</span><span class='line'>    <span class="nt">&lt;/insert&gt;</span>
+</span><span class='line'><span class="nt">&lt;/mapper&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>继续在spring.xml文件里进行Mybatis的配置，定义Mybatis的DAO(数据库访问对象)和事务控制，这里配置了DAO的包路径。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;basePackage&quot;</span> <span class="na">value=</span><span class="s">&quot;com.farmer.baton.repo&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sqlSessionFactoryBeanName&quot;</span> <span class="na">value=</span><span class="s">&quot;sqlSessionFactory&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;transactionManager&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;dataSource&quot;</span> <span class="na">ref=</span><span class="s">&quot;dataSource&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Mybatis responsitory编写</h2>
+
+<p>在前面的spring里面配置了DAO的包路径，我们下面要做的东西就比较就简单了。</p>
+
+<ul>
+<li>先在DAO包路径下定义一个DAO接口，这里不需要实现具体的内容，具体的sql在我们的映射文件里面体现。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>FarmerRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">farmer</span><span class="o">.</span><span class="na">baton</span><span class="o">.</span><span class="na">repo</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.farmer.baton.model.Farmer</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">FarmerRepository</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">List</span><span class="o">&lt;</span><span class="n">Farmer</span><span class="o">&gt;</span> <span class="nf">findAll</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在xml映射文件里面实现findAll方法，这里要注意方法的签名必须和映射文件的sql的id一致，包括方法名和id一致，方法参数类型和sql的parameterType一致，方法返回类型和sql的resultType或resultMap类型一致。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>farmer.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot; &gt;</span>
+</span><span class='line'><span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">&quot;com.farmer.baton.repo.FarmerRepository&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;resultMap</span> <span class="na">id=</span><span class="s">&quot;baseResultMap&quot;</span> <span class="na">type=</span><span class="s">&quot;com.farmer.baton.model.Farmer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;id</span> <span class="na">column=</span><span class="s">&quot;id&quot;</span> <span class="na">property=</span><span class="s">&quot;id&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&quot;name&quot;</span> <span class="na">property=</span><span class="s">&quot;name&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&quot;age&quot;</span> <span class="na">property=</span><span class="s">&quot;age&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/resultMap&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&quot;findAll&quot;</span> <span class="na">resultMap=</span><span class="s">&quot;baseResultMap&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        select id as id,
+</span><span class='line'>        name as name,
+</span><span class='line'>        age as age
+</span><span class='line'>        from farmers
+</span><span class='line'>    <span class="nt">&lt;/select&gt;</span>
+</span><span class='line'><span class="nt">&lt;/mapper&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>写好Repository和映射SQL就可以了，程序在调用Repository方法的时候就会自动执行到相关的SQL。</li>
+</ul>
+
+
+<h2>事务控制</h2>
+
+<ul>
+<li>Mybatis的事务控制使用Spring的事务配置即可，配置如下:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;beans</span> <span class="na">xmlns:tx=</span><span class="s">&quot;http://www.springframework.org/schema/tx&quot;</span>
+</span><span class='line'>        <span class="err">http://www.springframework.org/schema/tx</span> <span class="err">http://www.springframework.org/schema/tx/spring-tx-4.0.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    ...
+</span><span class='line'>    <span class="nt">&lt;tx:annotation-driven/&gt;</span>
+</span><span class='line'>    ...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>然后在调用Repository的方面前面加上Transactional标签，如下所示:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>FarmerService.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Service</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FarmerService</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Autowired</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">FarmerRepository</span> <span class="n">farmerRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Transactional</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">updateTwoFarmers</span><span class="o">(</span><span class="n">Farmer</span> <span class="n">farmer1</span><span class="o">,</span> <span class="n">Farmer</span> <span class="n">farmer2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">farmerRepository</span><span class="o">.</span><span class="na">updateZhangsan</span><span class="o">(</span><span class="n">farmer1</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">farmerRepository</span><span class="o">.</span><span class="na">updateWangwu</span><span class="o">(</span><span class="n">farmer2</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Mybatis语法</h2>
+
+<p>Mybatis的语法在功能上有了很大的改进，具体体现在SQL映射文件中。</p>
+
+<ul>
+<li>批量插入多条记录。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;insert</span> <span class="na">id=</span><span class="s">&quot;add-new-farmer&quot;</span> <span class="na">parameterType=</span><span class="s">&quot;com.farmer.baton.model.Farmer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      insert into farmers(id, name, age) values
+</span><span class='line'>      <span class="nt">&lt;foreach</span> <span class="na">collection=</span><span class="s">&quot;farmers&quot;</span> <span class="na">item=</span><span class="s">&quot;farmer&quot;</span> <span class="na">separator=</span><span class="s">&quot;,&quot;</span><span class="nt">&gt;</span> 
+</span><span class='line'>      (
+</span><span class='line'>        #{id},
+</span><span class='line'>        #{name},
+</span><span class='line'>        #{age}
+</span><span class='line'>      )
+</span><span class='line'>      <span class="nt">&lt;/foreach&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/insert&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>FarmerRepository </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kt">void</span> <span class="nf">addFarmers</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;farmers&quot;</span><span class="o">)</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Farmer</span><span class="o">&gt;</span> <span class="n">farmers</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>多参数SQL映射</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;resultMap</span> <span class="na">id=</span><span class="s">&quot;farmer&quot;</span> <span class="na">type=</span><span class="s">&quot;com.farmer.baton.model.Farmer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;id</span> <span class="na">column=</span><span class="s">&quot;id&quot;</span> <span class="na">property=</span><span class="s">&quot;id&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&quot;name&quot;</span> <span class="na">property=</span><span class="s">&quot;name&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&quot;age&quot;</span> <span class="na">property=</span><span class="s">&quot;age&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/resultMap&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&quot;selectFarmersByNameAndAge&quot;</span> <span class="na">parameterType=</span><span class="s">&quot;map&quot;</span> <span class="na">resultMap=</span><span class="s">&quot;farmer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      select id as id,
+</span><span class='line'>        name as name,
+</span><span class='line'>        age as age
+</span><span class='line'>        from farmers
+</span><span class='line'>        where name = #{name}
+</span><span class='line'>        and age = #{age}
+</span><span class='line'>    <span class="nt">&lt;/select&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>FarmerRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="n">List</span><span class="o">&lt;</span><span class="n">Farmer</span><span class="o">&gt;</span> <span class="nf">selectFarmersByNameAndAge</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;age&quot;</span><span class="o">)</span> <span class="kt">int</span> <span class="n">age</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>返回对象属性包含List</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;resultMap</span> <span class="na">id=</span><span class="s">&quot;farmer&quot;</span> <span class="na">type=</span><span class="s">&quot;com.farmer.baton.model.Farmer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;id</span> <span class="na">column=</span><span class="s">&quot;id&quot;</span> <span class="na">property=</span><span class="s">&quot;id&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&quot;name&quot;</span> <span class="na">property=</span><span class="s">&quot;name&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&quot;age&quot;</span> <span class="na">property=</span><span class="s">&quot;age&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;collection</span> <span class="na">property=</span><span class="s">&quot;farmland&quot;</span> <span class="na">ofType=</span><span class="s">&quot;com.farmer.baton.model.Farmland&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&quot;size&quot;</span> <span class="na">property=</span><span class="s">&quot;size&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/collection&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/resultMap&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&quot;selectFarmersAndFarmlands&quot;</span> <span class="na">resultMap=</span><span class="s">&quot;farmer&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      select id as id,
+</span><span class='line'>        name as name,
+</span><span class='line'>        age as age
+</span><span class='line'>        from farmers a
+</span><span class='line'>        left outer join farmerlands b on a.id = b.farmer_id
+</span><span class='line'>    <span class="nt">&lt;/select&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>FarmerRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="n">List</span><span class="o">&lt;</span><span class="n">Farmer</span><span class="o">&gt;</span> <span class="nf">selectFarmersAndFarmlands</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Farmer.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Farmland</span><span class="o">&gt;</span> <span class="n">farmlands</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>具体的Demo可以参考我的github工程<a href="https://github.com/zhaozhiming/spring4-mybatis">spring4-mybatis</a>。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用fullPage美化你的网站]]></title>
@@ -4738,133 +5204,6 @@ JPA有个好处就是操作数据库时不用写太多代码，不用像以前�
 <p>精益创业的常规工作是对比测试、持续部署和顾客测试，精益创业的技巧包括快速迭代/基于数据制定决策，以及早期顾客介入。</p>
 
 <p>自己写的读书笔记不咋的，这里看到了另外一篇关于《精益创业》的读书笔记，非常完整地概括了这本书的观点，是前JavaEye的创始人范凯写的，点击<a href="http://robbinfan.com/blog/27/lean-startup">这里</a>查看。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Red Hat系统安装Redis]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/05/07/redis-install-guide-in-redhat/"/>
-    <updated>2014-05-07T19:53:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/05/07/redis-install-guide-in-redhat</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-5/redis.jpg"></p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>环境</h2>
-
-<p>RHLinux-6.4-64-EN, 红帽6.4 64位，英文正式发布版</p>
-
-<h2>安装</h2>
-
-<p>安装很简单，先下载redis的压缩包，下载地址见<a href="http://redis.io/download">这里</a>，然后拷贝到你的linux机器，接着执行下面的命令。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>tar xzf redis-2.6.14.tar.gz
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14
-</span><span class='line'><span class="nv">$ </span>make
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>启动</h2>
-
-<p>编译完后增加了src目录，执行src下面的redis-server脚本即可启动redis服务。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-server
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>调试</h2>
-
-<p>执行src目录下的redis-cli脚本，这个是redis的客户端。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-cli
-</span><span class='line'>redis&gt; <span class="nb">set </span>foo bar
-</span><span class='line'>OK
-</span><span class='line'>redis&gt; get foo
-</span><span class='line'><span class="s2">&quot;bar&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>java调用</h2>
-
-<ol>
-<li>Redis比较出名的java客户端是jedis，先下载jedis的jar包，可以去maven库搜下jedis就可以下载到，源码是放在github上：<a href="https://github.com/xetorthio/jedis">https://github.com/xetorthio/jedis</a>。</li>
-<li>简单写个main方法就可以调用。</li>
-</ol>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Jedis</span> <span class="n">jedis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Jedis</span><span class="o">(</span><span class="s">&quot;10.20.8.39&quot;</span><span class="o">);</span> <span class="c1">//redis服务器的ip，端口默认6379</span>
-</span><span class='line'>        <span class="n">jedis</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;bar&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">jedis</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>后台进程</h2>
-
-<p>之前的启动方式不是后台进程方式的，终端关了服务也就停了，可以使用下面的命令将Redis作为后台进程启动，并添加到系统启动命名中。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14/utils
-</span><span class='line'><span class="nv">$.</span>/install_server
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>执行命令后，会提示你回答几个问题，可以一路回车过去，选择默认设置。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>Please <span class="k">select </span>the redis port <span class="k">for </span>this instance: <span class="o">[</span>6379<span class="o">]</span>
-</span><span class='line'>Selecting default: 6379
-</span><span class='line'>Please <span class="k">select </span>the redis config file name <span class="o">[</span>/etc/redis/6379.conf<span class="o">]</span>
-</span><span class='line'>Selected default - /etc/redis/6379.conf
-</span><span class='line'>Please <span class="k">select </span>the redis log file name <span class="o">[</span>/var/log/redis_6379.log<span class="o">]</span>
-</span><span class='line'>Selected default - /var/log/redis_6379.log
-</span><span class='line'>Please <span class="k">select </span>the data directory <span class="k">for </span>this instance <span class="o">[</span>/var/lib/redis/6379<span class="o">]</span>
-</span><span class='line'>Selected default - /var/lib/redis/6379
-</span><span class='line'>Please <span class="k">select </span>the redis executable path <span class="o">[</span>/usr/local/bin/redis-server<span class="o">]</span>
-</span><span class='line'>...
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>后续可以通过下面的方式启停服务。<br/>
-1. /etc/init.d/redis_6379 start &mdash;启动<br/>
-2. /etc/init.d/redis_6379 stop &mdash;服务<br/>
-当然也可在/usr/local/bin目录下使用redis-server来启动。</p>
-
-<p><strong>PS: 我在执行install_server脚本后，发现服务启动不起来，查看/etc/init.d/redis_6379这个文件发现里面的换行符号被替换成了<code>/n</code>符号，手动将这些符号替换成换行就可以了。</strong></p>
-
-<h2>更多资料</h2>
-
-<p>更多资料可以看这里：<a href="http://redis.io/">http://redis.io/</a></p>
 ]]></content>
   </entry>
   
