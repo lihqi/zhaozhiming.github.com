@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-11-17T16:17:52+08:00</updated>
+  <updated>2014-11-24T13:19:10+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Docker打造自己的开发环境]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/11/18/hello-docker/"/>
+    <updated>2014-11-18T21:45:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/11/18/hello-docker</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-11/docker.png"></p>
+
+<p>作为这个时代的程序员真的很幸福，每天不但有一些改变世界的产品出现，而且提高程序员开发效率的工具也是层出不穷。之前介绍过如何使用<a href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible/">Vagrant来创建Ceph环境</a>，使用Vagrant可以很方便的管理我们的虚拟机，同时来定制开发团队的开发环境，现在又出现了Docker，让我们有了一个更好的选择。</p>
+
+<!--more-->
+
+
+<h2><a href="https://www.docker.com/">Docker</a>介绍</h2>
+
+<p>之前有幸参加了OSChina在成都举办的源创会，听到了Docker中国社区创始人马全一老师介绍Docker，他们团队在去年就开始研究Docker，但不知道为什么Docker今年开始火了起来，原因可能是Docker今年搞了一次宣传会，IT界各种大佬公司都去捧场了，有Google，RedHat等，然后媒体争相报道，于是Docker就火了。</p>
+
+<p>Docker的介绍也是不断在变，以前官方的Docker的概括是这样的:</p>
+
+<blockquote><p>An open source project to pack, ship and run any application as a lightweight container.</p></blockquote>
+
+
+<p>现在是这样的:</p>
+
+<blockquote><p>An open platform for distributed applications for developers and sysadmins.</p></blockquote>
+
+
+<p>但不管怎样，Docker是一个很好的东西，可以让我们快速创建自己的开发环境，真正做到<code>Build once, Run anywhere</code>。</p>
+
+<h2>Docker命令介绍</h2>
+
+<p>如果有过Vagrant使用经验的话，Docker使用起来非常简单，无非就是把Vagrant的box换成image，把Vagrant的VM换成container就可以了。如果没有Vagrant使用经验也没有关系，试试Docker的<a href="https://www.docker.com/tryit/">TryIt</a>，里面有一个教程可以让你快速掌握Docker的一些基本命令。</p>
+
+<p>比较常用的Docker命令:</p>
+
+<ul>
+<li>docker version: 查看Docker版本。</li>
+<li>docker pull [image name]: 下载一个docker的镜像，类似git拉代码的命令，不过这个是拉docker镜像。</li>
+<li>docker images: 列出所有的镜像。</li>
+<li>docker run [image name] [command]: 运行一个镜像的某个命令，这样会产生一个container。</li>
+<li>docker ps: 列出container。</li>
+<li>docker start [container name]: 启动一个container。</li>
+<li>docker stop [container name]: 停止一个container。</li>
+<li>docker rm [container name]: 删除一个container。</li>
+<li>docker rmi [image name]: 删除一个image镜像。</li>
+</ul>
+
+
+<h2>Docker镜像</h2>
+
+<p>在Docker官网上可以看到已经有很多做好的镜像，比如Ubuntu，CentOS，MySql等，而且每天都有一些新的镜像不断在上传，因为上传一个镜像就像github上传代码一样简单。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-11/docker-images.png"></p>
+
+<p>但是Docker在下载镜像的时候会发现速度很慢，有时候甚至连不上，这时候需要翻墙(可以看看我之前的文章，<a href="http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1/">让路由飞越长城(一)</a>，<a href="http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2/">让路由飞越长城(二)</a>)，或者找一下国内的镜像(可以看下<a href="https://docker.cn/">这里</a>)，虽然国内的镜像没有Docker官网的那么全，但基本的镜像还是有的。</p>
+
+<h2>Docker &amp; Vagrant</h2>
+
+<p>在没有Docker之前，我使用Vagrant来创建自己的开发环境，Docker和Vagrant都有一个很好的特点，就是通过虚拟化环境来创建开发环境，这样的好处是不会影响本机的环境配置。</p>
+
+<p>试想一下，如果在你需要安装Mysql，Ruby，Apache等服务，在本机上就需要做各种配置，像修改环境变量等，遇到版本升级还需要删除本地配置，然后再更新，久而久之本地环境就会被&#8221;污染&#8221;了，这时候想安装其他服务可能就会报各种莫名其妙的错误。</p>
+
+<p>如果我们有虚拟化环境就不会存在这种问题了，在虚拟环境安装各种服务，不需要的话销毁环境重新创建一个即可，简单又方便。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-11/docker_vagrant_small.png"></p>
+
+<p>在Docker推出之后，网上就有各种比较Docker和Vagrant的文章，可以看看StackOverFlow上面的<a href="http://stackoverflow.com/questions/16647069/should-i-use-vagrant-or-docker-io-for-creating-an-isolated-environment">这篇文章</a>，连Docker的作者也来回答这个问题。</p>
+
+<p>其实Docker和Vagrant不一定是竞争的关系，也可以是相辅相成的关系，比如在本地安装Docker，还是需要修改一些本地的配置，以后遇到版本升级还是会遇到修改配置的问题，如果是下载一个Docker的Vagrant box(已经有人制作了一个，见<a href="https://github.com/mitchellh/boot2docker-vagrant-box">这里</a>)，再使用VM安装其他docker镜像就不会有这种问题了。</p>
+
+<p>在网上有人做过Docker的性能评估，分别对比了原生OS，OS安装Docker，OS系统安装虚拟机，虚拟机安装Docker这4种情况的性能情况，最后的结论是在虚拟机上运行Docker性能比较差，建议如果是生产环境还是使用原生的Docker比较好，性能比较文章请见<a href="http://blogs.vmware.com/performance/2014/10/docker-containers-performance-vmware-vsphere.html">这里</a>。</p>
+
+<h2>Steve Wozniak is not boring</h2>
+
+<p>在研究Docker的过程中，发现如果创建contrainer的时候不指定containrer名称的话，系统会自动帮你创建名称，而名称是随机生成的。名称随机有2部分组成，左半部分是形容词，右半部分是人名，是一些影响计算机发展的IT名人，在源码中可以看到这些名字的说明。</p>
+
+<p>有趣的是，当名字随机到<code>boring_wozniak</code>的时候，程序会跳过生成这个名字，而继续生成下个随机名字，旁边有段注释是<code>Steve Wozniak is not boring</code>，相当好玩。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2014-11/docker-humorous.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何在Spring4中配置Mybatis]]></title>
@@ -5126,84 +5207,6 @@ JPA有个好处就是操作数据库时不用写太多代码，不用像以前�
 
 
 <p>更多的资料可以参考这里：<a href="http://redis.io/topics/cluster-tutorial">http://redis.io/topics/cluster-tutorial</a>。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[读书笔记——沸腾十五年，看板方法，精益创业]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/05/09/read-book-note-2014-4/"/>
-    <updated>2014-05-09T06:43:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/05/09/read-book-note-2014-4</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-5/april_book.jpg"></p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>沸腾十五年</h2>
-
-<p><img class="right" src="http://zhaozhiming.github.io/images/post/2014-5/china-15-year.jpg"></p>
-
-<p>沸腾十五年这本书介绍了中国互联网1995～2010这15年间，中国互联网公司从无到有，从小到大，各种兴衰成败的故事。</p>
-
-<p>里面有一个比较好玩的段子，讲的是联众（大家应该都知道，就是以前做休闲游戏平台的，后来被腾讯无情超越）刚开始把游戏平台做出来的时候，用户非常少，经常找不到人可以开一桌麻将或者斗地主，用户等着等着不耐烦就走了。联众的几位创始开发看到这种情况急得不得了，本来上线的人就少，经过招呼亲朋好友卖广告什么的好不容易来了点人吧，还经常因为凑不到一桌游戏而让人给跑了。后来他们想了个办法，看到有上线的用户凑不到一桌开不了游戏的，就几个开发人员一起点进去陪用户玩，这样来把用户留住，甚至有的开发一人开了好几个账号同时陪用户玩游戏。靠着这种打不死的精神，后来联众就慢慢做大了。</p>
-
-<p>看完书会让人热血沸腾，恨不得马上投身互联网浪潮，但仔细一想书中介绍的都是成功的互联网企业，在这些光彩夺目的互联网公司的光芒照耀下，让人看不到那些同期出生但又失败的互联网公司，这些公司的数量应该是成功者的N倍。我们要时刻充满激情来对待工作和生活，但在这个浮躁的社会也需要时刻保持一颗冷静的心。</p>
-
-<h2>看板方法</h2>
-
-<p><img class="right" src="http://zhaozhiming.github.io/images/post/2014-5/kanban.jpg"></p>
-
-<p>有幸参加了David Anderson关于看板方法的培训，回来后把看板方法的书认真研读了一遍，对其中的观点很是赞同。</p>
-
-<h3>缩短范围</h3>
-
-<p><code>在项目过程中需要舍弃一些东西进行权衡时，传统的项目经理会选择延期交付、增加资源投入、缩短范围或三者不同程度兼而有之;敏捷项目的明确共识是缩短范围，保障交付时间。</code><br/>
-在有些东西要权衡时，为什么敏捷项目只选择缩短范围呢？<br/>
-* 首先看如果选择延期交付会造成什么后果。由于你无法兑现之前的交付承诺，导致了与业务之间的不信任关系，业务无法相信你下次是否还能按时完成交付。<br/>
-* 再看增加资源投入。在软件开发中，增加资源投入就意味着加人，但在《人月神话》里面已经说过了，<code>在一个已经延迟的项目里面增加人手，只会导致这个项目更加延迟</code>。<br/>
-* 最后是缩短范围。缩小范围不是将业务的需求全部去掉，而是保留其中业务认为最主要的一部分，缩减业务认为优先级不是特别高的一部分，这样也可以让业务对需求有更清晰的认识。</p>
-
-<p>项目的三要素：时间、金钱和质量，我觉得是三者是一个能量守恒的关系，如果提高其中的两项，那另外一项是要降低的，不可能三者同时提高。业务经常要求功能要多（金钱），上线时间要早（时间），传统项目迫于业务的压力，经常会选择降低质量（质量）来达到业务的前面两个要求，而敏捷项目首先会保持质量这一高标准，然后在保证按时交付的前提下，和业务PK交付的需求。</p>
-
-<h3>降低变异性</h3>
-
-<p>变异性是导致任务堆积，项目不能按时交付等的风险因素。降低变异性有如下好处：
-* 降低变异性可以减少WIP，使得平均前置时间下降。
-* 降低变异性能够减少对富余时间的需要（富余时间我理解就是预估工作量的buffer）。
-* 降低变异性有利于实现资源平衡，潜在地降低对人数的需求。
-什么地方可以体现变异性？<br/>
-比如手工测试就存在变异性，手工测试会因为某些人为因素而认为测试是失败的，但实际上测试是成功的，结果就造成了开发过程中的浪费，乃至阻碍。可以通过自动化测试消除手工测试的变异性，自动化测试稳定而且准确。<br/>
-还有比如在编写story的时候，如果story使用不同的方式来描述也会存在变异性，会让开发需要经常切换不同的思维或者角度去理解需求，出错率较高。可以通过编写一套团队认为合适的story模板来消除这种变异性。</p>
-
-<h3>其他</h3>
-
-<ul>
-<li>敏捷开发中有很多对业务没有实际价值的成本，有这么几种：事务成本（搭建环境），协调成本（各种会议），破坏负载（软件缺陷）。敏捷中的会议是协调成本，以精益的角度来将要消除这种浪费。</li>
-<li>虽然看板中强调前置时间少，交付速率高，但也不能以牺牲可预测性来换取这些指标。可预测在敏捷中很关键，可预测的交付会与用户建立信任关系，牺牲可预测性来提高短期的前置时间和交付速率是不可取的。</li>
-</ul>
-
-
-<h2>精益创业</h2>
-
-<p><img class="right" src="http://zhaozhiming.github.io/images/post/2014-5/lean.jpg"></p>
-
-<h3>MVP(最小化可行产品)</h3>
-
-<p>MVP是指一个最小化的可以获得用户反馈的产品，可以帮助创业者尽早开启学习认知的历程，它不一定是实实在在的产品，它是用最快的方式，以最少的精力完成&#8217;开发-测量-认知&#8217;的反馈循环。比如Dropbox在他们还未开发出产品之前，把一段幽默风趣的产品介绍视频作为他们的MVP放到网上，从而吸引了大量公测用户，为他们指明产品的正确方向。</p>
-
-<h2>低质量</h2>
-
-<p>质量低下的产品可能会造成重新返工、交付延期、用户的流失，每个做产品的人，包括设计、开发、测试，每个人都会以高质量为标准，在敏捷开发中更是要求产品质量必须是高标准，但坚持高质量的前提是我们已经知道产品的哪些功能是用户需要的，如果在用户需要的功能上偷工减料势必会造成用户流失。<br/>
-但在创业的时候，很多东西都是未知的，用户不知道自己想要什么，创业者可能连哪些人是用户都不知道，在不知道产品有哪些功能的情况下，坚持产品质量的高标准就没有什么必要了。<br/>
-创业阶段更需要是快速推出一个MVP产品，获得用户反馈，即使质量低下也未必不受用户欢迎。</p>
-
-<h3>其他</h3>
-
-<p>精益创业的常规工作是对比测试、持续部署和顾客测试，精益创业的技巧包括快速迭代/基于数据制定决策，以及早期顾客介入。</p>
-
-<p>自己写的读书笔记不咋的，这里看到了另外一篇关于《精益创业》的读书笔记，非常完整地概括了这本书的观点，是前JavaEye的创始人范凯写的，点击<a href="http://robbinfan.com/blog/27/lean-startup">这里</a>查看。</p>
 ]]></content>
   </entry>
   

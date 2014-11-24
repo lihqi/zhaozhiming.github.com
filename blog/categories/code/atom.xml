@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-11-17T16:17:52+08:00</updated>
+  <updated>2014-11-24T13:19:10+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,85 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Docker打造自己的开发环境]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/11/18/hello-docker/"/>
+    <updated>2014-11-18T21:45:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/11/18/hello-docker</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-11/docker.png"></p>
+
+<p>作为这个时代的程序员真的很幸福，每天不但有一些改变世界的产品出现，而且提高程序员开发效率的工具也是层出不穷。之前介绍过如何使用<a href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible/">Vagrant来创建Ceph环境</a>，使用Vagrant可以很方便的管理我们的虚拟机，同时来定制开发团队的开发环境，现在又出现了Docker，让我们有了一个更好的选择。</p>
+
+<!--more-->
+
+
+<h2><a href="https://www.docker.com/">Docker</a>介绍</h2>
+
+<p>之前有幸参加了OSChina在成都举办的源创会，听到了Docker中国社区创始人马全一老师介绍Docker，他们团队在去年就开始研究Docker，但不知道为什么Docker今年开始火了起来，原因可能是Docker今年搞了一次宣传会，IT界各种大佬公司都去捧场了，有Google，RedHat等，然后媒体争相报道，于是Docker就火了。</p>
+
+<p>Docker的介绍也是不断在变，以前官方的Docker的概括是这样的:</p>
+
+<p><blockquote><p>An open source project to pack, ship and run any application as a lightweight container.</p></blockquote></p>
+
+<p>现在是这样的:</p>
+
+<p><blockquote><p>An open platform for distributed applications for developers and sysadmins.</p></blockquote></p>
+
+<p>但不管怎样，Docker是一个很好的东西，可以让我们快速创建自己的开发环境，真正做到<code>Build once, Run anywhere</code>。</p>
+
+<h2>Docker命令介绍</h2>
+
+<p>如果有过Vagrant使用经验的话，Docker使用起来非常简单，无非就是把Vagrant的box换成image，把Vagrant的VM换成container就可以了。如果没有Vagrant使用经验也没有关系，试试Docker的<a href="https://www.docker.com/tryit/">TryIt</a>，里面有一个教程可以让你快速掌握Docker的一些基本命令。</p>
+
+<p>比较常用的Docker命令:</p>
+
+<ul>
+<li>docker version: 查看Docker版本。</li>
+<li>docker pull [image name]: 下载一个docker的镜像，类似git拉代码的命令，不过这个是拉docker镜像。</li>
+<li>docker images: 列出所有的镜像。</li>
+<li>docker run [image name] [command]: 运行一个镜像的某个命令，这样会产生一个container。</li>
+<li>docker ps: 列出container。</li>
+<li>docker start [container name]: 启动一个container。</li>
+<li>docker stop [container name]: 停止一个container。</li>
+<li>docker rm [container name]: 删除一个container。</li>
+<li>docker rmi [image name]: 删除一个image镜像。</li>
+</ul>
+
+
+<h2>Docker镜像</h2>
+
+<p>在Docker官网上可以看到已经有很多做好的镜像，比如Ubuntu，CentOS，MySql等，而且每天都有一些新的镜像不断在上传，因为上传一个镜像就像github上传代码一样简单。</p>
+
+<p><img src="/images/post/2014-11/docker-images.png"></p>
+
+<p>但是Docker在下载镜像的时候会发现速度很慢，有时候甚至连不上，这时候需要翻墙(可以看看我之前的文章，<a href="http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1/">让路由飞越长城(一)</a>，<a href="http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2/">让路由飞越长城(二)</a>)，或者找一下国内的镜像(可以看下<a href="https://docker.cn/">这里</a>)，虽然国内的镜像没有Docker官网的那么全，但基本的镜像还是有的。</p>
+
+<h2>Docker &amp; Vagrant</h2>
+
+<p>在没有Docker之前，我使用Vagrant来创建自己的开发环境，Docker和Vagrant都有一个很好的特点，就是通过虚拟化环境来创建开发环境，这样的好处是不会影响本机的环境配置。</p>
+
+<p>试想一下，如果在你需要安装Mysql，Ruby，Apache等服务，在本机上就需要做各种配置，像修改环境变量等，遇到版本升级还需要删除本地配置，然后再更新，久而久之本地环境就会被"污染"了，这时候想安装其他服务可能就会报各种莫名其妙的错误。</p>
+
+<p>如果我们有虚拟化环境就不会存在这种问题了，在虚拟环境安装各种服务，不需要的话销毁环境重新创建一个即可，简单又方便。</p>
+
+<p><img src="/images/post/2014-11/docker_vagrant_small.png"></p>
+
+<p>在Docker推出之后，网上就有各种比较Docker和Vagrant的文章，可以看看StackOverFlow上面的<a href="http://stackoverflow.com/questions/16647069/should-i-use-vagrant-or-docker-io-for-creating-an-isolated-environment">这篇文章</a>，连Docker的作者也来回答这个问题。</p>
+
+<p>其实Docker和Vagrant不一定是竞争的关系，也可以是相辅相成的关系，比如在本地安装Docker，还是需要修改一些本地的配置，以后遇到版本升级还是会遇到修改配置的问题，如果是下载一个Docker的Vagrant box(已经有人制作了一个，见<a href="https://github.com/mitchellh/boot2docker-vagrant-box">这里</a>)，再使用VM安装其他docker镜像就不会有这种问题了。</p>
+
+<p>在网上有人做过Docker的性能评估，分别对比了原生OS，OS安装Docker，OS系统安装虚拟机，虚拟机安装Docker这4种情况的性能情况，最后的结论是在虚拟机上运行Docker性能比较差，建议如果是生产环境还是使用原生的Docker比较好，性能比较文章请见<a href="http://blogs.vmware.com/performance/2014/10/docker-containers-performance-vmware-vsphere.html">这里</a>。</p>
+
+<h2>Steve Wozniak is not boring</h2>
+
+<p>在研究Docker的过程中，发现如果创建contrainer的时候不指定containrer名称的话，系统会自动帮你创建名称，而名称是随机生成的。名称随机有2部分组成，左半部分是形容词，右半部分是人名，是一些影响计算机发展的IT名人，在源码中可以看到这些名字的说明。</p>
+
+<p>有趣的是，当名字随机到<code>boring_wozniak</code>的时候，程序会跳过生成这个名字，而继续生成下个随机名字，旁边有段注释是<code>Steve Wozniak is not boring</code>，相当好玩。</p>
+
+<p><img src="/images/post/2014-11/docker-humorous.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何在Spring4中配置Mybatis]]></title>
@@ -1235,7 +1314,7 @@
 </span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Initializing web interface&amp;hellip;
 </span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> You will now be prompted <span class="k">for </span>login details <span class="k">for </span>the administrative user account. This is the account you will use to log into the web interface once setup is complete.
 </span><span class='line'>Username <span class="o">(</span>leave blank to use &amp;lsquo;root&amp;rsquo;<span class="o">)</span>:
-</span><span class='line'>Email address: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;&amp;#109;&amp;#x61;&amp;#x69;&amp;#108;&amp;#116;&amp;#x6f;&amp;#x3a;&amp;#107;&amp;#97;&amp;#x72;&amp;#97;&amp;#110;&amp;#x2e;&amp;#115;&amp;#105;&amp;#x6e;&amp;#103;&amp;#x68;&amp;#x40;&amp;#99;&amp;#x73;&amp;#x63;&amp;#x2e;&amp;#102;&amp;#x69;&quot;</span>&gt;&amp;#107;&amp;#97;&amp;#x72;&amp;#97;&amp;#110;&amp;#46;&amp;#115;&amp;#x69;&amp;#x6e;&amp;#103;&amp;#x68;&amp;#x40;&amp;#99;&amp;#x73;&amp;#x63;&amp;#x2e;&amp;#x66;&amp;#x69;&lt;/a&gt;
+</span><span class='line'>Email address: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#116;&amp;#111;&amp;#x3a;&amp;#x6b;&amp;#x61;&amp;#114;&amp;#x61;&amp;#110;&amp;#x2e;&amp;#115;&amp;#105;&amp;#x6e;&amp;#103;&amp;#x68;&amp;#64;&amp;#99;&amp;#115;&amp;#x63;&amp;#x2e;&amp;#102;&amp;#x69;&quot;</span>&gt;&amp;#107;&amp;#x61;&amp;#x72;&amp;#97;&amp;#x6e;&amp;#x2e;&amp;#x73;&amp;#x69;&amp;#110;&amp;#103;&amp;#x68;&amp;#64;&amp;#x63;&amp;#x73;&amp;#99;&amp;#x2e;&amp;#102;&amp;#105;&lt;/a&gt;
 </span><span class='line'>Password:
 </span><span class='line'>Password <span class="o">(</span>again<span class="o">)</span>:
 </span><span class='line'>Superuser created successfully.
@@ -1729,342 +1808,6 @@
 <h2>总结</h2>
 
 <p>IDEA和Eclipse的定位本身是不一样的，Eclipse将其定位为一个平台，可以通过安装各种插件来编写各种语言的代码，包括C++等，而IDEA将自己定位为<em>最智能的Java集成开发编辑器</em>，如果你不是开发Java代码的，建议不要选用IDEA。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[让你的安卓开发更容易(三)——Picasso]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/10/07/make-your-android-dev-life-easy-part-3/"/>
-    <updated>2014-10-07T23:48:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/10/07/make-your-android-dev-life-easy-part-3</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-10/picasso.png"></p>
-
-<p><a href="http://square.github.io/picasso/">Picasso</a>是Android下一个强大的图片下载和缓存类库，代码借口简洁易懂，功能强大，Picasso有如下特性：</p>
-
-<ul>
-<li>处理Adapter中的ImageView回收和取消已经回收ImageView的下载进程</li>
-<li>使用最少的内存完成复杂的图片转换，比如把下载的图片转换为圆角等</li>
-<li>自动添加磁盘和内存缓存</li>
-</ul>
-
-
-<p>下面通过介绍Android原生的图片下载缓存功能和Picasso进行对比，看看使用Picasso有哪些好的地方。</p>
-
-<!--more-->
-
-
-<h2>Android原生的图片下载功能</h2>
-
-<p>在没有使用Picasso的情况下，如果想做到图片下载以及缓存，需要编写大量代码。</p>
-
-<h4>图片下载</h4>
-
-<p>Android的图片下载是不能在主线程里面进行的，需要新创建一个线程进行操作。</p>
-
-<ul>
-<li>首先要继承AsyncTask类，Android的一个异步操作类。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>DownloadTask.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">android.graphics.BitmapFactory</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">android.os.AsyncTask</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">android.util.Log</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.ImageView</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">com.github.zzm.bushu.app.model.LogTag</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DownloadTask</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">Void</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="n">File</span> <span class="n">imageFile</span><span class="o">;</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">ImageView</span> <span class="n">imageView</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="nf">DownloadTask</span><span class="o">(</span><span class="n">File</span> <span class="n">imageFile</span><span class="o">,</span> <span class="n">ImageView</span> <span class="n">imageView</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">imageFile</span> <span class="o">=</span> <span class="n">imageFile</span><span class="o">;</span>
-</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">imageView</span> <span class="o">=</span> <span class="n">imageView</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>实现<code>doInBackground</code>方法。</li>
-</ul>
-
-
-<p>该方法接受一个可变String参数，表示可以进行多个url下载，但这url参数是从哪里传进来的呢？</p>
-
-<p>我们后面在使用这个<code>DownloadTask</code>类时，会调用其<code>exexute(String... url)</code>的方法，url参数就是从这里传进去的。</p>
-
-<p>下面的代码中通过<code>new URL(url).openStream()</code>进行图片下载，然后新建一个文件输出流，将图片写到输出文件中。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>DownloadTask.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Override</span>
-</span><span class='line'><span class="kd">protected</span> <span class="n">String</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">urls</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">storageImage</span><span class="o">(</span><span class="n">urls</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">storageImage</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">FileOutputStream</span> <span class="n">outputStream</span><span class="o">;</span>
-</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">outputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">imageFile</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">outputStream</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">getImageBytes</span><span class="o">(</span><span class="n">url</span><span class="o">));</span>
-</span><span class='line'>        <span class="n">outputStream</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">LogTag</span><span class="o">.</span><span class="na">DownloadTask</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="s">&quot;storage image error:&quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">getImageBytes</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">InputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">openStream</span><span class="o">());</span>
-</span><span class='line'>    <span class="n">ByteArrayOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">();</span>
-</span><span class='line'>    <span class="kt">byte</span><span class="o">[]</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">];</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">n</span><span class="o">;</span>
-</span><span class='line'>    <span class="k">while</span> <span class="o">(-</span><span class="mi">1</span> <span class="o">!=</span> <span class="o">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">buf</span><span class="o">)))</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>    <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>实现<code>onPostExecute</code>方法，这个方法是在图片下载完成后调用的，我们可以将下载的图片指定显示到某个imageView中。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>DownloadTask.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Override</span>
-</span><span class='line'><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">String</span> <span class="n">ignore</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">imageView</span><span class="o">.</span><span class="na">setImageBitmap</span><span class="o">(</span><span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeFile</span><span class="o">(</span><span class="n">imageFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">()));</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h4>图片缓存</h4>
-
-<p>我们要自己实现图片缓存的功能也比较简单，代码如下。(但如果已经有Picasso这种强大的类库，我们又何必自己造轮子呢？)</p>
-
-<ul>
-<li>要找到下载的图片文件，我们要自己定义文件的命名规则和存放路径，这样才能方便我们找到文件。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">File</span> <span class="n">imageFile</span> <span class="o">=</span> <span class="n">getImageFile</span><span class="o">(</span><span class="n">bookName</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">private</span> <span class="n">File</span> <span class="nf">getImageFile</span><span class="o">(</span><span class="n">String</span> <span class="n">bookName</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">File</span> <span class="n">imageFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">getFilesDir</span><span class="o">(),</span> <span class="n">bookName</span> <span class="o">+</span> <span class="s">&quot;.png&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">LogTag</span><span class="o">.</span><span class="na">BooksAdapter</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="s">&quot;file path: &quot;</span> <span class="o">+</span> <span class="n">imageFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">());</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">imageFile</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>判断文件是否存在，如果不存在则进行首次下载，如果已经存在了则直接从磁盘上面加载文件。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="o">(</span><span class="n">imageFileEmpty</span><span class="o">(</span><span class="n">imageFile</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">downloadImage</span><span class="o">(</span><span class="n">bookName</span><span class="o">,</span> <span class="n">imageView</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">imageView</span><span class="o">.</span><span class="na">setImageBitmap</span><span class="o">(</span><span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeFile</span><span class="o">(</span><span class="n">imageFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">()));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>判断是否有网络，有的话进行图片下载，调用刚才介绍的<code>DownloadTask</code>类，然后调用<code>execute</code>的方法即可，这样后台就会异步帮你将图片下载下来，然后进行显示。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="kt">void</span> <span class="n">downloadImage</span><span class="o">(</span><span class="n">String</span> <span class="n">bookName</span><span class="o">,</span> <span class="n">ImageView</span> <span class="n">imageView</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">networkOk</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">url</span> <span class="o">=</span> <span class="n">format</span><span class="o">(</span><span class="s">&quot;%s%s/%s.png&quot;</span><span class="o">,</span> <span class="n">STORAGE_BASE_URL</span><span class="o">,</span> <span class="n">getScreenDensity</span><span class="o">(),</span> <span class="n">bookName</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">LogTag</span><span class="o">.</span><span class="na">BooksAdapter</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="n">format</span><span class="o">(</span><span class="s">&quot;url: %s&quot;</span><span class="o">,</span> <span class="n">url</span><span class="o">));</span>
-</span><span class='line'>        <span class="k">new</span> <span class="nf">DownloadTask</span><span class="o">(</span><span class="n">getImageFile</span><span class="o">(</span><span class="n">bookName</span><span class="o">),</span> <span class="n">imageView</span><span class="o">).</span><span class="na">execute</span><span class="o">(</span><span class="n">url</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">networkOk</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">ConnectivityManager</span> <span class="n">connMgr</span> <span class="o">=</span> <span class="o">(</span><span class="n">ConnectivityManager</span><span class="o">)</span> <span class="n">context</span><span class="o">.</span><span class="na">getSystemService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">CONNECTIVITY_SERVICE</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">NetworkInfo</span> <span class="n">networkInfo</span> <span class="o">=</span> <span class="n">connMgr</span><span class="o">.</span><span class="na">getActiveNetworkInfo</span><span class="o">();</span>
-</span><span class='line'>    <span class="k">return</span> <span class="o">(</span><span class="n">networkInfo</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="n">networkInfo</span><span class="o">.</span><span class="na">isConnected</span><span class="o">());</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>Picasso的图片下载功能</h2>
-
-<p>看完Android的图片下载功能，发现我们写了不少代码，现在来看看Picasso是怎么实现的。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Picasso</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">getContext</span><span class="o">()).</span><span class="na">load</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">into</span><span class="o">((</span><span class="n">ImageView</span><span class="o">)</span> <span class="n">viewImage</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>一句话就搞定了，就是这么简单，是不是觉得生活美好了很多。</p>
-
-<p>Picasso会在应用的cache目录下新建一个<code>picasso-cache</code>文件夹，里面就是picasso的图片缓存文件。</p>
-
-<p><img src="/images/post/2014-10/picasso-cache.png"></p>
-
-<h2>相关链接</h2>
-
-<ul>
-<li><a href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-2/">让你的安卓开发更容易(二)——Genymotion</a></li>
-<li><a href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1/">让你的安卓开发更容易(一)——Intellij IDEA</a></li>
-</ul>
-
 ]]></content>
   </entry>
   

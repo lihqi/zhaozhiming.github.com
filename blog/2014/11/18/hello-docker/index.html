@@ -1,0 +1,255 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>使用Docker打造自己的开发环境 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="使用Docker打造自己的开发环境">
+	<meta name="keywords" content="docker">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='/stylesheets/slackey.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/fjalla_one.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/amethysta.css' rel='stylesheet' type='text/css'>
+	<script src="http://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">使用Docker打造自己的开发环境</h2>
+	<div class="entry-content"><p><img src="/images/post/2014-11/docker.png"></p>
+
+<p>作为这个时代的程序员真的很幸福，每天不但有一些改变世界的产品出现，而且提高程序员开发效率的工具也是层出不穷。之前介绍过如何使用<a href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible/">Vagrant来创建Ceph环境</a>，使用Vagrant可以很方便的管理我们的虚拟机，同时来定制开发团队的开发环境，现在又出现了Docker，让我们有了一个更好的选择。</p>
+
+<!--more-->
+
+
+<h2><a href="https://www.docker.com/">Docker</a>介绍</h2>
+
+<p>之前有幸参加了OSChina在成都举办的源创会，听到了Docker中国社区创始人马全一老师介绍Docker，他们团队在去年就开始研究Docker，但不知道为什么Docker今年开始火了起来，原因可能是Docker今年搞了一次宣传会，IT界各种大佬公司都去捧场了，有Google，RedHat等，然后媒体争相报道，于是Docker就火了。</p>
+
+<p>Docker的介绍也是不断在变，以前官方的Docker的概括是这样的:</p>
+
+<blockquote><p>An open source project to pack, ship and run any application as a lightweight container.</p></blockquote>
+
+
+<p>现在是这样的:</p>
+
+<blockquote><p>An open platform for distributed applications for developers and sysadmins.</p></blockquote>
+
+
+<p>但不管怎样，Docker是一个很好的东西，可以让我们快速创建自己的开发环境，真正做到<code>Build once, Run anywhere</code>。</p>
+
+<h2>Docker命令介绍</h2>
+
+<p>如果有过Vagrant使用经验的话，Docker使用起来非常简单，无非就是把Vagrant的box换成image，把Vagrant的VM换成container就可以了。如果没有Vagrant使用经验也没有关系，试试Docker的<a href="https://www.docker.com/tryit/">TryIt</a>，里面有一个教程可以让你快速掌握Docker的一些基本命令。</p>
+
+<p>比较常用的Docker命令:</p>
+
+<ul>
+<li>docker version: 查看Docker版本。</li>
+<li>docker pull [image name]: 下载一个docker的镜像，类似git拉代码的命令，不过这个是拉docker镜像。</li>
+<li>docker images: 列出所有的镜像。</li>
+<li>docker run [image name] [command]: 运行一个镜像的某个命令，这样会产生一个container。</li>
+<li>docker ps: 列出container。</li>
+<li>docker start [container name]: 启动一个container。</li>
+<li>docker stop [container name]: 停止一个container。</li>
+<li>docker rm [container name]: 删除一个container。</li>
+<li>docker rmi [image name]: 删除一个image镜像。</li>
+</ul>
+
+
+<h2>Docker镜像</h2>
+
+<p>在Docker官网上可以看到已经有很多做好的镜像，比如Ubuntu，CentOS，MySql等，而且每天都有一些新的镜像不断在上传，因为上传一个镜像就像github上传代码一样简单。</p>
+
+<p><img src="/images/post/2014-11/docker-images.png"></p>
+
+<p>但是Docker在下载镜像的时候会发现速度很慢，有时候甚至连不上，这时候需要翻墙(可以看看我之前的文章，<a href="http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1/">让路由飞越长城(一)</a>，<a href="http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2/">让路由飞越长城(二)</a>)，或者找一下国内的镜像(可以看下<a href="https://docker.cn/">这里</a>)，虽然国内的镜像没有Docker官网的那么全，但基本的镜像还是有的。</p>
+
+<h2>Docker &amp; Vagrant</h2>
+
+<p>在没有Docker之前，我使用Vagrant来创建自己的开发环境，Docker和Vagrant都有一个很好的特点，就是通过虚拟化环境来创建开发环境，这样的好处是不会影响本机的环境配置。</p>
+
+<p>试想一下，如果在你需要安装Mysql，Ruby，Apache等服务，在本机上就需要做各种配置，像修改环境变量等，遇到版本升级还需要删除本地配置，然后再更新，久而久之本地环境就会被&#8221;污染&#8221;了，这时候想安装其他服务可能就会报各种莫名其妙的错误。</p>
+
+<p>如果我们有虚拟化环境就不会存在这种问题了，在虚拟环境安装各种服务，不需要的话销毁环境重新创建一个即可，简单又方便。</p>
+
+<p><img src="/images/post/2014-11/docker_vagrant_small.png"></p>
+
+<p>在Docker推出之后，网上就有各种比较Docker和Vagrant的文章，可以看看StackOverFlow上面的<a href="http://stackoverflow.com/questions/16647069/should-i-use-vagrant-or-docker-io-for-creating-an-isolated-environment">这篇文章</a>，连Docker的作者也来回答这个问题。</p>
+
+<p>其实Docker和Vagrant不一定是竞争的关系，也可以是相辅相成的关系，比如在本地安装Docker，还是需要修改一些本地的配置，以后遇到版本升级还是会遇到修改配置的问题，如果是下载一个Docker的Vagrant box(已经有人制作了一个，见<a href="https://github.com/mitchellh/boot2docker-vagrant-box">这里</a>)，再使用VM安装其他docker镜像就不会有这种问题了。</p>
+
+<p>在网上有人做过Docker的性能评估，分别对比了原生OS，OS安装Docker，OS系统安装虚拟机，虚拟机安装Docker这4种情况的性能情况，最后的结论是在虚拟机上运行Docker性能比较差，建议如果是生产环境还是使用原生的Docker比较好，性能比较文章请见<a href="http://blogs.vmware.com/performance/2014/10/docker-containers-performance-vmware-vsphere.html">这里</a>。</p>
+
+<h2>Steve Wozniak is not boring</h2>
+
+<p>在研究Docker的过程中，发现如果创建contrainer的时候不指定containrer名称的话，系统会自动帮你创建名称，而名称是随机生成的。名称随机有2部分组成，左半部分是形容词，右半部分是人名，是一些影响计算机发展的IT名人，在源码中可以看到这些名字的说明。</p>
+
+<p>有趣的是，当名字随机到<code>boring_wozniak</code>的时候，程序会跳过生成这个名字，而继续生成下个随机名字，旁边有段注释是<code>Steve Wozniak is not boring</code>，相当好玩。</p>
+
+<p><img src="/images/post/2014-11/docker-humorous.png"></p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2014
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>
