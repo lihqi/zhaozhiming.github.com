@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-11-24T13:19:10+08:00</updated>
+  <updated>2014-11-29T10:53:12+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,197 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何用iso文件创建Vagrant的Box]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/11/29/use-veewee-to-create-vagrant-box/"/>
+    <updated>2014-11-29T08:06:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/11/29/use-veewee-to-create-vagrant-box</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-11/iso_to_box.jpg"></p>
+
+<p>虽然<a href="https://www.vagrantup.com/">Vagrant</a>官网上已经有了很多OS的box，比如Ubuntu，CentOS，Debian等，但像RHEL这种不免费的OS，Vagrant上面就没有它的box，如果需要用到RHEL的box，我们就需要自己来制作。下面讲下从iso文件到box文件的一个制作过程。</p>
+
+<!--more-->
+
+
+<h2>准备</h2>
+
+<p>在制作box文件之前，我们需要安装下面的软件:</p>
+
+<ul>
+<li><a href="https://www.vagrantup.com/">Vagrant</a>: 这个没必要说了，我们就是要制作它的box文件。</li>
+<li><a href="https://www.virtualbox.org/">VirtualBox</a>: 跟VMWare一样的虚拟机软件，不过它是免费的。</li>
+<li><a href="https://github.com/jedi4ever/veewee">Veewee</a>: 这是一款可以轻松创建Vagrant的box文件的工具，它还可以创建KVM和其他虚拟机镜像。</li>
+</ul>
+
+
+<p>这些软件的安装我就不介绍了，请到软件网站自行了解。</p>
+
+<h2>使用Veewee创建Box</h2>
+
+<ul>
+<li>首先查找Veewee下面有哪些VirtualBox的模板，下面的vbox表示VirtualBox，当然你也可以换成其他的虚拟机工具。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>veewee vbox templates
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>命令会列出veewee可以用的模板，如果我们要制作RHEL6.5的Box，可以找CentOS6.5的模板来制作。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>veewee vbox define rhel65-64bit <span class="s1">&#39;CentOS-6.5-x86_64-netboot&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>命令执行完后，会在当前目录下产生一个<code>definitions</code>的文件夹，这时我们需要修改下面的一些文件。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vi definitions/rhel65-64bit/definition.rb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>definition.rb</code>是Veewee的创建脚本，我们将其中的<code>iso-file</code>的值修改为iso的文件名，比如<code>rhel-server-6.5-x86_64-dvd.iso</code>，其他iso开头的选项可以不修改或删除。</p>
+
+<figure class='code'><figcaption><span>definition.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Veewee</span><span class="p">:</span><span class="ss">:Session</span><span class="o">.</span><span class="n">declare</span><span class="p">({</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="ss">:iso_file</span> <span class="o">=&gt;</span> <span class="s2">&quot;rhel-server-6.5-x86_64-dvd.iso&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>然后下载rhel6.5的iso文件，上网查一下资源还是比较多的，这里就不贴iso文件的链接了，怕链接以后会失效，请自行搜索。</li>
+<li>在当前目录下创建iso的子文件夹，将下载的iso文件放到这个文件夹中。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mkdir iso
+</span><span class='line'><span class="nv">$ </span>mv /your/iso/path/rhel-server-6.5-x86_64-dvd.iso iso
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>执行命令创建Box，然后去喝杯咖啡，等一会儿回来看看RHEL6.5的VM应该就创建好了。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>veewee vbox build <span class="s1">&#39;rhel65-64bit&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>进到VirtualBox的虚拟机目录(比如在OSX下是<code>~/VirtualBox VMs</code>)，进行vagrant创建box文件操作。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/VirtualBox<span class="se">\ </span>VMs/rhel65-64bit/
+</span><span class='line'><span class="nv">$ </span>vagrant package --base rhel65-64bit --output rhel65-64bit.box
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>最后使用vagrant启动vm，正常启动证明我们的box已经正确创建了。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vagrant box add --name rhel65-64bit rhel65-64bit.box
+</span><span class='line'><span class="nv">$ </span>vagrant init rhel65-64bit
+</span><span class='line'><span class="nv">$ </span>vagrant up
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>手动创建Box</h2>
+
+<p>如果想手动创建Box也是可以的，不过比较麻烦，下面是手动创建Box的一些注意事项，注意以下命令都是在你的VM进行操作，所以首先要能ssh到VM，没有ssh的话需要先安装ssh。</p>
+
+<ul>
+<li>安装一些基本的软件，比如ssh, wget, curl等。</li>
+<li>设置root用户密码为<code>vagrant</code>。</li>
+<li>新增用户<code>vagrant</code>，密码也是设置为<code>vagrant</code>。</li>
+<li>修改visudo的配置，让vagrant用户使用sudo时不需要输入密码。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>visudo
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在最后一行增加以下内容:</p>
+
+<figure class='code'><figcaption><span>visudo </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>vagrant <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD:ALL
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>安装Guset Additions，这个是为了可以使用vagrant来创建共享文件夹。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso
+</span><span class='line'><span class="nv">$ </span>sudo mkdir -p /media/VBoxGuestAdditions
+</span><span class='line'><span class="nv">$ </span>sudo mount -o loop,ro VBoxGuestAdditions_4.3.8.iso /media/VBoxGuestAdditions
+</span><span class='line'><span class="nv">$ </span>sudo /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>修改ssh配置，让vagrant可以无密码ssh登陆VM。</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /home/vagrant
+</span><span class='line'><span class="nv">$ </span>mkdir .ssh
+</span><span class='line'><span class="nv">$ </span>wget https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub -O .ssh/authorized_keys
+</span><span class='line'><span class="nv">$ </span>chmod 700 .ssh
+</span><span class='line'><span class="nv">$ </span>chmod 600 .ssh/authorized_keys
+</span><span class='line'><span class="nv">$ </span>chown -R vagrant:vagrant .ssh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面这些做好以后，就可以退出VM，后面的步骤就跟Veewee创建Box一样了，就是使用vagrant来生成box文件，添加box，启动VM。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用Docker打造自己的开发环境]]></title>
@@ -4979,234 +5170,6 @@ JPA有个好处就是操作数据库时不用写太多代码，不用像以前�
 <p>分离成多个对象的话，有个好处就是可以在不同的model添加不同的逻辑计算，避免把所有逻辑都放在一个类里面，这也是面向对象设计时要考虑的一个问题。但数据库始终只对应一张表，操作简单。</p>
 
 <p>下一篇: <a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/">最近小项目的一些记录（二）</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Redis集群环境安装指南]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/05/11/redis-cluster-env-create/"/>
-    <updated>2014-05-11T20:50:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/05/11/redis-cluster-env-create</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-5/redis-cluster.jpg"></p>
-
-<h3>环境</h3>
-
-<p>RHLinux-6.4-64-EN, 红帽6.4 64位，英文正式发布版。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h3>Redis3.0.0</h3>
-
-<ul>
-<li>redis2.x版本还不支持集群，3.0版本将会支持，现在3.0版本还在开发中，现在是beta-3版本(截止2014-5-8)，但功能是可用的。</li>
-<li>下载Redis3.0.0 beta-3版本，点击<a href="https://github.com/antirez/redis/archive/3.0.0-beta3.tar.gz">这里</a>下载。</li>
-<li>Redis3的安装可以参照之前的<a href="http://10.42.173.13/zhaozhiming003/redis-poc/blob/master/doc/redis_install.md">单机安装指南</a>操作。</li>
-</ul>
-
-
-<h3>创建Redis集群实例</h3>
-
-<ul>
-<li>创建集群节点的文件夹，先创建cluster-test文件夹，再以端口为名称创建子文件夹。这里我们要创建6个Redis实例，3个作为master，3个作为slave。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir cluster-test
-</span><span class='line'><span class="nb">cd </span>cluster-test
-</span><span class='line'>mkdir 7000 7001 7002 7003 7004 7005
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>在每个文件夹下面创建创建Redis配置文件，注意根据不同实例的端口号修改下面的配置文件，nodes.conf文件为Redis实例启动时自动生成。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>port 7000
-</span><span class='line'>cluster-enabled yes
-</span><span class='line'>cluster-config-file nodes.conf
-</span><span class='line'>cluster-node-timeout 5000
-</span><span class='line'>appendonly yes
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>开6个terminal窗口，分别启动这6个Redis实例。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>7000
-</span><span class='line'>../redis-server ./redis.conf
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>当成功启动后，能看到每个terminal出现下面的字样，是因为node.conf文件不存在，所以给每个实例分配了一个新的ID。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>82462<span class="o">]</span> 26 Nov 11:56:55.329 * No cluster configuration found, I<span class="err">&#39;</span>m 97a3a64667477371c4479320d683e4c8db5858b1
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>创建集群</h3>
-
-<ul>
-<li>现在Redis的6个实例都已经启动了，现在来开始创建集群。创建集群用到了一个ruby文件，放在redis3目录的src子目录下，找到后执行以下命令。这里的<code>-replicas 1</code>表示每个master配备1个slave，后面的参数就是6个实例的ip加端口，以空格隔开。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>redis-3.0.0-beta3/src
-</span><span class='line'>./redis-trib.rb create --replicas 1 127.0.0.1:7000 127.0.0.1:7001 <span class="se">\</span>
-</span><span class='line'>127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>执行命令后会提示你是否接受提示的配置信息，默认的是前3台作为master机器，后3台作为slave机器，输入<code>yes</code>，出现最后的信息表示集群已经创建好了。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>Creating cluster
-</span><span class='line'>Connecting to node 127.0.0.1:7000: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7001: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7002: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7003: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7004: OK
-</span><span class='line'>Connecting to node 127.0.0.1:7005: OK &gt;&gt;&gt;
-</span><span class='line'>Performing <span class="nb">hash </span>slots allocation on 6 nodes...
-</span><span class='line'>Using 3 masters: 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002
-</span><span class='line'>127.0.0.1:7000 replica <span class="c">#1 is 127.0.0.1:7003</span>
-</span><span class='line'>127.0.0.1:7001 replica <span class="c">#1 is 127.0.0.1:7004</span>
-</span><span class='line'>127.0.0.1:7002 replica <span class="c">#1 is 127.0.0.1:7005</span>
-</span><span class='line'>M: 9991306f0e50640a5684f1958fd754b38fa034c9 127.0.0.1:7000 slots:0-5460 <span class="o">(</span>5461 slots<span class="o">)</span> master
-</span><span class='line'>M: e68e52cee0550f558b03b342f2f0354d2b8a083b 127.0.0.1:7001 slots:5461-10921 <span class="o">(</span>5461 slots<span class="o">)</span> master
-</span><span class='line'>M: 393c6df5eb4b4cec323f0e4ca961c8b256e3460a 127.0.0.1:7002 slots:10922-16383 <span class="o">(</span>5462 slots<span class="o">)</span> master
-</span><span class='line'>S: 48b728dbcedff6bf056231eb44990b7d1c35c3e0 127.0.0.1:7003
-</span><span class='line'>S: 345ede084ac784a5c030a0387f8aaa9edfc59af3 127.0.0.1:7004
-</span><span class='line'>S: 3375be2ccc321932e8853234ffa87ee9fde973ff 127.0.0.1:7005
-</span><span class='line'>Can I <span class="nb">set </span>the above configuration? <span class="o">(</span><span class="nb">type</span> <span class="s1">&#39;yes&#39;</span> to accept<span class="o">)</span>: yes
-</span><span class='line'>
-</span><span class='line'>Nodes configuration updated &gt;&gt;&gt;
-</span><span class='line'>Sending CLUSTER MEET messages to join the cluster Waiting <span class="k">for </span>the cluster to join... &gt;&gt;&gt;
-</span><span class='line'>Performing Cluster Check <span class="o">(</span>using node 127.0.0.1:7000<span class="o">)</span>
-</span><span class='line'>M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7000
-</span><span class='line'>   slots:0-5460 <span class="o">(</span>5461 slots<span class="o">)</span> master
-</span><span class='line'>M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7001
-</span><span class='line'>   slots:5461-10922 <span class="o">(</span>5462 slots<span class="o">)</span> master
-</span><span class='line'>M: 73c22198cd1d0782ec24e3c9b03378030891c9a3 127.0.0.1:7002
-</span><span class='line'>   slots:10923-16383 <span class="o">(</span>5461 slots<span class="o">)</span> master
-</span><span class='line'>M: c785d85b95d7bdc28ec90384ab8a5885b289542c 127.0.0.1:7003
-</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
-</span><span class='line'>   replicates b949ea2d9c822ff069521a354b4ed48855ac6203
-</span><span class='line'>M: 570c472fe553ba3c9d0fb3ba16fcdb8579b4fc86 127.0.0.1:7004
-</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
-</span><span class='line'>   replicates ebbb890e899244e4a2a6303826a29543ebf9885d
-</span><span class='line'>M: f86667ec42cff41a5666162a912713173f5306d7 127.0.0.1:7005
-</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
-</span><span class='line'>   replicates 73c22198cd1d0782ec24e3c9b03378030891c9a3
-</span><span class='line'><span class="o">[</span>OK<span class="o">]</span> All nodes agree about slots configuration.
-</span><span class='line'>&gt;&gt;&gt; Check <span class="k">for </span>open slots...
-</span><span class='line'>&gt;&gt;&gt; Check slots coverage...
-</span><span class='line'><span class="o">[</span>OK<span class="o">]</span> All 16384 slots covered.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>PS: 安装过程还发现RedHat系统上没有安装ruby，需要先安装ruby，而且公司机器还不能上网下载安装，只能通过离线的方式安装ruby，这里有离线安装的文档可以参考一下:<a href="https://rvm.io/rvm/offline">https://rvm.io/rvm/offline</a>。</p>
-
-<h3>验证</h3>
-
-<p>可以使用Redis3.0的redis-cli客户端进行验证，需要加上<code>-c</code>参数，表示集群的意思。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>redis-cli -c -p 7000
-</span><span class='line'>redis 127.0.0.1:7000&gt; <span class="nb">set </span>foo bar
-</span><span class='line'>-&gt; Redirected to slot <span class="o">[</span>12182<span class="o">]</span> located at 127.0.0.1:7002
-</span><span class='line'>OK
-</span><span class='line'>redis 127.0.0.1:7002&gt; <span class="nb">set </span>hello world
-</span><span class='line'>-&gt; Redirected to slot <span class="o">[</span>866<span class="o">]</span> located at 127.0.0.1:7000
-</span><span class='line'>OK
-</span><span class='line'>redis 127.0.0.1:7000&gt; get foo
-</span><span class='line'>-&gt; Redirected to slot <span class="o">[</span>12182<span class="o">]</span> located at 127.0.0.1:7002
-</span><span class='line'><span class="s2">&quot;bar&quot;</span>
-</span><span class='line'>redis 127.0.0.1:7000&gt; get hello
-</span><span class='line'>-&gt; Redirected to slot <span class="o">[</span>866<span class="o">]</span> located at 127.0.0.1:7000
-</span><span class='line'><span class="s2">&quot;world&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>更多的资料可以参考这里：<a href="http://redis.io/topics/cluster-tutorial">http://redis.io/topics/cluster-tutorial</a>。</p>
 ]]></content>
   </entry>
   
