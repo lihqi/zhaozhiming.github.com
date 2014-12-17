@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-11-29T10:53:12+08:00</updated>
+  <updated>2014-12-17T16:24:22+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,418 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用TPP来控制TDD的节奏做好单元测试]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/12/14/use-tpp-to-do-tdd/"/>
+    <updated>2014-12-14T06:58:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/12/14/use-tpp-to-do-tdd</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-12/tpp.jpeg"></p>
+
+<p>最近参加了一次编程活动，大家在一起讨论单元测试和TDD(测试驱动开发)，有人提到了<a href="http://en.wikipedia.org/wiki/Robert_Cecil_Martin">Uncle Bob</a>的TPP(Transformation Priority Premise)——变形动作的优先顺序，可以帮助我们控制好TDD的节奏。</p>
+
+<!--more-->
+
+
+<p>关于TPP的详细信息可以查看Uncle Bob的<a href="http://blog.8thlight.com/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html">这篇博文</a>，核心的思想如下:</p>
+
+<ul>
+<li>({}–>nil) no code at all->code that employs nil</li>
+<li>(nil->constant)</li>
+<li>(constant->constant+) a simple constant to a more complex constant</li>
+<li>(constant->scalar) replacing a constant with a variable or an argument</li>
+<li>(statement->statements) adding more unconditional statements.</li>
+<li>(unconditional->if) splitting the execution path</li>
+<li>(scalar->array)</li>
+<li>(array->container)</li>
+<li>(statement->recursion)</li>
+<li>(if->while)</li>
+<li>(expression->function) replacing an expression with a function or algorithm</li>
+<li>(variable->assignment) replacing the value of a variable.</li>
+</ul>
+
+
+<p>为了验证一下TPP是否有效，我用<a href="http://butunclebob.com/ArticleS.UncleBob.ThePrimeFactorsKata">PrimeFactorsKata</a>来做练习，然后使用go语言来写，这样可以顺便练练go的语法。</p>
+
+<h2>({}–>nil) no code at all->code that employs nil</h2>
+
+<p>首先我们写第一个测试，当传入<code>1</code>时返回一个空的集合，用最简单的代码实现功能，直接返回<code>nil</code>，这样就完成了从没有代码到<code>nil</code>的过程。<br/>
+PS: 这里我使用了<a href="https://github.com/stretchr/testify"><code>stretchr/testify</code></a>这个单元测试第三方包，它的使用方法就跟Java的Junit一样简单。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">prime</span><span class="p">&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kn">import</span> <span class="p">(&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
+</span><span class='line'><span class="s">&quot;testing&quot;</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;)&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_1_then_return_empty_list</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">prime</span><span class="p">&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">return</span> <span class="kc">nil</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>(nil->constant)</h2>
+
+<p>执行测试我们发现测试案例是不通过的，所以我们需要让测试变绿，让方法返回一个空的集合。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>(constant->constant+) a simple constant to a more complex constant</h2>
+
+<h2>(unconditional->if) splitting the execution path</h2>
+
+<p>接着我们写第二个测试，当传入<code>2</code>时返回只有<code>2</code>的集合，同时修改实现代码，让原来返回的空集合变成包含<code>2</code>的一个集合，同时加上判断，如果<code>num</code>小于2时还是返回空集合。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_2_then_return_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">if</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>constant->scalar replacing a constant with a variable or an argument</h2>
+
+<p>通过了前面2个测试之后，我们接着写第三个测试，要返回一个包含<code>3</code>的集合，需要将原来写死的常量<code>2</code>变成<code>num</code>。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_3_then_return_3</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">3</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">if</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="nx">num</span><span class="p">}</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>(statement->statements) adding more unconditional statements</h2>
+
+<p>继续增加测试，传入<code>4</code>返回包含<code>2</code>和<code>2</code>的集合，这次实现代码的改动比较大，基本算法已经出来了，使用<code>num</code>来对<code>2</code>求余数，然后同时添加除数和被除数，这个时候单元测试的效果就出来了，如果实现代码没有写对，以前的测试会失败，需要你不断修改，保证通过所有测试。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_4_then_return_2_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">if</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">result</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'><span class="nx">mod</span> <span class="o">:=</span> <span class="nx">num</span> <span class="o">%</span> <span class="mi">2</span>
+</span><span class='line'><span class="k">if</span> <span class="nx">mod</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;</span><span class="nx">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="nx">amp</span><span class="p">;</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>    <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">num</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="nx">result</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>添加测试</h2>
+
+<p>增加测试，传入<code>6</code>得到<code>2</code>和<code>3</code>的集合，实现代码没有改动。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_6_then_return_2_3</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>(if->while)</h2>
+
+<p>再增加一个参数<code>8</code>，返回<code>2-2-2</code>集合的测试，这个测试迫使我们的实现代码做循环，所以这是一个if到while的过程。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_8_then_return_2_2_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">if</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">result</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'><span class="k">for</span> <span class="nx">div</span> <span class="o">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">div</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;=</span> <span class="nx">num</span><span class="p">;</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nx">num</span><span class="o">%</span><span class="nx">div</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">div</span><span class="p">)</span>
+</span><span class='line'>        <span class="nx">num</span> <span class="o">/=</span> <span class="nx">div</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">div</span><span class="o">++</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="nx">result</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>代码写完了吗？</h2>
+
+<p>这个时候实际上我们的功能已经实现了，如果不放心我们就继续增加几个测试案例，结果验证都是通过的。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_9_then_return_3_3</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_20_then_return_2_2_5</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_30_then_return_2_3_5</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_64_then_return_2_2_2_2_2_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">64</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_10984_then_return_2_2_2_1373</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1373</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">10984</span><span class="p">))</span>
+</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>总结</h2>
+
+<p>虽然看了Uncle Bob的TPP，但是觉得根据他的核心思想还是不容易控制TDD的节奏，实际上在做4-2-2的测试的时候我自己就想好了算法，如果没有想好算法要驱动出实际代码来比较难，可能还需要更多的练习才能达到TPP的效果吧。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何用iso文件创建Vagrant的Box]]></title>
@@ -1084,633 +1496,6 @@
 <p>在fullPage的github工程里面，有一个example文件夹，主页面是<code>demoPage.html</code>，在浏览器打开它可以看到里面列举了19个fullPage的Demo，有上下翻页，左右翻页，嵌套视频等各种例子，如果想实现自己想要的效果，可以参照对应demo的html文件来进行修改。</p>
 
 <p><img src="/images/post/2014-11/fullpage-demo.png"></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在Ubuntu12.04上安装Ceph Calamari]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/10/28/install-ceph-calamari-on-ubuntu/"/>
-    <updated>2014-10-28T15:56:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/10/28/install-ceph-calamari-on-ubuntu</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-10/calamari.png"></p>
-
-<p>Calamari是<a href="http://ceph.com/">Ceph</a>的一个监控和管理工具，它提供了一些定义好的REST API。Calamari包括服务端和客户端，服务端是使用Python的web框架<a href="https://www.djangoproject.com/">Django</a>开发的，提供了供客户端调用的REST API接口。客户端使用了<a href="http://nodejs.org/">NodeJS</a>,<a href="https://angularjs.org/">AngularJS</a>,<a href="http://getbootstrap.com/">Bootstrap3</a>，每个模块可以独立部署更新，其界面十分简洁清晰，几乎涵盖了所有监控要求。</p>
-
-<p>下面介绍一下Calamari在Ubuntu上面的安装过程。</p>
-
-<!--more-->
-
-
-<h2>环境准备</h2>
-
-<ul>
-<li>安装VitrualBox和Vagrant，Vagrant的使用可以参照我之前的blog——<a href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible">使用Vagrant和Ansible搭建Ceph环境</a>。</li>
-<li>下载ubuntu12.04的box文件——<a href="https://vagrantcloud.com/discover/featured">box文件下载地址</a>，我们在虚拟机中安装calamari，不污染我们的本机环境。</li>
-</ul>
-
-
-<h2>生成Calamari安装文件</h2>
-
-<h3>生成server安装文件</h3>
-
-<ul>
-<li>下载calamari工程</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mkdir calamari-node
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
-</span><span class='line'><span class="nv">$ </span>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/ceph/calamari.git&quot;</span>&gt;https://github.com/ceph/calamari.git&lt;/a&gt;
-</span><span class='line'><span class="nv">$ </span>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/ceph/Diamond.git&quot;</span>&gt;https://github.com/ceph/Diamond.git&lt;/a&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>使用vagrant生成server安装文件</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari/vagrant/precise-build&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;首先要保证你的vagrant已经导入名字为precise的box&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>vagrant up
-</span><span class='line'>&amp;hellip;
-</span><span class='line'>&amp;hellip;
-</span><span class='line'>Copying salt minion config to vm.
-</span><span class='line'>Checking <span class="k">if </span>salt-minion is installed
-</span><span class='line'>salt-minion was not found.
-</span><span class='line'>Checking <span class="k">if </span>salt-call is installed
-</span><span class='line'>salt-call was not found.
-</span><span class='line'>Bootstrapping Salt&amp;hellip; <span class="o">(</span>this may take a <span class="k">while</span><span class="o">)</span>
-</span><span class='line'>Salt successfully configured and installed!
-</span><span class='line'>run_overstate <span class="nb">set </span>to false. Not running state.overstate.
-</span><span class='line'>run_highstate <span class="nb">set </span>to false. Not running state.highstate.&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>vagrant ssh
-</span><span class='line'><span class="nv">$ </span>sudo salt-call state.highstate
-</span><span class='line'>&amp;hellip;
-</span><span class='line'>&amp;hellip;&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h2&gt;Summary&lt;/h2&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;Succeeded: 11&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h2&gt;Failed: 0&lt;/h2&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;Total: 11
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>这里的虚拟机将我们创建的根目录<code>calamari-node</code>和虚拟机中的<code>/git</code>目录关联起来了，我们可以通过在查看这2个目录中的任意一个来查看安装文件是否已经生成。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;查看calamari-node目录&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="nv">$ </span><span class="nb">cd </span>calamari-node
-</span><span class='line'><span class="nv">$ </span>ls -l
-</span><span class='line'>drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
-</span><span class='line'>drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;查看虚拟机的/git目录&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="nv">$ </span><span class="nb">cd </span>calamari-node/calamari/vagrant/precise-build
-</span><span class='line'><span class="nv">$ </span>vagrant ssh
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /git
-</span><span class='line'><span class="nv">$ </span>ls -l
-</span><span class='line'>drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
-</span><span class='line'>drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>从上面可以看到安装文件已经生成好了，2个deb文件分别是server和监控服务的安装文件，tar.gz文件是安装服务所需的依赖包安装文件集合，如果是连网安装的话，这个tar.gz文件不需要用到。</li>
-</ul>
-
-
-<h3>生成client安装文件</h3>
-
-<ul>
-<li>下载calamari-client工程</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
-</span><span class='line'><span class="nv">$ </span>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/ceph/calamari-clients.git&quot;</span>&gt;https://github.com/ceph/calamari-clients.git&lt;/a&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>使用vagrant生成client安装文件</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-client/vagrant/precise-build/
-</span><span class='line'><span class="nv">$ </span>vagrant up
-</span><span class='line'>&amp;hellip;
-</span><span class='line'>&amp;hellip;
-</span><span class='line'>Copying salt minion config to vm.
-</span><span class='line'>Checking <span class="k">if </span>salt-minion is installed
-</span><span class='line'>salt-minion was not found.
-</span><span class='line'>Checking <span class="k">if </span>salt-call is installed
-</span><span class='line'>salt-call was not found.
-</span><span class='line'>Bootstrapping Salt&amp;hellip; <span class="o">(</span>this may take a <span class="k">while</span><span class="o">)</span>
-</span><span class='line'>Salt successfully configured and installed!
-</span><span class='line'>run_overstate <span class="nb">set </span>to false. Not running state.overstate.
-</span><span class='line'>run_highstate <span class="nb">set </span>to false. Not running state.highstate.&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>vagrant ssh
-</span><span class='line'><span class="nv">$ </span>sudo salt-call state.highstate
-</span><span class='line'>&amp;hellip;
-</span><span class='line'>&amp;hellip;&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h2&gt;Summary&lt;/h2&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;Succeeded: 13&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h2&gt;Failed: 0&lt;/h2&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;Total: 13
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>查看生成的安装文件，可以看到有1个deb文件和一个tar.gz文件，ubuntu的话直接使用deb文件进行安装就可以了，tar.gz文件不需要。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
-</span><span class='line'><span class="nv">$ </span>ls -l
-</span><span class='line'>drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
-</span><span class='line'>drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
-</span><span class='line'>drwxr-xr-x  22 zhaozhiming  staff      748 Oct 20 16:46 calamari-clients
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;   1 zhaozhiming  staff  1711253 Oct 21 12:38 calamari-clients-build-output.tar.gz
-</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;   1 zhaozhiming  staff  1705364 Oct 21 12:38 calamari-clients_1.2.1.1-29-g3790c24_all.deb
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>安装Calamari</h2>
-
-<ul>
-<li>创建一个ubuntu的虚拟机来安装calamari，首先在根目录下创建一个Vagrantfile文件。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
-</span><span class='line'><span class="nv">$ </span>touch Vagrantfile
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>Vagrantfile文件内容如下，注意要使用绑定好的IP。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;h1&gt;&amp;ndash;&lt;em&gt;&amp;ndash; mode: ruby &amp;ndash;&lt;/em</span><span class="o">&gt;&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;h1&gt;vi: set ft=ruby :&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="no">Vagrantfile</span> <span class="no">API</span><span class="o">/</span><span class="n">syntax</span> <span class="n">version</span><span class="o">.</span> <span class="no">Don</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">t</span> <span class="n">touch</span> <span class="k">unless</span> <span class="n">you</span> <span class="n">know</span> <span class="n">what</span> <span class="n">you</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">re</span> <span class="n">doing!</span><span class="o">&lt;</span><span class="sr">/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;VAGRANTFILE_API_VERSION = &amp;ldquo;2&amp;rdquo;&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="no">VAGRANTFILE_API_VERSION</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">precise64</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;  config.vm.define &amp;ldquo;manager&amp;rdquo; do |manager|&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">manager</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="s2">&quot;manager-env&quot;</span>
-</span><span class='line'><span class="n">manager</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:private_network</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.26.10&quot;</span>
-</span><span class='line'><span class="n">manager</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">vb</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="mi">512</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>启动虚拟机并登陆</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vagrant up
-</span><span class='line'><span class="nv">$ </span>vagrant ssh
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>在虚拟机上安装salt</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get install python-software-properties
-</span><span class='line'><span class="nv">$ </span>sudo add-apt-repository ppa:saltstack/salt
-</span><span class='line'><span class="nv">$ </span>sudo apt-get update
-</span><span class='line'><span class="nv">$ </span>sudo apt-get install salt-master
-</span><span class='line'><span class="nv">$ </span>sudo apt-get install salt-minion
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>在虚拟机上安装所需依赖包</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get update &amp;amp;&amp;amp; sudo apt-get install -y apache2 libapache2-mod-wsgi libcairo2 supervisor python-cairo libpq5 postgresql
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>安装calamari</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /vagrant
-</span><span class='line'><span class="nv">$ </span>sudo dpkg -i calamari-server&lt;em&gt;.deb calamari-clients&lt;/em&gt;.deb
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>初始化calamari服务，这里会要求你输入用户名、邮箱、密码，这个用户名密码是在浏览器访问calamari服务需要的。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo calamari-ctl initialize
-</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Loading configuration..
-</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Starting/enabling salt&amp;hellip;
-</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Starting/enabling postgres&amp;hellip;
-</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Initializing database&amp;hellip;
-</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Initializing web interface&amp;hellip;
-</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> You will now be prompted <span class="k">for </span>login details <span class="k">for </span>the administrative user account. This is the account you will use to log into the web interface once setup is complete.
-</span><span class='line'>Username <span class="o">(</span>leave blank to use &amp;lsquo;root&amp;rsquo;<span class="o">)</span>:
-</span><span class='line'>Email address: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;&amp;#109;&amp;#97;&amp;#x69;&amp;#108;&amp;#116;&amp;#111;&amp;#x3a;&amp;#107;&amp;#x61;&amp;#114;&amp;#97;&amp;#x6e;&amp;#46;&amp;#115;&amp;#105;&amp;#110;&amp;#103;&amp;#104;&amp;#x40;&amp;#x63;&amp;#115;&amp;#99;&amp;#x2e;&amp;#x66;&amp;#105;&quot;</span>&gt;&amp;#x6b;&amp;#x61;&amp;#x72;&amp;#x61;&amp;#x6e;&amp;#46;&amp;#x73;&amp;#x69;&amp;#110;&amp;#x67;&amp;#x68;&amp;#64;&amp;#99;&amp;#x73;&amp;#x63;&amp;#46;&amp;#x66;&amp;#105;&lt;/a&gt;
-</span><span class='line'>Password:
-</span><span class='line'>Password <span class="o">(</span>again<span class="o">)</span>:
-</span><span class='line'>Superuser created successfully.
-</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Starting/enabling services&amp;hellip;
-</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Restarting services&amp;hellip; &amp;ndash; See more at: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://ceph.com/category/calamari/#sthash.qUtbU0mX.dpuf&quot;</span>&gt;http://ceph.com/category/calamari/#sthash.qUtbU0mX.dpuf&lt;/a&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>登陆浏览器，输入虚拟机的ip(比如<a href="http://192.168.26.10">http://192.168.26.10</a>)，可以看到如下页面。</li>
-</ul>
-
-
-<p><img src="/images/post/2014-10/calamari-login.png"></p>
-
-<ul>
-<li>输入刚才设置的用户名密码后，可以看到calamari提示你进行ceph集群配置。</li>
-</ul>
-
-
-<p><img src="/images/post/2014-10/calamari-first.png"></p>
-
-<h2>Ceph集群配置监控服务</h2>
-
-<h3>配置ceph集群</h3>
-
-<ul>
-<li>登陆其中一台ceph集群机器(这里假设ceph集群都是ubuntu环境)，安装监控服务。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo dpkg -i diamond_3.4.67_all.deb <span class="c">#deb文件是之前生成server安装文件时一起生成的，需要将其先考到ceph集群机器上</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>创建默认的监控配置文件</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo mv /etc/diamond/diamond.conf.example /etc/diamond/diamond.conf
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>安装salt-minion服务</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get install python-software-properties
-</span><span class='line'><span class="nv">$ </span>sudo add-apt-repository ppa:saltstack/salt
-</span><span class='line'><span class="nv">$ </span>sudo apt-get update
-</span><span class='line'><span class="nv">$ </span>sudo apt-get install salt-minion
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>在<code>/etc/hosts</code>文件中增加calamari服务器的映射关系</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/etc/hosts </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&amp;hellip;
-</span><span class='line'>&amp;hellip;
-</span><span class='line'>192.168.26.10 ceph-calamari
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>修改salt-minion的配置文件<code>/etc/salt/minion</code>，将master指向calamari服务器</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/etc/salt/minion </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&amp;hellip;
-</span><span class='line'>master: ceph-calamari
-</span><span class='line'>&amp;hellip;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>重启服务</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service salt-minion restart&lt;br/&gt;
-</span><span class='line'><span class="nv">$ </span>sudo service diamond restart
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>在所有的ceph集群机器上重复以上的步骤。</li>
-</ul>
-
-
-<h3>在calamari服务上添加ceph集群机器</h3>
-
-<ul>
-<li>查看salt-key</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo salt-key -L
-</span><span class='line'>Accepted Keys:
-</span><span class='line'>Unaccepted Keys:
-</span><span class='line'>ceph-mon0
-</span><span class='line'>ceph-mon1
-</span><span class='line'>ceph-mon2
-</span><span class='line'>ceph-osd0
-</span><span class='line'>ceph-osd1
-</span><span class='line'>ceph-osd2
-</span><span class='line'>Rejected Keys:
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>添加ceph集群机器到calamari</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo salt-key -A
-</span><span class='line'>The following keys are going to be accepted:
-</span><span class='line'>Unaccepted Keys:
-</span><span class='line'>ceph-mon0
-</span><span class='line'>ceph-mon1
-</span><span class='line'>ceph-mon2
-</span><span class='line'>ceph-osd0
-</span><span class='line'>ceph-osd1
-</span><span class='line'>ceph-osd2
-</span><span class='line'>Proceed? <span class="o">[</span>n/Y<span class="o">]</span> y
-</span><span class='line'>Key <span class="k">for </span>minion ceph-mon0 accepted.
-</span><span class='line'>Key <span class="k">for </span>minion ceph-mon1 accepted.
-</span><span class='line'>Key <span class="k">for </span>minion ceph-mon2 accepted.
-</span><span class='line'>Key <span class="k">for </span>minion ceph-osd0 accepted.
-</span><span class='line'>Key <span class="k">for </span>minion ceph-osd1 accepted.
-</span><span class='line'>Key <span class="k">for </span>minion ceph-osd2 accepted.
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>再次查看salt-key，可以看到所有节点都已添加。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo salt-key -L
-</span><span class='line'>Accepted Keys:
-</span><span class='line'>ceph-mon0
-</span><span class='line'>ceph-mon1
-</span><span class='line'>ceph-mon2
-</span><span class='line'>ceph-osd0
-</span><span class='line'>ceph-osd1
-</span><span class='line'>ceph-osd2
-</span><span class='line'>Unaccepted Keys:
-</span><span class='line'>Rejected Keys:
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>在浏览器中再次登陆calamari服务，可以看到已经能监控ceph集群的信息。</li>
-</ul>
-
-
-<p><img src="/images/post/2014-10/calamari.png"></p>
-
-<p><img src="/images/post/2014-10/calamari-page1.png"></p>
-
-<p><img src="/images/post/2014-10/calamari-page2.png"></p>
-
-<p><img src="/images/post/2014-10/calamari-page3.png"></p>
-
-<h2>参考资料</h2>
-
-<ul>
-<li>文档1：<a href="http://calamari.readthedocs.org/en/latest/operations/index.html">http://calamari.readthedocs.org/en/latest/operations/index.html</a></li>
-<li>文档2：<a href="http://calamari.readthedocs.org/en/latest/operations/index.html">http://ceph.com/category/calamari/</a></li>
-</ul>
-
 ]]></content>
   </entry>
   

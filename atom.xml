@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-11-29T10:53:12+08:00</updated>
+  <updated>2014-12-17T16:24:22+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,333 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用TPP来控制TDD的节奏做好单元测试]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/12/14/use-tpp-to-do-tdd/"/>
+    <updated>2014-12-14T06:58:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/12/14/use-tpp-to-do-tdd</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-12/tpp.jpeg"></p>
+
+<p>最近参加了一次编程活动，大家在一起讨论单元测试和TDD(测试驱动开发)，有人提到了<a href="http://en.wikipedia.org/wiki/Robert_Cecil_Martin">Uncle Bob</a>的TPP(Transformation Priority Premise)——变形动作的优先顺序，可以帮助我们控制好TDD的节奏。</p>
+
+<!--more-->
+
+
+<p>关于TPP的详细信息可以查看Uncle Bob的<a href="http://blog.8thlight.com/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html">这篇博文</a>，核心的思想如下:</p>
+
+<ul>
+<li>({}–>nil) no code at all->code that employs nil</li>
+<li>(nil->constant)</li>
+<li>(constant->constant+) a simple constant to a more complex constant</li>
+<li>(constant->scalar) replacing a constant with a variable or an argument</li>
+<li>(statement->statements) adding more unconditional statements.</li>
+<li>(unconditional->if) splitting the execution path</li>
+<li>(scalar->array)</li>
+<li>(array->container)</li>
+<li>(statement->recursion)</li>
+<li>(if->while)</li>
+<li>(expression->function) replacing an expression with a function or algorithm</li>
+<li>(variable->assignment) replacing the value of a variable.</li>
+</ul>
+
+
+<p>为了验证一下TPP是否有效，我用<a href="http://butunclebob.com/ArticleS.UncleBob.ThePrimeFactorsKata">PrimeFactorsKata</a>来做练习，然后使用go语言来写，这样可以顺便练练go的语法。</p>
+
+<h2>({}–>nil) no code at all->code that employs nil</h2>
+
+<p>首先我们写第一个测试，当传入<code>1</code>时返回一个空的集合，用最简单的代码实现功能，直接返回<code>nil</code>，这样就完成了从没有代码到<code>nil</code>的过程。<br/>
+PS: 这里我使用了<a href="https://github.com/stretchr/testify"><code>stretchr/testify</code></a>这个单元测试第三方包，它的使用方法就跟Java的Junit一样简单。</p>
+
+<figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">prime</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="p">(</span>
+</span><span class='line'>  <span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
+</span><span class='line'>  <span class="s">&quot;testing&quot;</span>
+</span><span class='line'><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">func</span> <span class="nx">Test_given_1_then_return_empty_list</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">prime</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kc">nil</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>(nil->constant)</h2>
+
+<p>执行测试我们发现测试案例是不通过的，所以我们需要让测试变绿，让方法返回一个空的集合。</p>
+
+<figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>(constant->constant+) a simple constant to a more complex constant</h2>
+
+<h2>(unconditional->if) splitting the execution path</h2>
+
+<p>接着我们写第二个测试，当传入<code>2</code>时返回只有<code>2</code>的集合，同时修改实现代码，让原来返回的空集合变成包含<code>2</code>的一个集合，同时加上判断，如果<code>num</code>小于2时还是返回空集合。</p>
+
+<figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_2_then_return_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">num</span> <span class="p">&lt;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>constant->scalar replacing a constant with a variable or an argument</h2>
+
+<p>通过了前面2个测试之后，我们接着写第三个测试，要返回一个包含<code>3</code>的集合，需要将原来写死的常量<code>2</code>变成<code>num</code>。</p>
+
+<figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_3_then_return_3</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">3</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">num</span> <span class="p">&lt;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="nx">num</span><span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>(statement->statements) adding more unconditional statements</h2>
+
+<p>继续增加测试，传入<code>4</code>返回包含<code>2</code>和<code>2</code>的集合，这次实现代码的改动比较大，基本算法已经出来了，使用<code>num</code>来对<code>2</code>求余数，然后同时添加除数和被除数，这个时候单元测试的效果就出来了，如果实现代码没有写对，以前的测试会失败，需要你不断修改，保证通过所有测试。</p>
+
+<figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_4_then_return_2_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">num</span> <span class="p">&lt;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">result</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="nx">mod</span> <span class="o">:=</span> <span class="nx">num</span> <span class="o">%</span> <span class="mi">2</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">mod</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">num</span> <span class="p">&gt;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>      <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">num</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">result</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>添加测试</h2>
+
+<p>增加测试，传入<code>6</code>得到<code>2</code>和<code>3</code>的集合，实现代码没有改动。</p>
+
+<figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_6_then_return_2_3</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>(if->while)</h2>
+
+<p>再增加一个参数<code>8</code>，返回<code>2-2-2</code>集合的测试，这个测试迫使我们的实现代码做循环，所以这是一个if到while的过程。</p>
+
+<figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_8_then_return_2_2_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>prime.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">num</span> <span class="p">&lt;</span> <span class="mi">2</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">result</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">div</span> <span class="o">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">div</span> <span class="o">&lt;=</span> <span class="nx">num</span><span class="p">;</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nx">num</span><span class="o">%</span><span class="nx">div</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">div</span><span class="p">)</span>
+</span><span class='line'>          <span class="nx">num</span> <span class="o">/=</span> <span class="nx">div</span>
+</span><span class='line'>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">div</span><span class="o">++</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">result</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>代码写完了吗？</h2>
+
+<p>这个时候实际上我们的功能已经实现了，如果不放心我们就继续增加几个测试案例，结果验证都是通过的。</p>
+
+<figure class='code'><figcaption><span>prime_test.go </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_9_then_return_3_3</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">func</span> <span class="nx">Test_given_20_then_return_2_2_5</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">func</span> <span class="nx">Test_given_30_then_return_2_3_5</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">func</span> <span class="nx">Test_given_64_then_return_2_2_2_2_2_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">64</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">func</span> <span class="nx">Test_given_10984_then_return_2_2_2_1373</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1373</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">10984</span><span class="p">))</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>总结</h2>
+
+<p>虽然看了Uncle Bob的TPP，但是觉得根据他的核心思想还是不容易控制TDD的节奏，实际上在做4-2-2的测试的时候我自己就想好了算法，如果没有想好算法要驱动出实际代码来比较难，可能还需要更多的练习才能达到TPP的效果吧。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何用iso文件创建Vagrant的Box]]></title>
@@ -4815,361 +5142,6 @@ PCRE安装比较简单，去pcre的网站下载源码包后解压，cd到解压�
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[最近小项目的一些记录（一）]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project/"/>
-    <updated>2014-05-31T09:09:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project</id>
-    <content type="html"><![CDATA[<p>最近花了2个星期的时间做了一个小网站，用来统计部门同事发布的博客情况。需求比较简单，做这个项目的时候就顺便把以前学到的东西整合到了一起，从前端到后台，从编码到部署（“全栈工程师”？呵呵），虽然事情比较琐碎但也学到了不少东西，下面就记录一下开发过程中遇到的一些问题。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>技术栈</h2>
-
-<p>这里先列举一下项目用到的一些技术，其实这些东西就是自己的工具箱，要慢慢丰富，要及时更新，这样才能做出来好东西。</p>
-
-<ul>
-<li>Spring4 MVC</li>
-<li>Hibernate orm</li>
-<li>Spring Data JPA</li>
-<li>AngularJS(Javascript MVW Framework)</li>
-<li>Semantic UI(CSS Framework)</li>
-<li>Velocity(for mail)</li>
-<li>Gradle</li>
-<li>SAE(Sina App Engine)</li>
-</ul>
-
-
-<h2>Spring JPA</h2>
-
-<p>项目遇到不少的问题都来自JPA，也有一部分原因是由于SAE的MySql数据库是读写分离的两个库，所以要配置多个数据源才能在上面正常读写数据。<br/>
-JPA有个好处就是操作数据库时不用写太多代码，不用像以前一样写一个接口再写一个实现，只需要一个接口就可以完成基本的操作了，如果有特殊的操作则可以通过标签的方式来写sql。</p>
-
-<h3>Spring JPA配置多个persistence-unit(或多个数据源）</h3>
-
-<ul>
-<li>首先增加JPA的多persistence-unit的管理Bean。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;persistenceUnitManager&quot;</span>
-</span><span class='line'>          <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceXmlLocation&quot;</span> <span class="na">value=</span><span class="s">&quot;classpath:META-INF/persistence.xml&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="c">&lt;!--  comment dataSourceLooup to use jndi --&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;dataSourceLookup&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.jdbc.datasource.lookup.BeanFactoryDataSourceLookup&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>然后配置多套DataSource，EntityManagerFactory，TransactionManger和jpa:repository，这里要重点注意jps:repository的配置也要有多套，否则启动就会报<code>No unique bean of type [javax.persistence.EntityManagerFactory] is defined: expected single bean but found 2</code>的错误。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="c">&lt;!--write persistence unit config--&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeJpaVendor&quot;</span>
-</span><span class='line'>          <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;showSql&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;generateDdl&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeDataSource&quot;</span> <span class="na">class=</span><span class="s">&quot;com.mchange.v2.c3p0.ComboPooledDataSource &quot;</span> <span class="na">destroy-method=</span><span class="s">&quot;close&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;driverClass&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jdbcUrl&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;acquireIncrement&quot;</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;initialPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;minPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxStatements&quot;</span> <span class="na">value=</span><span class="s">&quot;100&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;testConnectionOnCheckout&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="na">ref=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitName&quot;</span> <span class="na">value=</span><span class="s">&quot;mainPersistenceUnit&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaVendorAdapter&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeJpaVendor&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;loadTimeWeaver&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeTransactionManager&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.JpaTransactionManager&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;entityManagerFactory&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;qualifier</span> <span class="na">value=</span><span class="s">&quot;writeEm&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;jpa:repositories</span> <span class="na">base-package=</span><span class="s">&quot;com.github.dba.repo.write&quot;</span>
-</span><span class='line'>                      <span class="na">entity-manager-factory-ref=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span>
-</span><span class='line'>                      <span class="na">transaction-manager-ref=</span><span class="s">&quot;writeTransactionManager&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;tx:annotation-driven</span> <span class="na">transaction-manager=</span><span class="s">&quot;writeTransactionManager&quot;</span><span class="nt">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>在persistence.xml文件中增加多个unit,这里以一个unit为例，多个的话只要persistence-unit的name不一样就可以了。下面的例子引用了之前的datasource的配置，可以不需要再配置一次jdbc信息。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;persistence-unit</span> <span class="na">name=</span><span class="s">&quot;mainPersistenceUnit&quot;</span> <span class="na">transaction-type=</span><span class="s">&quot;RESOURCE_LOCAL&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;provider&gt;</span>org.hibernate.ejb.HibernatePersistence<span class="nt">&lt;/provider&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;non-jta-data-source&gt;</span>writeDataSource<span class="nt">&lt;/non-jta-data-source&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.Blog<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepGroup<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepMember<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.github.dba.model.BlogView<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;properties&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.driver&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.url&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.dialect&quot;</span> <span class="na">value=</span><span class="s">&quot;org.hibernate.dialect.MySQLDialect&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.show_sql&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.hbm2ddl.auto&quot;</span> <span class="na">value=</span><span class="s">&quot;update&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/properties&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/persistence-unit&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Spring JPA动态查询</h3>
-
-<ul>
-<li>首先在model类中增加一个静态方法，用来生成本次查询的动态条件。
-
-<ul>
-<li>下面的例子假设depGroup, website, startDate, endDate都可能有值。</li>
-<li>where中的&#8221;=&ldquo;,&rdquo;&lt;&ldquo;,&rdquo;>&ldquo;可以在CriteriaBuilder中找到相应的方法，还有比如like等。</li>
-<li>如果是嵌套对象的话，比如Blog对象包含Author对象，要对比Author对象的值，则可以用这种方式来取值: <code>root.&lt;Author&gt;get("author").&lt;String&gt;get("groupName")</code>。</li>
-</ul>
-</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Specification</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="nf">querySpecification</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">depGroup</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">website</span><span class="o">,</span>
-</span><span class='line'>                                                         <span class="kd">final</span> <span class="n">String</span> <span class="n">startDate</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">endDate</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">Specifications</span><span class="o">.</span><span class="na">where</span><span class="o">(</span><span class="k">new</span> <span class="n">Specification</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;()</span> <span class="o">{</span>
-</span><span class='line'>            <span class="nd">@Override</span>
-</span><span class='line'>            <span class="kd">public</span> <span class="n">Predicate</span> <span class="nf">toPredicate</span><span class="o">(</span><span class="n">Root</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="n">root</span><span class="o">,</span> <span class="n">CriteriaQuery</span><span class="o">&lt;?&gt;</span> <span class="n">query</span><span class="o">,</span> <span class="n">CriteriaBuilder</span> <span class="n">cb</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">Predicate</span> <span class="n">predicate</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="na">conjunction</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">depGroup</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">depGroup</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
-</span><span class='line'>                            <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">Author</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;author&quot;</span><span class="o">).&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;groupName&quot;</span><span class="o">),</span> <span class="n">depGroup</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">website</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">website</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
-</span><span class='line'>                            <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;website&quot;</span><span class="o">),</span> <span class="n">website</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">startDate</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                        <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">startDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
-</span><span class='line'>                        <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">ge</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
-</span><span class='line'>                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">startDate</span><span class="o">));</span>
-</span><span class='line'>                    <span class="o">}</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">endDate</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                        <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">endDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
-</span><span class='line'>                        <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">le</span><span class="o">(</span><span class="n">root</span><span class="o">.&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
-</span><span class='line'>                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">endDate</span><span class="o">));</span>
-</span><span class='line'>                    <span class="o">}</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">return</span> <span class="n">predicate</span><span class="o">;</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">});</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>写好了动态查询条件后，就要把它放到查询语句里面了，比如要查询所有数据，示例如下，例子还加了一个对时间的排序条件。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="n">blogs</span> <span class="o">=</span> <span class="n">blogReadRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">(</span>
-</span><span class='line'>                <span class="n">Blog</span><span class="o">.</span><span class="na">querySpecification</span><span class="o">(</span><span class="n">depGroup</span><span class="o">,</span> <span class="n">website</span><span class="o">,</span> <span class="n">startDate</span><span class="o">,</span> <span class="n">endDate</span><span class="o">),</span>
-</span><span class='line'>                <span class="k">new</span> <span class="nf">Sort</span><span class="o">(</span><span class="n">Sort</span><span class="o">.</span><span class="na">Direction</span><span class="o">.</span><span class="na">DESC</span><span class="o">,</span> <span class="s">&quot;time&quot;</span><span class="o">));</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>嵌套对象</h3>
-
-<p>这个可能跟JPA没有多大关系，更多是跟Hibernate有关，但都属于db层面的，就写在一起了。</p>
-
-<p>比如有张表是Blog，这样用Hibernate-orm对应到程序就有一个Blog类，如果Blog属性比较多的话，后续就会变成了一个大类。我们想在数据库只对应一张表的情况下，可以对应到程序的多个类，比如Blog类下面有个Author的类，要怎么做呢？可以用<code>@Embedded</code>标签来解决这个问题。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;blogs&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Blog</span> <span class="o">{</span>
-</span><span class='line'>  <span class="nd">@Id</span>
-</span><span class='line'>    <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Embedded</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Author</span> <span class="n">author</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Embeddable</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Author</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Basic</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>分离成多个对象的话，有个好处就是可以在不同的model添加不同的逻辑计算，避免把所有逻辑都放在一个类里面，这也是面向对象设计时要考虑的一个问题。但数据库始终只对应一张表，操作简单。</p>
-
-<p>下一篇: <a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/">最近小项目的一些记录（二）</a></p>
 ]]></content>
   </entry>
   
