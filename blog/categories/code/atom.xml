@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-12-17T16:24:22+08:00</updated>
+  <updated>2014-12-19T10:58:34+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,301 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Spring Security进行LDAP认证]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/12/18/use-spring-security-to-ldap-authentication/"/>
+    <updated>2014-12-18T08:56:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/12/18/use-spring-security-to-ldap-authentication</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-12/spring-security.jpeg"></p>
+
+<p>这里介绍一下如何是用Spring Security来做LDAP的认证，LDAP服务器只存放了用户的用户名和密码，没有角色等其他权限，所以这里介绍的是最简单的用户名密码认证。</p>
+
+<!--more-->
+
+
+<h2>下载spring-security相关JAR包</h2>
+
+<p>下面是gradle的脚本配置，需要下载spring-security和ldap相关的JAR包。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">String</span> <span class="n">springSecurityVersion</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mf">3.2</span><span class="o">.</span><span class="mi">5</span><span class="o">.</span><span class="na">RELEASE</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;dependencies {&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;...</span><span class="c1">//other spring jars</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//security</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-core:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-web:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-config:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-ldap:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.ldap:spring-ldap-core:2.0.2.RELEASE&quot;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="s">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>配置web.xml</h2>
+
+<p>在web.xml配置<code>filter</code>，修改内容如下。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>web.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;filter&gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>filter-name&gt;springSecurityFilterChain<span class="ni">&amp;lt;</span>/filter-name&gt;
+</span><span class='line'>  <span class="ni">&amp;lt;</span>filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy<span class="ni">&amp;lt;</span>/filter-class&gt;
+</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>filter-mapping&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>filter-name&gt;springSecurityFilterChain<span class="ni">&amp;lt;</span>/filter-name&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>url-pattern&gt;/*<span class="ni">&amp;lt;</span>/url-pattern&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>/filter-mapping&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;listener&gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>listener-class&gt;org.springframework.web.context.ContextLoaderListener<span class="ni">&amp;lt;</span>/listener-class&gt;
+</span><span class='line'><span class="nt">&lt;/listener&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span><span class="ni">&amp;lt;</span>context-param&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>param-name&gt;contextConfigLocation<span class="ni">&amp;lt;</span>/param-name&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>param-value&gt;classpath:spring-security.xml<span class="ni">&amp;lt;</span>/param-value&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>/context-param&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>创建spring-security.xml</h2>
+
+<p>在web.xml里面指定了Application启动时需要加载spring-security.xml文件，我们的LDAP认证主要就配置在这个文件里面。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring-security.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>beans xmlns=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:s=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/security&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/security<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span> xmlns:context=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/context&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/context<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:xsi=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="nt">&gt;</span>http://www.w3.org/2001/XMLSchema-instance<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xsi:schemaLocation=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans<span class="nt">&lt;/a&gt;</span> <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans/spring-beans-4.0.xsd&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans/spring-beans-4.0.xsd<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+</span><span class='line'>http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>context:property-placeholder location=<span class="ni">&amp;ldquo;</span>classpath:app.properties<span class="ni">&amp;rdquo;</span> /&gt;  //1<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:http pattern=<span class="ni">&amp;ldquo;</span>/resources/**<span class="ni">&amp;rdquo;</span> security=<span class="ni">&amp;ldquo;</span>none<span class="ni">&amp;rdquo;</span> /&gt;  //2
+</span><span class='line'>   <span class="ni">&amp;lt;</span>s:http pattern=<span class="ni">&amp;ldquo;</span>/login.html<span class="ni">&amp;rdquo;</span> security=<span class="ni">&amp;ldquo;</span>none<span class="ni">&amp;rdquo;</span> /&gt;    //2<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:http use-expressions=<span class="ni">&amp;ldquo;</span>true<span class="ni">&amp;rdquo;</span>&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>  <span class="ni">&amp;lt;</span>s:intercept-url pattern=&quot;/**&quot; access=&quot;isAuthenticated()&quot; /<span class="ni">&amp;gt;</span>  //3
+</span><span class='line'>  <span class="ni">&amp;lt;</span>s:form-login login-page=&quot;/login.html&quot;                        //4
+</span><span class='line'>     authentication-failure-url=&quot;/login.html?error=true&quot;        //5
+</span><span class='line'>     username-parameter=&quot;j_username&quot; password-parameter=&quot;j_password&quot;/<span class="ni">&amp;gt;</span> //6
+</span><span class='line'>  <span class="ni">&amp;lt;</span>s:anonymous /<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>s:logout logout-success-url=&quot;/login.html?logout=true&quot; /<span class="ni">&amp;gt;</span>  //7
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>/s:http&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:ldap-server url=<span class="ni">&amp;ldquo;</span>${ldap_server}<span class="ni">&amp;rdquo;</span> manager-dn=<span class="ni">&amp;ldquo;</span>${ldap_user}<span class="ni">&amp;rdquo;</span>//8<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>  manager-password=&quot;${ldap_password}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:authentication-manager&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>  <span class="ni">&amp;lt;</span>s:ldap-authentication-provider
+</span><span class='line'>     user-dn-pattern=&quot;${ldap_user_dn_pattern}&quot; /<span class="ni">&amp;gt;</span>  //9
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>/s:authentication-manager&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/beans&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ol>
+<li>指定properties文件，下面的ldap信息都是从properties文件里面取得。</li>
+<li>配置哪些资源和url不需要做认证，比如一些图片，js和css文件等，还有我们的login页面，如果把login页面也拦截的话，就做不了认证了。</li>
+<li>指定其他url(<code>/**</code>)都需要做认证，isAuthenticated方法表示认证通过了才能访问该url。</li>
+<li>指定登陆页面的地址，这里是相对路径，如果不指定login-page，认证时会自动调用spring-security的一个默认登陆页面。</li>
+<li>指定认证失败后的url，这里我们使用同一个login页面，只是在url后面加上查询参数作为认证失败的标示。</li>
+<li>指定login页面2个作用域，用户名和密码，需要和页面录入框的name相同。</li>
+<li>指定登出/注销成功后的页面，这里我们还是使用login页面，在url后面加上logout参数作为标示。</li>
+<li>ldap服务器的配置信息，包括url, manager-dn和manager-password。</li>
+<li>配置ldap的user-dn-pattern。</li>
+</ol>
+
+
+<p>下面是app.properties的内容。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>app.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="err">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;Ldap&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;ldap_server</span><span class="o">=</span><span class="s">ldap://your.ldap.server.com.:12356</span>
+</span><span class='line'><span class="na">ldap_user</span><span class="o">=</span><span class="s">cn=yourname,cn=Users,dc=ldap,dc=server,dc=com</span>
+</span><span class='line'><span class="na">ldap_password</span><span class="o">=</span><span class="s">123456</span>
+</span><span class='line'><span class="na">ldap_user_dn_pattern</span><span class="o">=</span><span class="s">uid={0},ou=staff,ou=people,o=ldap.server.com</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>创建登陆页面</h2>
+
+<p>创建用户登陆的Form，method为<code>post</code>，action为<code>j_spring_security_check</code>，用户录入框的name为<code>j_username</code>，密码录入框的name为<code>j_password</code>，这2个值与之前spring-security.xml里面配置的要保持一致。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>login.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;LoginForm&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_check&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div style=&quot;display: block;&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>h1<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>span class=&quot;ui-icon add&quot;<span class="ni">&amp;gt;&amp;lt;</span>/span<span class="ni">&amp;gt;</span>用户登录
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/h1<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;content&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>div id=&quot;error&quot; style=&quot;display: none; color: #c9302c&quot; align=&quot;center&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>h3<span class="ni">&amp;gt;</span>认证失败，请重新登录<span class="ni">&amp;lt;</span>/h3<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>div id=&quot;logout&quot; style=&quot;display: none; color: #02547f&quot; align=&quot;center&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>h3<span class="ni">&amp;gt;</span>已成功登出<span class="ni">&amp;lt;</span>/h3<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>ul<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>li<span class="ni">&amp;gt;&amp;lt;</span>label<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>span<span class="ni">&amp;gt;</span>用户名<span class="ni">&amp;lt;</span>/span<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>input type=&quot;text&quot; name=&quot;j_username&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/label<span class="ni">&amp;gt;&amp;lt;</span>/li<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>li<span class="ni">&amp;gt;&amp;lt;</span>label<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>span<span class="ni">&amp;gt;</span>密码<span class="ni">&amp;lt;</span>/span<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>input type=&quot;password&quot; name=&quot;j_password&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/label<span class="ni">&amp;gt;&amp;lt;</span>/li<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/ul<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>button type=&quot;submit&quot; name=&quot;logon&quot; value=&quot;Logon&quot;<span class="ni">&amp;gt;</span>登录<span class="ni">&amp;lt;</span>/button<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>如果需要的话，可以配置自己的logout页面，只需要一个Form就可以了，方法为<code>post</code>，action为<code>j_spring_security_logout</code>，只要提交了这个Form就可以成功登出了。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>logout.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_logout&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">id=</span><span class="s">&quot;logoutForm&quot;</span><span class="nt">&gt;&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用TPP来控制TDD的节奏做好单元测试]]></title>
@@ -1269,233 +1564,6 @@ PS: 这里我使用了<a href="https://github.com/stretchr/testify"><code>stretc
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>具体的Demo可以参考我的github工程<a href="https://github.com/zhaozhiming/spring4-mybatis">spring4-mybatis</a>。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用fullPage美化你的网站]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/11/12/use-full-page-to-make-web-site-beautify/"/>
-    <updated>2014-11-12T20:07:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/11/12/use-full-page-to-make-web-site-beautify</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-11/fullpage.png"></p>
-
-<p>这段时间逛网站，发现有一些网站的页面做的跟手机屏幕一样，大图片大字体铺满整个屏幕，还可以像手机一样通过鼠标上下左右滑动来切换不同的页面，让人感觉很炫很酷很炫。好奇心的驱使下找到了<a href="http://alvarotrigo.com/fullPage/#firstPage">fullPage.js</a>这个jquery插件，它可以让你轻松地制作漂亮的全屏滑动页面。</p>
-
-<!--more-->
-
-
-<h2>支持的浏览器</h2>
-
-<p>可以看到好东西都是不支持IE6的。</p>
-
-<p><img src="/images/post/2014-11/support-brower.gif"></p>
-
-<h2>用法</h2>
-
-<ul>
-<li>fullPage.js使用非常简单，先在你的html页面里面加上fullPage的css和js文件，注意还需要包括jquery的js文件，而且要放在fullPage的js文件前面。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href=</span><span class="s">&quot;jquery.fullPage.css&quot;</span> <span class="nt">/&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;jquery.fullPage.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>然后在html里面定义一个div，id为<code>fullpage</code>，里面再嵌套div，class为<code>section</code>，代码示例如下，这是一个简单的全页滑动页面。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;fullpage&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li>最后在对fullPage对象进行初始化。</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#fullpage&#39;</span><span class="p">).</span><span class="nx">fullpage</span><span class="p">();</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>fullPage属性</h2>
-
-<p>这是一个比较复杂的fullPage初始化，可以看到fullPage可以设置很多的属性，比如menu(菜单)，设置为<code>true</code>则在屏幕右边会显示导航菜单，其他的属性说明可以参考fullPage的<a href="https://github.com/alvarotrigo/fullPage.js#options">官方说明</a>。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#fullpage&#39;</span><span class="p">).</span><span class="nx">fullpage</span><span class="p">({</span>
-</span><span class='line'>    <span class="c1">//Navigation</span>
-</span><span class='line'>    <span class="nx">menu</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">anchors</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;firstSlide&#39;</span><span class="p">,</span> <span class="s1">&#39;secondSlide&#39;</span><span class="p">],</span>
-</span><span class='line'>    <span class="nx">navigation</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">navigationPosition</span><span class="o">:</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">navigationTooltips</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;firstSlide&#39;</span><span class="p">,</span> <span class="s1">&#39;secondSlide&#39;</span><span class="p">],</span>
-</span><span class='line'>    <span class="nx">slidesNavigation</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">slidesNavPosition</span><span class="o">:</span> <span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//Scrolling</span>
-</span><span class='line'>    <span class="nx">css3</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">scrollingSpeed</span><span class="o">:</span> <span class="mi">700</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">autoScrolling</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">scrollBar</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">easing</span><span class="o">:</span> <span class="s1">&#39;easeInQuart&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">easingcss3</span><span class="o">:</span> <span class="s1">&#39;ease&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">loopBottom</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">loopTop</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">loopHorizontal</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">continuousVertical</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">normalScrollElements</span><span class="o">:</span> <span class="s1">&#39;#element1, .element2&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">scrollOverflow</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">touchSensitivity</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">normalScrollElementTouchThreshold</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//Accessibility</span>
-</span><span class='line'>    <span class="nx">keyboardScrolling</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">animateAnchor</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//Design</span>
-</span><span class='line'>    <span class="nx">verticalCentered</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">resize</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">sectionsColor</span> <span class="o">:</span> <span class="p">[</span><span class="s1">&#39;#ccc&#39;</span><span class="p">,</span> <span class="s1">&#39;#fff&#39;</span><span class="p">],</span>
-</span><span class='line'>    <span class="nx">paddingTop</span><span class="o">:</span> <span class="s1">&#39;3em&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">paddingBottom</span><span class="o">:</span> <span class="s1">&#39;10px&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">fixedElements</span><span class="o">:</span> <span class="s1">&#39;#header, .footer&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">responsive</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//Custom selectors</span>
-</span><span class='line'>    <span class="nx">sectionSelector</span><span class="o">:</span> <span class="s1">&#39;.section&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">slideSelector</span><span class="o">:</span> <span class="s1">&#39;.slide&#39;</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//events</span>
-</span><span class='line'>    <span class="nx">onLeave</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">nextIndex</span><span class="p">,</span> <span class="nx">direction</span><span class="p">){},</span>
-</span><span class='line'>    <span class="nx">afterLoad</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">anchorLink</span><span class="p">,</span> <span class="nx">index</span><span class="p">){},</span>
-</span><span class='line'>    <span class="nx">afterRender</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){},</span>
-</span><span class='line'>    <span class="nx">afterResize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){},</span>
-</span><span class='line'>    <span class="nx">afterSlideLoad</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">anchorLink</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">slideAnchor</span><span class="p">,</span> <span class="nx">slideIndex</span><span class="p">){},</span>
-</span><span class='line'>    <span class="nx">onSlideLeave</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">anchorLink</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">slideIndex</span><span class="p">,</span> <span class="nx">direction</span><span class="p">){}</span>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>参考示例</h2>
-
-<p>在fullPage的github工程里面，有一个example文件夹，主页面是<code>demoPage.html</code>，在浏览器打开它可以看到里面列举了19个fullPage的Demo，有上下翻页，左右翻页，嵌套视频等各种例子，如果想实现自己想要的效果，可以参照对应demo的html文件来进行修改。</p>
-
-<p><img src="/images/post/2014-11/fullpage-demo.png"></p>
 ]]></content>
   </entry>
   

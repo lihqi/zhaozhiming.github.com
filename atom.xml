@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2014-12-17T16:24:22+08:00</updated>
+  <updated>2014-12-19T10:58:34+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,271 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Spring Security进行LDAP认证]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2014/12/18/use-spring-security-to-ldap-authentication/"/>
+    <updated>2014-12-18T08:56:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2014/12/18/use-spring-security-to-ldap-authentication</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-12/spring-security.jpeg"></p>
+
+<p>这里介绍一下如何是用Spring Security来做LDAP的认证，LDAP服务器只存放了用户的用户名和密码，没有角色等其他权限，所以这里介绍的是最简单的用户名密码认证。</p>
+
+<!--more-->
+
+
+<h2>下载spring-security相关JAR包</h2>
+
+<p>下面是gradle的脚本配置，需要下载spring-security和ldap相关的JAR包。</p>
+
+<figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">String</span> <span class="n">springSecurityVersion</span> <span class="o">=</span> <span class="s2">&quot;3.2.5.RELEASE&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">...</span><span class="c1">//other spring jars</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c1">//security</span>
+</span><span class='line'>  <span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-core:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'>  <span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-web:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'>  <span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-config:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'>  <span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-ldap:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'>  <span class="n">compile</span> <span class="s2">&quot;org.springframework.ldap:spring-ldap-core:2.0.2.RELEASE&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>配置web.xml</h2>
+
+<p>在web.xml配置<code>filter</code>，修改内容如下。</p>
+
+<figure class='code'><figcaption><span>web.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;filter&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;filter-name&gt;</span>springSecurityFilterChain<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;filter-class&gt;</span>org.springframework.web.filter.DelegatingFilterProxy<span class="nt">&lt;/filter-class&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'><span class="nt">&lt;filter-mapping&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;filter-name&gt;</span>springSecurityFilterChain<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;url-pattern&gt;</span>/*<span class="nt">&lt;/url-pattern&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter-mapping&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;listener&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="nt">&lt;/listener-class&gt;</span>
+</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;context-param&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;param-value&gt;</span>classpath:spring-security.xml<span class="nt">&lt;/param-value&gt;</span>
+</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>创建spring-security.xml</h2>
+
+<p>在web.xml里面指定了Application启动时需要加载spring-security.xml文件，我们的LDAP认证主要就配置在这个文件里面。</p>
+
+<figure class='code'><figcaption><span>spring-security.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span>
+</span><span class='line'>   <span class="na">xmlns:s=</span><span class="s">&quot;http://www.springframework.org/schema/security&quot;</span> <span class="na">xmlns:context=</span><span class="s">&quot;http://www.springframework.org/schema/context&quot;</span>
+</span><span class='line'>   <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+</span><span class='line'>   <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+</span><span class='line'><span class="s">       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd</span>
+</span><span class='line'><span class="s">    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="nt">&lt;context:property-placeholder</span> <span class="na">location=</span><span class="s">&quot;classpath:app.properties&quot;</span> <span class="nt">/&gt;</span>  //1
+</span><span class='line'>
+</span><span class='line'>   <span class="nt">&lt;s:http</span> <span class="na">pattern=</span><span class="s">&quot;/resources/**&quot;</span> <span class="na">security=</span><span class="s">&quot;none&quot;</span> <span class="nt">/&gt;</span>  //2
+</span><span class='line'>   <span class="nt">&lt;s:http</span> <span class="na">pattern=</span><span class="s">&quot;/login.html&quot;</span> <span class="na">security=</span><span class="s">&quot;none&quot;</span> <span class="nt">/&gt;</span>    //2
+</span><span class='line'>
+</span><span class='line'>   <span class="nt">&lt;s:http</span> <span class="na">use-expressions=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;s:intercept-url</span> <span class="na">pattern=</span><span class="s">&quot;/**&quot;</span> <span class="na">access=</span><span class="s">&quot;isAuthenticated()&quot;</span> <span class="nt">/&gt;</span>  //3
+</span><span class='line'>      <span class="nt">&lt;s:form-login</span> <span class="na">login-page=</span><span class="s">&quot;/login.html&quot;</span>                        <span class="err">//4</span>
+</span><span class='line'>         <span class="na">authentication-failure-url=</span><span class="s">&quot;/login.html?error=true&quot;</span>        <span class="err">//5</span>
+</span><span class='line'>         <span class="na">username-parameter=</span><span class="s">&quot;j_username&quot;</span> <span class="na">password-parameter=</span><span class="s">&quot;j_password&quot;</span><span class="nt">/&gt;</span> //6
+</span><span class='line'>      <span class="nt">&lt;s:anonymous</span> <span class="nt">/&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;s:logout</span> <span class="na">logout-success-url=</span><span class="s">&quot;/login.html?logout=true&quot;</span> <span class="nt">/&gt;</span>  //7
+</span><span class='line'>   <span class="nt">&lt;/s:http&gt;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="nt">&lt;s:ldap-server</span> <span class="na">url=</span><span class="s">&quot;${ldap_server}&quot;</span> <span class="na">manager-dn=</span><span class="s">&quot;${ldap_user}&quot;</span><span class="err">//8</span>
+</span><span class='line'>      <span class="na">manager-password=</span><span class="s">&quot;${ldap_password}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="nt">&lt;s:authentication-manager&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;s:ldap-authentication-provider</span>
+</span><span class='line'>         <span class="na">user-dn-pattern=</span><span class="s">&quot;${ldap_user_dn_pattern}&quot;</span> <span class="nt">/&gt;</span>  //9
+</span><span class='line'>   <span class="nt">&lt;/s:authentication-manager&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/beans&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>指定properties文件，下面的ldap信息都是从properties文件里面取得。</li>
+<li>配置哪些资源和url不需要做认证，比如一些图片，js和css文件等，还有我们的login页面，如果把login页面也拦截的话，就做不了认证了。</li>
+<li>指定其他url(<code>/**</code>)都需要做认证，isAuthenticated方法表示认证通过了才能访问该url。</li>
+<li>指定登陆页面的地址，这里是相对路径，如果不指定login-page，认证时会自动调用spring-security的一个默认登陆页面。</li>
+<li>指定认证失败后的url，这里我们使用同一个login页面，只是在url后面加上查询参数作为认证失败的标示。</li>
+<li>指定login页面2个作用域，用户名和密码，需要和页面录入框的name相同。</li>
+<li>指定登出/注销成功后的页面，这里我们还是使用login页面，在url后面加上logout参数作为标示。</li>
+<li>ldap服务器的配置信息，包括url, manager-dn和manager-password。</li>
+<li>配置ldap的user-dn-pattern。</li>
+</ol>
+
+
+<p>下面是app.properties的内容。</p>
+
+<figure class='code'><figcaption><span>app.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="c"># Ldap</span>
+</span><span class='line'><span class="na">ldap_server</span><span class="o">=</span><span class="s">ldap://your.ldap.server.com.:12356</span>
+</span><span class='line'><span class="na">ldap_user</span><span class="o">=</span><span class="s">cn=yourname,cn=Users,dc=ldap,dc=server,dc=com</span>
+</span><span class='line'><span class="na">ldap_password</span><span class="o">=</span><span class="s">123456</span>
+</span><span class='line'><span class="na">ldap_user_dn_pattern</span><span class="o">=</span><span class="s">uid={0},ou=staff,ou=people,o=ldap.server.com</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>创建登陆页面</h2>
+
+<p>创建用户登陆的Form，method为<code>post</code>，action为<code>j_spring_security_check</code>，用户录入框的name为<code>j_username</code>，密码录入框的name为<code>j_password</code>，这2个值与之前spring-security.xml里面配置的要保持一致。</p>
+
+<figure class='code'><figcaption><span>login.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;LoginForm&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_check&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">&quot;display: block;&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;h1&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;ui-icon add&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>用户登录
+</span><span class='line'>            <span class="nt">&lt;/h1&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;error&quot;</span> <span class="na">style=</span><span class="s">&quot;display: none; color: #c9302c&quot;</span> <span class="na">align=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;h3&gt;</span>认证失败，请重新登录<span class="nt">&lt;/h3&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;logout&quot;</span> <span class="na">style=</span><span class="s">&quot;display: none; color: #02547f&quot;</span> <span class="na">align=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;h3&gt;</span>已成功登出<span class="nt">&lt;/h3&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;li&gt;&lt;label&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;span&gt;</span>用户名<span class="nt">&lt;/span&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;j_username&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/label&gt;&lt;/li&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;li&gt;&lt;label&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;span&gt;</span>密码<span class="nt">&lt;/span&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="na">name=</span><span class="s">&quot;j_password&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/label&gt;&lt;/li&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">name=</span><span class="s">&quot;logon&quot;</span> <span class="na">value=</span><span class="s">&quot;Logon&quot;</span><span class="nt">&gt;</span>登录<span class="nt">&lt;/button&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果需要的话，可以配置自己的logout页面，只需要一个Form就可以了，方法为<code>post</code>，action为<code>j_spring_security_logout</code>，只要提交了这个Form就可以成功登出了。</p>
+
+<figure class='code'><figcaption><span>logout.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_logout&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">id=</span><span class="s">&quot;logoutForm&quot;</span><span class="nt">&gt;&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用TPP来控制TDD的节奏做好单元测试]]></title>
@@ -4863,285 +5128,6 @@ PCRE安装比较简单，去pcre的网站下载源码包后解压，cd到解压�
 
 
 <p>如果你的项目里面有自定义的Reponsitory具体实现，则需要做单元测试，这个可以上网自行搜索相关资料。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[最近小项目的一些记录（二）]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/"/>
-    <updated>2014-05-31T10:40:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2</id>
-    <content type="html"><![CDATA[<p><a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project/">前一篇post</a>主要记录了Spring JPA和Hibernate的问题，接着记录其他一些工具遇到的问题。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>Jsoup</h2>
-
-<p><a href="https://github.com/jhy/jsoup">Jsoup</a>是一个比较火的Java解析Html工具，简单易用，功能强大，在github上有不少星星。</p>
-
-<h3>使用Jsoup连接url时报403</h3>
-
-<p>一般使用Jsoup连接url都不会有什么问题，正常的写法如下：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但有些网站会获取用户的浏览器信息，而上面的写法是没有浏览器信息的，这个时候就会报403的错误，需要在连接时加上userAngent。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">userAgent</span><span class="o">(</span><span class="s">&quot;Mozilla&quot;</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Css Selector</h3>
-
-<p>使用Jsoup来抓取网页信息，最简单的一种方式就是通过Css selector，这样可以让你少写很多代码。比如下面的一段html:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'> <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;main&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;header&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>使用css selector可以这样简单的获得。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">doc</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="s">&quot;#main div.header&quot;</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Velocity</h2>
-
-<p>项目用到了Velocity来定制邮件模板，这样可以方便的修改邮件格式。在网上可以搜到很多关于Spring和Velocity集成的文章，但大部分是讲如何使用Velocity来生成页面的，而如何生成其他文件的说明比较少，下面我们就来看一下如何配置的。</p>
-
-<ul>
-<li>先配置velocityConfigurer的bean，这里定义了模板文件的路径，属性和编码等信息。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;velocityConfigurer&quot;</span>
-</span><span class='line'>          <span class="na">class=</span><span class="s">&quot;org.springframework.web.servlet.view.velocity.VelocityConfigurer&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;resourceLoaderPath&quot;</span> <span class="na">value=</span><span class="s">&quot;WEB-INF/velocity&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;velocityProperties&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;props&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.name&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    loopCounter
-</span><span class='line'>                <span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.initial.value&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    0
-</span><span class='line'>                <span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;input.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;output.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/props&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>在需要使用的Sevice里面引入，这样就可以在service里面使用到Velocity的配置信息了。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Service</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailService</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Resource</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;velocityConfigurer&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">VelocityConfigurer</span> <span class="n">velocityConfigurer</span><span class="o">;</span>
-</span><span class='line'> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>使用Velocity的工具类来得到生成的文件信息。
-
-<ul>
-<li>temple是模板文件的名称。</li>
-<li>model是生成文件所需的参数。</li>
-</ul>
-</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">content</span> <span class="o">=</span> <span class="n">VelocityEngineUtils</span><span class="o">.</span><span class="na">mergeTemplateIntoString</span><span class="o">(</span>
-</span><span class='line'>                <span class="n">velocityConfigurer</span><span class="o">.</span><span class="na">getVelocityEngine</span><span class="o">(),</span> <span class="n">temple</span><span class="o">,</span>
-</span><span class='line'>                <span class="n">MAIL_ENCODING</span><span class="o">,</span> <span class="n">model</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Angularjs</h3>
-
-<p>Angularjs功能比较强大，使用它之后基本可以不用使用JQuery了，这里记录一下使用遇到的一个比较奇怪的问题。</p>
-
-<ul>
-<li>问题: 使用Angularjs发起一个post请求，带了几个请求的参数，后台接收请求时获取不到参数。开始的写法如下：</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>   <span class="kd">var</span> <span class="nx">queryData</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>                <span class="s2">&quot;depGroup&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#dep_group&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span class='line'>                <span class="s2">&quot;website&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#website&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span class='line'>                <span class="s2">&quot;startDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#start_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span class='line'>                <span class="s2">&quot;endDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#end_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span>
-</span><span class='line'>            <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-</span><span class='line'>                <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>接收不到参数的原因是angularjs把参数转成了json导致后台接收不到，需要在发起请求时将参数转换一下，修改后的代码如下：</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>   <span class="kd">var</span> <span class="nx">postConfig</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">},</span>
-</span><span class='line'>        <span class="nx">transformRequest</span><span class="o">:</span> <span class="nx">transform</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="err">，</span><span class="nx">postConfig</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Semantic-ui</h3>
-
-<p>这个是我比较喜欢的一个css框架，这里要注意的地方是有些功能和Angularjs结合起来会发现不起作用，如果不起作用可以尝试使用<a href="https://github.com/caitp/angular-semantic">angular-semantic</a>这个工具看看能否解决问题。</p>
-
-<ul>
-<li>semantic-ui的表单规则和行为设置，简单的示例如下，需要设置规则(rules)和配置(setting即校验通过后的行为)。</li>
-</ul>
-
-
-<p>js代码:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="kd">var</span> <span class="nx">rules</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>      <span class="nx">searchKeyword</span><span class="o">:</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nx">identifier</span><span class="o">:</span> <span class="s1">&#39;searchKeyword&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="nx">rules</span><span class="o">:</span> <span class="p">[</span>
-</span><span class='line'>                <span class="p">{</span>
-</span><span class='line'>                    <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;empty&#39;</span><span class="p">,</span>
-</span><span class='line'>                    <span class="nx">prompt</span><span class="o">:</span> <span class="s1">&#39;请输入查询关键字&#39;</span>
-</span><span class='line'>                <span class="p">}</span>
-</span><span class='line'>            <span class="p">]</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">setting</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">onSuccess</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>            <span class="c1">// 发http请求</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#searchForm&#39;</span><span class="p">).</span><span class="nx">form</span><span class="p">(</span><span class="nx">rules</span><span class="p">,</span> <span class="nx">setting</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>html代码:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'> <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;searchForm&quot;</span> <span class="na">class=</span><span class="s">&quot;ui form&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;two fields&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui icon input&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;searchKeyword&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;searchKeyword&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;请输入查询关键字...&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">&quot;search icon&quot;</span><span class="nt">&gt;&lt;/i&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;searchBtn&quot;</span> <span class="na">class=</span><span class="s">&quot;ui blue submit button&quot;</span><span class="nt">&gt;</span>查询<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui error message&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 ]]></content>
   </entry>
   
