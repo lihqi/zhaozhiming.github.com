@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-02-04T15:53:06+08:00</updated>
+  <updated>2015-02-04T20:29:39+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,373 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[微信公众账号开发part2——用户消息接收]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2015/02/04/wechat-public-account-dev-part-2/"/>
+    <updated>2015-02-04T16:03:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2015/02/04/wechat-public-account-dev-part-2</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2015-2/wechat_part2.jpg"></p>
+
+<p>上一篇写了如何通过微信开发者认证，今天来讲下如何接收用户的消息，我们以接收用户的订阅消息为例。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>微信用户消息格式</h2>
+
+<p>在开发者文档的<a href="http://mp.weixin.qq.com/wiki/2/5baf56ce4947d35003b86a9805634b1e.html">接收事件推送</a>文档中，说明了用户订阅消息的请求实体，内容如下:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;xml&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ToUserName&gt;</span><span class="cp">&lt;![CDATA[toUser]]&gt;</span><span class="nt">&lt;/ToUserName&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;FromUserName&gt;</span><span class="cp">&lt;![CDATA[FromUser]]&gt;</span><span class="nt">&lt;/FromUserName&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;CreateTime&gt;</span>123456789<span class="nt">&lt;/CreateTime&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;MsgType&gt;</span><span class="cp">&lt;![CDATA[event]]&gt;</span><span class="nt">&lt;/MsgType&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Event&gt;</span><span class="cp">&lt;![CDATA[subscribe]]&gt;</span><span class="nt">&lt;/Event&gt;</span>
+</span><span class='line'><span class="nt">&lt;/xml&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>ToUserName: 加了密的公众账号名称</li>
+<li>FromUserName: 加了密的微信账号名称</li>
+<li>CreateTime: 消息发送时间，秒数</li>
+<li>MsgType: 消息类型，事件消息为event</li>
+<li>Event: 事件类型，订阅消息为subscribe</li>
+</ul>
+
+
+<h2>消息真实性验证</h2>
+
+<blockquote><p>每次开发者接收用户消息的时候，微信也都会带上前面三个参数（signature、timestamp、nonce）访问开发者设置的URL，开发者依然通过对签名的效验判断此条消息的真实性。效验方式与首次提交验证申请一致。</p><footer><strong>微信公众平台开发者文档</strong> <cite><a href='http://mp.weixin.qq.com/wiki/4/2ccadaef44fe1e4b0322355c2312bfa8.html'>验证消息真实性</a></cite></footer></blockquote>
+
+
+<p>所以每个订阅消息的http请求都会带有（signature、timestamp、nonce）这3个参数和上面的xml请求实体，服务端可以选择是否校验消息的真实性，建议校验，这样会比较安全。</p>
+
+<h2>接收消息后的响应内容</h2>
+
+<p>了解了消息请求的入参后，还需要知道我们处理请求后，需要返回什么样的内容给用户，这个在开发者文档里面好像没有提及，参考各方资料后知道需要返回一段xml内容，格式如下:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;xml&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;Content&gt;</span>感谢您关注我的公众账号[愉快]<span class="nt">&lt;/Content&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;CreateTime&gt;</span>1423022113<span class="nt">&lt;/CreateTime&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;FromUserName&gt;</span>zzm<span class="nt">&lt;/FromUserName&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;FuncFlag&gt;</span>0<span class="nt">&lt;/FuncFlag&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;MsgType&gt;</span>text<span class="nt">&lt;/MsgType&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;ToUserName&gt;</span>zzm<span class="nt">&lt;/ToUserName&gt;</span>
+</span><span class='line'><span class="nt">&lt;/xml&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>ToUserName: <code>加了密的微信账号名称</code></li>
+<li>FromUserName: <code>加了密的公众账号名称</code></li>
+<li>CreateTime: 消息发送时间，秒数</li>
+<li>FuncFlag: 这个暂时不知道是什么，默认值为0</li>
+<li>MsgType: 消息类型，文档消息可以为text和其他，这里我们以最简单的text文本消息为例</li>
+<li>Content: 返回给订阅用户的消息内容，可以加表情</li>
+</ul>
+
+
+<p>PS: ToUserName和FromUserName这2个参数和请求的xml实体要相反，这个也比较好理解，用户发了条消息过来，你要发个消息回去，ToUserName就变成了用户，FromUserName变成了你自己的公众账号了。</p>
+
+<h2>服务端开发</h2>
+
+<ul>
+<li>了解了http请求的入参和出参，我们可以来开发我们的API了，<code>talk is cheap, show me code</code>。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>MainController.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="c1">//这里我们定义跟之前认证api相同的url，但方法是POST</span>
+</span><span class='line'>  <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/index&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span>
+</span><span class='line'>    <span class="nd">@ResponseBody</span>
+</span><span class='line'>    <span class="c1">//3个校验消息真实性的参数，还有一个request实体body，里面是xml文本</span>
+</span><span class='line'>    <span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">receive</span><span class="o">(</span><span class="nd">@RequestParam</span><span class="o">(</span><span class="s">&quot;signature&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">signature</span><span class="o">,</span>
+</span><span class='line'>                                   <span class="nd">@RequestParam</span><span class="o">(</span><span class="s">&quot;timestamp&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">timestamp</span><span class="o">,</span>
+</span><span class='line'>                                   <span class="nd">@RequestParam</span><span class="o">(</span><span class="s">&quot;nonce&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">nonce</span><span class="o">,</span>
+</span><span class='line'>                                   <span class="nd">@RequestBody</span> <span class="n">String</span> <span class="n">body</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;receive message start&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;signature:%s, timestamp:%s, nonce:%s&quot;</span><span class="o">,</span> <span class="n">signature</span><span class="o">,</span> <span class="n">timestamp</span><span class="o">,</span> <span class="n">nonce</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">//先校验消息的真实性，如果校验失败，则返回400</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">wechatAuth</span><span class="o">(</span><span class="n">signature</span><span class="o">,</span> <span class="n">timestamp</span><span class="o">,</span> <span class="n">nonce</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;wechat auth failed&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;(</span><span class="s">&quot;wechat auth failed.&quot;</span><span class="o">,</span> <span class="n">HttpStatus</span><span class="o">.</span><span class="na">BAD_REQUEST</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;body:%s&quot;</span><span class="o">,</span> <span class="n">body</span><span class="o">));</span>
+</span><span class='line'>        <span class="c1">//我们定义了一个util来解析xml，将其转换为一个object</span>
+</span><span class='line'>        <span class="n">TextMessage</span> <span class="n">requestMessage</span> <span class="o">=</span> <span class="n">XmlUtil</span><span class="o">.</span><span class="na">toTextMessage</span><span class="o">(</span><span class="n">body</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;requestMessage:%s&quot;</span><span class="o">,</span> <span class="n">requestMessage</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">TextMessage</span> <span class="n">textMessage</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">msgType</span> <span class="o">=</span> <span class="n">requestMessage</span><span class="o">.</span><span class="na">getMsgType</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">toUserName</span> <span class="o">=</span> <span class="n">requestMessage</span><span class="o">.</span><span class="na">getToUserName</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">fromUserName</span> <span class="o">=</span> <span class="n">requestMessage</span><span class="o">.</span><span class="na">getFromUserName</span><span class="o">();</span>
+</span><span class='line'>        <span class="c1">//判断消息类型，如果是event，且事件类型为subscribe，则新建一个文本消息</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">MessageType</span><span class="o">.</span><span class="na">event</span><span class="o">.</span><span class="na">name</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="n">msgType</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">EventType</span><span class="o">.</span><span class="na">subscribe</span><span class="o">.</span><span class="na">name</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="n">requestMessage</span><span class="o">.</span><span class="na">getEvent</span><span class="o">()))</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;感谢您关注我的公众账号[愉快]&quot;</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">textMessage</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TextMessage</span><span class="o">(</span><span class="n">toUserName</span><span class="o">,</span> <span class="n">fromUserName</span><span class="o">,</span>
+</span><span class='line'>                        <span class="n">MessageType</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="n">message</span><span class="o">,</span> <span class="n">TimeUtil</span><span class="o">.</span><span class="na">currentSeconds</span><span class="o">());</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">//将文本消息转换为xml文本</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">responseMessage</span> <span class="o">=</span> <span class="n">XmlUtil</span><span class="o">.</span><span class="na">toXml</span><span class="o">(</span><span class="n">textMessage</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">HttpHeaders</span> <span class="n">responseHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpHeaders</span><span class="o">();</span>
+</span><span class='line'>        <span class="c1">//设置返回实体的编码，不设置的话可能会变成乱码</span>
+</span><span class='line'>        <span class="n">responseHeaders</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;Content-Type&quot;</span><span class="o">,</span> <span class="s">&quot;text/html; charset=utf-8&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;response message: %s&quot;</span><span class="o">,</span> <span class="n">responseMessage</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;receive message finish&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;(</span><span class="n">responseMessage</span><span class="o">,</span> <span class="n">responseHeaders</span><span class="o">,</span> <span class="n">HttpStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>这里使用java原生的JAXB来解析xml。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>XmlUtil.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.zzm.wechat.model.TextMessage</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.commons.io.IOUtils</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.bind.JAXBContext</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.bind.Marshaller</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.bind.Unmarshaller</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.StringReader</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.StringWriter</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">XmlUtil</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">toXml</span><span class="o">(</span><span class="n">TextMessage</span> <span class="n">textMessage</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">textMessage</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">JAXBContext</span> <span class="n">context</span> <span class="o">=</span> <span class="n">JAXBContext</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">TextMessage</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Marshaller</span> <span class="n">m</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">createMarshaller</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">m</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="n">Marshaller</span><span class="o">.</span><span class="na">JAXB_FORMATTED_OUTPUT</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">m</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="n">Marshaller</span><span class="o">.</span><span class="na">JAXB_FRAGMENT</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">StringWriter</span> <span class="n">sw</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringWriter</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">m</span><span class="o">.</span><span class="na">marshal</span><span class="o">(</span><span class="n">textMessage</span><span class="o">,</span> <span class="n">sw</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">sw</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">TextMessage</span> <span class="nf">toTextMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">xml</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">JAXBContext</span> <span class="n">jaxbContext</span> <span class="o">=</span> <span class="n">JAXBContext</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">TextMessage</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Unmarshaller</span> <span class="n">jaxbUnmarshaller</span> <span class="o">=</span> <span class="n">jaxbContext</span><span class="o">.</span><span class="na">createUnmarshaller</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">StringReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringReader</span><span class="o">(</span><span class="n">xml</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">TextMessage</span> <span class="n">textMessage</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextMessage</span><span class="o">)</span> <span class="n">jaxbUnmarshaller</span><span class="o">.</span><span class="na">unmarshal</span><span class="o">(</span><span class="n">reader</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">IOUtils</span><span class="o">.</span><span class="na">closeQuietly</span><span class="o">(</span><span class="n">reader</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">textMessage</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>定义消息的model类，这里需要用到xml的一些annotation。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>XmlUtil.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.bind.annotation.XmlElement</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.xml.bind.annotation.XmlRootElement</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//定义命名空间，如果不写的话，xml会以类名开头: &lt;TextMessage&gt;...&lt;/TextMessage&gt;，写了就会以xml开头: &lt;xml&gt;...&lt;/xml&gt;</span>
+</span><span class='line'><span class="nd">@XmlRootElement</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;xml&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TextMessage</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">fromUserName</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">toUserName</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">msgType</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">funcFlag</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">event</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">long</span> <span class="n">createTime</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">TextMessage</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">TextMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">fromUserName</span><span class="o">,</span> <span class="n">String</span> <span class="n">toUserName</span><span class="o">,</span> <span class="n">String</span> <span class="n">msgType</span><span class="o">,</span> <span class="n">String</span> <span class="n">content</span><span class="o">,</span> <span class="kt">long</span> <span class="n">createTime</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">fromUserName</span> <span class="o">=</span> <span class="n">fromUserName</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">toUserName</span> <span class="o">=</span> <span class="n">toUserName</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">msgType</span> <span class="o">=</span> <span class="n">msgType</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">createTime</span> <span class="o">=</span> <span class="n">createTime</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getToUserName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">toUserName</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//定义xml子项的名称，不写这个annotation的话，转换后的xml是: &lt;toUserName&gt;xxx&lt;/toUserName&gt;，首字母变小写了，会导致消息传输错误</span>
+</span><span class='line'>    <span class="nd">@XmlElement</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;ToUserName&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setToUserName</span><span class="o">(</span><span class="n">String</span> <span class="n">toUserName</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">toUserName</span> <span class="o">=</span> <span class="n">toUserName</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//other setter and getter</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">//...</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>方法写完以后，同样的打包，部署SAE。</p></li>
+<li><p>打开手机，关注你的公众账号后，就可以看到服务端传过来的消息内容了。</p></li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-2/wechat_subscribe.png"></p>
+
+<p>我的公众账号是<code>赵芝明的公账号</code>，有兴趣的也可以加一下，以后这个公共账号的功能肯定会慢慢丰富的。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[微信公众账号开发part1——开发者验证]]></title>
@@ -254,6 +621,8 @@
 
 
 <p><img src="http://zhaozhiming.github.io/images/post/2015-2/wechat_start.png"></p>
+
+<p>更多代码可以看这里: <a href="https://github.com/zhaozhiming/wechat-blog%EF%BC%8C%E8%A7%89%E5%BE%97%E5%A5%BD%E7%9A%84%E8%AF%9D%E8%AF%B7Star%E4%B8%80%E4%B8%8B%E5%90%A7%EF%BC%8C%E8%B0%A2%E8%B0%A2">https://github.com/zhaozhiming/wechat-blog%EF%BC%8C%E8%A7%89%E5%BE%97%E5%A5%BD%E7%9A%84%E8%AF%9D%E8%AF%B7Star%E4%B8%80%E4%B8%8B%E5%90%A7%EF%BC%8C%E8%B0%A2%E8%B0%A2</a></p>
 ]]></content>
   </entry>
   
@@ -5776,198 +6145,6 @@ PCRE安装比较简单，去pcre的网站下载源码包后解压，cd到解压�
 <li><a href="http://zhaozhiming.github.io/blog/2014/10/07/make-your-android-dev-life-easy-part-3/">让你的安卓开发更容易(三)——Picasso</a></li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[让路由飞越长城(二)]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2/"/>
-    <updated>2014-08-30T19:30:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-8/greatefw.jpg"></p>
-
-<p>配置好了高级的路由器，安装了dd-wrt版本的固件，现在还不忙着让路由器翻墙，先在一台机器上测试能通过新路由器能正常上网和翻墙，可以了之后我们再来配置路由器的翻墙功能。</p>
-
-<!--more-->
-
-
-<h3>VPN</h3>
-
-<p>翻墙基本是两种方式:SSH和VPN。SSH是在浏览器上连接国外的服务器从而可以浏览被和谐的网站，而VPN是让整个设备的网络都连上国外的服务器，包括浏览器和其他任何软件。VPN的好处是可以让其他软件更快速地连接国外服务器，比如要下载android的sdk，国内网络经常半天没有反应，翻墙后下载速度就快多了，但缺点也比较明显，就是访问国内网站的时候会比较慢，使用国内软件比如QQ的时候时不时会掉线。</p>
-
-<p>这里有个比较好的VPN推荐一下<a href="http://www.strongvpn.com/">Strong VPN</a>(需要翻墙才能访问)，这个是一个美国比较好的VPN，连接稳定，访问快速，24小时技术支持，价格也比较合适，有个55美刀/年的套餐，支持PPTP,L2TP和SSTP连接。国内的VPN和SSH我用了几个都不大满意，不是有些网站不能上，就是经常掉线连不上。如果有米的话，还可以去租VPS(虚拟专用服务器)，自己搭VPN服务，那速度绝对比直接买的VPN快，甚至还可以自己卖VPN账号。</p>
-
-<p>不管怎样，我们需要一个VPN账号，而且可以支持PPTP连接的，下面会用到。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-8/strong-vpn.png"></p>
-
-<h3><a href="https://code.google.com/p/autoddvpn/">autoddvpn</a>(需要翻墙才能访问)</h3>
-
-<p>autoddvpn是一个解决方案，主要有下面几大功能:</p>
-
-<ul>
-<li>让你的dd-wrt路由器可以自由翻墙，路由下的所有设备仿佛在墙外一样，完全感觉不到墙的存在；</li>
-<li>智能路由，可以自动判断访问的网站是墙内还是墙外的，如果是墙内的就不走VPN，如果是墙外的走VPN；</li>
-<li>守护进程，监控你的VPN服务是否正常，如果VPN断了可以随时重连。</li>
-</ul>
-
-
-<p>autoddvpn有2种设置模式:传统模式(classicMode)和优雅模式(graceMode)，这里我们主要介绍<a href="https://code.google.com/p/autoddvpn/wiki/graceMode">graceMode</a>。在gracemode中，我们主要看PPTP这一块的内容，因为我们的VPN账号只支持PPTP，不支持OpenVPN(Strong VPN支持PPTP,L2TP,SSTP连接，但dd-wrt不支持L2TP和SSTP)。</p>
-
-<ul>
-<li>首先开启路由器的<a href="https://code.google.com/p/autoddvpn/wiki/jffs">JFFS</a>，这样可以将我们的脚本放到jffs里面(jffs我理解是一块可以挂载的小硬盘)；</li>
-<li>接着按照文档设置DNS(<a href="https://code.google.com/p/autoddvpn/wiki/graceMode#%E8%A8%AD%E7%BD%AE%E6%96%B9%E5%BC%8F(%E4%BB%A5PPTP%E7%82%BA%E4%BE%8B)">PPTP设置</a>)；</li>
-<li>ssh或telnet到你的路由器，登录名和密码是你刷了dd-wrt版本后进入web页面设置的用户名和密码；</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>telnet 192.168.11.1
-</span><span class='line'>Trying 192.168.11.1...
-</span><span class='line'>Connected to 192.168.1.1.
-</span><span class='line'>Escape character is <span class="s1">&#39;^]&#39;</span>.
-</span><span class='line'>
-</span><span class='line'>DD-WRT v24-sp2 std <span class="o">(</span>c<span class="o">)</span> 2014 NewMedia-NET GmbH
-</span><span class='line'>Release: 06/23/14 <span class="o">(</span>SVN revision: 24461<span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'>DD-WRT login: root
-</span><span class='line'>Password:
-</span><span class='line'><span class="o">==========================================================</span>
-</span><span class='line'>
-</span><span class='line'> ____  ___    __        ______ _____         ____  _  _
-</span><span class='line'> | _ <span class="se">\|</span> _ <span class="se">\ </span>  <span class="se">\ \ </span>     / /  _ <span class="se">\_</span>   _| __   _|___ <span class="se">\|</span> <span class="o">||</span> |
-</span><span class='line'> <span class="o">||</span> | <span class="o">||</span> <span class="o">||</span>____<span class="se">\ \ </span>/<span class="se">\ </span>/ /| |_<span class="o">)</span> <span class="o">||</span> |   <span class="se">\ \ </span>/ / __<span class="o">)</span> | <span class="o">||</span> |_
-</span><span class='line'> <span class="o">||</span>_| <span class="o">||</span>_||_____<span class="se">\ </span>V  V / |  _ &lt; | |    <span class="se">\ </span>V / / __/|__   _|
-</span><span class='line'> |___/|___/      <span class="se">\_</span>/<span class="se">\_</span>/  |_| <span class="se">\_\|</span>_|     <span class="se">\_</span>/ |_____|  |_|
-</span><span class='line'>
-</span><span class='line'>                       DD-WRT v24-sp2
-</span><span class='line'>                   http://www.dd-wrt.com
-</span><span class='line'>
-</span><span class='line'><span class="o">==========================================================</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>BusyBox v1.22.1 <span class="o">(</span>2014-06-23 03:23:41 CEST<span class="o">)</span> built-in shell <span class="o">(</span>ash<span class="o">)</span>
-</span><span class='line'>Enter <span class="s1">&#39;help&#39;</span> <span class="k">for </span>a list of built-in commands.
-</span><span class='line'>
-</span><span class='line'>root@DD-WRT:~#
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>登陆后执行下面的命令；</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># mkdir /jffs/pptp</span>
-</span><span class='line'><span class="c"># cd /jffs/pptp</span>
-</span><span class='line'><span class="c"># wget http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpnup.sh</span>
-</span><span class='line'><span class="c"># wget http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpndown.sh</span>
-</span><span class='line'><span class="c"># wget http://autoddvpn.googlecode.com/svn/trunk/pptp/jffs/run.sh</span>
-</span><span class='line'><span class="c"># chmod a+x *.sh</span>
-</span><span class='line'><span class="c"># nvram set rc_startup=&#39;/jffs/pptp/run.sh&#39;</span>
-</span><span class='line'><span class="c"># nvram commit</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>一般执行上面的wget命令都是不行的，因为autoddvpn网站要翻墙才能访问，所以可以在pptp目录下创建那3个脚本文件，然后将网站上脚本的内容copy到脚本文件里面，命令更新如下。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># mkdir /jffs/pptp</span>
-</span><span class='line'><span class="c"># cd /jffs/pptp</span>
-</span><span class='line'><span class="c"># touch vpnup.sh</span>
-</span><span class='line'><span class="c"># touch vpndown.sh</span>
-</span><span class='line'><span class="c"># touch run.sh</span>
-</span><span class='line'><span class="c"># ...直接从网站上复制脚本内容，再拷贝到文件里面</span>
-</span><span class='line'><span class="c"># chmod a+x *.sh</span>
-</span><span class='line'><span class="c"># nvram set rc_startup=&#39;/jffs/pptp/run.sh&#39;</span>
-</span><span class='line'><span class="c"># nvram commit</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>参考<a href="https://code.google.com/p/autoddvpn/wiki/HOWTO#%E8%A8%AD%E7%BD%AEPPTP_client">文档</a>的<code>设置PPTP client</code>部分进行dd-wrt的PPTP客户端设置;</li>
-<li>重启dd-wrt路由器，启动后会产生一个Log文件<code>/tmp/autoddvpn.log 這是autoddvpn的log</code>;</li>
-<li>最后关于守护进程的脚本，autoddvpn没有提供，其实就是定时检查一下PPTP连接是否通的，不通的话就重连，下面给一个openvpn的检查脚本，pptp的上网自己查一下；</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>/jffs/pptp/openvpnDaemon.sh </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
-</span><span class='line'><span class="nv">ISRUN</span><span class="o">=</span><span class="sb">`</span>ps|grep <span class="s2">&quot;openvpn&quot;</span>|wc -l<span class="sb">`</span>
-</span><span class='line'><span class="k">if</span> <span class="o">[[</span> <span class="nv">$ISRUN</span> -lt 4 <span class="o">]]</span>
-</span><span class='line'><span class="k">then</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Not running, start!&quot;</span>
-</span><span class='line'>openvpn --config /jffs/openvpn/openvpn.conf --daemon
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Openvpn is already running.&quot;</span>
-</span><span class='line'><span class="nb">exit</span>
-</span><span class='line'><span class="k">fi</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后在dd-wrt的web界面的“管理”->“管理”下启用Cron，并且在附加任务中输入：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>*/2 * * * * /jffs/openvpn/openvpnDaemon.sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>悬而未决的问题——PPTP无法连接</h3>
-
-<p>可能有的人使用VPN进行PPTP连接时会发现连接不上，在windows下是报一个<code>806</code>的异常，这种可能是你的ISP(网络服务提供商——电信或联通)没有提供这个服务，这种情况下还不知道怎么解决。在网上查过不少资料，说什么设置路由器的PPTP穿透功能，配置1723端口开启等，这些都没有什么效果，希望有高手告知这种情况要怎么解决。谢谢</p>
 ]]></content>
   </entry>
   
