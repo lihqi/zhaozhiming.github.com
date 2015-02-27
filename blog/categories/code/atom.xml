@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-02-05T14:57:58+08:00</updated>
+  <updated>2015-02-27T11:27:15+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,249 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MongoDB简介]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2015/02/26/hello-mongodb/"/>
+    <updated>2015-02-26T16:42:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2015/02/26/hello-mongodb</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-2/mongodb.jpeg"></p>
+
+<p><a href="http://www.mongodb.org/">MongoDB</a>是一个<a href="http://en.wikipedia.org/wiki/NoSQL">NoSQL</a>(Not only SQL)数据库，使用C++语言编写，当前最新版本为3.0(beta)。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>安装</h2>
+
+<p>在MongoDB官网上有各个OS的安装指导，但在docker横行的时代，使用docker来安装无疑是最方便的，这里是<a href="https://registry.hub.docker.com/_/mongo/">MongoDB的docker镜像地址</a>，使用非常简单，执行以下命令，docker就会自动下载镜像并启动MongoDB容器了。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>docker run &amp;mdash;name somename -d -p 27017:27017 mongo:tag
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>客户端</h2>
+
+<p>对比了几个MongoDB的GUI客户端，发现一个比较好用的客户端<a href="http://robomongo.org/">Robomongo</a>，而且是跨平台的，安装完成后点击添加连接，输入ip和端口号就可以连接到你的MongoDB服务器了。</p>
+
+<p><img src="/images/post/2015-2/robomongo.png"></p>
+
+<p>PS:因为我是OS系统，用boot2docker来启动docker的，所以我的ip不是<code>localhost</code>，而是<code>192.168.59.103</code>。</p>
+
+<h2>sql查询</h2>
+
+<p>MongoDB是用表达式语言进行数据库操作的，这里<a href="http://www.cnblogs.com/hoojo/archive/2011/06/01/2066426.html">有一篇blog</a>介绍了MongoDB的一些简单操作，并有SQL语句与之对应，下面简单介绍几个命令。</p>
+
+<h4>关系型数据库 vs NoSQL</h4>
+
+<p>在介绍命令之前，需要先理解与关系型数据库两者概念上的区别。</p>
+
+<ul>
+<li>表：table vs collection</li>
+<li>行：view/row(s) vs json document</li>
+<li>索引：index vs index</li>
+</ul>
+
+
+<h4>简单命令</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;创建一个聚集集合（table）&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.createCollection<span class="o">(</span>“collName”, <span class="o">{</span>size: 20, capped: 5, max: 100<span class="o">})</span>;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查询集合所有记录&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.userInfo.find<span class="o">()</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查询age <span class="o">=</span> 22的记录&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.userInfo.find<span class="o">({</span>&amp;ldquo;age&amp;rdquo;: 22<span class="o">})</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo where <span class="nv">age</span> <span class="o">=</span> 22;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查询name中包含 mongo的数据&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.userInfo.find<span class="o">({</span>name: /mongo/<span class="o">})</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo where name like ‘%mongo%’;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查询name <span class="o">=</span> zhangsan, <span class="nv">age</span> <span class="o">=</span> 22的数据&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.userInfo.find<span class="o">({</span>name: &amp;lsquo;zhangsan&amp;rsquo;, age: 22<span class="o">})</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo where <span class="nv">name</span> <span class="o">=</span> ‘zhangsan’ and <span class="nv">age</span> <span class="o">=</span> ‘22’;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;更新记录&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.users.update<span class="o">({</span>age: 25<span class="o">}</span>, <span class="o">{</span><span class="nv">$set</span>: <span class="o">{</span>name: &amp;lsquo;changeName&amp;rsquo;<span class="o">}}</span>, <span class="nb">false</span>, <span class="nb">true</span><span class="o">)</span>;
+</span><span class='line'>相当于: update users <span class="nb">set </span><span class="nv">name</span> <span class="o">=</span> ‘changeName’ where <span class="nv">age</span> <span class="o">=</span> 25;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;删除&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.users.remove<span class="o">({</span>age: 132<span class="o">})</span>;
+</span><span class='line'>相当于: delete from users where <span class="nv">age</span> <span class="o">=</span> 132;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Java示例</h2>
+
+<p>使用Java来操作MongoDB也比较简单，首先要下载Java驱动，在Maven库上可以查询到，下面是驱动的Gradle定义。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>org.mongodb:mongo-java-driver:3.0.0-beta2
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>驱动最新的版本是3.0，语法上跟2.x有一些差别，具体示例可以参考<a href="http://docs.mongodb.org/ecosystem/tutorial/getting-started-with-3.0-java-driver/">MongoDB官网的Java示例</a>。</p>
+
+<h4>简单示例</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyMongoDB.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.BasicDBObject</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.MongoClient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.client.FindIterable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.client.MongoCollection</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.client.MongoDatabase</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.bson.Document</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyMongoDb</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="n">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">MongoClient</span> <span class="n">mongo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MongoClient</span><span class="o">(</span><span class="s">&quot;192.168.59.103&quot;</span><span class="o">,</span> <span class="mi">27017</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 根据名称查找数据库</span>
+</span><span class='line'>    <span class="n">MongoDatabase</span> <span class="n">mydb</span> <span class="o">=</span> <span class="n">mongo</span><span class="o">.</span><span class="na">getDatabase</span><span class="o">(</span><span class="s">&quot;mydb&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="c1">// 根据名称查找集合</span>
+</span><span class='line'>    <span class="n">MongoCollection</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Document</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">mydb</span><span class="o">.</span><span class="na">getCollection</span><span class="o">(</span><span class="s">&quot;collectName&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 查询该集合的所有记录</span>
+</span><span class='line'>    <span class="n">FindIterable</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Document</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">documents</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="na">find</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">for</span> <span class="o">(</span><span class="n">Document</span> <span class="n">document</span> <span class="o">:</span> <span class="n">documents</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">document</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 插入一条记录</span>
+</span><span class='line'>    <span class="n">Document</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="s">&quot;time&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;age&quot;</span><span class="o">,</span> <span class="mi">100</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;sex&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;address&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">BasicDBObject</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="s">&quot;china&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;province&quot;</span><span class="o">,</span> <span class="s">&quot;Sichuan&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">collection</span><span class="o">.</span><span class="na">insertOne</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 更新一条记录</span>
+</span><span class='line'>    <span class="n">collection</span><span class="o">.</span><span class="na">updateOne</span><span class="o">(</span><span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;$set&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;age&quot;</span><span class="o">,</span> <span class="mi">101</span><span class="o">)));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>数据库设计原则</h2>
+
+<p>MongoDB的数据模式有2种结构：引用(References)和内嵌(Embedded)。</p>
+
+<ul>
+<li>引用和关系型数据库的表设计比较像，不同的对象放在不同的集合(表)中。</li>
+</ul>
+
+
+<p><img src="/images/post/2015-2/mongo-references.png"></p>
+
+<ul>
+<li>内嵌比较特殊，是把对象的关联对象放到一个集合(表)中，这个恰恰是关系系数据库做不到的。</li>
+</ul>
+
+
+<p><img src="/images/post/2015-2/mongo-embedded.png"></p>
+
+<p>那问题来了，什么时候使用引用，什么时候使用内嵌呢？下面是官方给的一些建议，总结如下:</p>
+
+<ul>
+<li>顶级对象，一般使用独立的collection，区别于内嵌</li>
+<li>线性明细对象如订单里的订单项，一般使用内嵌</li>
+<li>包含关系的对象通常使用内嵌</li>
+<li>多对多的关系通常采用引用，dbref</li>
+<li>只有少量数据的可以单独作为一个collection，这样可以快速缓存到应用服务器内存</li>
+<li>内嵌对象比顶级对象难引用，至少现在还不能对它使用dbref</li>
+<li>内嵌对象的获取有时候会比较难，例如各科分数内嵌到学生对象，从所有学生中获取前100个高分，不内嵌会更简单</li>
+<li>如果内嵌对象数量很多，可以限制其大小</li>
+<li>性能存在问题（应是查询的性能），使用内嵌</li>
+</ul>
+
+
+<p>总而言之，数据库的设计需要考虑需求的使用场景，能一次查询到结果的尽量不要分多次进行查询，更多内容可以参考MongoDB官网<a href="http://docs.mongodb.org/manual/core/data-modeling-introduction/">Data Modeling</a>的章节。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[微信公众账号开发part2——用户消息接收]]></title>
@@ -2025,262 +2268,6 @@
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>参考资料: <a href="http://stackoverflow.com/questions/17639442/deploy-and-serve-a-thrift-server">http://stackoverflow.com/questions/17639442/deploy-and-serve-a-thrift-server</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[RequireJS的简单使用]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/12/19/requirejs-simple-use/"/>
-    <updated>2014-12-19T11:05:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/12/19/requirejs-simple-use</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-12/requirejs.png"></p>
-
-<p>在没有<a href="http://requirejs.org/">RequireJS</a>以前，我们的html页面都需要配置很多js文件，有了RequireJS以后，我们只需要简单的一个RequireJS的文件就可以了。</p>
-
-<!--more-->
-
-
-<h2>工程目录</h2>
-
-<p>先看下我们的工程目录，主要引入了Jqury、AngularJS和RequireJS这几个js文件，login.html、main.js和login.js是我们自己的文件。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&amp;mdash;webapp
-</span><span class='line'>  |&amp;mdash;resources&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;|--scripts
-</span><span class='line'>  |--vendor
-</span><span class='line'>    |--jquery.js
-</span><span class='line'>    |--angularjs.js
-</span><span class='line'>    |--requirejs.js
-</span><span class='line'>  |--login.js
-</span><span class='line'>  |--main.js
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;  |&amp;mdash;WEB-INF
-</span><span class='line'>  |&amp;mdash;login.html
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>在html页面中加入RequireJS</h2>
-
-<p>首先在html页面我们先引入requirejs，可以看到script标签中有个data-main属性，这个是RequireJS的属性标签，指向我们工程里面的main.js文件，注意这里不需要写<code>.js</code>后缀。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE html&gt;
-</span><span class='line'><span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span> <span class="na">ng-app=</span><span class="s">&quot;app&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;head&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>meta charset=&quot;UTF-8&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>title<span class="ni">&amp;gt;</span>My App<span class="ni">&amp;lt;</span>/title<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>script src=&quot;resources/scripts/vendor/require.js&quot; data-main=&quot;resources/srcipts/main&quot;<span class="ni">&amp;gt;&amp;lt;</span>/script<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;/head&gt;</span>
-</span><span class='line'><span class="nt">&lt;body&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;LoginForm&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_check&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">&quot;display: block;&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;div&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;h1&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;ui-icon add&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>用户登录
-</span><span class='line'>                <span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;error&quot;</span> <span class="na">style=</span><span class="s">&quot;display: none; color: #c9302c&quot;</span> <span class="na">align=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;h3&gt;</span>认证失败，请重新登录<span class="nt">&lt;/h3&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;logout&quot;</span> <span class="na">style=</span><span class="s">&quot;display: none; color: #02547f&quot;</span> <span class="na">align=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;h3&gt;</span>已成功登出<span class="nt">&lt;/h3&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="nt">&lt;ul&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;li&gt;&lt;label&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;span&gt;</span>用户名<span class="nt">&lt;/span&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;j_username&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;/label&gt;&lt;/li&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;li&gt;&lt;label&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;span&gt;</span>密码<span class="nt">&lt;/span&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="na">name=</span><span class="s">&quot;j_password&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;/label&gt;&lt;/li&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/ul&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;div&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">name=</span><span class="s">&quot;logon&quot;</span> <span class="na">value=</span><span class="s">&quot;Logon&quot;</span><span class="nt">&gt;</span>登录<span class="nt">&lt;/button&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/form&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;/body&gt;</span>
-</span><span class='line'><span class="nt">&lt;/html&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>main.js</h2>
-
-<p>下面是我们的main.js。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>main.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">require</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
-</span><span class='line'>   <span class="nx">paths</span><span class="o">:</span><span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span>  <span class="nx">angular</span><span class="o">:</span> <span class="s1">&#39;vendor/angular&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">jquery</span><span class="o">:</span> <span class="s1">&#39;vendor/jquery&#39;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>   <span class="p">},</span>
-</span><span class='line'>   <span class="nx">shim</span><span class="o">:</span><span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span>  <span class="nx">angular</span><span class="o">:</span><span class="p">{</span>
-</span><span class='line'>     <span class="nx">deps</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;jquery&#39;</span><span class="p">],</span>
-</span><span class='line'>     <span class="nx">exports</span><span class="o">:</span> <span class="s1">&#39;angular&#39;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>   <span class="p">}</span> <span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">});</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">require</span><span class="p">([</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">angular</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">login</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">angular</span><span class="p">)</span> <span class="p">{</span>  <span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<ul>
-<li><code>paths</code>里面指定了jqury和angularjs对应的js文件路径，同样不需要写js后缀，并给他们起了对应的别名。</li>
-<li><code>shim</code>属性里面配置了deps数组，表明angular依赖jqury，还有exports值，表明这个模块外部调用时的名称。</li>
-<li>最后一部分代码表示我们的html页面需要使用哪些js文件，比如我们使用了angular和login这2个js文件的功能，同时angular依赖了jqurey，所以html页面加载的时候就会同时将jquery.js、angularjs.js和login.js这几个js文件加载进来。</li>
-</ul>
-
-
-<h2>login.js</h2>
-
-<p>最后看一下我们的login.js，通过之前的main.js我们已经加载好了Jquery和AngularJS这些第三方JS库，要使用它们的话需要通过<code>define</code>的方式来引用。</p>
-
-<p>比如下面的js文件使用了jquery的功能，我们可以在<code>define</code>后面添加<code>angular</code>这个名称，因为前面在<code>shim</code>属性里面已经定义了<code>angular</code>依赖<code>jquery</code>，所以使用<code>angular</code>也可以用到<code>jquery</code>的功能。(当然我们也可以单独添加<code>jquery</code>，但这样就使用不到<code>angular</code>的功能了)</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>login.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">define</span><span class="p">([</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">angular</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">angular</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">function</span> <span class="nx">getParameterByName</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\[]/</span><span class="p">,</span> <span class="s2">&quot;\\[&quot;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\]]/</span><span class="p">,</span> <span class="s2">&quot;\\]&quot;</span><span class="p">);</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">regex</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;[\\?&amp;amp;]&quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;=([^&amp;amp;#]*)&quot;</span><span class="p">),</span>
-</span><span class='line'>        <span class="nx">results</span> <span class="o">=</span> <span class="nx">regex</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">results</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="s2">&quot;&quot;</span> <span class="o">:</span> <span class="nb">decodeURIComponent</span><span class="p">(</span><span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\+/g</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">));</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="nx">getParameterByName</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#error&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="nx">getParameterByName</span><span class="p">(</span><span class="s2">&quot;logout&quot;</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#logout&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

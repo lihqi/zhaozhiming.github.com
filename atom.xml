@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-02-05T14:57:58+08:00</updated>
+  <updated>2015-02-27T11:27:15+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,229 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MongoDB简介]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2015/02/26/hello-mongodb/"/>
+    <updated>2015-02-26T16:42:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2015/02/26/hello-mongodb</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2015-2/mongodb.jpeg"></p>
+
+<p><a href="http://www.mongodb.org/">MongoDB</a>是一个<a href="http://en.wikipedia.org/wiki/NoSQL">NoSQL</a>(Not only SQL)数据库，使用C++语言编写，当前最新版本为3.0(beta)。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>安装</h2>
+
+<p>在MongoDB官网上有各个OS的安装指导，但在docker横行的时代，使用docker来安装无疑是最方便的，这里是<a href="https://registry.hub.docker.com/_/mongo/">MongoDB的docker镜像地址</a>，使用非常简单，执行以下命令，docker就会自动下载镜像并启动MongoDB容器了。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>docker run --name somename -d -p 27017:27017 mongo:tag
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>客户端</h2>
+
+<p>对比了几个MongoDB的GUI客户端，发现一个比较好用的客户端<a href="http://robomongo.org/">Robomongo</a>，而且是跨平台的，安装完成后点击添加连接，输入ip和端口号就可以连接到你的MongoDB服务器了。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-2/robomongo.png"></p>
+
+<p>PS:因为我是OS系统，用boot2docker来启动docker的，所以我的ip不是<code>localhost</code>，而是<code>192.168.59.103</code>。</p>
+
+<h2>sql查询</h2>
+
+<p>MongoDB是用表达式语言进行数据库操作的，这里<a href="http://www.cnblogs.com/hoojo/archive/2011/06/01/2066426.html">有一篇blog</a>介绍了MongoDB的一些简单操作，并有SQL语句与之对应，下面简单介绍几个命令。</p>
+
+<h4>关系型数据库 vs NoSQL</h4>
+
+<p>在介绍命令之前，需要先理解与关系型数据库两者概念上的区别。</p>
+
+<ul>
+<li>表：table vs collection</li>
+<li>行：view/row(s) vs json document</li>
+<li>索引：index vs index</li>
+</ul>
+
+
+<h4>简单命令</h4>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># 创建一个聚集集合（table）</span>
+</span><span class='line'>db.createCollection<span class="o">(</span>“collName”, <span class="o">{</span>size: 20, capped: 5, max: 100<span class="o">})</span>;
+</span><span class='line'>
+</span><span class='line'><span class="c"># 查询集合所有记录</span>
+</span><span class='line'>db.userInfo.find<span class="o">()</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo;
+</span><span class='line'>
+</span><span class='line'><span class="c"># 查询age = 22的记录</span>
+</span><span class='line'>db.userInfo.find<span class="o">({</span><span class="s2">&quot;age&quot;</span>: 22<span class="o">})</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo where <span class="nv">age</span> <span class="o">=</span> 22;
+</span><span class='line'>
+</span><span class='line'><span class="c"># 查询name中包含 mongo的数据</span>
+</span><span class='line'>db.userInfo.find<span class="o">({</span>name: /mongo/<span class="o">})</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo where name like ‘%mongo%’;
+</span><span class='line'>
+</span><span class='line'><span class="c"># 查询name = zhangsan, age = 22的数据</span>
+</span><span class='line'>db.userInfo.find<span class="o">({</span>name: <span class="s1">&#39;zhangsan&#39;</span>, age: 22<span class="o">})</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo where <span class="nv">name</span> <span class="o">=</span> ‘zhangsan’ and <span class="nv">age</span> <span class="o">=</span> ‘22’;
+</span><span class='line'>
+</span><span class='line'><span class="c"># 更新记录</span>
+</span><span class='line'>db.users.update<span class="o">({</span>age: 25<span class="o">}</span>, <span class="o">{</span><span class="nv">$set</span>: <span class="o">{</span>name: <span class="s1">&#39;changeName&#39;</span><span class="o">}}</span>, <span class="nb">false</span>, <span class="nb">true</span><span class="o">)</span>;
+</span><span class='line'>相当于: update users <span class="nb">set </span><span class="nv">name</span> <span class="o">=</span> ‘changeName’ where <span class="nv">age</span> <span class="o">=</span> 25;
+</span><span class='line'>
+</span><span class='line'><span class="c"># 删除</span>
+</span><span class='line'>db.users.remove<span class="o">({</span>age: 132<span class="o">})</span>;
+</span><span class='line'>相当于: delete from users where <span class="nv">age</span> <span class="o">=</span> 132;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Java示例</h2>
+
+<p>使用Java来操作MongoDB也比较简单，首先要下载Java驱动，在Maven库上可以查询到，下面是驱动的Gradle定义。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>org.mongodb:mongo-java-driver:3.0.0-beta2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>驱动最新的版本是3.0，语法上跟2.x有一些差别，具体示例可以参考<a href="http://docs.mongodb.org/ecosystem/tutorial/getting-started-with-3.0-java-driver/">MongoDB官网的Java示例</a>。</p>
+
+<h4>简单示例</h4>
+
+<figure class='code'><figcaption><span>MyMongoDB.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.BasicDBObject</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.MongoClient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.client.FindIterable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.client.MongoCollection</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.client.MongoDatabase</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.bson.Document</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyMongoDb</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">MongoClient</span> <span class="n">mongo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MongoClient</span><span class="o">(</span><span class="s">&quot;192.168.59.103&quot;</span><span class="o">,</span> <span class="mi">27017</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 根据名称查找数据库</span>
+</span><span class='line'>        <span class="n">MongoDatabase</span> <span class="n">mydb</span> <span class="o">=</span> <span class="n">mongo</span><span class="o">.</span><span class="na">getDatabase</span><span class="o">(</span><span class="s">&quot;mydb&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="c1">// 根据名称查找集合</span>
+</span><span class='line'>        <span class="n">MongoCollection</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">mydb</span><span class="o">.</span><span class="na">getCollection</span><span class="o">(</span><span class="s">&quot;collectName&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 查询该集合的所有记录</span>
+</span><span class='line'>        <span class="n">FindIterable</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">documents</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="na">find</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Document</span> <span class="n">document</span> <span class="o">:</span> <span class="n">documents</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">document</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 插入一条记录</span>
+</span><span class='line'>        <span class="n">Document</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="s">&quot;time&quot;</span><span class="o">)</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;age&quot;</span><span class="o">,</span> <span class="mi">100</span><span class="o">)</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;sex&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;address&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">BasicDBObject</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="s">&quot;china&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;province&quot;</span><span class="o">,</span> <span class="s">&quot;Sichuan&quot;</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">collection</span><span class="o">.</span><span class="na">insertOne</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 更新一条记录</span>
+</span><span class='line'>        <span class="n">collection</span><span class="o">.</span><span class="na">updateOne</span><span class="o">(</span><span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;$set&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;age&quot;</span><span class="o">,</span> <span class="mi">101</span><span class="o">)));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>数据库设计原则</h2>
+
+<p>MongoDB的数据模式有2种结构：引用(References)和内嵌(Embedded)。</p>
+
+<ul>
+<li>引用和关系型数据库的表设计比较像，不同的对象放在不同的集合(表)中。</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-2/mongo-references.png"></p>
+
+<ul>
+<li>内嵌比较特殊，是把对象的关联对象放到一个集合(表)中，这个恰恰是关系系数据库做不到的。</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-2/mongo-embedded.png"></p>
+
+<p>那问题来了，什么时候使用引用，什么时候使用内嵌呢？下面是官方给的一些建议，总结如下:</p>
+
+<ul>
+<li>顶级对象，一般使用独立的collection，区别于内嵌</li>
+<li>线性明细对象如订单里的订单项，一般使用内嵌</li>
+<li>包含关系的对象通常使用内嵌</li>
+<li>多对多的关系通常采用引用，dbref</li>
+<li>只有少量数据的可以单独作为一个collection，这样可以快速缓存到应用服务器内存</li>
+<li>内嵌对象比顶级对象难引用，至少现在还不能对它使用dbref</li>
+<li>内嵌对象的获取有时候会比较难，例如各科分数内嵌到学生对象，从所有学生中获取前100个高分，不内嵌会更简单</li>
+<li>如果内嵌对象数量很多，可以限制其大小</li>
+<li>性能存在问题（应是查询的性能），使用内嵌</li>
+</ul>
+
+
+<p>总而言之，数据库的设计需要考虑需求的使用场景，能一次查询到结果的尽量不要分多次进行查询，更多内容可以参考MongoDB官网<a href="http://docs.mongodb.org/manual/core/data-modeling-introduction/">Data Modeling</a>的章节。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[微信公众账号开发part2——用户消息接收]]></title>
@@ -5839,309 +6062,6 @@ PCRE安装比较简单，去pcre的网站下载源码包后解压，cd到解压�
 
 <ul>
 <li><a href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1/">让你的安卓开发更容易(一)——Intellij IDEA</a></li>
-<li><a href="http://zhaozhiming.github.io/blog/2014/10/07/make-your-android-dev-life-easy-part-3/">让你的安卓开发更容易(三)——Picasso</a></li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[让你的安卓开发更容易(一)——Intellij IDEA]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1/"/>
-    <updated>2014-08-31T10:59:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-8/intellijidea_android.gif"></p>
-
-<blockquote><p>工欲善其事，必先利其器</p><footer><strong>孔子 ——《春秋》</strong></footer></blockquote>
-
-
-<p>介绍一下安卓开发的一些好用工具，可以让你的开发事半功倍。如果你是一个安卓新手，那么准备一套高效率的开发工具，会让你从一开始就养成使用好工具的习惯，从开始就比别人更快；如果你是一名安卓开发高手，也可以看看这些工具，说不定你已经在使用其中的一些工具了。</p>
-
-<!--more-->
-
-
-<h2>Intellij IDEA</h2>
-
-<p>虽然IntelliJ IDEA是一款收费的软件，但收费有它收费的道理，跟eclipse相比，它多了更多重构，代码错误提示，与更多工具集成的功能。IntelliJ IDEA被认为是当前Java开发效率最快的IDE工具，它集成了开发过程中实用的众多功能，几乎可以不用鼠标可以方便的完成你要做的任何事情，最大程度的加快开发的速度。简单而又功能强大。</p>
-
-<p>从版本10开始，IntelliJ IDEA就集成了Android的开发功能，发展到现在版本13，不仅具备了流畅开发Android项目的能力，而且还集成了最新的构建工具Gradle，Android lint等工具。</p>
-
-<h3>Android Hello World</h3>
-
-<p>现在我们使用IntelliJ IDEA来创建一个使用Gradle构建的Android项目。</p>
-
-<ul>
-<li>首先点击创建新工程，在左边的项目类型栏中选择<code>Android</code>，可以看到右边有4个选项可以选，我们选择<code>Gradle: Android Mondule</code>，然后点击下面的Next;</li>
-</ul>
-
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-1.png"></p>
-
-<ul>
-<li>进入项目信息配置页面，可以看到有如下的选项，填写后点击Next；
-
-<ul>
-<li>Application name: 应用名</li>
-<li>Module name: 模块名</li>
-<li>Package name: 包名</li>
-<li>Minimum required SDK: 可支持的最小Android SDK版本</li>
-<li>Target SDK: 可支持的最大Android SDK版本</li>
-<li>Compile with: 用哪个Android SDK版本编译</li>
-<li>Theme: app主题，全黑，全白，半黑半百，是否要GridLayou，是否要action bar等</li>
-</ul>
-</li>
-</ul>
-
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-2.png"></p>
-
-<ul>
-<li>选择main_activity的样式，有9种可以选择，样式的效果在右边可以预览，我们可以选择最简单的<code>Blank Activity</code>，选择好了Next；</li>
-</ul>
-
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-3.png"></p>
-
-<ul>
-<li>填写Activity名字和对应的展示层layout名字，填完Next；</li>
-</ul>
-
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-4.png"></p>
-
-<ul>
-<li>填写工程名和选择工程文件路径，注意最下面的<code>Project format</code>，有2种格式，一种是<code>.idea</code>文件夹，一个是ipr文件，选择ipr文件的方式可以减少很多文件的生成，最后Finish；</li>
-</ul>
-
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-5.png"></p>
-
-<p>生成的代码如下:</p>
-
-<figure class='code'><figcaption><span>MainActivity.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">ActionBarActivity</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onCreateOptionsMenu</span><span class="o">(</span><span class="n">Menu</span> <span class="n">menu</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// Inflate the menu; this adds items to the action bar if it is present.</span>
-</span><span class='line'>        <span class="n">getMenuInflater</span><span class="o">().</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">menu</span><span class="o">.</span><span class="na">main</span><span class="o">,</span> <span class="n">menu</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onOptionsItemSelected</span><span class="o">(</span><span class="n">MenuItem</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// Handle action bar item clicks here. The action bar will</span>
-</span><span class='line'>        <span class="c1">// automatically handle clicks on the Home/Up button, so long</span>
-</span><span class='line'>        <span class="c1">// as you specify a parent activity in AndroidManifest.xml.</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemId</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">id</span> <span class="o">==</span> <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">action_settings</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">onOptionsItemSelected</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>activity_main.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;RelativeLayout</span> <span class="na">xmlns:android=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span>
-</span><span class='line'>    <span class="na">xmlns:tools=</span><span class="s">&quot;http://schemas.android.com/tools&quot;</span>
-</span><span class='line'>    <span class="na">android:layout_width=</span><span class="s">&quot;match_parent&quot;</span>
-</span><span class='line'>    <span class="na">android:layout_height=</span><span class="s">&quot;match_parent&quot;</span>
-</span><span class='line'>    <span class="na">android:paddingLeft=</span><span class="s">&quot;@dimen/activity_horizontal_margin&quot;</span>
-</span><span class='line'>    <span class="na">android:paddingRight=</span><span class="s">&quot;@dimen/activity_horizontal_margin&quot;</span>
-</span><span class='line'>    <span class="na">android:paddingTop=</span><span class="s">&quot;@dimen/activity_vertical_margin&quot;</span>
-</span><span class='line'>    <span class="na">android:paddingBottom=</span><span class="s">&quot;@dimen/activity_vertical_margin&quot;</span>
-</span><span class='line'>    <span class="na">tools:context=</span><span class="s">&quot;com.github.zzm.myapplication1.app.MainActivity&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;TextView</span>
-</span><span class='line'>        <span class="na">android:text=</span><span class="s">&quot;@string/hello_world&quot;</span>
-</span><span class='line'>        <span class="na">android:layout_width=</span><span class="s">&quot;wrap_content&quot;</span>
-</span><span class='line'>        <span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;/RelativeLayout&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>运行的效果如下:</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-8/idea-android-project-6.png" width="250" height="350"></p>
-
-<h3>Gradle脚本</h3>
-
-<p>可以看到工程目录下有2个build.gradle脚本，一个是根目录的构建文件(如下)，如果想提高构建速度，可以将脚本中的mavenCentral()改为<code>maven {url "http://maven.oschina.net/content/groups/public/"}</code>，就是将maven的国外镜像库改成国内的库。</p>
-
-<figure class='code'><figcaption><span>root/build.gradle </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// Top-level build file where you can add configuration options common to all sub-projects/modules.</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">buildscript</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">mavenCentral</span><span class="o">()</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">classpath</span> <span class="s1">&#39;com.android.tools.build:gradle:0.9.+&#39;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">allprojects</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">mavenCentral</span><span class="o">()</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>另外一个是app目录下的构建文件，可以看到指定了sdk的最小最大版本，需要的依赖包等。</p>
-
-<figure class='code'><figcaption><span>app/build.gradle </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">buildscript</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">mavenCentral</span><span class="o">()</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">classpath</span> <span class="s1">&#39;com.android.tools.build:gradle:0.9.+&#39;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;android&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">repositories</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">mavenCentral</span><span class="o">()</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">android</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">compileSdkVersion</span> <span class="mi">20</span>
-</span><span class='line'>    <span class="n">buildToolsVersion</span> <span class="s2">&quot;20.0.0&quot;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">defaultConfig</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">minSdkVersion</span> <span class="mi">8</span>
-</span><span class='line'>        <span class="n">targetSdkVersion</span> <span class="mi">20</span>
-</span><span class='line'>        <span class="n">versionCode</span> <span class="mi">1</span>
-</span><span class='line'>        <span class="n">versionName</span> <span class="s2">&quot;1.0&quot;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">buildTypes</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">release</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">runProguard</span> <span class="kc">false</span>
-</span><span class='line'>            <span class="n">proguardFiles</span> <span class="nf">getDefaultProguardFile</span><span class="o">(</span><span class="s1">&#39;proguard-android.txt&#39;</span><span class="o">),</span> <span class="s1">&#39;proguard-rules.txt&#39;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">compile</span> <span class="nf">fileTree</span><span class="o">(</span><span class="nl">dir:</span> <span class="s1">&#39;libs&#39;</span><span class="o">,</span> <span class="nl">include:</span> <span class="o">[</span><span class="s1">&#39;*.jar&#39;</span><span class="o">])</span>
-</span><span class='line'>    <span class="n">compile</span> <span class="s1">&#39;com.android.support:appcompat-v7:20.0.0&#39;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>相关链接</h2>
-
-<ul>
-<li><a href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-2/">让你的安卓开发更容易(二)——Genymotion</a></li>
 <li><a href="http://zhaozhiming.github.io/blog/2014/10/07/make-your-android-dev-life-easy-part-3/">让你的安卓开发更容易(三)——Picasso</a></li>
 </ul>
 
