@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: redis | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/redis/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-02-27T11:27:15+08:00</updated>
+  <updated>2015-04-12T16:46:03+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,193 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Spring-data进行Redis操作]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2015/04/12/spring-data-redis/"/>
+    <updated>2015-04-12T15:15:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2015/04/12/spring-data-redis</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-4/spring-redis.jpg"></p>
+
+<p><a href="http://redis.io/">Redis</a>相信大家都听说过，它是一个开源的key-value缓存数据库，有很多Java的客户端支持，比较有名的有Jedis，JRedis等（见<a href="http://redis.io/clients#java">这里</a>）。当然我们可以使用客户端的原生代码实现redis的操作，但实际上在spring中就已经集成了这些客户端的使用，下面我们就以Jedis为例来介绍一下Spring中关于Redis的配置。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>下载相关依赖包</h2>
+
+<p>首先要下载spring和redis相关的依赖包，最新的jedis版本是2.6.2，还需要下载jackson的包，这个后面会介绍为什么需要，以gradle脚本示例如下。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;compile<span class="o">(</span><span class="s2">&quot;redis.clients:jedis:&quot;</span> + jedisVersion<span class="o">)</span>
+</span><span class='line'>compile <span class="s2">&quot;org.springframework.data:spring-data-redis:&quot;</span> + springDataRedisVersion
+</span><span class='line'>
+</span><span class='line'>//json
+</span><span class='line'>compile <span class="s2">&quot;com.fasterxml.jackson.core:jackson-databind:&quot;</span> + jacksonDatabindVersion
+</span><span class='line'>compile <span class="s2">&quot;org.codehaus.jackson:jackson-mapper-asl:&quot;</span> + jacksonVersion
+</span><span class='line'>compile <span class="s2">&quot;org.codehaus.jackson:jackson-core-asl:&quot;</span> + jacksonVersion
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>spring配置jedis</h2>
+
+<p>在spring的xml配置文件中，做如下配置。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>!-- 配置redis池，依次为最大实例数，最大空闲实例数，(创建实例时)最大等待时间，(创建实例时)是否验证 --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;jedisPoolConfig&quot; class=&quot;redis.clients.jedis.JedisPoolConfig&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxTotal&quot; value=&quot;${redis.maxTotal}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxIdle&quot; value=&quot;${redis.maxIdle}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxWaitMillis&quot; value=&quot;${redis.maxWaitMillis}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;testOnBorrow&quot; value=&quot;${redis.testOnBorrow}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>!-- redis连接配置，依次为主机ip，端口，是否使用池，(usePool=true时)redis的池配置 --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;jedisFactory&quot; class=&quot;org.springframework.data.redis.connection.jedis.JedisConnectionFactory&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;hostName&quot; value=&quot;${redis.host}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;port&quot; value=&quot;${redis.port}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;usePool&quot; value=&quot;true&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;poolConfig&quot; ref=&quot;jedisPoolConfig&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>!-- redis模板配置 --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;redisTemplate&quot; class=&quot;org.springframework.data.redis.core.RedisTemplate&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;connectionFactory&quot; ref=&quot;jedisFactory&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;defaultSerializer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>bean class=&quot;org.springframework.data.redis.serializer.StringRedisSerializer&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/property<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>序列化</h2>
+
+<p>在spring中进行redis存储，如果没有对key和value进行序列化，保存到redis中会出现乱码。注意看上面的redis模板配置，有个配置项是defaultSerializer，这里表示redis中的key和value遇到需要序列化的时候，都默认使用StringRedisSerializer这个类来进行序列化。如果不指定序列化的话，内容会带乱码。</p>
+
+<p>spring-data-redis的序列化类有下面这几个:</p>
+
+<ul>
+<li>GenericToStringSerializer: 可以将任何对象泛化为字符串并序列化</li>
+<li>Jackson2JsonRedisSerializer: 跟JacksonJsonRedisSerializer实际上是一样的</li>
+<li>JacksonJsonRedisSerializer: 序列化object对象为json字符串</li>
+<li>JdkSerializationRedisSerializer: 序列化java对象</li>
+<li>StringRedisSerializer: 简单的字符串序列化</li>
+</ul>
+
+
+<p>一般如果key-value都是string的话，使用StringRedisSerializer就可以了，如果需要保存对象为json的话推荐使用JacksonJsonRedisSerializer，它不仅可以将对象序列化，还可以将对象转换为json字符串并保存到redis中，但需要和jackson配合一起使用。</p>
+
+<h2>简单的redis操作</h2>
+
+<p>代码示例如下，使用redis进行set和get操作。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>AccessTokenRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Repository</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AccessTokenRepository</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c1">//直接使用autowire就可以引用到配置文件中的redis-template</span>
+</span><span class='line'><span class="nd">@Autowired</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RedisTemplate</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">AccessToken</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">template</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">private</span> <span class="n">ValueOperations</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">AccessToken</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">operations</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@PostConstruct</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">//这里设置value的序列化方式为JacksonJsonRedisSerializer</span>
+</span><span class='line'>    <span class="n">template</span><span class="o">.</span><span class="na">setValueSerializer</span><span class="o">(</span><span class="k">new</span> <span class="n">JacksonJsonRedisSerializer</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;&amp;</span><span class="n">gt</span><span class="o">;(</span><span class="n">AccessToken</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">operations</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="na">opsForValue</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">AccessToken</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">operations</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="n">AccessToken</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">operations</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>调用set方法后，就可以在redis里面看到保存后的json字符串了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Redis集群环境安装指南]]></title>
