@@ -1,0 +1,491 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>使用Openfire和Smack进行即时通讯消息开发 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="使用Openfire和Smack进行即时通讯消息开发">
+	<meta name="keywords" content="openfire,smack">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='/stylesheets/slackey.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/fjalla_one.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/amethysta.css' rel='stylesheet' type='text/css'>
+	<script src="http://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">使用Openfire和Smack进行即时通讯消息开发</h2>
+	<div class="entry-content"><p><img src="/images/post/2015-4/openfire.png"></p>
+
+<p><a href="http://www.igniterealtime.org/index.jsp">Openfire</a>是由Ignite Realtime公司用Java开发的一个开源即时通讯服务器，基于XMPP协议（Jabber）进行消息交互，最新版本是3.9.3。该公司旗下有多个Java客户端可供使用，较常使用的是<a href="http://www.igniterealtime.org/projects/smack/index.jsp">Smack</a>，最新的版本是4.1.0，最新的版本与以前的版本相比有较大改动，下面我们就来介绍一下Openfire和Smack的使用。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>Openfire安装</h2>
+
+<p>Openfire的安装非常简单，你可以通过下面几种方式进行安装。</p>
+
+<h4>docker镜像</h4>
+
+<p>最简单的方式你可以通过docker下载<a href="https://registry.hub.docker.com/u/sameersbn/openfire/dockerfile/">Openfire的镜像</a>，然后执行下面的命令启动openfire容器。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>docker run --name<span class="o">=</span>myopenfire -d <span class="se">\ </span>
+</span><span class='line'>  -p 9090:9090 -p 5222:5222 -p 5223:5223 <span class="se">\ </span>
+</span><span class='line'>  -p 7777:7777 -p 7070:7070 -p 7443:7443 <span class="se">\ </span>
+</span><span class='line'>  -p 5229:5229 -p 5269:5269 sameersbn/openfire:3.9.3-2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>直接安装</h4>
+
+<p>这里是openfire的<a href="http://www.igniterealtime.org/builds/openfire/docs/latest/documentation/install-guide.html">安装向导</a>，有各个平台的指南，不过首先要安装JDK1.5+，然后按照指南进行安装即可。</p>
+
+<h2>Smack</h2>
+
+<p>最新的Smack版本是4.1.0，跟之前版本的API有很大区别，据说4.2.0的API差别会更大，<a href="https://www.igniterealtime.org/builds/smack/docs/latest/documentation/">这里</a>是Smack4.1.0的代码使用示例。</p>
+
+<h4>创建连接</h4>
+
+<p>不同于以前版本的是ConnectionConfig不再是new出来的，而是通过builder来创建。这个导致Spring的integration-xmpp组件不支持使用，只能自己写连接的类了。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">public</span> <span class="n">XMPPTCPConnection</span> <span class="nf">createConnection</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">XMPPTCPConnectionConfiguration</span> <span class="n">connectionConfig</span> <span class="o">=</span> <span class="n">XMPPTCPConnectionConfiguration</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">setUsernameAndPassword</span><span class="o">(</span><span class="s">&quot;username&quot;</span><span class="o">,</span> <span class="s">&quot;password&quot;</span><span class="o">)</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">setServiceName</span><span class="o">(</span><span class="s">&quot;your.server.name&quot;</span><span class="o">)</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">setHost</span><span class="o">(</span><span class="s">&quot;your.server.ip&quot;</span><span class="o">)</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">setConnectTimeout</span><span class="o">(</span><span class="mi">3000</span><span class="o">)</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">setSendPresence</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span> <span class="c1">// 设置用户是否上线</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">setSecurityMode</span><span class="o">(</span><span class="n">ConnectionConfiguration</span><span class="o">.</span><span class="na">SecurityMode</span><span class="o">.</span><span class="na">disabled</span><span class="o">)</span> <span class="c1">//不使用安全模式</span>
+</span><span class='line'>                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">XMPPTCPConnection</span> <span class="n">connection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XMPPTCPConnection</span><span class="o">(</span><span class="n">connectionConfig</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">connection</span><span class="o">.</span><span class="na">connect</span><span class="o">().</span><span class="na">login</span><span class="o">();</span>
+</span><span class='line'>        <span class="c1">//这里的login方法如果没传username和password，就是以之前set的用户登录，传了的话就是以传入的用户登录</span>
+</span><span class='line'>        <span class="k">return</span>  <span class="n">connection</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>创建用户</h4>
+
+<p>像AccountManager这类对象也不再是new出来的，而是通过getInstance传入connection对象得到。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createUser</span><span class="o">(</span><span class="n">XMPPTCPConnectionConfiguration</span> <span class="n">connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">AccountManager</span> <span class="n">accountManager</span> <span class="o">=</span> <span class="n">AccountManager</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">accountManager</span><span class="o">.</span><span class="na">createAccount</span><span class="o">(</span><span class="s">&quot;username&quot;</span><span class="o">,</span> <span class="s">&quot;password&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>发送消息</h4>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendMessage</span><span class="o">(</span><span class="n">XMPPTCPConnectionConfiguration</span> <span class="n">connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ChatManager</span> <span class="n">chatManager</span> <span class="o">=</span> <span class="n">ChatManager</span><span class="o">.</span><span class="na">getInstanceFor</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Chat</span> <span class="n">chat</span> <span class="o">=</span> <span class="n">chatManager</span><span class="o">.</span><span class="na">createChat</span><span class="o">(</span><span class="s">&quot;jid like username@your.server.name&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">chat</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="s">&quot;Hello word1!&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>获取离线消息</h4>
+
+<p>注意在创建连接时如果setSendPresence没有设为false，那么在获取离线消息时是始终获取不到的，因为setSendPresence表示已上线，一旦用户上线离线消息就没有了。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">receiveOfflineMessages</span><span class="o">(</span><span class="n">XMPPTCPConnectionConfiguration</span> <span class="n">connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">OfflineMessageManager</span> <span class="n">offlineMessageManager</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OfflineMessageManager</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Message</span><span class="o">&gt;</span> <span class="n">messages</span> <span class="o">=</span> <span class="n">offlineMessageManager</span><span class="o">.</span><span class="na">getMessages</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Message</span> <span class="n">message</span> <span class="o">:</span> <span class="n">messages</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>删除离线消息</h4>
+
+<p>离线消息是根据时间来删除的，我们可以在header中获取到消息的时间戳。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteOfflineMessages</span><span class="o">(</span><span class="n">XMPPTCPConnectionConfiguration</span> <span class="n">connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">OfflineMessageManager</span> <span class="n">offlineMessageManager</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OfflineMessageManager</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">OfflineMessageHeader</span><span class="o">&gt;</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">offlineMessageManager</span><span class="o">.</span><span class="na">getHeaders</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">stamps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">OfflineMessageHeader</span> <span class="n">header</span> <span class="o">:</span> <span class="n">headers</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">stamps</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">header</span><span class="o">.</span><span class="na">getStamp</span><span class="o">());</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">offlineMessageManager</span><span class="o">.</span><span class="na">deleteMessages</span><span class="o">(</span><span class="n">stamps</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>消息的时间我们还可以通过这种方式获取，这里获取到的时间是一个Date对象，而上面的方式是获取一个时间的String。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getMessageTime</span><span class="o">(</span><span class="n">Message</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">DelayInformation</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="na">getExtension</span><span class="o">(</span><span class="n">DelayInformation</span><span class="o">.</span><span class="na">ELEMENT</span><span class="o">,</span> <span class="n">DelayInformation</span><span class="o">.</span><span class="na">NAMESPACE</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">delay</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">delay</span><span class="o">.</span><span class="na">getStamp</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">delay</span><span class="o">.</span><span class="na">getStamp</span><span class="o">().</span><span class="na">getTime</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>创建聊天室</h4>
+
+<p>Smack还可以创建多人聊天，openfire服务器搭建好后会默认创建一个名为conference的分组聊天服务，我们可以在上面创建聊天室。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createRoom</span><span class="o">(</span><span class="n">XMPPTCPConnectionConfiguration</span> <span class="n">connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">MultiUserChatManager</span> <span class="n">multiUserChatManager</span> <span class="o">=</span> <span class="n">MultiUserChatManager</span><span class="o">.</span><span class="na">getInstanceFor</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">MultiUserChat</span> <span class="n">muc</span> <span class="o">=</span> <span class="n">multiUserChatManager</span><span class="o">.</span><span class="na">getMultiUserChat</span><span class="o">(</span><span class="s">&quot;room jid like roomname@conference.your.server.name&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">muc</span><span class="o">.</span><span class="na">createOrJoin</span><span class="o">(</span><span class="s">&quot;nickname&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Form</span> <span class="n">form</span> <span class="o">=</span> <span class="n">muc</span><span class="o">.</span><span class="na">getConfigurationForm</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">Form</span> <span class="n">submitForm</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="na">createAnswerForm</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">FormField</span><span class="o">&gt;</span> <span class="n">fields</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="na">getFields</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">FormField</span> <span class="n">field</span> <span class="o">:</span> <span class="n">fields</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">FormField</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">hidden</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">field</span><span class="o">.</span><span class="na">getType</span><span class="o">())</span> <span class="o">&amp;&amp;</span> <span class="n">field</span><span class="o">.</span><span class="na">getVariable</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">submitForm</span><span class="o">.</span><span class="na">setDefaultAnswer</span><span class="o">(</span><span class="n">field</span><span class="o">.</span><span class="na">getVariable</span><span class="o">());</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="c1">// 这里设置聊天室为公共聊天室</span>
+</span><span class='line'>        <span class="n">submitForm</span><span class="o">.</span><span class="na">setAnswer</span><span class="o">(</span><span class="s">&quot;muc#roomconfig_publicroom&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="c1">// 这里设置聊天室是永久存在的</span>
+</span><span class='line'>        <span class="n">submitForm</span><span class="o">.</span><span class="na">setAnswer</span><span class="o">(</span><span class="s">&quot;muc#roomconfig_persistentroom&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">muc</span><span class="o">.</span><span class="na">sendConfigurationForm</span><span class="o">(</span><span class="n">submitForm</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>发送多人聊天消息</h4>
+
+<p>注意: 在发送聊天室消息之前，必须先加入聊天室(调用join方法)，否则发送的消息实际上是没有发送成功的。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendRoomMessage</span><span class="o">(</span><span class="n">XMPPTCPConnectionConfiguration</span> <span class="n">connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">MultiUserChatManager</span> <span class="n">multiUserChatManager</span> <span class="o">=</span> <span class="n">MultiUserChatManager</span><span class="o">.</span><span class="na">getInstanceFor</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">MultiUserChat</span> <span class="n">muc</span> <span class="o">=</span> <span class="n">multiUserChatManager</span><span class="o">.</span><span class="na">getMultiUserChat</span><span class="o">(</span><span class="s">&quot;room jid like roomname@conference.your.server.name&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">muc</span><span class="o">.</span><span class="na">createOrJoin</span><span class="o">(</span><span class="s">&quot;nickname&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">muc</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="s">&quot;hello world&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>获取聊天室消息</h4>
+
+<p>获取聊天室消息，是在加入聊天室时传入一个DiscussionHistory对象，这个对象可以设置需要获取多少条聊天记录，或者从什么时候开始的聊天记录等。<br/>
+注意: nextMessage方法如果不带超时参数，会使用默认的连接超时时间，一般是5S，加入时间参数可以缩短整个方法的执行时间。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Message</span><span class="o">&gt;</span> <span class="nf">getRoomChat</span><span class="o">(</span><span class="n">XMPPTCPConnectionConfiguration</span> <span class="n">connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">MultiUserChatManager</span> <span class="n">multiUserChatManager</span> <span class="o">=</span> <span class="n">MultiUserChatManager</span><span class="o">.</span><span class="na">getInstanceFor</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">MultiUserChat</span> <span class="n">muc</span> <span class="o">=</span> <span class="n">multiUserChatManager</span><span class="o">.</span><span class="na">getMultiUserChat</span><span class="o">(</span><span class="s">&quot;room jid like roomname@conference.your.server.name&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">DiscussionHistory</span> <span class="n">discussionHistory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DiscussionHistory</span><span class="o">();</span>
+</span><span class='line'>        <span class="c1">//取某个时间点开始的聊天室消息</span>
+</span><span class='line'>        <span class="n">discussionHistory</span><span class="o">.</span><span class="na">setSince</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">(</span><span class="mi">1427090003460L</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">muc</span><span class="o">.</span><span class="na">createOrJoin</span><span class="o">(</span><span class="s">&quot;nick&quot;</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="n">discussionHistory</span><span class="o">,</span> <span class="n">connection</span><span class="o">.</span><span class="na">getPacketReplyTimeout</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Message</span><span class="o">&gt;</span> <span class="n">messages</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="c1">//这里超时时间设置为100毫秒</span>
+</span><span class='line'>            <span class="n">Message</span> <span class="n">message</span> <span class="o">=</span> <span class="n">muc</span><span class="o">.</span><span class="na">nextMessage</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">message</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">messages</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">messages</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>保存聊天消息</h2>
+
+<p>Openfire一般是不保存历史消息的，包括P2P(个人对个人)或MUC(多人聊天)的都不保存，离线消息会暂时保存在<code>ofOffline</code>这张表中，如果离线消息已读就会从该表中删除。</p>
+
+<p>如果我们需要保存历史消息可以通过添加插件的方式来记录。</p>
+
+<ul>
+<li>在Openfire控制台，进入<code>插件</code>页面，选择<code>有效的插件</code>，在里面选择Monitoring Service进行添加。</li>
+</ul>
+
+
+<p><img src="/images/post/2015-4/monitoring_service.png"></p>
+
+<ul>
+<li>安装完成后可以在<code>插件</code>页面看到已经安装好的插件。</li>
+</ul>
+
+
+<p><img src="/images/post/2015-4/openfire_plugin.png"></p>
+
+<ul>
+<li>在<code>服务器</code>页面会看到新增了2个子页面，<code>归档文件</code>和<code>统计表</code>，进入<code>归档文件</code>页面的存档设置勾上<code>Archive one-to-one chats</code>和<code>Archive group chats</code>选项。</li>
+</ul>
+
+
+<p><img src="/images/post/2015-4/openfire_archive.png"></p>
+
+<ul>
+<li>设置好后以后不管是个人聊天还是聊天室的聊天记录都会记录到数据库的<code>ofMessageArchive</code>表中，不过消息是异步保存的，大概会在消息发送后1分钟左右再存到数据库。</li>
+</ul>
+
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script></div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2015
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>
