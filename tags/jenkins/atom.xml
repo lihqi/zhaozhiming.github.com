@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: jenkins | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/jenkins/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-05-11T14:23:15+08:00</updated>
+  <updated>2015-05-29T20:48:33+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -141,6 +141,15 @@
 
 <p>使用很简单，先进入这个网址<a href="https://buildhive.cloudbees.com/job/jenkinsci/">https://buildhive.cloudbees.com/job/jenkinsci/</a>，然后使用你的github帐号登录，接着勾选你想要做持续集成的github项目。这样该项目每次提交代码之后，BuildHive@CloudBees就会为你做持续集成，如果有问题的话会发邮件通知你。  <br/>
 到这里，jenkins插件开发的所有介绍已经全部结束了，之前做插件开发的时候查到一些中文资料，都是一些比较入门的内容，所以自己就想写一个比较全面的介绍，希望这一系列的文章可以帮到你，谢谢。</p>
+
+<hr />
+
+<ul>
+<li><a href="http://zhaozhiming.github.io/blog/2013/01/31/jenkins-plugins-develop-part-1/">jenkins插件开发（一）&mdash; 环境搭建</a></li>
+<li><a href="http://zhaozhiming.github.io/blog/2013/02/02/jenkins-plugins-develop-part-2/">jenkins插件开发（二）&mdash; HelloWorld</a></li>
+<li><a href="http://zhaozhiming.github.io/blog/2013/02/03/jenkins-plugins-develop-part-3/">jenkins插件开发（三）&mdash; 插件编写</a></li>
+</ul>
+
 ]]></content>
   </entry>
   
@@ -325,6 +334,15 @@
 首先是去到Jenkins的<a href="https://wiki.jenkins-ci.org/display/JENKINS/Extend+Jenkins">官网WIKI</a>。这里介绍了如何创建你的插件工程，插件扩展点，插件编码和页面如何编写等，内容比较多，但你只需要关注你需要的内容就可以了。<br/>
 光看Jenkins的WIKI是不够的，有一些页面和类的用法上面没有直接给出，那肿么办呢？很简单：看源码。在github上download下jenkins的源码（<a href="https://github.com/jenkinsci/jenkins">这里</a>），在IDE里面打开Jenkins工程，比如想要查看某个jelly页面的用法，就可以在工程中搜索所有jelly页面，看看源码中的页面是怎么写的，我们再拿过来改一下就可以了。类和扩展点不知道如何写，也可以参照这个方法，通过源码了解其他扩展点子类是如何写的，然后再写出自己的插件。<br/>
 可能在jenkins的源码中还是找不到扩展点的用法，那怎么办呢？这个时候可能就需要去参考其他插件是如何写的了，幸运的是，大部分插件的代码现在都放在了github上，我们可以通过了解其他插件来写出自己的插件。</p>
+
+<hr />
+
+<ul>
+<li><a href="http://zhaozhiming.github.io/blog/2013/01/31/jenkins-plugins-develop-part-1/">jenkins插件开发（一）&mdash; 环境搭建</a></li>
+<li><a href="http://zhaozhiming.github.io/blog/2013/02/02/jenkins-plugins-develop-part-2/">jenkins插件开发（二）&mdash; HelloWorld</a></li>
+<li><a href="http://zhaozhiming.github.io/blog/2013/02/04/jenkins-plugins-develop-part-4/">jenkins插件开发（四）&mdash; 插件发布</a></li>
+</ul>
+
 ]]></content>
   </entry>
   
@@ -425,6 +443,15 @@
 
 <p>注意：如果用hpi:run启动的服务，jenkins地址是：localhost:8080，而使用真实Jetty启动的服务，地址是：localhost:8080/jenkins。<br/>
 到这里你的jenkins插件开发环境已经搭建好了，我们在下一篇blog再继续介绍具体的插件开发，谢谢！</p>
+
+<hr />
+
+<ul>
+<li><a href="http://zhaozhiming.github.io/blog/2013/02/02/jenkins-plugins-develop-part-2/">jenkins插件开发（二）&mdash; HelloWorld</a></li>
+<li><a href="http://zhaozhiming.github.io/blog/2013/02/03/jenkins-plugins-develop-part-3/">jenkins插件开发（三）&mdash; 插件编写</a></li>
+<li><a href="http://zhaozhiming.github.io/blog/2013/02/04/jenkins-plugins-develop-part-4/">jenkins插件开发（四）&mdash; 插件发布</a></li>
+</ul>
+
 ]]></content>
   </entry>
   
