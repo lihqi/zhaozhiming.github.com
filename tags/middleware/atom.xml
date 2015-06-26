@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: middleware | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/middleware/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-05-31T21:20:37+08:00</updated>
+  <updated>2015-06-26T14:29:18+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -175,10 +175,14 @@
 看源码先从单元测试看起，可以以最快的速度了解源代码的功能。在这个测试案例中，测试先mock了一个虚拟的app，这个app不会真实的调用swift，而是会将http response返回预设好的值。<br/>
 再看其中的一个测试案例，这里给定了一个最大长度url，然后通过调用name_check中间件，期望请求可以正常通过。</p>
 
-<p>最后我们再来看name_check中间件的<a href="https://github.com/openstack/swift/blob/master/swift/common/middleware/name_check.py">源码</a>几个方法：
-* <strong>init</strong>: 中间件的初始化方法
-* <strong>call</strong>: 中间件被调用时触发的方法
-* filter_factory: 这个是类以外的方法，在swift服务启动时会创建中间件实例，并加入到pipeline中。</p>
+<p>最后我们再来看name_check中间件的<a href="https://github.com/openstack/swift/blob/master/swift/common/middleware/name_check.py">源码</a>几个方法：</p>
+
+<ul>
+<li><strong>init</strong>: 中间件的初始化方法</li>
+<li><strong>call</strong>: 中间件被调用时触发的方法</li>
+<li>filter_factory: 这个是类以外的方法，在swift服务启动时会创建中间件实例，并加入到pipeline中。</li>
+</ul>
+
 
 <p>学习完这个简单的中间件后，相信大家都可以依葫芦画瓢开始写自己的中间件了。</p>
 
