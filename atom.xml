@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-08-02T20:05:09+08:00</updated>
+  <updated>2015-08-09T15:04:29+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,203 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[为什么我要使用Vim]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2015/08/09/why-i-use-vi/"/>
+    <updated>2015-08-09T08:47:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2015/08/09/why-i-use-vi</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2015-8/vi.png" width="250" height="250"></p>
+
+<p>之前做Java开发的时候一直使用IDE，因为Java的IDE工具开发的太好了，以致没有机会深入接触像<code>vi</code>和<code>emacs</code>之类的神编辑器，但最近转python让我有机会深入了解了<code>vi</code>，使用过后不仅觉得方便，而且被其强大深深所吸引。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>为什么使用vi</h2>
+
+<p>最早是使用Eclipse，然后转IntelliJ IDEA，可以看看我之前的这篇文章——<a href="http://zhaozhiming.github.io/blog/2014/10/09/why-intellij-idea-better-than-eclipse">《为什么Intellij-IDEA比Eclipse好》</a>，之前觉得使用IDEA效率已经很高了，熟悉快捷键的话可以完全不用鼠标进行编码。</p>
+
+<p>其实Jetbarins(开发IDEA的公司)也有python的IDE——PyCharm，功能、操作和IDEA差不多，熟悉IDEA的人可以很快上手PyCharm。</p>
+
+<p>但是作为一个程序员，我觉得如果没有深入使用过一款&#8221;神之编辑器&#8221;（vi或emacs）是有遗憾的，而且通过使用vi发现，IDE有的功能vi都可以有，通过vi的配置，可以将vi打造成任一种语言的IDE，也就是说，使用IDE功能是有限的，但是使用vi，你的编辑器功能是没有边界的，任何你想要的功能都可以通过安装插件或者自己开发插件来实现。</p>
+
+<p>使用IDE你可能不用鼠标进行编码，但是使用vi你可以不用鼠标来操作整个操作系统，这就是vi的魅力，可以让你像弹钢琴一样优雅的编写代码，行云流水，酣畅淋漓。</p>
+
+<p>最后为什么选vi不选emacs呢？因为公司都是vi党，用emacs怕被人打，还是用vi好了-_&ndash;#</p>
+
+<h2>简明Vim练级攻略</h2>
+
+<p>说实话，vi的学习曲线非常陡峭，但是经过前人的积累，已经有不少好用的vi插件和工具帮助我们尽快的熟悉vi，省去自己配置vi的烦恼，剩下的就只有不断地使用vi，以增强vi的熟练程度，做到得心应手。</p>
+
+<p>这里要推荐陈皓老师翻译整理的这篇文章——<a href="http://coolshell.cn/articles/5426.html">简明Vim练级攻略</a>，里面详细介绍了从入门到高级的vi使用命令，分阶段让学习者掌握vi的编辑命令，让你从一大堆繁杂的vi命令中了解到真正实用的vi指令。</p>
+
+<p>还是之前说的，文章只是给你指明方向，实际的练习才是最重要的，要熟悉vi就要每天都使用vi写写东西，如果忘记了命令再重温一下文章的内容，这样不断地强化精神和肌肉的记忆才能掌握好vi。</p>
+
+<h2><a href="https://github.com/wklken/k-vim">k-vim</a></h2>
+
+<p>这里要推荐k-vim这个国人打造的vim配置，里面集成了各种强大的vi插件，功能堪比甚至远超各种IDE，其主要用于python开发，也支持一些基础的前端开发，这里主要讲一下里面配置的一些强大的插件。</p>
+
+<h4>YouCompleteMe</h4>
+
+<p>很多IDE都有代码自动补全的功能，通过这个插件，vi也可以做到这一点，这个插件还可以配置各种语言的自动补全提示。</p>
+
+<h4>gmarik/vundle</h4>
+
+<p>像pip，npm一样，vundle可以管理vi的插件，通过简单的install/uninstall命令可以帮你安装你想要的vi插件。</p>
+
+<h4>scrooloose/syntastic</h4>
+
+<p>IDE有语法错误之类的检查，这个vi插件实现了类似的功能，并且可以配置各种语言的语法检查。</p>
+
+<p>还有其他很多强大的插件，比如工程目录结构菜单，代码模板，源码跳转等。总之，使用k-vim可以省却你大部分配置vim的时间，让你得以马上体验vi的强大。</p>
+
+<h2><a href="https://tmux.github.io">tmux</a></h2>
+
+<p>tmux是一个terminal管理软件，通过tmux配合vi可以使开发工作更加简单快捷，网上有很多介绍tmux的文章，我就不多介绍了，附一下是我的tmux配置，也是从网上查的一份配置，使用之后觉得还不错，推荐给大家，这里使用<code>ctl+A</code>作为tmux前缀，相对默认的<code>ctl+B</code>来说按键相对要近一些。</p>
+
+<figure class='code'><figcaption><span>tmux.conf </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># -- base -- #</span>
+</span><span class='line'>unbind C-b
+</span><span class='line'><span class="nb">set</span> -g prefix C-a
+</span><span class='line'><span class="nb">set</span> -g status-keys vi
+</span><span class='line'>setw -g mode-keys vi
+</span><span class='line'><span class="nb">bind</span> : <span class="nb">command</span>-prompt
+</span><span class='line'><span class="nb">bind </span>r <span class="nb">source</span>-file ~/.tmux.conf <span class="se">\;</span> display-message <span class="s2">&quot;Reloading..&quot;</span>.
+</span><span class='line'><span class="nb">set</span> -g default-terminal <span class="s2">&quot;screen-256color&quot;</span>
+</span><span class='line'><span class="nb">bind</span>-key a send-prefix
+</span><span class='line'>
+</span><span class='line'><span class="c"># -- windown -- #</span>
+</span><span class='line'><span class="nb">bind </span>s split-window -h -c <span class="s2">&quot;#{pane_current_path}&quot;</span>
+</span><span class='line'><span class="nb">bind </span>v split-window -v -c <span class="s2">&quot;#{pane_current_path}&quot;</span>
+</span><span class='line'><span class="nb">bind</span>-key c  new-window -c <span class="s2">&quot;#{pane_current_path}&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">bind </span>h <span class="k">select</span>-pane -L
+</span><span class='line'><span class="nb">bind </span>j <span class="k">select</span>-pane -D
+</span><span class='line'><span class="nb">bind </span>k <span class="k">select</span>-pane -U
+</span><span class='line'><span class="nb">bind </span>l <span class="k">select</span>-pane -R
+</span><span class='line'>
+</span><span class='line'><span class="nb">bind</span> ^k resizep -U 10
+</span><span class='line'><span class="nb">bind</span> ^j resizep -D 10
+</span><span class='line'><span class="nb">bind</span> ^h resizep -L 10
+</span><span class='line'><span class="nb">bind</span> ^l resizep -R 10
+</span><span class='line'><span class="nb">bind</span> ^u swapp -U
+</span><span class='line'><span class="nb">bind</span> ^d swapp -D
+</span><span class='line'>
+</span><span class='line'><span class="nb">bind </span>u choose-session
+</span><span class='line'><span class="nb">bind </span>o choose-window
+</span><span class='line'><span class="nb">bind</span> <span class="se">\ </span>last
+</span><span class='line'><span class="nb">bind </span>q killp
+</span><span class='line'>
+</span><span class='line'><span class="nb">bind</span>-key -n C-S-Left swap-window -t -1
+</span><span class='line'><span class="nb">bind</span>-key -n C-S-Right swap-window -t +1
+</span><span class='line'><span class="nb">set</span> -g base-index 1
+</span><span class='line'>setw -g pane-base-index 1
+</span><span class='line'><span class="nb">set</span> -g <span class="nb">history</span>-limit 5000
+</span><span class='line'>
+</span><span class='line'><span class="c"># pane border</span>
+</span><span class='line'><span class="nb">set</span> -g pane-border-fg black
+</span><span class='line'><span class="nb">set</span> -g pane-border-bg white
+</span><span class='line'><span class="nb">set</span> -g pane-active-border-fg black
+</span><span class='line'><span class="nb">set</span> -g pane-active-border-bg <span class="s1">&#39;#afd787&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># -- command -- #</span>
+</span><span class='line'><span class="nb">bind </span>m <span class="nb">command</span>-prompt <span class="s2">&quot;splitw &#39;exec man %%&#39;&quot;</span>
+</span><span class='line'><span class="nb">bind </span>space copy-mode
+</span><span class='line'><span class="nb">bind</span> -t vi-copy v begin-selection
+</span><span class='line'><span class="nb">bind</span> -t vi-copy y copy-selection
+</span><span class='line'><span class="nb">bind</span> -t vi-copy C-v rectangle-toggle
+</span><span class='line'><span class="nb">bind</span> <span class="o">]</span> paste-buffer
+</span><span class='line'>
+</span><span class='line'><span class="c"># -- statusbar --#</span>
+</span><span class='line'><span class="nb">set</span> -g status-justify centre
+</span><span class='line'><span class="nb">set</span> -g status-right-attr bright
+</span><span class='line'><span class="nb">set</span> -g status-right <span class="s2">&quot;%H:%M %a %m-%d&quot;</span>
+</span><span class='line'><span class="nb">set</span> -g status-bg default
+</span><span class='line'><span class="nb">set</span> -g status-fg <span class="s1">&#39;#afd787&#39;</span>
+</span><span class='line'>setw -g window-status-current-attr bright
+</span><span class='line'>setw -g window-status-current-fg black
+</span><span class='line'>setw -g window-status-current-bg <span class="s1">&#39;#afd787&#39;</span>
+</span><span class='line'><span class="nb">set</span> -g status-utf8 on
+</span><span class='line'><span class="nb">set</span> -g status-interval 1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>vi学习</h2>
+
+<ul>
+<li>简明Vim练级攻略只是介绍了一些比较实用和常用的命令，如果在实际使用过程中发现一些不清楚的vi操作，最好的办法就是通过googl搜索找到答案，并将答案记录下来以免下次忘记。</li>
+<li>在从IDE过渡到vi的期间，可以用IDE完成一些比较紧急的工作，其他的就使用vi来完成。</li>
+<li>在使用vi的过程中，可以模拟IDE的操作来了解更多vi的命令，比如IDE可以用<code>ctl+w</code>选中整个单词，在vi里面要如何操作？这样慢慢一步一步地将vi的命令掌握，并替换掉你的IDE。</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[终于等到你]]></title>
@@ -6239,364 +6436,6 @@ PS: 这里我使用了<a href="https://github.com/stretchr/testify"><code>stretc
 <li><a href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-2/">让你的安卓开发更容易(二)——Genymotion</a></li>
 <li><a href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1/">让你的安卓开发更容易(一)——Intellij IDEA</a></li>
 </ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用Vagrant和Ansible搭建Ceph环境]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible/"/>
-    <updated>2014-10-02T22:03:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-9/ceph-install.jpg"></p>
-
-<h2><a href="http://ceph.com/">Ceph</a>简介</h2>
-
-<p>Ceph是一个高性能，高可用，高扩展的分布式对象存储框架和文件系统，而且是一个免费开源的项目。</p>
-
-<p>但是Ceph的环境搭建起来比较麻烦，最简单的环境也需要2台VM(虚拟机，1台做mon和osd，另外一台做gateway)，而且按照官方文档上面的指南进行安装，经常报各种莫名其妙的问题，现在给大家介绍一个简单的方法来进行Ceph环境的搭建。下面先介绍几个要用到的工具。</p>
-
-<!--more-->
-
-
-<h2><a href="https://www.vagrantup.com/">Vagrant</a></h2>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-9/vagrant.png"></p>
-
-<p>以前使用VM情况是这样的:</p>
-
-<ul>
-<li>下载操作系统的iso镜像</li>
-<li>通过VM管理工具(VMWare，VirtualBox等)将iso镜像转换为VM</li>
-<li>登陆到VM进行操作</li>
-</ul>
-
-
-<p>整个过程复杂而且漫长，但是使用了Vagrant之后就非常方便了，一个命令就可以搞定VM的安装，ssh到VM也无需输入用户名密码，还可以查看所有VM的状态等。</p>
-
-<h3>Box</h3>
-
-<p>vagrant通过box来生成VM，box可以理解是一个制作好的VM，这意味着你搭建完自己的开发环境后，也可以将其制作成一个box，供团队其他成员使用。</p>
-
-<p>box的容量非常小，比如Ubuntu12.04的一个iso镜像一般要500多M，制作成VM可能要10G左右，而一个ubuntu12.04的box只有300多M。Vagrant的box可以在<a href="https://vagrantcloud.com/discover/featured">这里</a>下载，除了有各种OS(ubuntu, windosw, CentOS等)的VM外，还有Virtualbox和VMWare各自对应的box，不过要使用VMWare的box，需要安装插件和到购买相关的<a href="https://www.vagrantup.com/VMware">License</a>，毕竟VMWare不是免费的软件。</p>
-
-<p>下载了box后，执行下面命令就可以添加box了，如果直接输入box名称并发现本地没有box的话，会自动下载box文件。(<code>PS: Vagrant默认使用Virtualbox作为虚拟器软件，所以在安装Vagrant还需要先安装Virtualbox。</code>)</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>//添加本地box文件
-</span><span class='line'><span class="nv">$ </span>vagrant box add /your/box/path/xxx.box
-</span><span class='line'>//添加指定名称的box，没有的话会自动下载box文件
-</span><span class='line'><span class="nv">$ </span>vagrant box add hashicorp/precise32
-</span><span class='line'>//列出所有的box
-</span><span class='line'><span class="nv">$ </span>vagrant box list
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Vagrant基本操作</h3>
-
-<p>Vagrant的操作非常简单，现在介绍几个常用的操作指令。(<code>PS: 下面的大部分命令后面可以跟VM名称，不跟的话是对所有的VM进行操作。</code>)</p>
-
-<ul>
-<li>vagrant status: 展示VM的信息。</li>
-<li>vagrant up: 启动VM。</li>
-<li>vagrant ssh [VM]: ssh到某个VM上，无需输入用户名和密码。</li>
-<li>vagrant halt: 关闭VM。</li>
-<li>vagrant destroy: 销毁VM，如果你的VM被你玩残了，销毁它然后重新启动一个就可以了，很方便。</li>
-</ul>
-
-
-<h3>Vagrant共享</h3>
-
-<p>使用<code>vagrant ssh</code>到VM后，可以看到根目录下有个<code>/vagrant</code>文件夹，这个是VM和工程间的共享目录，在这个文件夹里面存放东西，可以在存放Vagrantfile的目录里面看到，反之亦然，在VM里面也可以读取到工程下的文件。</p>
-
-<h3>Vagrantfile</h3>
-
-<p>初始化vagrant工程后可以看到一个<code>Vagrantfile</code>的文件，这个是配置VM的文件，可以看下面的例子:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">VAGRANTFILE_API_VERSION</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="no">VAGRANTFILE_API_VERSION</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;hashicorp/precise64&quot;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">define</span> <span class="ss">:rgw</span> <span class="k">do</span> <span class="o">|</span><span class="n">rgw</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">network</span> <span class="ss">:private_network</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.42.2&quot;</span>
-</span><span class='line'>    <span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">host_name</span> <span class="o">=</span> <span class="s2">&quot;ceph-rgw&quot;</span>
-</span><span class='line'>    <span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">vb</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyVM&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--memory&quot;</span><span class="p">,</span> <span class="s2">&quot;192&quot;</span><span class="o">]</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="n">rgw</span><span class="o">.</span><span class="n">VM</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:VMware_fusion</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">v</span><span class="o">.</span><span class="n">VMx</span><span class="o">[</span><span class="s1">&#39;memsize&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;192&#39;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这个Vagrantfile指定了box的名称，然后创建了一个名称为<code>rgw</code>的VM，指定了VM的ip、hostname、内存大小。</p>
-
-<p>关于vagrant就介绍到这里，想要了解更多信息可以查看<a href="https://www.vagrantup.com/">vagrant官网</a>。</p>
-
-<h2><a href="http://www.ansible.com/home">Ansible</a></h2>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-9/ansible.jpg"></p>
-
-<p>Ansible是一个开源的远程机器管理软件，可以批量操作多台远程服务器。(<code>PS: Ansible只适合操作Linux和Unix机器，如果是Windows系统是不可以的。</code>)</p>
-
-<h3>安装</h3>
-
-<p>要安装Ansible需要先安装Python2.6/7，然后可以通过easy_install或pip进行下载安装。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo esay_install ansible
-</span><span class='line'><span class="c"># or</span>
-</span><span class='line'>sudo pip install ansible
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>使用示例</h3>
-
-<p>创建一个文件夹，在文件夹里面创建一个hosts文件，hosts格式如下:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># hosts</span>
-</span><span class='line'><span class="o">[</span>ceph<span class="o">]</span>
-</span><span class='line'>192.168.42.2
-</span><span class='line'>192.168.42.101
-</span><span class='line'>192.168.42.201
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>可以看到hosts文件里面有几个远程机器的ip(这里是虚拟机)，远程机器可以分组，通过中括号里面的组名来划分。</p>
-
-<p>然后执行下面的命令执行简单的命令。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ansible all -a <span class="s1">&#39;who&#39;</span>
-</span><span class='line'>ceph-mon0 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
-</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'>ceph-osd0 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
-</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'>ceph-osd1 | success | <span class="nv">rc</span><span class="o">=</span>0 &gt;&gt;
-</span><span class='line'>ceph     pts/0        2014-10-02 08:54 <span class="o">(</span>192.168.42.60<span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>从输出信息上可以看到这几台远程机器都成功执行了<code>who</code>命令，不过如果要成功执行上面的命令，还需要先在执行机和远程机上面设置无密码ssh连接。</p>
-
-<h3>无密码ssh连接</h3>
-
-<p>假设有2台机器，机器A和机器B，现在想让机器A<code>ssh</code>机器B的时候不需要输入用户和密码，操作如下。</p>
-
-<ul>
-<li>在机器B上创建一个用户，并配置好，下面命令的<code>username</code>指自己要创建的用户名。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo useradd -d /home/<span class="o">{</span>username<span class="o">}</span> -m <span class="o">{</span>username<span class="o">}</span>
-</span><span class='line'><span class="nv">$ </span>sudo passwd <span class="o">{</span>username<span class="o">}</span>
-</span><span class='line'><span class="c"># 输入密码</span>
-</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">&quot;{username} ALL = (root) NOPASSWD:ALL&quot;</span> | sudo tee /etc/sudoers.d/<span class="o">{</span>username<span class="o">}</span>
-</span><span class='line'><span class="nv">$ </span>sudo chmod 0440 /etc/sudoers.d/<span class="o">{</span>username<span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>在机器A上生成密钥，并发送给机器B。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh-keygen
-</span><span class='line'>
-</span><span class='line'>Generating public/private key pair.
-</span><span class='line'>Enter file in which to save the key <span class="o">(</span>/ceph-admin/.ssh/id_rsa<span class="o">)</span>:
-</span><span class='line'>Enter passphrase <span class="o">(</span>empty <span class="k">for </span>no passphrase<span class="o">)</span>:
-</span><span class='line'>Enter same passphrase again:
-</span><span class='line'>Your identification has been saved in /ceph-admin/.ssh/id_rsa.
-</span><span class='line'>Your public key has been saved in /ceph-admin/.ssh/id_rsa.pub.
-</span><span class='line'>
-</span><span class='line'><span class="nv">$ </span>ssh-copy-id <span class="o">{</span>username<span class="o">}</span>@<span class="o">{</span>机器B<span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>到这里就可以不用输入密码进行ssh了，如果想连用户名也不想输入的话，需要机器A在<code>.ssh</code>文件下创建一个<code>config</code>文件，在里面添加如下内容。</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host 机器B
-</span><span class='line'>   Hostname 机器B
-</span><span class='line'>   User <span class="o">{</span>username<span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>playbook</h3>
-
-<p>ansible还可以通过一个playbook脚本进行远程机器的操作，playbook的示例如下:</p>
-
-<figure class='code'><figcaption><span>playbook.yml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># playbook.yml</span>
-</span><span class='line'><span class="nn">---</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">all</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">remote_user</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ceph</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">tasks</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">whoami</span>
-</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="s">&#39;whoami</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">whoami.rst&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>创建完playbook文件后执行如下命令可以看到执行结果。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ansible-playbook playbook.yml
-</span><span class='line'>
-</span><span class='line'>PLAY <span class="o">[</span>all<span class="o">]</span> ********************************************************************
-</span><span class='line'>
-</span><span class='line'>GATHERING FACTS ***************************************************************
-</span><span class='line'>ok: <span class="o">[</span>ceph-mon0<span class="o">]</span>
-</span><span class='line'>ok: <span class="o">[</span>ceph-osd1<span class="o">]</span>
-</span><span class='line'>ok: <span class="o">[</span>ceph-osd0<span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>TASK: <span class="o">[</span>whoami<span class="o">]</span> ****************************************************************
-</span><span class='line'>changed: <span class="o">[</span>ceph-mon0<span class="o">]</span>
-</span><span class='line'>changed: <span class="o">[</span>ceph-osd0<span class="o">]</span>
-</span><span class='line'>changed: <span class="o">[</span>ceph-osd1<span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>PLAY RECAP ********************************************************************
-</span><span class='line'>ceph-mon0                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span><span class='line'>ceph-osd0                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span><span class='line'>ceph-osd1                  : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这时可以在远程机器的用户目录上可以看到新产生了一个<code>whoami.rst</code>的文件。</p>
-
-<p>关于ansible就介绍到这里，想要了解更多信息可以查看<a href="http://docs.ansible.com/">ansible的文档</a>。</p>
-
-<h2><a href="https://github.com/ceph/ceph-ansible">Ceph-ansible</a></h2>
-
-<p>这个github项目主要是利用了上面介绍的2个工具，使用vagrant来创建ceph需要的服务器VM，然后将ceph的环境搭建通过ansible的playbook脚本执行。</p>
-
-<h3>执行步骤</h3>
-
-<ul>
-<li>下载ceph-ansible项目;</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/ceph/ceph-ansible.git
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>一行命令就可以完成环境搭建，完成后ceph的环境是: 3个mon，3个osd，1个rgw;</li>
-</ul>
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vagrant up
-</span><span class='line'>...
-</span><span class='line'>...
-</span><span class='line'>...
-</span><span class='line'>mon0                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>11   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span><span class='line'>mon1                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>10   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span><span class='line'>mon2                       : <span class="nv">ok</span><span class="o">=</span>16   <span class="nv">changed</span><span class="o">=</span>11   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span><span class='line'>osd0                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span><span class='line'>osd1                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span><span class='line'>osd2                       : <span class="nv">ok</span><span class="o">=</span>19   <span class="nv">changed</span><span class="o">=</span>7    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span><span class='line'>rgw                        : <span class="nv">ok</span><span class="o">=</span>20   <span class="nv">changed</span><span class="o">=</span>17   <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0
-</span></code></pre></td></tr></table></div></figure>
-
-
 
 ]]></content>
   </entry>
