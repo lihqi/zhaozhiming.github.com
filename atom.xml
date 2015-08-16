@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-08-09T15:04:29+08:00</updated>
+  <updated>2015-08-16T22:58:32+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,228 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[python-docx使用简介]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2015/08/16/hello-python-doxc/"/>
+    <updated>2015-08-16T20:18:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2015/08/16/hello-python-doxc</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2015-8/python-docx.png" width="400" height="300"></p>
+
+<p>使用word文档来展现内容是很多企业使用的方式之一，但如果文档内容比较多，或者需要制作很多重复文档的话，编写文档的过程会十分枯燥无聊，如果这个时候有一个程序可以帮助你来完成文档制作工作的话那就太好了，这就是<a href="https://python-docx.readthedocs.org/en/latest/">python-docx</a>可以做的事情，下面我们就来看看python-docx的强大功能。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>安装</h2>
+
+<p>python-docx安装非常简单，可以使用<code>pip install python-docx</code>进行安装。</p>
+
+<h2>创建文档</h2>
+
+<p>使用python-docx创建一个文档非常简单，只需要2行代码就可以搞定，代码如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="p">()</span>
+</span><span class='line'><span class="n">document</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;foo.docx&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>编写段落</h2>
+
+<p>word文档最基本的内容就是一段段的文字信息，使用python-docx可以轻松的生成各种不同风格的段落。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c"># 普通段落</span>
+</span><span class='line'><span class="n">document</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">(</span><span class="s">u&#39;我是普通文档&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="c"># 带风格的段落</span>
+</span><span class='line'><span class="n">document</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">(</span><span class="s">u&#39;我是好看的文档&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;IntenseQuote&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>style属性是使用一个定制好的风格，名称必须是document对象包含了这个style名称才能使用，否则在生成文档的过程会报错或者style没有生效。</p>
+
+<p>add_paragraph方法会返回一个paragraph对象，这个对象中有一个ParagraphFormat属性，通过设置ParagraphFormat属性的内容可以展示不同的风格：</p>
+
+<ul>
+<li>alignment: 段落对齐方式，值为<code>WD_PARAGRAPH_ALIGNMENT</code>常量中的一个。</li>
+<li>line_spacing: 行间隔，单位可以有多种，详情参见<a href="https://python-docx.readthedocs.org/en/latest/api/shared.html">这里</a>。</li>
+<li>first_line_indent: 首行缩进，值为整数，单位与line_spacing相同。</li>
+</ul>
+
+
+<p>还有其他更多的属性就不一一介绍了，我们还可以更加细粒度地控制一个段落的风格，比如前两句话我们使用粗体展示，后两句使用斜体，这就需要用到Run对象的属性设置了，Run可以看成是段落中的一句话，一个段落包含了n个Run。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">run1</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_run</span><span class="p">(</span><span class="s">u&#39;句子一&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">run1</span><span class="o">.</span><span class="n">bold</span> <span class="o">=</span> <span class="bp">True</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">run2</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_run</span><span class="p">(</span><span class="s">u&#39;句子二&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">run1</span><span class="o">.</span><span class="n">italic</span> <span class="o">=</span> <span class="bp">True</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在document中我们还可以添加标题<code>Heading</code>，新建的文档有<code>0~9</code>级的标题让你选择（默认是1级），其实标题也是段落的一种，我们可以使用设置段落风格的方式来设置标题的风格。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">h</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_heading</span><span class="p">(</span><span class="s">u&#39;标题&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'><span class="n">h</span><span class="o">.</span><span class="n">paragraph_format</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">WD_ALIGN_PARAGRAPH</span><span class="o">.</span><span class="n">LEFT</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>绘制表格</h2>
+
+<p>在文档中我们可能会添加一些表格作为数据内容的展示，在python-docx里面可以轻松的绘制不同的表格。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c"># 绘制一个2 * 2的表格</span>
+</span><span class='line'><span class="n">t</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;单元1&#39;</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;单元2&#39;</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;单元3&#39;</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;单元4&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>还可以对单元格进行合并：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">t</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="c"># 将第一行的2个单元格合并</span>
+</span><span class='line'><span class="n">merge_cell</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class='line'><span class="n">merge_cell</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;合并单元格&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>默认的表格是不带边框的，如果想让表格有边框，可以使用<code>Table Grid</code>这种表格的style。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">t</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="s">&#39;Table Grid&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>添加图片</h2>
+
+<p>添加图片也非常简单，在添加图片的方法中输入图片的相对路径即可。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">document</span><span class="o">.</span><span class="n">add_picture</span><span class="p">(</span><span class="s">&#39;demo.png&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>甚至可以添加网络上的图片到文档中，但前提是把图片下载到内存。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">urllib2</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">StringIO</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># img_url为网络图片url地址</span>
+</span><span class='line'><span class="n">image_from_url</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">img_url</span><span class="p">)</span>
+</span><span class='line'><span class="n">io_url</span> <span class="o">=</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+</span><span class='line'><span class="n">io_url</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">image_from_url</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</span><span class='line'><span class="n">io_url</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span class='line'><span class="n">document</span><span class="o">.</span><span class="n">add_picture</span><span class="p">(</span><span class="n">io_url</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>文档风格</h2>
+
+<p>每个document对象里面都有一个styles对象，styles对象包含了文档可以使用的style，包括段落，表格，图片等的风格。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">styles</span><span class="p">)</span>
+</span><span class='line'><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">document</span><span class="o">.</span><span class="n">styles</span><span class="p">:</span>
+</span><span class='line'>    <span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">console</span><span class="o">---------------</span>
+</span><span class='line'><span class="mi">160</span>
+</span><span class='line'><span class="n">Normal</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">2</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">3</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">4</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">5</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">6</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">7</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">8</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">9</span>
+</span><span class='line'><span class="n">Default</span> <span class="n">Paragraph</span> <span class="n">Font</span>
+</span><span class='line'><span class="n">Normal</span> <span class="n">Table</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这是新建的文档所包含的style，比较齐全，但如果是基于已有文档的document就只能使用已有文档的styles，可能会比新建的文档少很多。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="s">&#39;exist.docx&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">styles</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">console</span><span class="o">---------------</span>
+</span><span class='line'><span class="mi">12</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>python-docx是没有设置页眉页脚功能的，但是通过打开一个已经存在页眉页脚的文档，我们就可以拥有包含页眉页脚的document了。</p>
+
+<p>这些是python-docx的一些基本使用方法，更多的内容请参考官方文档，谢谢。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[为什么我要使用Vim]]></title>
@@ -6162,281 +6384,6 @@ PS: 这里我使用了<a href="https://github.com/stretchr/testify"><code>stretc
 <h2>总结</h2>
 
 <p>IDEA和Eclipse的定位本身是不一样的，Eclipse将其定位为一个平台，可以通过安装各种插件来编写各种语言的代码，包括C++等，而IDEA将自己定位为<em>最智能的Java集成开发编辑器</em>，如果你不是开发Java代码的，建议不要选用IDEA。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[让你的安卓开发更容易(三)——Picasso]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/10/07/make-your-android-dev-life-easy-part-3/"/>
-    <updated>2014-10-07T23:48:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/10/07/make-your-android-dev-life-easy-part-3</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-10/picasso.png"></p>
-
-<p><a href="http://square.github.io/picasso/">Picasso</a>是Android下一个强大的图片下载和缓存类库，代码借口简洁易懂，功能强大，Picasso有如下特性：</p>
-
-<ul>
-<li>处理Adapter中的ImageView回收和取消已经回收ImageView的下载进程</li>
-<li>使用最少的内存完成复杂的图片转换，比如把下载的图片转换为圆角等</li>
-<li>自动添加磁盘和内存缓存</li>
-</ul>
-
-
-<p>下面通过介绍Android原生的图片下载缓存功能和Picasso进行对比，看看使用Picasso有哪些好的地方。</p>
-
-<!--more-->
-
-
-<h2>Android原生的图片下载功能</h2>
-
-<p>在没有使用Picasso的情况下，如果想做到图片下载以及缓存，需要编写大量代码。</p>
-
-<h4>图片下载</h4>
-
-<p>Android的图片下载是不能在主线程里面进行的，需要新创建一个线程进行操作。</p>
-
-<ul>
-<li>首先要继承AsyncTask类，Android的一个异步操作类。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>DownloadTask.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">android.graphics.BitmapFactory</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">android.os.AsyncTask</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">android.util.Log</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.ImageView</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">com.github.zzm.bushu.app.model.LogTag</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DownloadTask</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Void</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">private</span> <span class="n">File</span> <span class="n">imageFile</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">ImageView</span> <span class="n">imageView</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">DownloadTask</span><span class="o">(</span><span class="n">File</span> <span class="n">imageFile</span><span class="o">,</span> <span class="n">ImageView</span> <span class="n">imageView</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">imageFile</span> <span class="o">=</span> <span class="n">imageFile</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">imageView</span> <span class="o">=</span> <span class="n">imageView</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>  <span class="o">...</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>实现<code>doInBackground</code>方法。</li>
-</ul>
-
-
-<p>该方法接受一个可变String参数，表示可以进行多个url下载，但这url参数是从哪里传进来的呢？</p>
-
-<p>我们后面在使用这个<code>DownloadTask</code>类时，会调用其<code>exexute(String... url)</code>的方法，url参数就是从这里传进去的。</p>
-
-<p>下面的代码中通过<code>new URL(url).openStream()</code>进行图片下载，然后新建一个文件输出流，将图片写到输出文件中。</p>
-
-<figure class='code'><figcaption><span>DownloadTask.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="n">String</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">urls</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">storageImage</span><span class="o">(</span><span class="n">urls</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">storageImage</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">FileOutputStream</span> <span class="n">outputStream</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">outputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">imageFile</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">outputStream</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">getImageBytes</span><span class="o">(</span><span class="n">url</span><span class="o">));</span>
-</span><span class='line'>            <span class="n">outputStream</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">LogTag</span><span class="o">.</span><span class="na">DownloadTask</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="s">&quot;storage image error:&quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">getImageBytes</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">InputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">openStream</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">ByteArrayOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">();</span>
-</span><span class='line'>        <span class="kt">byte</span><span class="o">[]</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">];</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">n</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">while</span> <span class="o">(-</span><span class="mi">1</span> <span class="o">!=</span> <span class="o">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">buf</span><span class="o">)))</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>实现<code>onPostExecute</code>方法，这个方法是在图片下载完成后调用的，我们可以将下载的图片指定显示到某个imageView中。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>DownloadTask.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">String</span> <span class="n">ignore</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">imageView</span><span class="o">.</span><span class="na">setImageBitmap</span><span class="o">(</span><span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeFile</span><span class="o">(</span><span class="n">imageFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">()));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>图片缓存</h4>
-
-<p>我们要自己实现图片缓存的功能也比较简单，代码如下。(但如果已经有Picasso这种强大的类库，我们又何必自己造轮子呢？)</p>
-
-<ul>
-<li>要找到下载的图片文件，我们要自己定义文件的命名规则和存放路径，这样才能方便我们找到文件。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="n">File</span> <span class="n">imageFile</span> <span class="o">=</span> <span class="n">getImageFile</span><span class="o">(</span><span class="n">bookName</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">File</span> <span class="nf">getImageFile</span><span class="o">(</span><span class="n">String</span> <span class="n">bookName</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">File</span> <span class="n">imageFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">getFilesDir</span><span class="o">(),</span> <span class="n">bookName</span> <span class="o">+</span> <span class="s">&quot;.png&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">LogTag</span><span class="o">.</span><span class="na">BooksAdapter</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="s">&quot;file path: &quot;</span> <span class="o">+</span> <span class="n">imageFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">());</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">imageFile</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>判断文件是否存在，如果不存在则进行首次下载，如果已经存在了则直接从磁盘上面加载文件。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">imageFileEmpty</span><span class="o">(</span><span class="n">imageFile</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">downloadImage</span><span class="o">(</span><span class="n">bookName</span><span class="o">,</span> <span class="n">imageView</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">imageView</span><span class="o">.</span><span class="na">setImageBitmap</span><span class="o">(</span><span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeFile</span><span class="o">(</span><span class="n">imageFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">()));</span>
-</span><span class='line'>        <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>判断是否有网络，有的话进行图片下载，调用刚才介绍的<code>DownloadTask</code>类，然后调用<code>execute</code>的方法即可，这样后台就会异步帮你将图片下载下来，然后进行显示。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">downloadImage</span><span class="o">(</span><span class="n">String</span> <span class="n">bookName</span><span class="o">,</span> <span class="n">ImageView</span> <span class="n">imageView</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">networkOk</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">String</span> <span class="n">url</span> <span class="o">=</span> <span class="n">format</span><span class="o">(</span><span class="s">&quot;%s%s/%s.png&quot;</span><span class="o">,</span> <span class="n">STORAGE_BASE_URL</span><span class="o">,</span> <span class="n">getScreenDensity</span><span class="o">(),</span> <span class="n">bookName</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">LogTag</span><span class="o">.</span><span class="na">BooksAdapter</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="n">format</span><span class="o">(</span><span class="s">&quot;url: %s&quot;</span><span class="o">,</span> <span class="n">url</span><span class="o">));</span>
-</span><span class='line'>            <span class="k">new</span> <span class="nf">DownloadTask</span><span class="o">(</span><span class="n">getImageFile</span><span class="o">(</span><span class="n">bookName</span><span class="o">),</span> <span class="n">imageView</span><span class="o">).</span><span class="na">execute</span><span class="o">(</span><span class="n">url</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">networkOk</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">ConnectivityManager</span> <span class="n">connMgr</span> <span class="o">=</span> <span class="o">(</span><span class="n">ConnectivityManager</span><span class="o">)</span> <span class="n">context</span><span class="o">.</span><span class="na">getSystemService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">CONNECTIVITY_SERVICE</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">NetworkInfo</span> <span class="n">networkInfo</span> <span class="o">=</span> <span class="n">connMgr</span><span class="o">.</span><span class="na">getActiveNetworkInfo</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">return</span> <span class="o">(</span><span class="n">networkInfo</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">networkInfo</span><span class="o">.</span><span class="na">isConnected</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Picasso的图片下载功能</h2>
-
-<p>看完Android的图片下载功能，发现我们写了不少代码，现在来看看Picasso是怎么实现的。</p>
-
-<figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Picasso</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">getContext</span><span class="o">()).</span><span class="na">load</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">into</span><span class="o">((</span><span class="n">ImageView</span><span class="o">)</span> <span class="n">viewImage</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>一句话就搞定了，就是这么简单，是不是觉得生活美好了很多。</p>
-
-<p>Picasso会在应用的cache目录下新建一个<code>picasso-cache</code>文件夹，里面就是picasso的图片缓存文件。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-10/picasso-cache.png"></p>
-
-<h2>相关链接</h2>
-
-<ul>
-<li><a href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-2/">让你的安卓开发更容易(二)——Genymotion</a></li>
-<li><a href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1/">让你的安卓开发更容易(一)——Intellij IDEA</a></li>
-</ul>
-
 ]]></content>
   </entry>
   
