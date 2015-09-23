@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: python | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/python/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-09-17T16:33:54+08:00</updated>
+  <updated>2015-09-23T11:45:18+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/09/05/how-to-learn-python/"/>
     <updated>2015-09-05T15:01:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/09/05/how-to-learn-python</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2015-9/python.jpg" width="400" height="300"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2015-9/python.jpg 400 300 %}</p>
 
 <p>Python语言相对Java来说，最大的特点就是易用易学，基本上每个linux系统都有安装python，不像Java一样还需要自己下JVM、安装、设置环境变量等。有了其他编程语言的基础再来学习Python其实是非常简单的，因为Python语言是基于<a href="https://en.wikipedia.org/wiki/ABC_(programming_language)">ABC</a>语言开发出来的，ABC语言是以教学为目的的语言，其宗旨是让编程变得容易阅读和理解，所以Python语言也很容易理解和学习。</p>
 
@@ -35,31 +35,20 @@
 
 <p>关于Python的书我推荐<a href="http://book.douban.com/subject/3112503/">《Python核心编程（第二版）》</a>，这本书看起来很厚其实读起来非常浅显易懂，重点可以看看下面这几章。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>第4章 Python对象
-</span><span class='line'>6.8 Unicode
-</span><span class='line'>8.11 迭代器和iter<span class="o">()</span>函数
-</span><span class='line'>第9章 文件的输入和输出
-</span><span class='line'>第10章 错误和异常
-</span><span class='line'>第11章 函数和函数式编程
-</span><span class='line'>第12章 模块
-</span><span class='line'>第13章 面向对象编程
-</span><span class='line'>第14章 执行环境
-</span><span class='line'>第15章 正则表达式
-</span><span class='line'>第18章 多线程编程
-</span><span class='line'>20.2 使用Python进行Web应用：创建一个简单的Web客户端
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+第4章 Python对象
+6.8 Unicode
+8.11 迭代器和iter()函数
+第9章 文件的输入和输出
+第10章 错误和异常
+第11章 函数和函数式编程
+第12章 模块
+第13章 面向对象编程
+第14章 执行环境
+第15章 正则表达式
+第18章 多线程编程
+20.2 使用Python进行Web应用：创建一个简单的Web客户端
+{% endcodeblock %}</p>
 
 <p>如果不想看这种太多理论的书的话，可以看这本实战的书<a href="http://learnpythonthehardway.org/">《Learn Python The Hard Way》</a>，里面的例子从浅到深让你一步步的学习Python，比较适合没有编程经验的新手。里面的例子不要只是把它们打出来，最好自己可以举一反三做一些关于知识点的挑战和扩展。</p>
 
@@ -80,41 +69,24 @@
 
 <p>pip和setuptools就不说了，Python开发必备，下载管理依赖包就靠他们了，其他最有用的Python工具要数<a href="http://docs.python-guide.org/en/latest/dev/virtualenvs/">virtualenv</a>了，它可以创建一个虚拟的Python执行环境，因为Python的虚拟机不像JVM那么大，创建出来之后的文件夹非常小（大概只有10M），在这个虚拟环境里面安装执行Python程序不会污染你操作系统的主Python环境。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;安装virtualenv&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;pip install virtualenv&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;创建Python虚拟环境&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;virtualenv venv&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;让虚拟环境生效&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;source venv/bin/activate&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;取消虚拟环境&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;deactivate
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}</p>
+
+<h1>安装virtualenv</h1>
+
+<p>pip install virtualenv</p>
+
+<h1>创建Python虚拟环境</h1>
+
+<p>virtualenv venv</p>
+
+<h1>让虚拟环境生效</h1>
+
+<p>source venv/bin/activate</p>
+
+<h1>取消虚拟环境</h1>
+
+<p>deactivate
+{% endcodeblock %}</p>
 
 <p>另外Pyhton的调试也非常方便，只要在需要设置断点的地方添加代码<code>import pdb;pdb.set_trace()</code>即可，然后执行程序就会在断点出停止，你可以通过打印下面命令进行调试:</p>
 
@@ -130,7 +102,29 @@
 
 <p>在Python中执行<code>import this</code>可以看到Python之禅。</p>
 
-<p><blockquote><p>The Zen of Python, by Tim Peters</p></p><p><p>Beautiful is better than ugly.<br/>Explicit is better than implicit.<br/>Simple is better than complex.<br/>Complex is better than complicated.<br/>Flat is better than nested.<br/>Sparse is better than dense.<br/>Readability counts.<br/>Special cases aren&rsquo;t special enough to break the rules.<br/>Although practicality beats purity.<br/>Errors should never pass silently.<br/>Unless explicitly silenced.<br/>In the face of ambiguity, refuse the temptation to guess.<br/>There should be one&mdash; and preferably only one &mdash;obvious way to do it.<br/>Although that way may not be obvious at first unless you&rsquo;re Dutch.<br/>Now is better than never.<br/>Although never is often better than <em>right</em> now.<br/>If the implementation is hard to explain, it&rsquo;s a bad idea.<br/>If the implementation is easy to explain, it may be a good idea.<br/>Namespaces are one honking great idea &mdash; let&rsquo;s do more of those!</p></blockquote></p>
+<p>{% blockquote %}
+The Zen of Python, by Tim Peters</p>
+
+<p>Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren&rsquo;t special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one&mdash; and preferably only one &mdash;obvious way to do it.
+Although that way may not be obvious at first unless you&rsquo;re Dutch.
+Now is better than never.
+Although never is often better than <em>right</em> now.
+If the implementation is hard to explain, it&rsquo;s a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea &mdash; let&rsquo;s do more of those!
+{% endblockquote %}</p>
 
 <p>从Python之禅中我们可以看到Python是一门追求简洁，追求优雅的语言，语言设计者对代码质量要求比较高，希望编写Python代码的开发人员也能写出高质量的代码。</p>
 
@@ -138,33 +132,24 @@
 
 <p>比如我们有这样的一个数据结构，一个字典里面包含多个集合，用Java来初始化大概是这个样子:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Map</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;();</span>
-</span><span class='line'><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
-</span><span class='line'><span class="n">list1</span><span class="o">.</span><span class="na">add</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">foo1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
-</span><span class='line'><span class="n">list1</span><span class="o">.</span><span class="na">add</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">bar1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
-</span><span class='line'><span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">list1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="n">list1</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
-</span><span class='line'><span class="n">list2</span><span class="o">.</span><span class="na">add</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">foo2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
-</span><span class='line'><span class="n">list2</span><span class="o">.</span><span class="na">add</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">bar2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
-</span><span class='line'><span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">list2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="n">list2</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:java %}
+Map&lt;String, List<String>> map = new HashMap&lt;String, List<String>>();
+List<String> list1 = new ArrayList<String>();
+list1.add(&ldquo;foo1&rdquo;);
+list1.add(&ldquo;bar1&rdquo;);
+map.put(&ldquo;list1&rdquo;, list1);</p>
+
+<p>List<String> list2 = new ArrayList<String>();
+list2.add(&ldquo;foo2&rdquo;);
+list2.add(&ldquo;bar2&rdquo;);
+map.put(&ldquo;list2&rdquo;, list2);
+{% endcodeblock %}</p>
 
 <p>而用Python一行代码就可以搞定:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">my_map</span> <span class="o">=</span> <span class="p">{</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">list1</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;:</span> <span class="p">[</span><span class="n">foo1</span><span class="p">,</span> <span class="n">bar1</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">list2</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;:</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">foo2</span><span class="s">&#39;，&#39;</span><span class="n">bar2</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;]}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:python %}
+my_map = {&lsquo;list1&rsquo;: [foo1, bar1], &lsquo;list2&rsquo;: [&lsquo;foo2'，'bar2&rsquo;]}
+{% endcodeblock %}</p>
 
 <p>所以说Java是一门很啰嗦的语言，虽然新版本的Java加了lambda，然而并不能减少多少Java语言本身的繁杂性。</p>
 
@@ -187,7 +172,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/08/02/new-company-where-i-actually-like-to/"/>
     <updated>2015-08-02T07:37:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/08/02/new-company-where-i-actually-like-to</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2015-8/company.jpg"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2015-8/company.jpg %}</p>
 
 <p>其实来到新环境已经有一个多月了，但为了尽快熟悉工作上的事情在学习其他东西而忽略了博客的更新，希望以后工作再忙也要保持写博客的习惯。</p>
 
@@ -243,7 +228,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu/"/>
     <updated>2014-04-13T15:54:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-4/pycharm_and_eclipse.jpg"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2014-4/pycharm_and_eclipse.jpg %}</p>
 
 <p>我比较喜欢Pycharm，因为这个是JetBrains公司出的python IDE工具，该公司下的java IDE工具——IDEA，无论从界面还是操作上都甩eclipse几条街，但项目组里有些人使用eclipse比较久了，一时让他们转pycharm比较困难，所以还是两边的设置都介绍一下吧。</p>
 
@@ -260,16 +245,16 @@
 <li>将pycharm安装目录下的pycharm-debug.egg文件拷贝到远程机器上（如果是python3的话就拷贝pycharm-debug-py3k.egg文件）。</li>
 <li>在远程机器上安装pycharm-debug.egg，安装命令： <code>easy_install pycharm-debug.egg</code>。</li>
 <li><p>在pycharm中设置断点监听配置。<br/>
-<img src="/images/post/2014-4/pycharm-debug/pycharm-1.png"><br/>
-<img src="/images/post/2014-4/pycharm-debug/pycharm-2.png"><br/>
-<img src="/images/post/2014-4/pycharm-debug/pycharm-3.png"></p></li>
+{% img /images/post/2014-4/pycharm-debug/pycharm-1.png %}<br/>
+{% img /images/post/2014-4/pycharm-debug/pycharm-2.png %}<br/>
+{% img /images/post/2014-4/pycharm-debug/pycharm-3.png %}</p></li>
 <li><p>启动调试监听程序。<br/>
-<img src="/images/post/2014-4/pycharm-debug/pycharm-4.png"><br/>
-<img src="/images/post/2014-4/pycharm-debug/pycharm-5.png"></p></li>
+{% img /images/post/2014-4/pycharm-debug/pycharm-4.png %}<br/>
+{% img /images/post/2014-4/pycharm-debug/pycharm-5.png %}</p></li>
 <li><p>在远程机器上启动服务并发起http请求。<br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
+{% img /images/post/2014-4/eclipse-debug/eclipse-10.png %}</p></li>
 <li><p>pycharm监听到请求会进入断点。
-<img src="/images/post/2014-4/pycharm-debug/pycharm-6.png"></p></li>
+{% img /images/post/2014-4/pycharm-debug/pycharm-6.png %}</p></li>
 </ol>
 
 
@@ -284,27 +269,27 @@
 <li><p>PyDev可以按照<a href="http://pydev.org/manual_101_install.html">官网的向导</a>进行安装。<br/>
 安装完后按照下面的步骤进行远程调试。</p></li>
 <li><p>在window->Preperences->PyDev->Debug中，设置debug端口，比如12306。<br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-1.png"></p></li>
+{% img /images/post/2014-4/eclipse-debug/eclipse-1.png %}</p></li>
 <li><p>新增PyDev视图。<br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-2.png"><br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-3.png"></p></li>
+{% img /images/post/2014-4/eclipse-debug/eclipse-2.png %}<br/>
+{% img /images/post/2014-4/eclipse-debug/eclipse-3.png %}</p></li>
 <li><p>在Pydev试图中增加remote debug菜单。<br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-4.png"><br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-5.png"></p></li>
+{% img /images/post/2014-4/eclipse-debug/eclipse-4.png %}<br/>
+{% img /images/post/2014-4/eclipse-debug/eclipse-5.png %}</p></li>
 <li><p>在远程机器的源码里面添加调试代码和断点。<br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-6.png"></p></li>
+{% img /images/post/2014-4/eclipse-debug/eclipse-6.png %}</p></li>
 <li><p>断点设置语句：<br/>
 <code>pydevd.settrace('192.168.8.128', port=12306, stdoutToServer=True, stderrToServer=True)</code><br/>
 注意：这里的ip是指设置了调试监听的机器ip。<br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-7.png"></p></li>
+{% img /images/post/2014-4/eclipse-debug/eclipse-7.png %}</p></li>
 <li><p>通过Pydev菜单打开调试监听。<br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-8.png"><br/>
+{% img /images/post/2014-4/eclipse-debug/eclipse-8.png %}<br/>
 开始监听显示信息如下：<br/>
-<img src="/images/post/2014-4/eclipse-debug/eclipse-9.png"></p></li>
+{% img /images/post/2014-4/eclipse-debug/eclipse-9.png %}</p></li>
 <li><p>启动远程服务并发起http请求。
-<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
+{% img /images/post/2014-4/eclipse-debug/eclipse-10.png %}</p></li>
 <li><p>Pydev监听到请求后就会进入断点。
-<img src="/images/post/2014-4/eclipse-debug/eclipse-11.png"></p></li>
+{% img /images/post/2014-4/eclipse-debug/eclipse-11.png %}</p></li>
 </ul>
 
 

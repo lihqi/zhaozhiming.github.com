@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: vim | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/vim/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-09-17T16:33:54+08:00</updated>
+  <updated>2015-09-23T11:45:18+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/08/09/why-i-use-vi/"/>
     <updated>2015-08-09T08:47:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/08/09/why-i-use-vi</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2015-8/vi.png" width="250" height="250"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2015-8/vi.png 250 250 %}</p>
 
 <p>之前做Java开发的时候一直使用IDE，因为Java的IDE工具开发的太好了，以致没有机会深入接触像<code>vi</code>和<code>emacs</code>之类的神编辑器，但最近转python让我有机会深入了解了<code>vi</code>，使用过后不仅觉得方便，而且被其强大深深所吸引。</p>
 
@@ -69,148 +69,77 @@
 
 <p>tmux是一个terminal管理软件，通过tmux配合vi可以使开发工作更加简单快捷，网上有很多介绍tmux的文章，我就不多介绍了，附一下是我的tmux配置，也是从网上查的一份配置，使用之后觉得还不错，推荐给大家，这里使用<code>ctl+A</code>作为tmux前缀，相对默认的<code>ctl+B</code>来说按键相对要近一些。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>tmux.conf </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;&amp;mdash; base &amp;mdash;&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;unbind C-b
-</span><span class='line'><span class="nb">set</span> -g prefix C-a
-</span><span class='line'><span class="nb">set</span> -g status-keys vi
-</span><span class='line'>setw -g mode-keys vi
-</span><span class='line'><span class="nb">bind</span> : <span class="nb">command</span>-prompt
-</span><span class='line'><span class="nb">bind </span>r <span class="nb">source</span>-file ~/.tmux.conf <span class="se">\;</span> display-message &amp;ldquo;Reloading..&amp;rdquo;.
-</span><span class='line'><span class="nb">set</span> -g default-terminal &amp;ldquo;screen-256color&amp;rdquo;
-</span><span class='line'><span class="nb">bind</span>-key a send-prefix&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;&amp;mdash; windown &amp;mdash;&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;bind s split-window -h -c &amp;ldquo;#<span class="o">{</span>pane_current_path<span class="o">}</span>&amp;rdquo;
-</span><span class='line'><span class="nb">bind </span>v split-window -v -c &amp;ldquo;#<span class="o">{</span>pane_current_path<span class="o">}</span>&amp;rdquo;
-</span><span class='line'><span class="nb">bind</span>-key c  new-window -c &amp;ldquo;#<span class="o">{</span>pane_current_path<span class="o">}</span>&amp;rdquo;&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;bind h <span class="k">select</span>-pane -L
-</span><span class='line'><span class="nb">bind </span>j <span class="k">select</span>-pane -D
-</span><span class='line'><span class="nb">bind </span>k <span class="k">select</span>-pane -U
-</span><span class='line'><span class="nb">bind </span>l <span class="k">select</span>-pane -R&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;bind ^k resizep -U 10
-</span><span class='line'><span class="nb">bind</span> ^j resizep -D 10
-</span><span class='line'><span class="nb">bind</span> ^h resizep -L 10
-</span><span class='line'><span class="nb">bind</span> ^l resizep -R 10
-</span><span class='line'><span class="nb">bind</span> ^u swapp -U
-</span><span class='line'><span class="nb">bind</span> ^d swapp -D&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;bind u choose-session
-</span><span class='line'><span class="nb">bind </span>o choose-window
-</span><span class='line'><span class="nb">bind</span> <span class="se">\ </span>last
-</span><span class='line'><span class="nb">bind </span>q killp&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;bind-key -n C-S-Left swap-window -t -1
-</span><span class='line'><span class="nb">bind</span>-key -n C-S-Right swap-window -t +1
-</span><span class='line'><span class="nb">set</span> -g base-index 1
-</span><span class='line'>setw -g pane-base-index 1
-</span><span class='line'><span class="nb">set</span> -g <span class="nb">history</span>-limit 5000&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;pane border&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;set -g pane-border-fg black
-</span><span class='line'><span class="nb">set</span> -g pane-border-bg white
-</span><span class='line'><span class="nb">set</span> -g pane-active-border-fg black
-</span><span class='line'><span class="nb">set</span> -g pane-active-border-bg &amp;lsquo;#afd787&amp;rsquo;&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;&amp;mdash; <span class="nb">command</span> &amp;mdash;&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;bind m <span class="nb">command</span>-prompt &amp;ldquo;splitw &amp;lsquo;exec man %%&amp;rsquo;&amp;rdquo;
-</span><span class='line'><span class="nb">bind </span>space copy-mode
-</span><span class='line'><span class="nb">bind</span> -t vi-copy v begin-selection
-</span><span class='line'><span class="nb">bind</span> -t vi-copy y copy-selection
-</span><span class='line'><span class="nb">bind</span> -t vi-copy C-v rectangle-toggle
-</span><span class='line'><span class="nb">bind</span> <span class="o">]</span> paste-buffer&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;&amp;mdash; statusbar &amp;mdash;&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;set -g status-justify centre
-</span><span class='line'><span class="nb">set</span> -g status-right-attr bright
-</span><span class='line'><span class="nb">set</span> -g status-right &amp;ldquo;%H:%M %a %m-%d&amp;rdquo;
-</span><span class='line'><span class="nb">set</span> -g status-bg default
-</span><span class='line'><span class="nb">set</span> -g status-fg &amp;lsquo;#afd787&amp;rsquo;
-</span><span class='line'>setw -g window-status-current-attr bright
-</span><span class='line'>setw -g window-status-current-fg black
-</span><span class='line'>setw -g window-status-current-bg &amp;lsquo;#afd787&amp;rsquo;
-</span><span class='line'><span class="nb">set</span> -g status-utf8 on
-</span><span class='line'><span class="nb">set</span> -g status-interval 1
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock tmux.conf lang:sh %}</p>
+
+<h1>&mdash; base &mdash;</h1>
+
+<p>unbind C-b
+set -g prefix C-a
+set -g status-keys vi
+setw -g mode-keys vi
+bind : command-prompt
+bind r source-file ~/.tmux.conf \; display-message &ldquo;Reloading..&rdquo;.
+set -g default-terminal &ldquo;screen-256color&rdquo;
+bind-key a send-prefix</p>
+
+<h1>&mdash; windown &mdash;</h1>
+
+<p>bind s split-window -h -c &ldquo;#{pane_current_path}&rdquo;
+bind v split-window -v -c &ldquo;#{pane_current_path}&rdquo;
+bind-key c  new-window -c &ldquo;#{pane_current_path}&rdquo;</p>
+
+<p>bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R</p>
+
+<p>bind ^k resizep -U 10
+bind ^j resizep -D 10
+bind ^h resizep -L 10
+bind ^l resizep -R 10
+bind ^u swapp -U
+bind ^d swapp -D</p>
+
+<p>bind u choose-session
+bind o choose-window
+bind \ last
+bind q killp</p>
+
+<p>bind-key -n C-S-Left swap-window -t -1
+bind-key -n C-S-Right swap-window -t +1
+set -g base-index 1
+setw -g pane-base-index 1
+set -g history-limit 5000</p>
+
+<h1>pane border</h1>
+
+<p>set -g pane-border-fg black
+set -g pane-border-bg white
+set -g pane-active-border-fg black
+set -g pane-active-border-bg &lsquo;#afd787&rsquo;</p>
+
+<h1>&mdash; command &mdash;</h1>
+
+<p>bind m command-prompt &ldquo;splitw &lsquo;exec man %%&rsquo;&rdquo;
+bind space copy-mode
+bind -t vi-copy v begin-selection
+bind -t vi-copy y copy-selection
+bind -t vi-copy C-v rectangle-toggle
+bind ] paste-buffer</p>
+
+<h1>&mdash; statusbar &mdash;</h1>
+
+<p>set -g status-justify centre
+set -g status-right-attr bright
+set -g status-right &ldquo;%H:%M %a %m-%d&rdquo;
+set -g status-bg default
+set -g status-fg &lsquo;#afd787&rsquo;
+setw -g window-status-current-attr bright
+setw -g window-status-current-fg black
+setw -g window-status-current-bg &lsquo;#afd787&rsquo;
+set -g status-utf8 on
+set -g status-interval 1
+{% endcodeblock %}</p>
 
 <h2>vi学习</h2>
 

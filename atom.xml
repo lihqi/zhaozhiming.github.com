@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-09-17T16:33:54+08:00</updated>
+  <updated>2015-09-23T11:44:33+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,75 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[开发人员神秘的工具箱]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2015/09/21/the-mysterious-tools-of-developer/"/>
+    <updated>2015-09-21T10:06:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2015/09/21/the-mysterious-tools-of-developer</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2015-9/toolbox.jpeg" width="400" height="300"></p>
+
+<p>需求、时间和质量是项目管理的三个平衡点，如果需求多、开发时间短必将会导致项目质量下降，那开发人员有什么办法在短时间内交付大量的需求（虽然质量低）呢？其实每个开发人员都有一套“神秘”的工具箱，在万不得已的时候就会开始使用它（这部分内容是以前参加<a href="https://www.linkedin.com/in/dteng">Daniel</a>的CSM课程的时候听到的，觉得很有意思，想和大家分享一下）。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<blockquote><p>天下武功，唯快不破</p><footer><strong>火云邪神</strong></footer></blockquote>
+
+
+<h2>复制粘贴</h2>
+
+<p>最常见的就是复制粘贴了，天下文章一大抄，何况代码了，把以前可以工作的代码拷贝过来，改改就可以用了，甚至改都不改一下就直接上线也是可以的。别人敲了半天的代码我按2次按键就搞定了，这就是效率！</p>
+
+<p>别跟我说神马重复代码导致改一处地方要变成改多处地方，修改还容易遗漏这些balbal，我们听多了，Who care，明天的事情明天再说，现在最要紧的是赶紧把功能做出来上线，不然奖金泡汤你负责啊？</p>
+
+<h2>在网上搜索代码然后拷过来直接用</h2>
+
+<p>每当我没有灵感的时候，我都会上网搜一下有没有实现我想要的功能的代码，发现了的话就拷贝粘贴到我的代码里面，呵呵我的工作就算完成了。</p>
+
+<p>你说什么？！不弄清楚代码原理直接用危险大？别人的代码不一定适用于我的工程？拜托，我弄清楚那些代码原理的时间，我都可以自己写一个实现了好吗？跟你说了现在最要紧的是上线，别跟我扯这些没用的！另外我用百度搜代码，那速度杠杠的，谁用谁知道啊，现在谁还费那么大劲翻墙访问google啊？！</p>
+
+<h2>功能变成Bug</h2>
+
+<p>上面2招都不好使了肿么办，系统明天就要上线了，功能完不成老板又要找我麻烦了。。。机智的我还是想到了办法，我轻轻地在键盘上敲下了实现该功能的方法名，然后。。。就完了，我已经把功能实现了，可以上线了。</p>
+
+<p>什么？上线后发现啥功能都没有？额。。。我看看。。。哦，这里有个<strong>BUG</strong>，等下个版本一起修复吧！懂了吗？现在这里不是一个未完成的功能，而是一个<strong>BUG</strong>了，呵呵这种办法还不是一般人能想的出来的。</p>
+
+<h2>没有测试</h2>
+
+<p>测试？现在连睡觉的时间都没有，还要我做测试？Are you kidding me？这些东西交给用户不就可以了吗？用户是什么，不就是我们的小白鼠嘛呵呵。</p>
+
+<p>单元测试是什么鬼？用代码来测试代码？我看你吃撑了吧？我写了一堆的代码实现了功能，然后还要写同样多的一堆代码来测试我原来那堆代码，但老板并没有给我双倍工资来做这个事情啊，所以还是省省吧！</p>
+
+<h2>没有代码评审</h2>
+
+<p>让一大群人围观我的代码，还要在上面鸡蛋里挑骨头，想想我也是醉了，我的代码我做主，不想那么多人来judge我的代码。</p>
+
+<p>我知道代码评审是保证质量的有利手段，也有知识传递、宣传团队规则的好处，但为了快速上线，这些活动能砍就砍掉吧。</p>
+
+<h2>没有重构</h2>
+
+<p>重构我有时候也是会做的，像以前我的变量名称都是拼音首字母来命名的，后来我把我系统里面的变量名称重构了一遍，在每个变量名加上了我的名字缩写前缀，像这样：<code>sb_xxx</code>，是不是很机智呢呵呵。</p>
+
+<p>但是为了让项目赶紧上线，我还是别浪费太多时间在重构上面了，等以后有时间再来做吧，或者都后面维护的兄弟来重构吧，前提是他能看懂我的代码：）</p>
+
+<h2>硬编码</h2>
+
+<p>为了更快的提高我编码速度，遇到一些可以直接硬编码我一般都不定义变量，这样可以保证我的思路不被起变量名这种麻烦事情打断，反正这些以后都是改的，到时候再来修改代码就好了。</p>
+
+<p>你看隔壁那个老王又写测试又重构的，还说什么这样以后方便维护，可以快速定位问题，但尼玛搞了2天才完成，而我才花了2个小时，这才是效率啊！什么？后面我花了2个月才修复1个Bug，你是怎么知道的？</p>
+
+<h2>加班</h2>
+
+<p>加班是我能力的重要证明啊，加班让我多了一倍时间来做项目，还怕完不成么？！</p>
+
+<p>加班除了聊天吃饭打游戏外，最重要的是让BOSS知道我在加班，凌晨半夜发个邮件到整个公司邮箱是必须的，下班走的时候在朋友圈晒张&#8221;加班的夜晚真美&#8221;之类的照片也是极好的。让BOSS知道我就算没有功劳也有苦劳，到时候项目完不成也不要怪我，因为我已经加班了。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-9/sb1.jpeg" width="300" height="300"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[通过TDD聊软件开发]]></title>
@@ -5553,203 +5622,6 @@ PS: 这里我使用了<a href="https://github.com/stretchr/testify"><code>stretc
 
 
 <p>具体的Demo可以参考我的github工程<a href="https://github.com/zhaozhiming/spring4-mybatis">spring4-mybatis</a>。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用fullPage美化你的网站]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/11/12/use-full-page-to-make-web-site-beautify/"/>
-    <updated>2014-11-12T20:07:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/11/12/use-full-page-to-make-web-site-beautify</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-11/fullpage.png"></p>
-
-<p>这段时间逛网站，发现有一些网站的页面做的跟手机屏幕一样，大图片大字体铺满整个屏幕，还可以像手机一样通过鼠标上下左右滑动来切换不同的页面，让人感觉很炫很酷很炫。好奇心的驱使下找到了<a href="http://alvarotrigo.com/fullPage/#firstPage">fullPage.js</a>这个jquery插件，它可以让你轻松地制作漂亮的全屏滑动页面。</p>
-
-<!--more-->
-
-
-<h2>支持的浏览器</h2>
-
-<p>可以看到好东西都是不支持IE6的。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-11/support-brower.gif"></p>
-
-<h2>用法</h2>
-
-<ul>
-<li>fullPage.js使用非常简单，先在你的html页面里面加上fullPage的css和js文件，注意还需要包括jquery的js文件，而且要放在fullPage的js文件前面。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>index.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href=</span><span class="s">&quot;jquery.fullPage.css&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;jquery.fullPage.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>然后在html里面定义一个div，id为<code>fullpage</code>，里面再嵌套div，class为<code>section</code>，代码示例如下，这是一个简单的全页滑动页面。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>index.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;fullpage&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;section&quot;</span><span class="nt">&gt;</span>Some section<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>最后在对fullPage对象进行初始化。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>index.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#fullpage&#39;</span><span class="p">).</span><span class="nx">fullpage</span><span class="p">();</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>fullPage属性</h2>
-
-<p>这是一个比较复杂的fullPage初始化，可以看到fullPage可以设置很多的属性，比如menu(菜单)，设置为<code>true</code>则在屏幕右边会显示导航菜单，其他的属性说明可以参考fullPage的<a href="https://github.com/alvarotrigo/fullPage.js#options">官方说明</a>。</p>
-
-<figure class='code'><figcaption><span>index.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#fullpage&#39;</span><span class="p">).</span><span class="nx">fullpage</span><span class="p">({</span>
-</span><span class='line'>        <span class="c1">//Navigation</span>
-</span><span class='line'>        <span class="nx">menu</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">anchors</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;firstSlide&#39;</span><span class="p">,</span> <span class="s1">&#39;secondSlide&#39;</span><span class="p">],</span>
-</span><span class='line'>        <span class="nx">navigation</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">navigationPosition</span><span class="o">:</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">navigationTooltips</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;firstSlide&#39;</span><span class="p">,</span> <span class="s1">&#39;secondSlide&#39;</span><span class="p">],</span>
-</span><span class='line'>        <span class="nx">slidesNavigation</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">slidesNavPosition</span><span class="o">:</span> <span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">//Scrolling</span>
-</span><span class='line'>        <span class="nx">css3</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">scrollingSpeed</span><span class="o">:</span> <span class="mi">700</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">autoScrolling</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">scrollBar</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">easing</span><span class="o">:</span> <span class="s1">&#39;easeInQuart&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">easingcss3</span><span class="o">:</span> <span class="s1">&#39;ease&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">loopBottom</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">loopTop</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">loopHorizontal</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">continuousVertical</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">normalScrollElements</span><span class="o">:</span> <span class="s1">&#39;#element1, .element2&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">scrollOverflow</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">touchSensitivity</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">normalScrollElementTouchThreshold</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">//Accessibility</span>
-</span><span class='line'>        <span class="nx">keyboardScrolling</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">animateAnchor</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">//Design</span>
-</span><span class='line'>        <span class="nx">verticalCentered</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">resize</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">sectionsColor</span> <span class="o">:</span> <span class="p">[</span><span class="s1">&#39;#ccc&#39;</span><span class="p">,</span> <span class="s1">&#39;#fff&#39;</span><span class="p">],</span>
-</span><span class='line'>        <span class="nx">paddingTop</span><span class="o">:</span> <span class="s1">&#39;3em&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">paddingBottom</span><span class="o">:</span> <span class="s1">&#39;10px&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">fixedElements</span><span class="o">:</span> <span class="s1">&#39;#header, .footer&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">responsive</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">//Custom selectors</span>
-</span><span class='line'>        <span class="nx">sectionSelector</span><span class="o">:</span> <span class="s1">&#39;.section&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">slideSelector</span><span class="o">:</span> <span class="s1">&#39;.slide&#39;</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">//events</span>
-</span><span class='line'>        <span class="nx">onLeave</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">nextIndex</span><span class="p">,</span> <span class="nx">direction</span><span class="p">){},</span>
-</span><span class='line'>        <span class="nx">afterLoad</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">anchorLink</span><span class="p">,</span> <span class="nx">index</span><span class="p">){},</span>
-</span><span class='line'>        <span class="nx">afterRender</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){},</span>
-</span><span class='line'>        <span class="nx">afterResize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){},</span>
-</span><span class='line'>        <span class="nx">afterSlideLoad</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">anchorLink</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">slideAnchor</span><span class="p">,</span> <span class="nx">slideIndex</span><span class="p">){},</span>
-</span><span class='line'>        <span class="nx">onSlideLeave</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">anchorLink</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">slideIndex</span><span class="p">,</span> <span class="nx">direction</span><span class="p">){}</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>参考示例</h2>
-
-<p>在fullPage的github工程里面，有一个example文件夹，主页面是<code>demoPage.html</code>，在浏览器打开它可以看到里面列举了19个fullPage的Demo，有上下翻页，左右翻页，嵌套视频等各种例子，如果想实现自己想要的效果，可以参照对应demo的html文件来进行修改。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-11/fullpage-demo.png"></p>
 ]]></content>
   </entry>
   
