@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: uat | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/uat/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-09-23T11:54:46+08:00</updated>
+  <updated>2015-10-25T16:18:22+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -35,86 +35,143 @@
 
 <p>Robot安装十分简单，但首先要安装Python环境（Python安装这里不介绍了，请自行google了解），然后执行以下语句进行安装。</p>
 
-<p>{% codeblock lang:sh %}
-sudo pip install robotframework
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>安装完成后验证是否安装成功。</p>
 
-<p>{% codeblock lang:sh %}
-pybot &mdash;version
-Robot Framework 2.8.5 (Python 2.7.3 on linux2)
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot &amp;mdash;version
+</span><span class='line'>Robot Framework 2.8.5 <span class="o">(</span>Python 2.7.3 on linux2<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>如果需要安装其他Lib包，同样是通过pip进行安装，下面以安装Selenium2Library为例。</p>
 
-<p>{% codeblock lang:sh %}
-sudo pip install robotframework_Selenium2Library
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework_Selenium2Library
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h4>Robot脚本</h4>
 
 <p>Robot安装完成后，就可以开始编写测试脚本了，下面是测试脚本和Resource文件的例子:</p>
 
-<p>{% codeblock lang:robotframework create_recipient.robot%}
-<strong><em> Settings </em></strong>
-Library    Selenium2Library
-Library    DatabaseLibrary
-Resource   resource.robot
-Test Setup      Open Browser  ${baseurl}/#/recipients  ${browser}
-Test Teardown   Close Browser</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>create_recipient.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Settings &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">Selenium2Library</span><span class="p"></span>
+</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">DatabaseLibrary</span><span class="p"></span>
+</span><span class='line'><span class="c">Resource</span><span class="p">   </span><span class="c">resource.robot</span><span class="p"></span>
+</span><span class='line'><span class="c">Test Setup</span><span class="p">      </span><span class="c">Open Browser</span><span class="p">  </span><span class="c">${baseurl}/#/recipients</span><span class="p">  </span><span class="c">${browser}</span><span class="p"></span>
+</span><span class='line'><span class="c">Test Teardown</span><span class="p">   </span><span class="c">Close Browser&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; TestCases &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">create new recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
+</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户成功</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;create exist recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="c">Given execute sql</span><span class="p">  </span><span class="c">insert into recipients(username,email) values(&#39;zhaozhiming&#39;,&#39;zhaozhiming003@gmail.com&#39;)</span><span class="p"></span>
+</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
+</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户失败</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; Keywords &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">execute sql&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${sql}</span><span class="p"></span>
+</span><span class='line'><span class="c">Connect To Database Using Custom Params</span><span class="p">      </span><span class="c">cymysql</span><span class="p">    </span><span class="c">db=&#39;${dbname}&#39;,user=&#39;${dbuser}&#39;,passwd=&#39;${dbpassword}&#39;, host=&#39;${dbhost}&#39;,port=${dbport}</span><span class="p"></span>
+</span><span class='line'><span class="c">Execute Sql String</span><span class="p">    </span><span class="c">${sql}</span><span class="p"></span>
+</span><span class='line'><span class="c">Disconnect from database</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;create recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Input text</span><span class="p">    </span><span class="c">username</span><span class="p">    </span><span class="c">zhaozhiming</span><span class="p"></span>
+</span><span class='line'><span class="c">Input text</span><span class="p">    </span><span class="c">email</span><span class="p">    </span><span class="c">zhaozhiming003@gmail.com</span><span class="p"></span>
+</span><span class='line'><span class="c">click element</span><span class="p">  </span><span class="c">css=.submit</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;verify create recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
+</span><span class='line'><span class="c">sleep</span><span class="p">   </span><span class="c">2s</span><span class="p"></span>
+</span><span class='line'><span class="c">page should contain</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p><strong><em> TestCases </em></strong>
-create new recipient</p>
-
-<pre><code>Given execute sql  delete from recipients where email='zhaozhiming003@gmail.com'
-When create recipient
-Then verify create recipient  添加用户成功
-</code></pre>
-
-<p>create exist recipient</p>
-
-<pre><code>Given execute sql  delete from recipients where email='zhaozhiming003@gmail.com'
-Given execute sql  insert into recipients(username,email) values('zhaozhiming','zhaozhiming003@gmail.com')
-When create recipient
-Then verify create recipient  添加用户失败
-</code></pre>
-
-<p><strong><em> Keywords </em></strong>
-execute sql</p>
-
-<pre><code>[Arguments]  ${sql}
-Connect To Database Using Custom Params      cymysql    db='${dbname}',user='${dbuser}',passwd='${dbpassword}', host='${dbhost}',port=${dbport}
-Execute Sql String    ${sql}
-Disconnect from database
-</code></pre>
-
-<p>create recipient</p>
-
-<pre><code>Input text    username    zhaozhiming
-Input text    email    zhaozhiming003@gmail.com
-click element  css=.submit
-</code></pre>
-
-<p>verify create recipient</p>
-
-<pre><code>[Arguments]  ${expectContent}
-sleep   2s
-page should contain  ${expectContent}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock lang:robotframework resource.robot%}
-<strong><em> Variables </em></strong>
-${baseurl}  <a href="http://localhost:9898/oddemail">http://localhost:9898/oddemail</a>
-${dbhost}  localhost
-${dbport}  3306
-${dbname}  oms
-${dbuser}  root
-${dbpassword}  root
-${browser}  chrome
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>resource.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Variables &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">${baseurl}</span><span class="p">  </span><span class="c">&lt;a href=&quot;http://localhost:9898/oddemail&quot;&gt;http://localhost:9898/oddemail&lt;/a&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbhost}</span><span class="p">  </span><span class="c">localhost</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbport}</span><span class="p">  </span><span class="c">3306</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbname}</span><span class="p">  </span><span class="c">oms</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbuser}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbpassword}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
+</span><span class='line'><span class="c">${browser}</span><span class="p">  </span><span class="c">chrome</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li><p>Settings下面是测试脚本需要引用的Lib包名，Resource文件，Setup和Teardown方法。</p>
@@ -142,41 +199,54 @@ ${browser}  chrome
 
 <p>因为这个测试案例是对web页面进行测试，所以在执行测试案例之前需要先将应用服务启起来，服务启起来后，执行下面的 语句:</p>
 
-<p>{% codeblock lang:sh%}
-pybot /your/robot/scripts/path/create_recipient.robot
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot /your/robot/scripts/path/create_recipient.robot
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>执行完后会看到系统自动打开浏览器，输入url，自动填写输入框，并验证是否正确，最后会产生几个报告文件，如果测试案例失败，还会自动将失败的页面截图存成文件。</p>
 
-<p>{% codeblock lang:sh%}
-Output:  /home/kingzzm/projects/odde-mail-server/output.xml
-Log:     /home/kingzzm/projects/odde-mail-server/log.html
-Report:  /home/kingzzm/projects/odde-mail-server/report.html
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Output:  /home/kingzzm/projects/odde-mail-server/output.xml
+</span><span class='line'>Log:     /home/kingzzm/projects/odde-mail-server/log.html
+</span><span class='line'>Report:  /home/kingzzm/projects/odde-mail-server/report.html
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>另外建议脚本存放到test目录下，建议目录结构如下:</p>
 
-<p>{% img /images/post/2014-6/robot_script_local.png %}</p>
+<p><img src="/images/post/2014-6/robot_script_local.png"></p>
 
 <h4>与Gradle集成</h4>
 
 <p>每次跑robot测试都需要手动启一个web服务比较麻烦，可以考虑在Gradle中通过任务的方式来执行robot测试，在跑测试之前先通过gradle启一个本地应用，然后开始跑robot测试，跑完测试后通过Gradle停掉本地服务。<br/>
 因为Gradle自带jetty容器，所以这一步实现起来也比较简单:</p>
 
-<p>{% codeblock lang:groovy %}
-[jettyRun, jettyStop]<em>.stopPort = 7654
-[jettyRun, jettyStop]</em>.stopKey = &lsquo;oddemail&rsquo;</p>
-
-<p>task uat(type:Exec, dependsOn: jettyRun) {</p>
-
-<pre><code>commandLine '/usr/local/bin/pybot', 'src/test/uat/testcase'
-doLast {
-    jettyStop.execute()
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="n">em</span><span class="o">&gt;.</span><span class="na">stopPort</span> <span class="o">=</span> <span class="mi">7654</span>
+</span><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="s">/em&gt;.stopKey = &amp;lsquo;oddemail&amp;rsquo;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">task</span> <span class="n">uat</span><span class="o">(</span><span class="nl">type:</span><span class="n">Exec</span><span class="o">,</span> <span class="nl">dependsOn:</span> <span class="n">jettyRun</span><span class="o">)</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;commandLine &#39;/</span><span class="n">usr</span><span class="s">/local/</span><span class="n">bin</span><span class="s">/pybot&#39;, &#39;src/</span><span class="n">test</span><span class="s">/uat/</span><span class="n">testcase</span><span class="err">&#39;</span>
+</span><span class='line'><span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">jettyStop</span><span class="o">.</span><span class="na">execute</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="s">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>以后需要跑uat测试就执行<code>gradle uat</code>这个命令就可以了，这样还可以结合jenkins进行uat自动化测试。</p>
 ]]></content>
