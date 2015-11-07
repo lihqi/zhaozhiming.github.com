@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-10-25T16:18:22+08:00</updated>
+  <updated>2015-11-07T18:19:24+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,91 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[科学上网利器Shadowsocks]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2015/11/07/use-shadowsocks-and-vps/"/>
+    <updated>2015-11-07T10:31:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2015/11/07/use-shadowsocks-and-vps</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2015-11/ss_vultr.jpg" width="400" height="350"></p>
+
+<p>前段时间AppStore出了一款神器<a href="https://itunes.apple.com/cn/app/surge-web-developer-tool-proxy/id1040100637?ls=1&amp;mt=8">Surge</a>，可以让iOS像其他平台使用<a href="https://github.com/shadowsocks/shadowsocks/wiki">Shadowsocks</a>（以下简称ss）一样地轻松科学上网，因为以前都是用买的SSH或VPN科学上网，所以对自建的VPN服务这一块没有太多关注，甚至错过了ss这种成熟的工具。最近试用了过后觉得非常方便，所以在这里记录一下。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>ss介绍</h2>
+
+<p>简单的说，ss就是帮助你翻过伟大的GFW的一个工具，只要你有一台可以访问国外网站的服务器，你就可以建立自己的VPN服务。它的方案十分完备，有服务端和各种操作系统的客户端，而且还内置了一个路由列表，在访问网站时会自动识别该网站是否需要科学上网，如果需要的则走国外线路，否则走本地线路，非常智能。</p>
+
+<h2>vps选择</h2>
+
+<p>要搭建自己的VPN，首先需要一台国外的服务器。老牌的vps有<a href="http://www.linode.com">Linode</a>和<a href="https://www.digitalocean.com">DigitalOcean</a>，都是不错的选择，后起之秀有<a href="https://www.vultr.com/">vultr</a>，我选择vultr是因为它最近在做活动，每个新用户送50美元，但是50美元需要在2个月内使用完，相当于头2个月可以选择25美元/月的服务器，这种价位的服务器性能是很高的。</p>
+
+<p>vultr50美元的活动链接是这个：<a href="https://www.vultr.com/freetrial/">50美元活动</a>，需点击页面中的<code>TRY VULTR CLOUD SERVERS FREE</code>按钮来注册用户，注册之后会要求绑定银行信用卡，绑定成功后vultr会在信用卡上预约扣款2.5美元，放心这个钱后面会退的。因为vultr需要24小时来审核你的账户，vultr要求每个人只能有一个账号，不允许一个人建立多个账号。</p>
+
+<p>当过了2个月之后，还可以使用其他优惠码来对账户进行充值，优惠码链接请看这里：<a href="http://vultr.youhuima.cc/">vultr优惠码</a>。</p>
+
+<h2>vps使用</h2>
+
+<p>vps就是一台云服务器，创建的时候要选择机房的物理位置、对应的操作系统和服务器配置，vultr最低的配置是5美元/月，对普通的搭搭博客和搭建VPN的需求是绰绰有余了。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-11/vultr_size.png"></p>
+
+<p>搭建完后就可以对机器进行相关的配置了，最常用的就是配置自己的访问电脑<code>SSH KEYS</code>，这样每次ssh登陆就可以不用输入密码了。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-11/vultr_ssh.png"></p>
+
+<h2>ss服务端</h2>
+
+<p>搭建ss服务器的说明请看这里：<a href="https://github.com/shadowsocks/shadowsocks/wiki/Shadowsocks-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E">ss服务器搭建</a>，操作比较简单，先安装pip，然后再通过pip安装ss，pip是Python的下载包工具，现在的linux操作系统一般都默认安装了Python。</p>
+
+<p>然后是设置端口、密码和加密算法，建议用后台方式启动服务，我是用配置文件的方式启动ss服务，这种方式可以将配置信息放在文件中维护。</p>
+
+<p>如果连接有问题，可以通过查看日志文件来看是什么问题，文件路径：<code>/var/log/shadowsock.log</code>。</p>
+
+<h2>ss客户端——android</h2>
+
+<p>ss安卓客户端的下载地址在这里：<a href="https://github.com/shadowsocks/shadowsocks-android/releases">ss安卓客户端</a>。App中文名字叫<code>影梭</code>，安装完成后打开配置界面，填写服务器ip，远程端口，本地端口，密码和加密方法，这些都是和服务端的配置文件内容一致的，完了点击连接，然后你的手机就可以科学上网了，赶紧把Fackbook, Twitter这些下下来玩一下吧。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-11/ss_android.jpg" width="200" height="150"></p>
+
+<h2>ss客户端——mac</h2>
+
+<p>ss在Mac上的客户端在这里：<a href="https://github.com/shadowsocks/shadowsocks-iOS/wiki/Shadowsocks-for-OSX-%E5%B8%AE%E5%8A%A9">ssMac客户端</a>。下载后直接安装即可，安装完成后在右上角菜单栏有个箭头的Logo就是ss了。如下图所示，进入ss的Server来配置服务端的信息。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-11/ss_mac.png" width="200" height="150"></p>
+
+<p>配置完成后，点击<code>Turn Shadowsocks On</code>就可以开启ss客户端了，然后在Chrome浏览器中安装SwitchySharp插件，配置信息如下，以后只要选择了这个代理就可以科学上网了。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-11/chrome_proxy.png" width="400" height="350"></p>
+
+<h2>proxifier</h2>
+
+<p>在Mac上安装了ss的客户端之后，虽然可以通过浏览器科学上网了，但是如果想让其他软件，比如邮箱，terminal等也能科学上网的话，就需要将你的ss代理全局化了。这里介绍一个软件<a href="https://www.proxifier.com/">proxifier</a>，它可以很方便地将ss的服务设置为全局服务。</p>
+
+<ul>
+<li>首先创建代理</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-11/proxy_create.png" width="400" height="350"></p>
+
+<ul>
+<li>然后再创建规则，注意这时要将Mac上的ss客户端ShadowsocksX设为<code>直连</code>，其他应用设为走ss代理。</li>
+</ul>
+
+
+<p><img src="http://zhaozhiming.github.io/images/post/2015-11/proxy_rule.png" width="400" height="350"></p>
+
+<ul>
+<li>最后观看proxifier的连接信息，就可以看到电脑上应用的网络连接信息了。</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Alfred和一些有用的workflow介绍]]></title>
@@ -5222,87 +5307,6 @@ PS: 这里我使用了<a href="https://github.com/stretchr/testify"><code>stretc
 
 
 <p>上面这些做好以后，就可以退出VM，后面的步骤就跟Veewee创建Box一样了，就是使用vagrant来生成box文件，添加box，启动VM。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用Docker打造自己的开发环境]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2014/11/18/hello-docker/"/>
-    <updated>2014-11-18T21:45:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2014/11/18/hello-docker</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2014-11/docker.png"></p>
-
-<p>作为这个时代的程序员真的很幸福，每天不但有一些改变世界的产品出现，而且提高程序员开发效率的工具也是层出不穷。之前介绍过如何使用<a href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible/">Vagrant来创建Ceph环境</a>，使用Vagrant可以很方便的管理我们的虚拟机，同时来定制开发团队的开发环境，现在又出现了Docker，让我们有了一个更好的选择。</p>
-
-<!--more-->
-
-
-<h2><a href="https://www.docker.com/">Docker</a>介绍</h2>
-
-<p>之前有幸参加了OSChina在成都举办的源创会，听到了Docker中国社区创始人马全一老师介绍Docker，他们团队在去年就开始研究Docker，但不知道为什么Docker今年开始火了起来，原因可能是Docker今年搞了一次宣传会，IT界各种大佬公司都去捧场了，有Google，RedHat等，然后媒体争相报道，于是Docker就火了。</p>
-
-<p>Docker的介绍也是不断在变，以前官方的Docker的概括是这样的:</p>
-
-<blockquote><p>An open source project to pack, ship and run any application as a lightweight container.</p></blockquote>
-
-
-<p>现在是这样的:</p>
-
-<blockquote><p>An open platform for distributed applications for developers and sysadmins.</p></blockquote>
-
-
-<p>但不管怎样，Docker是一个很好的东西，可以让我们快速创建自己的开发环境，真正做到<code>Build once, Run anywhere</code>。</p>
-
-<h2>Docker命令介绍</h2>
-
-<p>如果有过Vagrant使用经验的话，Docker使用起来非常简单，无非就是把Vagrant的box换成image，把Vagrant的VM换成container就可以了。如果没有Vagrant使用经验也没有关系，试试Docker的<a href="https://www.docker.com/tryit/">TryIt</a>，里面有一个教程可以让你快速掌握Docker的一些基本命令。</p>
-
-<p>比较常用的Docker命令:</p>
-
-<ul>
-<li>docker version: 查看Docker版本。</li>
-<li>docker pull [image name]: 下载一个docker的镜像，类似git拉代码的命令，不过这个是拉docker镜像。</li>
-<li>docker images: 列出所有的镜像。</li>
-<li>docker run [image name] [command]: 运行一个镜像的某个命令，这样会产生一个container。</li>
-<li>docker ps: 列出container。</li>
-<li>docker start [container name]: 启动一个container。</li>
-<li>docker stop [container name]: 停止一个container。</li>
-<li>docker rm [container name]: 删除一个container。</li>
-<li>docker rmi [image name]: 删除一个image镜像。</li>
-</ul>
-
-
-<h2>Docker镜像</h2>
-
-<p>在Docker官网上可以看到已经有很多做好的镜像，比如Ubuntu，CentOS，MySql等，而且每天都有一些新的镜像不断在上传，因为上传一个镜像就像github上传代码一样简单。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-11/docker-images.png"></p>
-
-<p>但是Docker在下载镜像的时候会发现速度很慢，有时候甚至连不上，这时候需要翻墙(可以看看我之前的文章，<a href="http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1/">让路由飞越长城(一)</a>，<a href="http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2/">让路由飞越长城(二)</a>)，或者找一下国内的镜像(可以看下<a href="https://docker.cn/">这里</a>)，虽然国内的镜像没有Docker官网的那么全，但基本的镜像还是有的。</p>
-
-<h2>Docker &amp; Vagrant</h2>
-
-<p>在没有Docker之前，我使用Vagrant来创建自己的开发环境，Docker和Vagrant都有一个很好的特点，就是通过虚拟化环境来创建开发环境，这样的好处是不会影响本机的环境配置。</p>
-
-<p>试想一下，如果在你需要安装Mysql，Ruby，Apache等服务，在本机上就需要做各种配置，像修改环境变量等，遇到版本升级还需要删除本地配置，然后再更新，久而久之本地环境就会被&#8221;污染&#8221;了，这时候想安装其他服务可能就会报各种莫名其妙的错误。</p>
-
-<p>如果我们有虚拟化环境就不会存在这种问题了，在虚拟环境安装各种服务，不需要的话销毁环境重新创建一个即可，简单又方便。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-11/docker_vagrant_small.png"></p>
-
-<p>在Docker推出之后，网上就有各种比较Docker和Vagrant的文章，可以看看StackOverFlow上面的<a href="http://stackoverflow.com/questions/16647069/should-i-use-vagrant-or-docker-io-for-creating-an-isolated-environment">这篇文章</a>，连Docker的作者也来回答这个问题。</p>
-
-<p>其实Docker和Vagrant不一定是竞争的关系，也可以是相辅相成的关系，比如在本地安装Docker，还是需要修改一些本地的配置，以后遇到版本升级还是会遇到修改配置的问题，如果是下载一个Docker的Vagrant box(已经有人制作了一个，见<a href="https://github.com/mitchellh/boot2docker-vagrant-box">这里</a>)，再使用VM安装其他docker镜像就不会有这种问题了。</p>
-
-<p>在网上有人做过Docker的性能评估，分别对比了原生OS，OS安装Docker，OS系统安装虚拟机，虚拟机安装Docker这4种情况的性能情况，最后的结论是在虚拟机上运行Docker性能比较差，建议如果是生产环境还是使用原生的Docker比较好，性能比较文章请见<a href="http://blogs.vmware.com/performance/2014/10/docker-containers-performance-vmware-vsphere.html">这里</a>。</p>
-
-<h2>Steve Wozniak is not boring</h2>
-
-<p>在研究Docker的过程中，发现如果创建contrainer的时候不指定containrer名称的话，系统会自动帮你创建名称，而名称是随机生成的。名称随机有2部分组成，左半部分是形容词，右半部分是人名，是一些影响计算机发展的IT名人，在源码中可以看到这些名字的说明。</p>
-
-<p>有趣的是，当名字随机到<code>boring_wozniak</code>的时候，程序会跳过生成这个名字，而继续生成下个随机名字，旁边有段注释是<code>Steve Wozniak is not boring</code>，相当好玩。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2014-11/docker-humorous.png"></p>
 ]]></content>
   </entry>
   

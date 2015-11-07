@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: ss | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/tags/ss/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2015-11-07T18:19:24+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[科学上网利器Shadowsocks]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2015/11/07/use-shadowsocks-and-vps/"/>
+    <updated>2015-11-07T10:31:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2015/11/07/use-shadowsocks-and-vps</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-11/ss_vultr.jpg" width="400" height="350"></p>
+
+<p>前段时间AppStore出了一款神器<a href="https://itunes.apple.com/cn/app/surge-web-developer-tool-proxy/id1040100637?ls=1&amp;mt=8">Surge</a>，可以让iOS像其他平台使用<a href="https://github.com/shadowsocks/shadowsocks/wiki">Shadowsocks</a>（以下简称ss）一样地轻松科学上网，因为以前都是用买的SSH或VPN科学上网，所以对自建的VPN服务这一块没有太多关注，甚至错过了ss这种成熟的工具。最近试用了过后觉得非常方便，所以在这里记录一下。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>ss介绍</h2>
+
+<p>简单的说，ss就是帮助你翻过伟大的GFW的一个工具，只要你有一台可以访问国外网站的服务器，你就可以建立自己的VPN服务。它的方案十分完备，有服务端和各种操作系统的客户端，而且还内置了一个路由列表，在访问网站时会自动识别该网站是否需要科学上网，如果需要的则走国外线路，否则走本地线路，非常智能。</p>
+
+<h2>vps选择</h2>
+
+<p>要搭建自己的VPN，首先需要一台国外的服务器。老牌的vps有<a href="http://www.linode.com">Linode</a>和<a href="https://www.digitalocean.com">DigitalOcean</a>，都是不错的选择，后起之秀有<a href="https://www.vultr.com/">vultr</a>，我选择vultr是因为它最近在做活动，每个新用户送50美元，但是50美元需要在2个月内使用完，相当于头2个月可以选择25美元/月的服务器，这种价位的服务器性能是很高的。</p>
+
+<p>vultr50美元的活动链接是这个：<a href="https://www.vultr.com/freetrial/">50美元活动</a>，需点击页面中的<code>TRY VULTR CLOUD SERVERS FREE</code>按钮来注册用户，注册之后会要求绑定银行信用卡，绑定成功后vultr会在信用卡上预约扣款2.5美元，放心这个钱后面会退的。因为vultr需要24小时来审核你的账户，vultr要求每个人只能有一个账号，不允许一个人建立多个账号。</p>
+
+<p>当过了2个月之后，还可以使用其他优惠码来对账户进行充值，优惠码链接请看这里：<a href="http://vultr.youhuima.cc/">vultr优惠码</a>。</p>
+
+<h2>vps使用</h2>
+
+<p>vps就是一台云服务器，创建的时候要选择机房的物理位置、对应的操作系统和服务器配置，vultr最低的配置是5美元/月，对普通的搭搭博客和搭建VPN的需求是绰绰有余了。</p>
+
+<p><img src="/images/post/2015-11/vultr_size.png"></p>
+
+<p>搭建完后就可以对机器进行相关的配置了，最常用的就是配置自己的访问电脑<code>SSH KEYS</code>，这样每次ssh登陆就可以不用输入密码了。</p>
+
+<p><img src="/images/post/2015-11/vultr_ssh.png"></p>
+
+<h2>ss服务端</h2>
+
+<p>搭建ss服务器的说明请看这里：<a href="https://github.com/shadowsocks/shadowsocks/wiki/Shadowsocks-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E">ss服务器搭建</a>，操作比较简单，先安装pip，然后再通过pip安装ss，pip是Python的下载包工具，现在的linux操作系统一般都默认安装了Python。</p>
+
+<p>然后是设置端口、密码和加密算法，建议用后台方式启动服务，我是用配置文件的方式启动ss服务，这种方式可以将配置信息放在文件中维护。</p>
+
+<p>如果连接有问题，可以通过查看日志文件来看是什么问题，文件路径：<code>/var/log/shadowsock.log</code>。</p>
+
+<h2>ss客户端——android</h2>
+
+<p>ss安卓客户端的下载地址在这里：<a href="https://github.com/shadowsocks/shadowsocks-android/releases">ss安卓客户端</a>。App中文名字叫<code>影梭</code>，安装完成后打开配置界面，填写服务器ip，远程端口，本地端口，密码和加密方法，这些都是和服务端的配置文件内容一致的，完了点击连接，然后你的手机就可以科学上网了，赶紧把Fackbook, Twitter这些下下来玩一下吧。</p>
+
+<p><img src="/images/post/2015-11/ss_android.jpg" width="200" height="150"></p>
+
+<h2>ss客户端——mac</h2>
+
+<p>ss在Mac上的客户端在这里：<a href="https://github.com/shadowsocks/shadowsocks-iOS/wiki/Shadowsocks-for-OSX-%E5%B8%AE%E5%8A%A9">ssMac客户端</a>。下载后直接安装即可，安装完成后在右上角菜单栏有个箭头的Logo就是ss了。如下图所示，进入ss的Server来配置服务端的信息。</p>
+
+<p><img src="/images/post/2015-11/ss_mac.png" width="200" height="150"></p>
+
+<p>配置完成后，点击<code>Turn Shadowsocks On</code>就可以开启ss客户端了，然后在Chrome浏览器中安装SwitchySharp插件，配置信息如下，以后只要选择了这个代理就可以科学上网了。</p>
+
+<p><img src="/images/post/2015-11/chrome_proxy.png" width="400" height="350"></p>
+
+<h2>proxifier</h2>
+
+<p>在Mac上安装了ss的客户端之后，虽然可以通过浏览器科学上网了，但是如果想让其他软件，比如邮箱，terminal等也能科学上网的话，就需要将你的ss代理全局化了。这里介绍一个软件<a href="https://www.proxifier.com/">proxifier</a>，它可以很方便地将ss的服务设置为全局服务。</p>
+
+<ul>
+<li>首先创建代理</li>
+</ul>
+
+
+<p><img src="/images/post/2015-11/proxy_create.png" width="400" height="350"></p>
+
+<ul>
+<li>然后再创建规则，注意这时要将Mac上的ss客户端ShadowsocksX设为<code>直连</code>，其他应用设为走ss代理。</li>
+</ul>
+
+
+<p><img src="/images/post/2015-11/proxy_rule.png" width="400" height="350"></p>
+
+<ul>
+<li>最后观看proxifier的连接信息，就可以看到电脑上应用的网络连接信息了。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
