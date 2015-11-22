@@ -1,0 +1,238 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>保存并恢复你的tmux - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="保存并恢复你的">
+	<meta name="keywords" content="tmux">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='/stylesheets/slackey.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/fjalla_one.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/amethysta.css' rel='stylesheet' type='text/css'>
+	<script src="http://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">保存并恢复你的tmux</h2>
+	<div class="entry-content"><p><img src="/images/post/2015-11/tmux.jpg" width="400" height="350"></p>
+
+<p><a href="https://tmux.github.io/">Tmux</a>是一个终端下的工具，可以方便地在一个终端窗口下进行分屏，配合vim可以打造任何IDE所需要的窗口模式，让你的生产力大大提升。介绍Tmux的文章网上有很多，所以我就不赘述了，今天介绍Tmux的一款工具，可以方便的保存Tmux的状态并在任何时候进行恢复。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>为什么需要恢复这个工具</h2>
+
+<p>Tmux虽然功能十分强大，但却不能像IDE一样保存已经定制好的窗口模式，每次电脑重启后，你需要重新划分你的终端屏幕。程序员都是比较懒的，为了不用每次重启机器都要重新设置一遍Tmux，我们找到了<a href="https://github.com/tmux-plugins/tmux-resurrect">tmux-resurrect</a>这个工具。在介绍这个工具之前，我们先介绍tmux的插件管理工具，因为tmux-resurrect推荐使用它来进行安装。</p>
+
+<h2>Tmux插件管理工具</h2>
+
+<p>Tmux也像Vim等其他软件一样可以通过安装插件来扩充其强大的功能，推荐的方式是使用Tmux的插件管理工具<a href="https://github.com/tmux-plugins/tpm">TPM</a>（Tmux Plugin Manager）来安装插件。安装TPM非常简单，参考其github工程的README文档就可以了。</p>
+
+<p>安装了TPM之后，以后要安装Tmux插件就很方便了，首先在<code>~/tmux.conf</code>中写入你要安装的插件名：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">set</span> -g @plugin <span class="s1">&#39;...&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后在tmux中按<code>前缀键+大写I</code>就可以提示你进行插件安装了，安装过程如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Already installed <span class="s2">&quot;tpm&quot;</span>                                                                                                                                                         <span class="o">[</span>0/0<span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>TMUX environment reloaded.
+</span><span class='line'>
+</span><span class='line'>Done, press ENTER to <span class="k">continue</span>.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>tmux-resurrect</h2>
+
+<p>安装完TPM后，我们再来安装tmux-resurrect，跟安装其他插件一样，先在<code>~/tmux.conf</code>下录入tmux-resurrect：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">set</span> -g @plugin <span class="s1">&#39;tmux-plugins/tmux-resurrect&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后按<code>前缀键+I</code>就可以了。</p>
+
+<p>tmux-resurrect的使用非常简单，在Tmux窗口中按<code>前缀键+ctrl+s</code>就是保存你的tmux窗口，按<code>前缀键+ctrl+r</code>是恢复你的tmux窗口。以后只要在开机后，进入Tmux，然后用<code>前缀键+ctrl+r</code>就可以一键恢复你之前的tmux窗口了:&ndash;)</p>
+
+<h2>tmux-sessionist</h2>
+
+<p>刚用tmux-resurrect的同学可能还以为它只是保存Tmux当前一个窗口，其实它保存的是Tmux的所有窗口。那要如何切换Tmux的窗口呢？那就要用到另外一个Tmux的插件——<a href="https://github.com/tmux-plugins/tmux-sessionist">tmux-sessionist</a>了，它可以快速的切换Tmux之间的seesion窗口，安装之后通过<code>前缀键+g</code>就可以了，感兴趣的小伙伴赶紧试一试吧。</p>
+</div>
+
+<div class="meta">
+	
+	
+          | <a href="#comments">Comments</a>
+    
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite"><div class="ds-thread" data-thread-key="aside" data-title="recent comments"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"zhaozhiming"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+</div>
+	  </section>
+	
+</div>
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2015
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>
