@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ddwrt | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/ddwrt/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-12-06T18:13:36+08:00</updated>
+  <updated>2015-12-20T21:02:37+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2/"/>
     <updated>2014-08-30T19:30:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-8/greatefw.jpg"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2014-8/greatefw.jpg %}</p>
 
 <p>配置好了高级的路由器，安装了dd-wrt版本的固件，现在还不忙着让路由器翻墙，先在一台机器上测试能通过新路由器能正常上网和翻墙，可以了之后我们再来配置路由器的翻墙功能。</p>
 
@@ -33,7 +33,7 @@
 
 <p>不管怎样，我们需要一个VPN账号，而且可以支持PPTP连接的，下面会用到。</p>
 
-<p><img src="/images/post/2014-8/strong-vpn.png"></p>
+<p>{% img /images/post/2014-8/strong-vpn.png %}</p>
 
 <h3><a href="https://code.google.com/p/autoddvpn/">autoddvpn</a>(需要翻墙才能访问)</h3>
 
@@ -55,156 +55,86 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>telnet 192.168.11.1
-</span><span class='line'>Trying 192.168.11.1&amp;hellip;
-</span><span class='line'>Connected to 192.168.1.1.
-</span><span class='line'>Escape character is &amp;lsquo;^<span class="o">]</span>&amp;rsquo;.&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;DD-WRT v24-sp2 std &amp;copy; 2014 NewMedia-NET GmbH
-</span><span class='line'>Release: 06/23/14 <span class="o">(</span>SVN revision: 24461<span class="o">)</span>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;DD-WRT login: root&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;Password: &lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;hr /&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt; | _ <span class="se">\|</span> _ <span class="se">\ </span>  <span class="se">\ \ </span>     / /  _ _   &lt;em&gt;| __   &lt;/em&gt;|&lt;em&gt;&lt;strong&gt; <span class="se">\|</span> <span class="o">||</span> |
-</span><span class='line'> <span class="o">||</span> | <span class="o">||</span> <span class="o">||</span>&lt;/strong&gt;__<span class="se">\ \ </span>/<span class="se">\ </span>/ /| |&lt;/em&gt;<span class="o">)</span> <span class="o">||</span> |   <span class="se">\ \ </span>/ / &lt;strong&gt;<span class="o">)</span> | <span class="o">||</span> |&lt;em&gt;
-</span><span class='line'> <span class="o">||</span>&lt;/em&gt;| <span class="o">||</span>&lt;em&gt;||&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;<span class="se">\ </span>V  V / |  _ &amp;lt; | |    <span class="se">\ </span>V / / &lt;/strong&gt;/|&lt;strong&gt;   &lt;em&gt;|
-</span><span class='line'> |&lt;/em&gt;&lt;/strong&gt;/|&lt;strong&gt;&lt;em&gt;/      _/_/  |&lt;/em&gt;| _<span class="se">\|</span>&lt;em&gt;|     _/ |&lt;/em&gt;&lt;/strong&gt;&lt;em&gt;_|  |&lt;/em&gt;|&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;                   DD-WRT v24-sp2
-</span><span class='line'>               http://www.dd-wrt.com
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="o">==========================================================</span>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;BusyBox v1.22.1 <span class="o">(</span>2014-06-23 03:23:41 CEST<span class="o">)</span> built-in shell <span class="o">(</span>ash<span class="o">)</span>
-</span><span class='line'>Enter &amp;lsquo;help&amp;rsquo; <span class="k">for </span>a list of built-in commands.&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;root@DD-WRT:~#
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+$ telnet 192.168.11.1
+Trying 192.168.11.1&hellip;
+Connected to 192.168.1.1.
+Escape character is &lsquo;^]&rsquo;.</p>
+
+<p>DD-WRT v24-sp2 std &copy; 2014 NewMedia-NET GmbH
+Release: 06/23/14 (SVN revision: 24461)</p>
+
+<p>DD-WRT login: root</p>
+
+<h1>Password: </h1>
+
+<hr />
+
+<p> | _ \| _ \   \ \      / /  _ _   <em>| __   </em>|<em><strong> \| || |
+ || | || ||</strong>__\ \ /\ / /| |</em>) || |   \ \ / / <strong>) | || |<em>
+ ||</em>| ||<em>||</em></strong><strong>\ V  V / |  _ &lt; | |    \ V / / </strong>/|<strong>   <em>|
+ |</em></strong>/|<strong><em>/      _/_/  |</em>| _\|<em>|     _/ |</em></strong><em>_|  |</em>|</p>
+
+<pre><code>                   DD-WRT v24-sp2
+               http://www.dd-wrt.com
+</code></pre>
+
+<p>==========================================================</p>
+
+<p>BusyBox v1.22.1 (2014-06-23 03:23:41 CEST) built-in shell (ash)
+Enter &lsquo;help&rsquo; for a list of built-in commands.</p>
+
+<p>root@DD-WRT:~#
+{% endcodeblock %}</p>
 
 <ul>
 <li>登陆后执行下面的命令；</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;mkdir /jffs/pptp&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;cd /jffs/pptp&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpnup.sh&quot;</span>&gt;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpnup.sh&lt;/a&gt;&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpndown.sh&quot;</span>&gt;http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpndown.sh&lt;/a&gt;&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://autoddvpn.googlecode.com/svn/trunk/pptp/jffs/run.sh&quot;</span>&gt;http://autoddvpn.googlecode.com/svn/trunk/pptp/jffs/run.sh&lt;/a&gt;&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;chmod a+x *.sh&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;nvram <span class="nb">set </span><span class="nv">rc_startup</span><span class="o">=</span>&amp;lsquo;/jffs/pptp/run.sh&amp;rsquo;&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;nvram commit&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}</p>
+
+<h1>mkdir /jffs/pptp</h1>
+
+<h1>cd /jffs/pptp</h1>
+
+<h1>wget <a href="http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpnup.sh">http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpnup.sh</a></h1>
+
+<h1>wget <a href="http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpndown.sh">http://autoddvpn.googlecode.com/svn/trunk/grace.d/vpndown.sh</a></h1>
+
+<h1>wget <a href="http://autoddvpn.googlecode.com/svn/trunk/pptp/jffs/run.sh">http://autoddvpn.googlecode.com/svn/trunk/pptp/jffs/run.sh</a></h1>
+
+<h1>chmod a+x *.sh</h1>
+
+<h1>nvram set rc_startup=&lsquo;/jffs/pptp/run.sh&rsquo;</h1>
+
+<h1>nvram commit</h1>
+
+<p>{% endcodeblock %}</p>
 
 <p>一般执行上面的wget命令都是不行的，因为autoddvpn网站要翻墙才能访问，所以可以在pptp目录下创建那3个脚本文件，然后将网站上脚本的内容copy到脚本文件里面，命令更新如下。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;mkdir /jffs/pptp&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;cd /jffs/pptp&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;touch vpnup.sh&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;touch vpndown.sh&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;touch run.sh&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;&amp;hellip;直接从网站上复制脚本内容，再拷贝到文件里面&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;chmod a+x *.sh&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;nvram <span class="nb">set </span><span class="nv">rc_startup</span><span class="o">=</span>&amp;lsquo;/jffs/pptp/run.sh&amp;rsquo;&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;nvram commit&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}</p>
+
+<h1>mkdir /jffs/pptp</h1>
+
+<h1>cd /jffs/pptp</h1>
+
+<h1>touch vpnup.sh</h1>
+
+<h1>touch vpndown.sh</h1>
+
+<h1>touch run.sh</h1>
+
+<h1>&hellip;直接从网站上复制脚本内容，再拷贝到文件里面</h1>
+
+<h1>chmod a+x *.sh</h1>
+
+<h1>nvram set rc_startup=&lsquo;/jffs/pptp/run.sh&rsquo;</h1>
+
+<h1>nvram commit</h1>
+
+<p>{% endcodeblock %}</p>
 
 <ul>
 <li>参考<a href="https://code.google.com/p/autoddvpn/wiki/HOWTO#%E8%A8%AD%E7%BD%AEPPTP_client">文档</a>的<code>设置PPTP client</code>部分进行dd-wrt的PPTP客户端设置;</li>
@@ -213,40 +143,26 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/jffs/pptp/openvpnDaemon.sh </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;ISRUN<span class="o">=</span>&lt;code&gt;ps|grep <span class="s2">&quot;openvpn&quot;</span>|wc -l&lt;/code&gt;
-</span><span class='line'><span class="k">if</span> <span class="o">[[</span> <span class="nv">$ISRUN</span> -lt 4 <span class="o">]]</span>
-</span><span class='line'><span class="k">then</span>
-</span><span class='line'><span class="nb">echo</span> &amp;ldquo;Not running, start!&amp;rdquo;
-</span><span class='line'>openvpn &amp;mdash;config /jffs/openvpn/openvpn.conf &amp;mdash;daemon
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'><span class="nb">echo</span> &amp;ldquo;Openvpn is already running.&amp;rdquo;
-</span><span class='line'><span class="nb">exit</span>
-</span><span class='line'><span class="k">fi</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock /jffs/pptp/openvpnDaemon.sh lang:sh %}</p>
+
+<h1>!/bin/sh</h1>
+
+<p>ISRUN=<code>ps|grep "openvpn"|wc -l</code>
+if [[ $ISRUN -lt 4 ]]
+then
+echo &ldquo;Not running, start!&rdquo;
+openvpn &mdash;config /jffs/openvpn/openvpn.conf &mdash;daemon
+else
+echo &ldquo;Openvpn is already running.&rdquo;
+exit
+fi
+{% endcodeblock %}</p>
 
 <p>然后在dd-wrt的web界面的“管理”->“管理”下启用Cron，并且在附加任务中输入：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>*/2 * * * * /jffs/openvpn/openvpnDaemon.sh
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+*/2 * * * * /jffs/openvpn/openvpnDaemon.sh
+{% endcodeblock %}</p>
 
 <h3>悬而未决的问题——PPTP无法连接</h3>
 
@@ -259,7 +175,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1/"/>
     <updated>2014-08-29T21:13:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-8/greatefw.jpeg"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2014-8/greatefw.jpeg %}</p>
 
 <p>最近GFW貌似升级了，现在连Google也无法访问，开发用百度实在搜不到什么东西，用bing也各种不爽(用了几天自己都快病了)。虽说可以用SSH，VPN翻墙，但家里的电子设备如果比较多，要一个一个设置起来就会比较麻烦，如果能在路由器上翻墙就好了，这样只要设备只需要接入路由器的WIFI就可以自动翻墙，无需任何设置。</p>
 
@@ -274,7 +190,7 @@
 
 <p>使用了Buffalo的路由器后，感觉要比以前用的那些路由快很多，同样是打开百度（百度最大的功能，测网络联通）速度明显感觉不一样。</p>
 
-<p><img src="/images/post/2014-8/WZR-HP-G300NH2.jpg"></p>
+<p>{% img /images/post/2014-8/WZR-HP-G300NH2.jpg %}</p>
 
 <h3><a href="http://www.dd-wrt.com">DD-WRT</a></h3>
 
@@ -284,11 +200,11 @@
 
 <p>进入官网首页后，点击Router Database模块，然后在输入框中输入路由器型号，就可以看到对应的dd-wrt版本记录。</p>
 
-<p><img src="/images/post/2014-8/dd-wrt-1.png"></p>
+<p>{% img /images/post/2014-8/dd-wrt-1.png %}</p>
 
 <p>点击查询出来的版本记录，会出现固件版本的详细说明和下载链接。</p>
 
-<p><img src="/images/post/2014-8/dd-wrt-2.png"></p>
+<p>{% img /images/post/2014-8/dd-wrt-2.png %}</p>
 
 <p>这里有2个固件可供选择(不同型号的固件名称会有不同，这里是以我的路由器型号举例):</p>
 
@@ -314,7 +230,7 @@
 </ul>
 
 
-<p><img src="/images/post/2014-8/dd-wrt-3.png"></p>
+<p>{% img /images/post/2014-8/dd-wrt-3.png %}</p>
 ]]></content>
   </entry>
   

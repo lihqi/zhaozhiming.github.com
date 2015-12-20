@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: middleware | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/middleware/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-12-06T18:13:36+08:00</updated>
+  <updated>2015-12-20T21:02:37+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/02/17/how-to-write-a-openstack-swift-middle-ware/"/>
     <updated>2014-02-17T20:33:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/02/17/how-to-write-a-openstack-swift-middle-ware</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-2/swift.jpg"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2014-2/swift.jpg %}</p>
 
 <p>关于openstack swift的资料可以看<a href="http://zh.wikipedia.org/wiki/OpenStack">这里</a>，<a href="http://www.programmer.com.cn/12403/">这里</a>还有<a href="http://www.ibm.com/developerworks/cn/cloud/library/1310_zhanghua_openstackswift/">这里</a>。</p>
 
@@ -42,37 +42,24 @@
 
 <p>swift通过提供基于HTTP协议的API给外界调用来完成对象存储的功能，我们从swift的各个部署说明里面可以看到，proxy server和storage node的配置文件里面都有一个<code>[pipeline:main]</code>，这个是swift各个服务的请求链，由多个中间件组成的一个中间件集合。pipeline有点像J2EE里面filter，每个http请求需要经过各个服务的pipeline。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>proxy-server.conf </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;hellip;</span>
-</span><span class='line'>[pipeline:main]<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>Yes, proxy-logging appears twice. This is so that<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>middleware-originated requests get logged too.<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>pipeline = catch_errors healthcheck proxy-logging bulk ratelimit crossdomain slo cache tempurl tempauth staticweb account-quotas container-quotas proxy-logging proxy-server
-</span><span class='line'><span class="ni">&amp;hellip;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock proxy-server.conf lang:xml %}
+&hellip;
+[pipeline:main]</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>account-server.conf </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;hellip;</span>
-</span><span class='line'>[pipeline:main]
-</span><span class='line'>pipeline = recon account-server
-</span><span class='line'><span class="ni">&amp;hellip;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<h1>Yes, proxy-logging appears twice. This is so that</h1>
+
+<h1>middleware-originated requests get logged too.</h1>
+
+<p>pipeline = catch_errors healthcheck proxy-logging bulk ratelimit crossdomain slo cache tempurl tempauth staticweb account-quotas container-quotas proxy-logging proxy-server
+&hellip;
+{% endcodeblock %}</p>
+
+<p>{% codeblock account-server.conf lang:xml %}
+&hellip;
+[pipeline:main]
+pipeline = recon account-server
+&hellip;
+{% endcodeblock %}</p>
 
 <h2>中间件编写</h2>
 
@@ -82,28 +69,18 @@
 
 <p>我们先来看一下name_check中间件的配置信息：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>proxy-server.conf </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>[pipeline:main]
-</span><span class='line'>pipeline = catch_errors healthcheck name_check cache ratelimit tempauth sos<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>       proxy-logging proxy-server
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>[filter:name_check]
-</span><span class='line'>use = egg:swift#name_check
-</span><span class='line'>forbidden_chars = <span class="ni">&amp;lsquo;&amp;ldquo;</span>`<span class="ni">&amp;lt;</span>&gt;
-</span><span class='line'>maximum_length = 255
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>{% codeblock proxy-server.conf lang:xml %}
+[pipeline:main]
+pipeline = catch_errors healthcheck name_check cache ratelimit tempauth sos</p>
+
+<pre><code>       proxy-logging proxy-server
+</code></pre>
+
+<p>[filter:name_check]
+use = egg:swift#name_check
+forbidden_chars = &lsquo;&ldquo;`&lt;>
+maximum_length = 255
+{% endcodeblock %}
 在上面的例子中，name_check中间件加在healthcheck这个中间件后面，filter:name_check下面的配置信息是name_check的一些配置参数。</p>
 
 <ul>
@@ -114,64 +91,35 @@
 
 <p>我们再来看name_check的单元测试：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test_name_check.py </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">FakeApp</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="s">&quot;OK&quot;</span><span class="p">)(</span><span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">TestNameCheckMiddleware</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;maximum_length&#39;</span><span class="p">:</span> <span class="n">MAX_LENGTH</span><span class="p">,</span> <span class="s">&#39;forbidden_chars&#39;</span><span class="p">:</span>
-</span><span class='line'>                 <span class="n">FORBIDDEN_CHARS</span><span class="p">,</span> <span class="s">&#39;forbidden_regexp&#39;</span><span class="p">:</span> <span class="n">FORBIDDEN_REGEXP</span><span class="p">}</span>
-</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">test_check</span> <span class="o">=</span> <span class="n">name_check</span><span class="o">.</span><span class="n">filter_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">)(</span><span class="n">FakeApp</span><span class="p">())</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">test_valid_length_and_character</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">path</span> <span class="o">=</span> <span class="s">&#39;/V1.0/&#39;</span> <span class="o">+</span> <span class="s">&#39;c&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">MAX_LENGTH</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">resp</span> <span class="o">=</span> <span class="n">Request</span><span class="o">.</span><span class="n">blank</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">environ</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;REQUEST_METHOD&#39;</span><span class="p">:</span> <span class="s">&#39;PUT&#39;</span><span class="p">}</span>
-</span><span class='line'>                         <span class="p">)</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_check</span><span class="p">)</span>
-</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="s">&#39;OK&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">......</span> <span class="c"># other test cases    </span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">if</span> <span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">name</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">main</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;&amp;</span><span class="n">rsquo</span><span class="p">;:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>{% codeblock test_name_check.py lang:python %}
+class FakeApp(object):</p>
+
+<pre><code>def __call__(self, env, start_response):
+    return Response(body="OK")(env, start_response)
+</code></pre>
+
+<p>class TestNameCheckMiddleware(unittest.TestCase):</p>
+
+<pre><code>def setUp(self):
+    self.conf = {'maximum_length': MAX_LENGTH, 'forbidden_chars':
+                 FORBIDDEN_CHARS, 'forbidden_regexp': FORBIDDEN_REGEXP}
+    self.test_check = name_check.filter_factory(self.conf)(FakeApp())
+
+def test_valid_length_and_character(self):
+    path = '/V1.0/' + 'c' * (MAX_LENGTH - 6)
+    resp = Request.blank(path, environ={'REQUEST_METHOD': 'PUT'}
+                         ).get_response(self.test_check)
+    self.assertEquals(resp.body, 'OK')
+
+...... # other test cases    
+</code></pre>
+
+<p>if <strong>name</strong> == &lsquo;<strong>main</strong>&rsquo;:</p>
+
+<pre><code>unittest.main()
+</code></pre>
+
+<p>{% endcodeblock %}
 看源码先从单元测试看起，可以以最快的速度了解源代码的功能。在这个测试案例中，测试先mock了一个虚拟的app，这个app不会真实的调用swift，而是会将http response返回预设好的值。<br/>
 再看其中的一个测试案例，这里给定了一个最大长度url，然后通过调用name_check中间件，期望请求可以正常通过。</p>
 
@@ -192,71 +140,49 @@
 
 <h4>首先先停止swift的服务</h4>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>shell </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>swift@ubuntu:~$ swift-init main stop
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock shell lang:xml %}
+swift@ubuntu:~$ swift-init main stop
+{% endcodeblock %}</p>
 
 <h4>接着修改conf文件</h4>
 
 <p>假设你增加的中间件是proxy server的中间件，就修改proxy-server.conf，自行决定要放到pipeline中的哪个位置，具体要看你的中间件是执行什么功能。
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>proxy-server.conf </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>[pipeline:main]
-</span><span class='line'>pipeline = catch_errors healthcheck your_middleware cache ratelimit tempauth sos<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>       proxy-logging proxy-server
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>[filter:your_middleware]
-</span><span class='line'>use = egg:swift#your_middleware
-</span><span class='line'>your_middleware_config1 = value1
-</span><span class='line'>your_middleware_config1 = value2
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock proxy-server.conf lang:xml %}
+[pipeline:main]
+pipeline = catch_errors healthcheck your_middleware cache ratelimit tempauth sos</p>
+
+<pre><code>       proxy-logging proxy-server
+</code></pre>
+
+<p>[filter:your_middleware]
+use = egg:swift#your_middleware
+your_middleware_config1 = value1
+your_middleware_config1 = value2
+{% endcodeblock %}</p>
 
 <h4>要修改swift的根目录下的setup.cfg文件</h4>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>setup.cfg </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>paste.filter_factory =<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>#这里加入一行自己的中间件，可以看下name_check中间件是怎么写的
-</span><span class='line'>name_check = swift.common.middleware.name_check:filter_factory
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock setup.cfg lang:xml %}
+paste.filter_factory =</p>
+
+<pre><code>#这里加入一行自己的中间件，可以看下name_check中间件是怎么写的
+name_check = swift.common.middleware.name_check:filter_factory
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <h4>执行命令重新安装swift</h4>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>shell </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>swift@ubuntu:~$ cd swift目录
-</span><span class='line'>swift@ubuntu:~$ sudo python setyp.py develop
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock shell lang:xml %}
+swift@ubuntu:~$ cd swift目录
+swift@ubuntu:~$ sudo python setyp.py develop
+{% endcodeblock %}</p>
 
 <h4>最后重启swift服务</h4>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>shell </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>swift@ubuntu:~$ swift-init main start
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock shell lang:xml %}
+swift@ubuntu:~$ swift-init main start
+{% endcodeblock %}</p>
 ]]></content>
   </entry>
   

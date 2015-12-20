@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: TDD | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/tdd/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-12-06T18:13:36+08:00</updated>
+  <updated>2015-12-20T21:02:37+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/11/13/the-points-about-tdd-is-dead/"/>
     <updated>2015-11-13T20:11:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/11/13/the-points-about-tdd-is-dead</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2015-11/tdd_dead.png"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2015-11/tdd_dead.png %}</p>
 
 <p>公司最近组织了一次关于TDD的培训，从而引发了同事关于TDD的一些讨论，这让我想起了一年前DHH（Ruby On Rails之父）那篇有名的文章<a href="http://david.heinemeierhansson.com/2014/tdd-is-dead-long-live-testing.html">《TDD is dead. Long live testing.》</a>，突然想聊一下关于TDD的一些事情。</p>
 
@@ -58,7 +58,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/09/15/say-something-about-develop-by-tdd/"/>
     <updated>2015-09-15T14:35:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/09/15/say-something-about-develop-by-tdd</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2015-9/tdd.png" width="400" height="300"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2015-9/tdd.png 400 300 %}</p>
 
 <p>TDD是由<a href="https://en.wikipedia.org/wiki/Extreme_programming">极限编程</a>提出的一个编程实践，与通常的编程行为相反，TDD是先编写测试案例，然后再编写功能代码，重复这样的一个过程直到功能实现完成为止。</p>
 
@@ -117,7 +117,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/12/14/use-tpp-to-do-tdd/"/>
     <updated>2014-12-14T06:58:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/12/14/use-tpp-to-do-tdd</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-12/tpp.jpeg"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2014-12/tpp.jpeg %}</p>
 
 <p>最近参加了一次编程活动，大家在一起讨论单元测试和TDD(测试驱动开发)，有人提到了<a href="http://en.wikipedia.org/wiki/Robert_Cecil_Martin">Uncle Bob</a>的TPP(Transformation Priority Premise)——变形动作的优先顺序，可以帮助我们控制好TDD的节奏。</p>
 
@@ -149,78 +149,48 @@
 <p>首先我们写第一个测试，当传入<code>1</code>时返回一个空的集合，用最简单的代码实现功能，直接返回<code>nil</code>，这样就完成了从没有代码到<code>nil</code>的过程。<br/>
 PS: 这里我使用了<a href="https://github.com/stretchr/testify"><code>stretchr/testify</code></a>这个单元测试第三方包，它的使用方法就跟Java的Junit一样简单。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">prime</span><span class="p">&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kn">import</span> <span class="p">(&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
-</span><span class='line'><span class="s">&quot;testing&quot;</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;)&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_1_then_return_empty_list</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock prime_test.go lang:go %}
+package prime</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">prime</span><span class="p">&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">return</span> <span class="kc">nil</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>import (</p>
+
+<pre><code>"github.com/stretchr/testify/assert"
+"testing"
+</code></pre>
+
+<p>)</p>
+
+<p>func Test_given_1_then_return_empty_list(t *testing.T) {</p>
+
+<pre><code>assert.Equal(t, []int{}, Prime(1))
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
+
+<p>{% codeblock prime.go lang:go %}
+package prime</p>
+
+<p>func Prime(num int) []int {</p>
+
+<pre><code>return nil
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <h2>(nil->constant)</h2>
 
 <p>执行测试我们发现测试案例是不通过的，所以我们需要让测试变绿，让方法返回一个空的集合。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock prime.go lang:go %}
+func Prime(num int) []int {</p>
+
+<pre><code>return []int{}
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <h2>(constant->constant+) a simple constant to a more complex constant</h2>
 
@@ -228,295 +198,175 @@ PS: 这里我使用了<a href="https://github.com/stretchr/testify"><code>stretc
 
 <p>接着我们写第二个测试，当传入<code>2</code>时返回只有<code>2</code>的集合，同时修改实现代码，让原来返回的空集合变成包含<code>2</code>的一个集合，同时加上判断，如果<code>num</code>小于2时还是返回空集合。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_2_then_return_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock prime_test.go lang:go %}
+func Test_given_2_then_return_2(t *testing.T) {</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">if</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<pre><code>assert.Equal(t, []int{2}, Prime(2))
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
+
+<p>{% codeblock prime.go lang:go %}
+func Prime(num int) []int {</p>
+
+<pre><code>if num &lt; 2 {
+    return []int{}
+}
+return []int{2}
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <h2>constant->scalar replacing a constant with a variable or an argument</h2>
 
 <p>通过了前面2个测试之后，我们接着写第三个测试，要返回一个包含<code>3</code>的集合，需要将原来写死的常量<code>2</code>变成<code>num</code>。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_3_then_return_3</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">3</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock prime_test.go lang:go %}
+func Test_given_3_then_return_3(t *testing.T) {</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">if</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="nx">num</span><span class="p">}</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<pre><code>assert.Equal(t, []int{3}, Prime(3))
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
+
+<p>{% codeblock prime.go lang:go %}
+func Prime(num int) []int {</p>
+
+<pre><code>if num &lt; 2 {
+    return []int{}
+}
+return []int{num}
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <h2>(statement->statements) adding more unconditional statements</h2>
 
 <p>继续增加测试，传入<code>4</code>返回包含<code>2</code>和<code>2</code>的集合，这次实现代码的改动比较大，基本算法已经出来了，使用<code>num</code>来对<code>2</code>求余数，然后同时添加除数和被除数，这个时候单元测试的效果就出来了，如果实现代码没有写对，以前的测试会失败，需要你不断修改，保证通过所有测试。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_4_then_return_2_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock prime_test.go lang:go %}
+func Test_given_4_then_return_2_2(t *testing.T) {</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">if</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">result</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
-</span><span class='line'><span class="nx">mod</span> <span class="o">:=</span> <span class="nx">num</span> <span class="o">%</span> <span class="mi">2</span>
-</span><span class='line'><span class="k">if</span> <span class="nx">mod</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;</span><span class="nx">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="nx">amp</span><span class="p">;</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-</span><span class='line'>    <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">num</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
-</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">return</span> <span class="nx">result</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<pre><code>assert.Equal(t, []int{2, 2}, Prime(4))
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
+
+<p>{% codeblock prime.go lang:go %}
+func Prime(num int) []int {</p>
+
+<pre><code>if num &lt; 2 {
+    return []int{}
+}
+
+result := []int{}
+mod := num % 2
+if mod == 0 &amp;&amp; num &gt; 2 {
+    result = append(result, 2)
+    result = append(result, num/2)
+} else {
+    result = append(result, num)
+}
+
+return result
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <h2>添加测试</h2>
 
 <p>增加测试，传入<code>6</code>得到<code>2</code>和<code>3</code>的集合，实现代码没有改动。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_6_then_return_2_3</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock prime_test.go lang:go %}
+func Test_given_6_then_return_2_3(t *testing.T) {</p>
+
+<pre><code>assert.Equal(t, []int{2, 3}, Prime(6))
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <h2>(if->while)</h2>
 
 <p>再增加一个参数<code>8</code>，返回<code>2-2-2</code>集合的测试，这个测试迫使我们的实现代码做循环，所以这是一个if到while的过程。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_8_then_return_2_2_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock prime_test.go lang:go %}
+func Test_given_8_then_return_2_2_2(t *testing.T) {</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Prime</span><span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="k">if</span> <span class="nx">num</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span> <span class="mi">2</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">result</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>
-</span><span class='line'><span class="k">for</span> <span class="nx">div</span> <span class="o">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">div</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;=</span> <span class="nx">num</span><span class="p">;</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="nx">num</span><span class="o">%</span><span class="nx">div</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">div</span><span class="p">)</span>
-</span><span class='line'>        <span class="nx">num</span> <span class="o">/=</span> <span class="nx">div</span>
-</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">div</span><span class="o">++</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="k">return</span> <span class="nx">result</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<pre><code>assert.Equal(t, []int{2, 2, 2}, Prime(8))
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
+
+<p>{% codeblock prime.go lang:go %}
+func Prime(num int) []int {</p>
+
+<pre><code>if num &lt; 2 {
+    return []int{}
+}
+
+result := []int{}
+for div := 2; div &lt;= num; {
+    if num%div == 0 {
+        result = append(result, div)
+        num /= div
+    } else {
+        div++
+    }
+}
+return result
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <h2>代码写完了吗？</h2>
 
 <p>这个时候实际上我们的功能已经实现了，如果不放心我们就继续增加几个测试案例，结果验证都是通过的。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>prime_test.go </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kd">func</span> <span class="nx">Test_given_9_then_return_3_3</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_20_then_return_2_2_5</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_30_then_return_2_3_5</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_64_then_return_2_2_2_2_2_2</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">64</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;</span><span class="kd">func</span> <span class="nx">Test_given_10984_then_return_2_2_2_1373</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{&lt;</span><span class="o">/</span><span class="nx">p</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">pre</span><span class="p">&gt;&lt;</span><span class="nx">code</span><span class="p">&gt;</span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1373</span><span class="p">},</span> <span class="nx">Prime</span><span class="p">(</span><span class="mi">10984</span><span class="p">))</span>
-</span><span class='line'><span class="p">&lt;</span><span class="o">/</span><span class="nx">code</span><span class="p">&gt;&lt;</span><span class="o">/</span><span class="nx">pre</span><span class="p">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">&lt;</span><span class="nx">p</span><span class="p">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock prime_test.go lang:go %}
+func Test_given_9_then_return_3_3(t *testing.T) {</p>
+
+<pre><code>assert.Equal(t, []int{3, 3}, Prime(9))
+</code></pre>
+
+<p>}</p>
+
+<p>func Test_given_20_then_return_2_2_5(t *testing.T) {</p>
+
+<pre><code>assert.Equal(t, []int{2, 2, 5}, Prime(20))
+</code></pre>
+
+<p>}</p>
+
+<p>func Test_given_30_then_return_2_3_5(t *testing.T) {</p>
+
+<pre><code>assert.Equal(t, []int{2, 3, 5}, Prime(30))
+</code></pre>
+
+<p>}</p>
+
+<p>func Test_given_64_then_return_2_2_2_2_2_2(t *testing.T) {</p>
+
+<pre><code>assert.Equal(t, []int{2, 2, 2, 2, 2, 2}, Prime(64))
+</code></pre>
+
+<p>}</p>
+
+<p>func Test_given_10984_then_return_2_2_2_1373(t *testing.T) {</p>
+
+<pre><code>assert.Equal(t, []int{2, 2, 2, 1373}, Prime(10984))
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <h2>总结</h2>
 
