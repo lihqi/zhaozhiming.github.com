@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-12-20T21:02:37+08:00</updated>
+  <updated>2016-02-28T20:50:23+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -14,11 +14,72 @@
 
   
   <entry>
+    <title type="html"><![CDATA[如何快速熟悉新系统]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2016/02/28/how-to-know-well-new-project-quickly/"/>
+    <updated>2016-02-28T17:05:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2016/02/28/how-to-know-well-new-project-quickly</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2016/02/new_guy.jpg"></p>
+
+<p>很多工程师都会遇到这样一种情况：被指派到另外一个项目参与开发工作，这个项目已经开发了一段时间了，代码还比较多，作为一个项目的新人，要如何尽快地熟悉项目融入团队呢？</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>对系统进行测试</h2>
+
+<p>作为一名新系统的小白，首先当然是要熟悉系统的功能，还有操作流程。</p>
+
+<ul>
+<li>如果有相关的系统说明文档（帮助手册）的话先阅读这些资料，了解系统是如何工作的，有哪些功能点。</li>
+<li>了解了系统如何操作以后，对系统的各个功能点进行功能测试，通过手动操作来加深对系统的了解，并帮助系统找到bug。</li>
+<li>发现bug后将bug记录起来，比如github（gitlab）上项目里的issue区域，并提醒其他开发人员关注这些问题。</li>
+</ul>
+
+
+<h2>尝试修复bug</h2>
+
+<p>操作了一段时间系统后，可能你对系统功能已经有了一个大概的了解，但实际的代码可能还了解不多，这个时候你可以通过修复一些小bug来达到了解系统的目的。</p>
+
+<ul>
+<li>首先找到bug对应的页面或者文件，设置断点，运行程序，查看是什么原因导致发生bug。</li>
+<li>搞清楚bug发生的原因后，动手修复这个bug。</li>
+<li>修复bug后，如果有测试案例要保证不破坏其他测试案例，如果有测试案例失败了，这可能表示你修复的代码破坏了其他正常的功能。</li>
+<li>对其他相关模块进行测试，保证没有其他副作用。</li>
+<li>如果可以的话，让其他资深的开发人员给你review一下代码，看看你有没有改出问题，或者是有没有其他更好的解决方案。</li>
+</ul>
+
+
+<h2>为系统添加测试案例</h2>
+
+<p>除了修复bug，还可以为系统添加测试案例。这里的测试案例是指单元测试、集成测试或者一些自动化测试。</p>
+
+<ul>
+<li>如果是写单元测试的话，要先读懂对应的功能代码，知道功能代码的逻辑是怎样的，有多少个分支需要写多少个测试案例才能覆盖完整。然后编写测试案例，并保证测试案例运行通过。</li>
+<li>如果是集成测试或者自动化测试，先了解要测试的功能的流程是怎样的，是要读取数据库数据做校验，还是可以直接在页面上面校验等。然后编写测试案例，因为自动化测试可能由于网络延迟等原因会让你的测试有时成功有时失败，请记住要避免这种情况，确保测试是百分之百运行成功的。</li>
+</ul>
+
+
+<h2>对代码进行重构</h2>
+
+<p>有时候系统开发久了，就会不知不觉产生一些烂代码，如果没有及时修复，整个系统可能就会慢慢腐烂，然后崩溃，最后维护都维护不了只能重做。所以如果你有一些代码重构的经验的话，可以在熟悉系统的过程中，通过代码重构的方式了解系统的代码。</p>
+
+<ul>
+<li>要重构代码，就要先熟悉你要改动的那一块代码，读懂它们并确保你做的重构不会影响到其他功能。</li>
+<li>如果要重构的代码之前有单元测试那是最好的，你可以边重构边运行测试，只要不破坏测试就可以了，但如果没有单元测试的话，你最好是先加上单元测试，以保证你的重构不会破坏原来的功能。</li>
+<li>这里的重构不是指哪种伤筋动骨的大改动，而是一些代码上的小修改，以让你的代码更具可读性和可维护性，比如变量名或方法名的重命名，相同代码的提取，长方法的分解等。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[开发人员神秘的工具箱]]></title>
     <link href="http://zhaozhiming.github.io/blog/2015/09/21/the-mysterious-tools-of-developer/"/>
     <updated>2015-09-21T10:06:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/09/21/the-mysterious-tools-of-developer</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-9/toolbox.jpeg 400 300 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-9/toolbox.jpeg" width="400" height="300"></p>
 
 <p>需求、时间和质量是项目管理的三个平衡点，如果需求多、开发时间短必将会导致项目质量下降，那开发人员有什么办法在短时间内交付大量的需求（虽然质量低）呢？其实每个开发人员都有一套“神秘”的工具箱，在万不得已的时候就会开始使用它（这部分内容是以前参加<a href="https://www.linkedin.com/in/dteng">Daniel</a>的CSM课程的时候听到的，觉得很有意思，想和大家分享一下）。</p>
 
@@ -27,9 +88,7 @@
 
 <p></p>
 
-<p>{% blockquote 火云邪神 %}
-天下武功，唯快不破
-{% endblockquote %}</p>
+<p><blockquote><p>天下武功，唯快不破</p><footer><strong>火云邪神</strong></footer></blockquote></p>
 
 <h2>复制粘贴</h2>
 
@@ -79,7 +138,7 @@
 
 <p>加班除了聊天吃饭打游戏外，最重要的是让BOSS知道我在加班，凌晨半夜发个邮件到整个公司邮箱是必须的，下班走的时候在朋友圈晒张"加班的夜晚真美"之类的照片也是极好的。让BOSS知道我就算没有功劳也有苦劳，到时候项目完不成也不要怪我，因为我已经加班了。</p>
 
-<p>{% img /images/post/2015-9/sb1.jpeg 300 300 %}</p>
+<p><img src="/images/post/2015-9/sb1.jpeg" width="300" height="300"></p>
 ]]></content>
   </entry>
   
@@ -88,7 +147,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/09/15/say-something-about-develop-by-tdd/"/>
     <updated>2015-09-15T14:35:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/09/15/say-something-about-develop-by-tdd</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-9/tdd.png 400 300 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-9/tdd.png" width="400" height="300"></p>
 
 <p>TDD是由<a href="https://en.wikipedia.org/wiki/Extreme_programming">极限编程</a>提出的一个编程实践，与通常的编程行为相反，TDD是先编写测试案例，然后再编写功能代码，重复这样的一个过程直到功能实现完成为止。</p>
 
@@ -147,7 +206,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/09/05/how-to-learn-python/"/>
     <updated>2015-09-05T15:01:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/09/05/how-to-learn-python</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-9/python.jpg 400 300 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-9/python.jpg" width="400" height="300"></p>
 
 <p>Python语言相对Java来说，最大的特点就是易用易学，基本上每个linux系统都有安装python，不像Java一样还需要自己下JVM、安装、设置环境变量等。有了其他编程语言的基础再来学习Python其实是非常简单的，因为Python语言是基于<a href="https://en.wikipedia.org/wiki/ABC_(programming_language)">ABC</a>语言开发出来的，ABC语言是以教学为目的的语言，其宗旨是让编程变得容易阅读和理解，所以Python语言也很容易理解和学习。</p>
 
@@ -164,20 +223,31 @@
 
 <p>关于Python的书我推荐<a href="http://book.douban.com/subject/3112503/">《Python核心编程（第二版）》</a>，这本书看起来很厚其实读起来非常浅显易懂，重点可以看看下面这几章。</p>
 
-<p>{% codeblock lang:sh %}
-第4章 Python对象
-6.8 Unicode
-8.11 迭代器和iter()函数
-第9章 文件的输入和输出
-第10章 错误和异常
-第11章 函数和函数式编程
-第12章 模块
-第13章 面向对象编程
-第14章 执行环境
-第15章 正则表达式
-第18章 多线程编程
-20.2 使用Python进行Web应用：创建一个简单的Web客户端
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>第4章 Python对象
+</span><span class='line'>6.8 Unicode
+</span><span class='line'>8.11 迭代器和iter<span class="o">()</span>函数
+</span><span class='line'>第9章 文件的输入和输出
+</span><span class='line'>第10章 错误和异常
+</span><span class='line'>第11章 函数和函数式编程
+</span><span class='line'>第12章 模块
+</span><span class='line'>第13章 面向对象编程
+</span><span class='line'>第14章 执行环境
+</span><span class='line'>第15章 正则表达式
+</span><span class='line'>第18章 多线程编程
+</span><span class='line'>20.2 使用Python进行Web应用：创建一个简单的Web客户端
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>如果不想看这种太多理论的书的话，可以看这本实战的书<a href="http://learnpythonthehardway.org/">《Learn Python The Hard Way》</a>，里面的例子从浅到深让你一步步的学习Python，比较适合没有编程经验的新手。里面的例子不要只是把它们打出来，最好自己可以举一反三做一些关于知识点的挑战和扩展。</p>
 
@@ -198,24 +268,41 @@
 
 <p>pip和setuptools就不说了，Python开发必备，下载管理依赖包就靠他们了，其他最有用的Python工具要数<a href="http://docs.python-guide.org/en/latest/dev/virtualenvs/">virtualenv</a>了，它可以创建一个虚拟的Python执行环境，因为Python的虚拟机不像JVM那么大，创建出来之后的文件夹非常小（大概只有10M），在这个虚拟环境里面安装执行Python程序不会污染你操作系统的主Python环境。</p>
 
-<p>{% codeblock lang:sh %}</p>
-
-<h1>安装virtualenv</h1>
-
-<p>pip install virtualenv</p>
-
-<h1>创建Python虚拟环境</h1>
-
-<p>virtualenv venv</p>
-
-<h1>让虚拟环境生效</h1>
-
-<p>source venv/bin/activate</p>
-
-<h1>取消虚拟环境</h1>
-
-<p>deactivate
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;安装virtualenv&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;pip install virtualenv&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;创建Python虚拟环境&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;virtualenv venv&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;让虚拟环境生效&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;source venv/bin/activate&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;取消虚拟环境&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;deactivate
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>另外Pyhton的调试也非常方便，只要在需要设置断点的地方添加代码<code>import pdb;pdb.set_trace()</code>即可，然后执行程序就会在断点出停止，你可以通过打印下面命令进行调试:</p>
 
@@ -231,29 +318,7 @@
 
 <p>在Python中执行<code>import this</code>可以看到Python之禅。</p>
 
-<p>{% blockquote %}
-The Zen of Python, by Tim Peters</p>
-
-<p>Beautiful is better than ugly.
-Explicit is better than implicit.
-Simple is better than complex.
-Complex is better than complicated.
-Flat is better than nested.
-Sparse is better than dense.
-Readability counts.
-Special cases aren&rsquo;t special enough to break the rules.
-Although practicality beats purity.
-Errors should never pass silently.
-Unless explicitly silenced.
-In the face of ambiguity, refuse the temptation to guess.
-There should be one&mdash; and preferably only one &mdash;obvious way to do it.
-Although that way may not be obvious at first unless you&rsquo;re Dutch.
-Now is better than never.
-Although never is often better than <em>right</em> now.
-If the implementation is hard to explain, it&rsquo;s a bad idea.
-If the implementation is easy to explain, it may be a good idea.
-Namespaces are one honking great idea &mdash; let&rsquo;s do more of those!
-{% endblockquote %}</p>
+<p><blockquote><p>The Zen of Python, by Tim Peters</p></p><p><p>Beautiful is better than ugly.<br/>Explicit is better than implicit.<br/>Simple is better than complex.<br/>Complex is better than complicated.<br/>Flat is better than nested.<br/>Sparse is better than dense.<br/>Readability counts.<br/>Special cases aren&rsquo;t special enough to break the rules.<br/>Although practicality beats purity.<br/>Errors should never pass silently.<br/>Unless explicitly silenced.<br/>In the face of ambiguity, refuse the temptation to guess.<br/>There should be one&mdash; and preferably only one &mdash;obvious way to do it.<br/>Although that way may not be obvious at first unless you&rsquo;re Dutch.<br/>Now is better than never.<br/>Although never is often better than <em>right</em> now.<br/>If the implementation is hard to explain, it&rsquo;s a bad idea.<br/>If the implementation is easy to explain, it may be a good idea.<br/>Namespaces are one honking great idea &mdash; let&rsquo;s do more of those!</p></blockquote></p>
 
 <p>从Python之禅中我们可以看到Python是一门追求简洁，追求优雅的语言，语言设计者对代码质量要求比较高，希望编写Python代码的开发人员也能写出高质量的代码。</p>
 
@@ -261,24 +326,33 @@ Namespaces are one honking great idea &mdash; let&rsquo;s do more of those!
 
 <p>比如我们有这样的一个数据结构，一个字典里面包含多个集合，用Java来初始化大概是这个样子:</p>
 
-<p>{% codeblock lang:java %}
-Map&lt;String, List<String>> map = new HashMap&lt;String, List<String>>();
-List<String> list1 = new ArrayList<String>();
-list1.add(&ldquo;foo1&rdquo;);
-list1.add(&ldquo;bar1&rdquo;);
-map.put(&ldquo;list1&rdquo;, list1);</p>
-
-<p>List<String> list2 = new ArrayList<String>();
-list2.add(&ldquo;foo2&rdquo;);
-list2.add(&ldquo;bar2&rdquo;);
-map.put(&ldquo;list2&rdquo;, list2);
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Map</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;();</span>
+</span><span class='line'><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+</span><span class='line'><span class="n">list1</span><span class="o">.</span><span class="na">add</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">foo1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">list1</span><span class="o">.</span><span class="na">add</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">bar1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">list1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="n">list1</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+</span><span class='line'><span class="n">list2</span><span class="o">.</span><span class="na">add</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">foo2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">list2</span><span class="o">.</span><span class="na">add</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">bar2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">list2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="n">list2</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>而用Python一行代码就可以搞定:</p>
 
-<p>{% codeblock lang:python %}
-my_map = {&lsquo;list1&rsquo;: [foo1, bar1], &lsquo;list2&rsquo;: [&lsquo;foo2'，'bar2&rsquo;]}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">my_map</span> <span class="o">=</span> <span class="p">{</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">list1</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;:</span> <span class="p">[</span><span class="n">foo1</span><span class="p">,</span> <span class="n">bar1</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">list2</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;:</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">foo2</span><span class="s">&#39;，&#39;</span><span class="n">bar2</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;]}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>所以说Java是一门很啰嗦的语言，虽然新版本的Java加了lambda，然而并不能减少多少Java语言本身的繁杂性。</p>
 
@@ -301,7 +375,7 @@ my_map = {&lsquo;list1&rsquo;: [foo1, bar1], &lsquo;list2&rsquo;: [&lsquo;foo2'�
     <link href="http://zhaozhiming.github.io/blog/2015/08/16/hello-python-doxc/"/>
     <updated>2015-08-16T20:18:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/08/16/hello-python-doxc</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-8/python-docx.png 400 300 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-8/python-docx.png" width="400" height="300"></p>
 
 <p>使用word文档来展现内容是很多企业使用的方式之一，但如果文档内容比较多，或者需要制作很多重复文档的话，编写文档的过程会十分枯燥无聊，如果这个时候有一个程序可以帮助你来完成文档制作工作的话那就太好了，这就是<a href="https://python-docx.readthedocs.org/en/latest/">python-docx</a>可以做的事情，下面我们就来看看python-docx的强大功能。</p>
 
@@ -318,25 +392,35 @@ my_map = {&lsquo;list1&rsquo;: [foo1, bar1], &lsquo;list2&rsquo;: [&lsquo;foo2'�
 
 <p>使用python-docx创建一个文档非常简单，只需要2行代码就可以搞定，代码如下：</p>
 
-<p>{% codeblock lang:python %}
-document = Document()
-document.save(&lsquo;foo.docx&rsquo;)
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="p">()</span>
+</span><span class='line'><span class="n">document</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">foo</span><span class="o">.</span><span class="n">docx</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>编写段落</h2>
 
 <p>word文档最基本的内容就是一段段的文字信息，使用python-docx可以轻松的生成各种不同风格的段落。</p>
 
-<p>{% codeblock lang:python %}</p>
-
-<h1>普通段落</h1>
-
-<p>document.add_paragraph(u'我是普通文档')</p>
-
-<h1>带风格的段落</h1>
-
-<p>document.add_paragraph(u'我是好看的文档', style=&lsquo;IntenseQuote&rsquo;)
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="err">普通段落</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">document</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">(</span><span class="s">u&#39;我是普通文档&#39;</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="err">带风格的段落</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">document</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">(</span><span class="s">u&#39;我是好看的文档&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">IntenseQuote</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>style属性是使用一个定制好的风格，名称必须是document对象包含了这个style名称才能使用，否则在生成文档的过程会报错或者style没有生效。</p>
 
@@ -351,498 +435,175 @@ document.save(&lsquo;foo.docx&rsquo;)
 
 <p>还有其他更多的属性就不一一介绍了，我们还可以更加细粒度地控制一个段落的风格，比如前两句话我们使用粗体展示，后两句使用斜体，这就需要用到Run对象的属性设置了，Run可以看成是段落中的一句话，一个段落包含了n个Run。</p>
 
-<p>{% codeblock lang:python %}
-p = document.add_paragraph(&lsquo;&rsquo;)
-run1 = p.add_run(u'句子一')
-run1.bold = True</p>
-
-<p>run2 = p.add_run(u'句子二')
-run1.italic = True
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span><span class='line'><span class="n">run1</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_run</span><span class="p">(</span><span class="s">u&#39;句子一&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">run1</span><span class="o">.</span><span class="n">bold</span> <span class="o">=</span> <span class="bp">True</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">run2</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_run</span><span class="p">(</span><span class="s">u&#39;句子二&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">run1</span><span class="o">.</span><span class="n">italic</span> <span class="o">=</span> <span class="bp">True</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>在document中我们还可以添加标题<code>Heading</code>，新建的文档有<code>0~9</code>级的标题让你选择（默认是1级），其实标题也是段落的一种，我们可以使用设置段落风格的方式来设置标题的风格。</p>
 
-<p>{% codeblock lang:python %}
-h = document.add_heading(u'标题', 0)
-h.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">h</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_heading</span><span class="p">(</span><span class="s">u&#39;标题&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'><span class="n">h</span><span class="o">.</span><span class="n">paragraph_format</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">WD_ALIGN_PARAGRAPH</span><span class="o">.</span><span class="n">LEFT</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>绘制表格</h2>
 
 <p>在文档中我们可能会添加一些表格作为数据内容的展示，在python-docx里面可以轻松的绘制不同的表格。</p>
 
-<p>{% codeblock lang:python %}</p>
-
-<h1>绘制一个2 * 2的表格</h1>
-
-<p>t = document.add_table(rows=2, cols=2)
-t.cell(0, 0).text = u'单元1'
-t.cell(0, 1).text = u'单元2'
-t.cell(1, 0).text = u'单元3'
-t.cell(1, 1).text = u'单元4'
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="err">绘制一个</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span><span class="err">的表格</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">t</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;单元1&#39;</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;单元2&#39;</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;单元3&#39;</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;单元4&#39;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>还可以对单元格进行合并：</p>
 
-<p>{% codeblock lang:python %}
-t = document.add_table(rows=2, cols=2)</p>
-
-<h1>将第一行的2个单元格合并</h1>
-
-<p>merge_cell = t.cell(0, 0).merge(t.cell(0, 1))
-merge_cell.text = u'合并单元格'
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">t</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="err">将第一行的</span><span class="mi">2</span><span class="err">个单元格合并</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">merge_cell</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class='line'><span class="n">merge_cell</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">u&#39;合并单元格&#39;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>默认的表格是不带边框的，如果想让表格有边框，可以使用<code>Table Grid</code>这种表格的style。</p>
 
-<p>{% codeblock lang:python %}
-t = document.add_table(rows=2, cols=2)
-t.style = &lsquo;Table Grid&rsquo;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">t</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="n">t</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">Table</span> <span class="n">Grid</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>添加图片</h2>
 
 <p>添加图片也非常简单，在添加图片的方法中输入图片的相对路径即可。</p>
 
-<p>{% codeblock lang:python %}
-document.add_picture(&lsquo;demo.png&rsquo;)
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">document</span><span class="o">.</span><span class="n">add_picture</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">demo</span><span class="o">.</span><span class="n">png</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>甚至可以添加网络上的图片到文档中，但前提是把图片下载到内存。</p>
 
-<p>{% codeblock lang:python %}
-import urllib2
-import StringIO</p>
-
-<h1>img_url为网络图片url地址</h1>
-
-<p>image_from_url = urllib2.urlopen(img_url)
-io_url = StringIO.StringIO()
-io_url.write(image_from_url.read())
-io_url.seek(0)
-document.add_picture(io_url)
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">urllib2</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">StringIO</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">img_url</span><span class="err">为网络图片</span><span class="n">url</span><span class="err">地址</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">image_from_url</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">img_url</span><span class="p">)</span>
+</span><span class='line'><span class="n">io_url</span> <span class="o">=</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+</span><span class='line'><span class="n">io_url</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">image_from_url</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</span><span class='line'><span class="n">io_url</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span class='line'><span class="n">document</span><span class="o">.</span><span class="n">add_picture</span><span class="p">(</span><span class="n">io_url</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>文档风格</h2>
 
 <p>每个document对象里面都有一个styles对象，styles对象包含了文档可以使用的style，包括段落，表格，图片等的风格。</p>
 
-<p>{% codeblock lang:python %}
-document = Document()
-print len(document.styles)
-for s in document.styles:</p>
-
-<pre><code>print s.name
-</code></pre>
-
-<p>console&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;
-160
-Normal
-Heading 1
-Heading 2
-Heading 3
-Heading 4
-Heading 5
-Heading 6
-Heading 7
-Heading 8
-Heading 9
-Default Paragraph Font
-Normal Table
-&hellip;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">styles</span><span class="p">)</span>
+</span><span class='line'><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">document</span><span class="o">.</span><span class="n">styles</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">console</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span>
+</span><span class='line'><span class="mi">160</span>
+</span><span class='line'><span class="n">Normal</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">2</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">3</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">4</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">5</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">6</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">7</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">8</span>
+</span><span class='line'><span class="n">Heading</span> <span class="mi">9</span>
+</span><span class='line'><span class="n">Default</span> <span class="n">Paragraph</span> <span class="n">Font</span>
+</span><span class='line'><span class="n">Normal</span> <span class="n">Table</span>
+</span><span class='line'><span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这是新建的文档所包含的style，比较齐全，但如果是基于已有文档的document就只能使用已有文档的styles，可能会比新建的文档少很多。</p>
 
-<p>{% codeblock lang:python %}
-document = Document(&lsquo;exist.docx&rsquo;)
-print len(document.styles)</p>
-
-<p>console&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;
-12
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">exist</span><span class="o">.</span><span class="n">docx</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span><span class='line'><span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">styles</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">console</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">mdash</span><span class="p">;</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span>
+</span><span class='line'><span class="mi">12</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>python-docx是没有设置页眉页脚功能的，但是通过打开一个已经存在页眉页脚的文档，我们就可以拥有包含页眉页脚的document了。</p>
 
 <p>这些是python-docx的一些基本使用方法，更多的内容请参考官方文档，谢谢。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[如何在Spring中配置Websocket]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2015/05/11/spring-websocket-config/"/>
-    <updated>2015-05-11T09:41:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2015/05/11/spring-websocket-config</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-5/websockets.png %}</p>
-
-<p>Websocket是HTML5的一项新技术，可以让服务端和客户端进行实时的通信，主要的使用场景有: 实时的聊天系统，对实时性要求比较高的游戏，或者金融行业对股票市场数据的及时获取等。在Spring3的时候就已经有了对Websocket的支持，不过需要一些高版本的web容器来运行，比如Tomcat7.0.47+，Jetty9等。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<p>在Spring的官网上有关于Websocket的示例工程，<a href="https://spring.io/guides/gs/messaging-stomp-websocket/">https://spring.io/guides/gs/messaging-stomp-websocket/</a>，里面简单介绍了如何通过Spring-boot来进行Websocket系统的构建。我们的例子将基于这个例子进行修改，但是是使用传统的Spring的方式进行配置。</p>
-
-<h2>依赖包</h2>
-
-<p>首先我们需要添加相关的依赖包:</p>
-
-<ul>
-<li>Websocket需要servlet3.1的版本</li>
-<li>spring-websocket和spring-messaging是Spring关于Websocket的组件</li>
-<li>使用Jackson进行json数据的处理</li>
-</ul>
-
-
-<p>{% codeblock build.gradle lang:groovy %}
-String springVersion = &ldquo;4.1.4.RELEASE&rdquo;
-String jacksonDatabindVersion = &ldquo;2.5.0&rdquo;
-String jacksonVersion = &ldquo;1.9.13&rdquo;
-dependencies {</p>
-
-<pre><code>//websocket
-compile("javax.websocket:javax.websocket-api:1.1")
-compile("javax.servlet:javax.servlet-api:3.1.0")
-
-//spring
-compile("org.springframework:spring-messaging:" + springVersion)
-compile("org.springframework:spring-websocket:" + springVersion)
-
-//json
-compile "com.fasterxml.jackson.core:jackson-databind:" + jacksonDatabindVersion
-compile "org.codehaus.jackson:jackson-mapper-asl:" + jacksonVersion
-compile "org.codehaus.jackson:jackson-core-asl:" + jacksonVersion
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
-
-<h2>xml配置（类配置）</h2>
-
-<p>我们有两种方式进行Websocket的配置，一种是通过xml文件的方式，在这里我们定义了websocket的配置信息，这样服务器往客户端发送消息就可以通过<code>/topic/xx</code>来发送，客户端则可以通过<code>/app/hello</code>来发送消息到服务端。</p>
-
-<p>{% codeblock lang:xml %}
-&lt;beans xmlns=&ldquo;<a href="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</a>&rdquo;</p>
-
-<pre><code>   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:websocket="http://www.springframework.org/schema/websocket"
-   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-    http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd"&gt;
-
-...... // other configurations
-
-&lt;websocket:message-broker application-destination-prefix="/app"&gt;
-    &lt;websocket:stomp-endpoint path="/hello"&gt;
-        &lt;websocket:sockjs/&gt;
-    &lt;/websocket:stomp-endpoint&gt;
-    &lt;websocket:simple-broker prefix="/topic"/&gt;
-&lt;/websocket:message-broker&gt;
-</code></pre>
-
-<p></beans>
-{% endcodeblock %}</p>
-
-<p>另外一种方式是通过类的方式，代码如下，功能与上面的xml配置相同:</p>
-
-<p>{% codeblock WebSocketConfig.java lang:java %}
-import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;</p>
-
-<p>@Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {</p>
-
-<pre><code>@Override
-public void configureMessageBroker(MessageBrokerRegistry config) {
-    config.enableSimpleBroker("/topic");
-    config.setApplicationDestinationPrefixes("/app");
-}
-
-@Override
-public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint("/hello").withSockJS();
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
-
-<h2>消息类和Controller定义</h2>
-
-<p>Controller定义:</p>
-
-<p>{% codeblock WebSocketConfig.java lang:java %}
-import com.zzm.wechat.model.Greeting;
-import com.zzm.wechat.model.HelloMessage;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;</p>
-
-<p>@Controller
-public class GreetingController {</p>
-
-<pre><code>@MessageMapping("/hello")
-@SendTo("/topic/greetings")
-public Greeting greeting(HelloMessage message) throws Exception {
-    Thread.sleep(3000); // simulated delay
-    return new Greeting("Hello, " + message.getName() + "!");
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
-
-<p>消息model的定义:</p>
-
-<p>{% codeblock WebSocketConfig.java lang:java %}
-public class Greeting {</p>
-
-<pre><code>private String content;
-
-public Greeting(String content) {
-    this.content = content;
-}
-
-public String getContent() {
-    return content;
-}
-</code></pre>
-
-<p>}</p>
-
-<p>public class HelloMessage {</p>
-
-<pre><code>private String name;
-
-public String getName() {
-    return name;
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
-
-<p>在web.xml中设置controller的url前缀，这样可以避免一些页面的url被controller拦截。</p>
-
-<p>{% codeblock web.xml lang:xml %}</p>
-
-<pre><code>&lt;servlet&gt;
-    &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
-    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
-    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-&lt;/servlet&gt;
-
-&lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;/api/*&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<h2>客户端页面</h2>
-
-<p>首先下载<code>stomp.js</code>和<code>sockjs.js</code>，然后编写一个html页面进行客户端websocket的连接，并实现发送消息和接收消息的功能。我们使用SockJS的方式来创建Websocket连接，注意url要加上domain名称(这里是<code>server</code>)和<code>api</code>前缀。</p>
-
-<p>{% codeblock demo.html lang:html %}
-&lt;!DOCTYPE html>
-<html>
-<head></p>
-
-<pre><code>&lt;title&gt;Hello WebSocket&lt;/title&gt;
-&lt;script src="resources/sockjs-0.3.4.js"&gt;&lt;/script&gt;
-&lt;script src="resources/stomp.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript"&gt;
-    var stompClient = null;
-
-    function setConnected(connected) {
-        document.getElementById('connect').disabled = connected;
-        document.getElementById('disconnect').disabled = !connected;
-        document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
-        document.getElementById('response').innerHTML = '';
-    }
-
-    function connect() {
-        var socket = new SockJS('/server/api/hello');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function(frame) {
-            setConnected(true);
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/greetings', function(greeting){
-                showGreeting(JSON.parse(greeting.body).content);
-            });
-        });
-    }
-
-    function disconnect() {
-        if (stompClient != null) {
-            stompClient.disconnect();
-        }
-        setConnected(false);
-        console.log("Disconnected");
-    }
-
-    function sendName() {
-        var name = document.getElementById('name').value;
-        stompClient.send("/app/hello", {}, JSON.stringify({ 'name': name }));
-    }
-
-    function showGreeting(message) {
-        var response = document.getElementById('response');
-        var p = document.createElement('p');
-        p.style.wordWrap = 'break-word';
-        p.appendChild(document.createTextNode(message));
-        response.appendChild(p);
-    }
-&lt;/script&gt;
-</code></pre>
-
-<p></head>
-<body onload="disconnect()">
-<noscript><h2 style="color: #ff0000">Seems your browser doesn&rsquo;t support Javascript! Websocket relies on Javascript being enabled. Please enable</p>
-
-<pre><code>Javascript and reload this page!&lt;/h2&gt;&lt;/noscript&gt;
-</code></pre>
-
-<div>
-    <div>
-        <button id="connect" onclick="connect();">Connect</button>
-        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
-    </div>
-    <div id="conversationDiv">
-        <label>What is your name?</label><input type="text" id="name" />
-        <button id="sendName" onclick="sendName();">Send</button>
-        <p id="response"></p>
-    </div>
-</div>
-
-
-<p></body>
-</html>
-{% endcodeblock %}</p>
-
-<p>运行结果：</p>
-
-<p>{% img /images/post/2015-5/websocket-run.png %}</p>
-
-<p>浏览器console信息:</p>
-
-<p>{% codeblock lang:sh %}
-Disconnected
-chrome-extension://fhhdlnnepfjhlhilgmeepgkhjmhhhjkh/js/detector.js:505 detector
-chrome-extension://fhhdlnnepfjhlhilgmeepgkhjmhhhjkh/js/detector.js:506 Object
-stomp.js:130 Opening Web Socket&hellip;
-stomp.js:130 Web Socket Opened&hellip;
-stomp.js:130 >>> CONNECT
-accept-version:1.1,1.0
-heart-beat:10000,10000</p>
-
-<p>&lt;&lt;&lt; CONNECTED
-version:1.1
-heart-beat:0,0</p>
-
-<p>connected to server undefined
-demo.html:22 Connected: CONNECTED
-heart-beat:0,0
-version:1.1</p>
-
-<blockquote><blockquote><blockquote><p>SUBSCRIBE
-id:sub-0
-destination:/topic/greetings</p>
-
-<p>SEND
-destination:/app/hello
-content-length:14</p></blockquote></blockquote></blockquote>
-
-<p>{&ldquo;name&rdquo;:&ldquo;zzm&rdquo;}
-&lt;&lt;&lt; MESSAGE
-destination:/topic/greetings
-content-type:application/json;charset=UTF-8
-subscription:sub-0
-message-id:3657pj5u-0
-content-length:25</p>
-
-<p>{&ldquo;content&rdquo;:&ldquo;Hello, zzm!&rdquo;}
-{% endcodeblock %}</p>
-
-<h2>gradle运行jetty9</h2>
-
-<p>gradle内置的Jetty版本是Jetty6，由于版本较低不支持websocket，所以我们测试的话需要打包并部署到Jetty9或Tomcat7.0.47+上，但我们可以通过其他gradle插件来把我们的本地服务运行到Jetty9上。这里介绍2个插件，<a href="https://github.com/akhikhl/gretty">Gretty</a>和<a href="https://github.com/bmuschko/gradle-cargo-plugin">Cargo</a>。</p>
-
-<h4>Gretty</h4>
-
-<p>在<code>build.gradle</code>中添加如下脚本:</p>
-
-<p>{% codeblock build.gradle lang:groovy %}
-buildscript {</p>
-
-<pre><code>repositories {
-    maven {
-        url "http://maven.oschina.net/content/groups/public/"
-    }
-}
-
-dependencies {
-    classpath 'org.akhikhl.gretty:gretty:+'
-}
-</code></pre>
-
-<p>}</p>
-
-<p>apply plugin: &lsquo;org.akhikhl.gretty&rsquo;
-// apply plugin: &lsquo;jetty&rsquo; 注意要注释掉原来的jetty插件</p>
-
-<p>gretty {</p>
-
-<pre><code>httpPort = 9898 // 指定web服务的http端口
-servletContainer = 'jetty9' // 这里可以指定tomcat,jetty的几个版本
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
-
-<p>然后运行<code>gradle appRun</code>即可。</p>
-
-<h4>Cargo</h4>
-
-<p>在<code>build.gradle</code>中添加如下脚本，注意要先下载jetty9的安装包并解压:</p>
-
-<p>{% codeblock build.gradle lang:groovy %}
-buildscript {</p>
-
-<pre><code>repositories {
-    maven {
-        url "http://maven.oschina.net/content/groups/public/"
-    }
-}
-
-dependencies {
-    classpath 'com.bmuschko:gradle-cargo-plugin:2.1'
-}
-</code></pre>
-
-<p>}</p>
-
-<p>apply plugin: &lsquo;com.bmuschko.cargo&rsquo;
-cargo {</p>
-
-<pre><code>containerId = 'jetty9x'
-port = 9898
-local {
-    homeDir = file('/Users/zhaozhiming/tools/jetty-distribution-9.2.10.v20150310')
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
-
-<p>然后运行<code>gradle war CargoRunLocal</code>，注意首先要打出war包，然后插件会自动部署war包到Jetty9的安装目录下，这种方式不大灵活，比如一些页面的修改都需要重新部署才能进行测试。</p>
-
-<p>最后附上Spring关于Websocket的文档链接，请见<a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html">这里</a>。</p>
 ]]></content>
   </entry>
   

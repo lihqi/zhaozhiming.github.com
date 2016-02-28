@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: jacoco | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/jacoco/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-12-20T21:02:37+08:00</updated>
+  <updated>2016-02-28T20:50:23+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -91,43 +91,80 @@
 <!--more-->
 
 
-<p>{% codeblock build.xml lang:xml %}
-<taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml"></p>
-
-<pre><code>    &lt;classpath path="${env.SONAR-ANT-TASK.JAR}"/&gt;
-&lt;/taskdef&gt;
-
-&lt;target name="sonar"&gt;
-    &lt;sonar:sonar key="${sonar.project.key}" version="${sonar.project.version}" xmlns:sonar="antlib:org.sonar.ant"&gt;
-        &lt;sources&gt;
-            &lt;path location="${src.dir}" /&gt;
-        &lt;/sources&gt;
-
-        &lt;property key="sonar.projectName" value="jacoco_demo" /&gt;
-        &lt;property key="sonar.sourceEncoding" value="UTF-8" /&gt;
-        &lt;property key="sonar.dynamicAnalysis" value="reuseReports" /&gt;
-        &lt;property key="sonar.surefire.reportsPath" value="${junit.dir}" /&gt;
-        &lt;property key="sonar.core.codeCoveragePlugin" value="jacoco" /&gt;
-        &lt;property key="sonar.jacoco.reportPath" value="${basedir}/ut.exec" /&gt;
-        &lt;property key="sonar.jacoco.itReportPath" value="${basedir}/uat.exec" /&gt;
-
-        &lt;tests&gt;
-            &lt;path location="${src.test.dir}" /&gt;
-        &lt;/tests&gt;
-
-        &lt;binaries&gt;
-            &lt;path location="${build.src.class}" /&gt;
-            &lt;path location="${build.test.class}" /&gt;
-        &lt;/binaries&gt;
-
-        &lt;libraries&gt;
-            &lt;path location="${build.lib.dir}" /&gt;
-        &lt;/libraries&gt;
-    &lt;/sonar:sonar&gt;
-&lt;/target&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.sonar.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/sonar/ant/antlib.xml&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>classpath path=&quot;${env.SONAR-ANT-TASK.JAR}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/taskdef<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>target name=&quot;sonar&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>sonar:sonar key=&quot;${sonar.project.key}&quot; version=&quot;${sonar.project.version}&quot; xmlns:sonar=&quot;antlib:org.sonar.ant&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>sources<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${src.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/sources<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.projectName&quot; value=&quot;jacoco_demo&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.sourceEncoding&quot; value=&quot;UTF-8&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.dynamicAnalysis&quot; value=&quot;reuseReports&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.surefire.reportsPath&quot; value=&quot;${junit.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.core.codeCoveragePlugin&quot; value=&quot;jacoco&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.jacoco.reportPath&quot; value=&quot;${basedir}/ut.exec&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.jacoco.itReportPath&quot; value=&quot;${basedir}/uat.exec&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>tests<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${src.test.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/tests<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>binaries<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${build.src.class}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${build.test.class}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/binaries<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>libraries<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${build.lib.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/libraries<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/sonar:sonar<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/target<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>参数解释：</p>
 
@@ -143,8 +180,8 @@
 <p>更多参数可以参考这里：<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Unit+Tests">单元测试</a>，<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Integration+Tests">集成测试</a><br/>
 在sonar 3.3的版本会自动将单元测试和集成测试的覆盖率合并，最后附上sonar上的覆盖率显示：</p>
 
-<p>{% img /images/post/2012112914305954.png %}<br/>
-{% img /images/post/2012112914311753.png %}</p>
+<p><img src="/images/post/2012112914305954.png"><br/>
+<img src="/images/post/2012112914311753.png"></p>
 ]]></content>
   </entry>
   
@@ -161,9 +198,9 @@
 
 
 <p>
-{% codeblock lang:sh %}
--javaagent:[yourpath/]jacocoagent.jar=includes=com.xxx.xxx.*,output=tcpserver,address=xxx.xxx.xxx.xxx,port=xxxxx
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>-javaagent:<span class="o">[</span>yourpath/<span class="o">]</span>jacocoagent.jar<span class="o">=</span><span class="nv">includes</span><span class="o">=</span>com.xxx.xxx.*,output<span class="o">=</span>tcpserver,address<span class="o">=</span>xxx.xxx.xxx.xxx,port<span class="o">=</span>xxxxx
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>参数解释：</p>
 
@@ -178,14 +215,22 @@
 <p>更多参数可以参考<a href="http://www.eclemma.org/jacoco/trunk/doc/agent.html">java agent</a>。<br/>
 配置完应用服务的JAVA_OPTIONS之后，启动服务器，然后可以开始跑你的集成测试，跑完之后，实际上jacocoagent已经将覆盖率数据记录下来了，我们可以使用下面的ant任务来dump出覆盖率文件：</p>
 
-<p>{% codeblock build.xml lang:xml %}
-　 <target name="downloadUatCoverageData"></p>
-
-<pre><code>    &lt;jacoco:dump address="xxx.xxx.xxx.xxx" port="xxxx" reset="true" destfile="${basedir}/uat.exec" append="false"/&gt;
-&lt;/target&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　 <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;downloadUatCoverageData&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>jacoco:dump address=&quot;xxx.xxx.xxx.xxx&quot; port=&quot;xxxx&quot; reset=&quot;true&quot; destfile=&quot;${basedir}/uat.exec&quot; append=&quot;false&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/target<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这里的address和port是刚才在JAVA_OPTIONS里面写的address和port的值，destfile是指生成的覆盖率文件路径。</p>
 
@@ -201,16 +246,24 @@
 
 <p>得到集成测试的覆盖率文件之后，结合之前取到的单元测试覆盖率文件，我们可以将2个文件合并，得到综合的覆盖率文件，命令如下：</p>
 
-<p>{% codeblock build.xml lang:xml %}
-　<target name="mergeCoverage"></p>
-
-<pre><code>    &lt;jacoco:merge destfile="merged.exec"&gt;
-        &lt;fileset dir="${basedir}" includes="*.exec"/&gt;
-    &lt;/jacoco:merge&gt;
-</code></pre>
-
-<p>   </target>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;mergeCoverage&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>jacoco:merge destfile=&quot;merged.exec&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>fileset dir=&quot;${basedir}&quot; includes=&quot;*.exec&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/jacoco:merge<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
@@ -224,18 +277,18 @@
 <!--more-->
 
 
-<p>{% img /images/post/2012112911555041.png %}<br/>
-{% img /images/post/2012112911561356.png %}</p>
+<p><img src="/images/post/2012112911555041.png"><br/>
+<img src="/images/post/2012112911561356.png"></p>
 
 <p>第一个录入框是你的覆盖率文件（exec），第二个是class文件目录，第三个是源代码文件目录。</p>
 
 <p>配置好了之后进行构建，构建完成之后job首页就会出现覆盖率的趋势图，鼠标点击趋势图可以看到覆盖率详情，包括具体覆盖率数据和源码的覆盖率情况：</p>
 
 <p>趋势图<br/>
-{% img /images/post/2012112911373757.png 趋势图 %}</p>
+<img src="/images/post/2012112911373757.png" title="趋势图" ></p>
 
 <p>覆盖率详情  <br/>
-{% img /images/post/2012112911394918.png 覆盖率详情 %}</p>
+<img src="/images/post/2012112911394918.png" title="覆盖率详情" ></p>
 ]]></content>
   </entry>
   
@@ -252,41 +305,69 @@
 
 
 <p>
-{% codeblock build.xml lang:xml %}
-<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml"></p>
-
-<pre><code>    &lt;classpath path="${basedir}/jacoco_lib/jacocoant.jar" /&gt;
-</code></pre>
-
-<p></taskdef>
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.jacoco.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/jacoco/ant/antlib.xml&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>classpath path=&quot;${basedir}/jacoco_lib/jacocoant.jar&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/taskdef&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这里要引入jacoco的jar包jacocoant.jar，增加了这个命令之后，将原有的单元测试任务用 jacoco:coverage包括起来，实例代码如下：</p>
 
-<p>{% codeblock build.xml lang:xml %}
-<target name="unitTest" depends="test_compile"></p>
-
-<pre><code>    &lt;mkdir dir="${junit.dir}"/&gt;
-    &lt;jacoco:coverage destfile="${basedir}/ut.exec"&gt;
-        &lt;junit fork="true" forkmode="once" printsummary="on" failureproperty="unit.test.failure"&gt;
-            &lt;classpath&gt;
-                &lt;pathelement location="${build.class}"/&gt;
-                &lt;fileset dir="${build.lib.dir}"/&gt;
-            &lt;/classpath&gt;
-
-            &lt;formatter type="xml"/&gt;
-            &lt;batchtest todir="${junit.dir}"&gt;
-                &lt;fileset dir="${src.test.dir}"&gt;
-                    &lt;include name="**/*Test.java"/&gt;
-                &lt;/fileset&gt;
-            &lt;/batchtest&gt;
-        &lt;/junit&gt;
-    &lt;/jacoco:coverage&gt;
-</code></pre>
-
-<p>　　　　<!-- 其他内容 -->
-</target>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;unitTest&quot;</span> <span class="na">depends=</span><span class="s">&quot;test_compile&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>mkdir dir=&quot;${junit.dir}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>jacoco:coverage destfile=&quot;${basedir}/ut.exec&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>junit fork=&quot;true&quot; forkmode=&quot;once&quot; printsummary=&quot;on&quot; failureproperty=&quot;unit.test.failure&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>classpath<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>pathelement location=&quot;${build.class}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>fileset dir=&quot;${build.lib.dir}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/classpath<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>formatter type=&quot;xml&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>batchtest todir=&quot;${junit.dir}&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>fileset dir=&quot;${src.test.dir}&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>                    <span class="ni">&amp;lt;</span>include name=&quot;**/*Test.java&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>/fileset<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/batchtest<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/junit<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/jacoco:coverage<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>　　　　<span class="c">&lt;!-- 其他内容 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>jacoco:coverage的destfile参数是指生成的覆盖率文件路径，不写默认文件名为jacoco.exec。另外在forkmode这个参数设置为once，可以提高你的单元测试的执行效率。</p>
 
@@ -294,30 +375,52 @@
 
 <p>如果要在本地生成jacoco的覆盖率报告，可以增加如下任务：</p>
 
-<p>{% codeblock build.xml lang:xml %}
-<target name="jacocoReport"></p>
-
-<pre><code>    &lt;delete dir="${basedir}/jacoco"/&gt;
-    &lt;mkdir dir="${result.jacoco.report.dir}/ut"/&gt;
-    &lt;jacoco:report&gt;
-        &lt;executiondata&gt;
-            &lt;file file="${basedir}/ut.exec"/&gt;
-        &lt;/executiondata&gt;
-
-        &lt;structure name="jacoco_demo"&gt;
-            &lt;classfiles&gt;
-                &lt;fileset dir="${build.dir}"/&gt;
-            &lt;/classfiles&gt;
-            &lt;sourcefiles encoding="UTF-8"&gt;
-                &lt;fileset dir="${src.dir}"/&gt;
-            &lt;/sourcefiles&gt;
-        &lt;/structure&gt;
-        &lt;html destdir="${result.jacoco.report.dir}/ut"/&gt;
-    &lt;/jacoco:report&gt;      
-</code></pre>
-
-<p></target>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;jacocoReport&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>delete dir=&quot;${basedir}/jacoco&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>mkdir dir=&quot;${result.jacoco.report.dir}/ut&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>jacoco:report<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>executiondata<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>file file=&quot;${basedir}/ut.exec&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/executiondata<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>structure name=&quot;jacoco_demo&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>classfiles<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>fileset dir=&quot;${build.dir}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/classfiles<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>sourcefiles encoding=&quot;UTF-8&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>fileset dir=&quot;${src.dir}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/sourcefiles<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/structure<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>html destdir=&quot;${result.jacoco.report.dir}/ut&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/jacoco:report<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>生成覆盖率报告需要覆盖率文件（exec）、源码、编译后的class文件。这里导出的格式是html，还有xml和cvs 2种格式可以导出，具体参考<a href="http://www.eclemma.org/jacoco/trunk/doc/ant.html#report">jacoco:report</a>。<br/>
 注意，这里的class文件和exec文件必须用同一个jvm执行，如果是用JVM A来编译class文件，然后用JVM B来生成覆盖率文件，生成出来的报告覆盖率会为0%。<strong>这一点对生成集成测试的覆盖率特别重要。</strong></p>

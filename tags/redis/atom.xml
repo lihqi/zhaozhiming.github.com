@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: redis | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/redis/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-12-20T21:02:37+08:00</updated>
+  <updated>2016-02-28T20:50:23+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/04/12/spring-data-redis/"/>
     <updated>2015-04-12T15:15:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/04/12/spring-data-redis</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-4/spring-redis.jpg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-4/spring-redis.jpg"></p>
 
 <p><a href="http://redis.io/">Redis</a>相信大家都听说过，它是一个开源的key-value缓存数据库，有很多Java的客户端支持，比较有名的有Jedis，JRedis等（见<a href="http://redis.io/clients#java">这里</a>）。当然我们可以使用客户端的原生代码实现redis的操作，但实际上在spring中就已经集成了这些客户端的使用，下面我们就以Jedis为例来介绍一下Spring中关于Redis的配置。</p>
 
@@ -31,51 +31,94 @@
 
 <p>首先要下载spring和redis相关的依赖包，最新的jedis版本是2.6.2，还需要下载jackson的包，这个后面会介绍为什么需要，以gradle脚本示例如下。</p>
 
-<p>{% codeblock build.gradle lang:sh %}</p>
-
-<pre><code>compile("redis.clients:jedis:" + jedisVersion)
-compile "org.springframework.data:spring-data-redis:" + springDataRedisVersion
-
-//json
-compile "com.fasterxml.jackson.core:jackson-databind:" + jacksonDatabindVersion
-compile "org.codehaus.jackson:jackson-mapper-asl:" + jacksonVersion
-compile "org.codehaus.jackson:jackson-core-asl:" + jacksonVersion
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;compile<span class="o">(</span><span class="s2">&quot;redis.clients:jedis:&quot;</span> + jedisVersion<span class="o">)</span>
+</span><span class='line'>compile <span class="s2">&quot;org.springframework.data:spring-data-redis:&quot;</span> + springDataRedisVersion
+</span><span class='line'>
+</span><span class='line'>//json
+</span><span class='line'>compile <span class="s2">&quot;com.fasterxml.jackson.core:jackson-databind:&quot;</span> + jacksonDatabindVersion
+</span><span class='line'>compile <span class="s2">&quot;org.codehaus.jackson:jackson-mapper-asl:&quot;</span> + jacksonVersion
+</span><span class='line'>compile <span class="s2">&quot;org.codehaus.jackson:jackson-core-asl:&quot;</span> + jacksonVersion
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>spring配置jedis</h2>
 
 <p>在spring的xml配置文件中，做如下配置。</p>
 
-<p>{% codeblock lang:xml %}</p>
-
-<pre><code>&lt;!-- 配置redis池，依次为最大实例数，最大空闲实例数，(创建实例时)最大等待时间，(创建实例时)是否验证 --&gt;
-&lt;bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"&gt;
-    &lt;property name="maxTotal" value="${redis.maxTotal}"/&gt;
-    &lt;property name="maxIdle" value="${redis.maxIdle}"/&gt;
-    &lt;property name="maxWaitMillis" value="${redis.maxWaitMillis}"/&gt;
-    &lt;property name="testOnBorrow" value="${redis.testOnBorrow}"/&gt;
-&lt;/bean&gt;
-
-&lt;!-- redis连接配置，依次为主机ip，端口，是否使用池，(usePool=true时)redis的池配置 --&gt;
-&lt;bean id="jedisFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"&gt;
-    &lt;property name="hostName" value="${redis.host}"/&gt;
-    &lt;property name="port" value="${redis.port}"/&gt;
-    &lt;property name="usePool" value="true"/&gt;
-    &lt;property name="poolConfig" ref="jedisPoolConfig"/&gt;
-&lt;/bean&gt;
-
-&lt;!-- redis模板配置 --&gt;
-&lt;bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"&gt;
-    &lt;property name="connectionFactory" ref="jedisFactory"/&gt;
-    &lt;property name="defaultSerializer"&gt;
-        &lt;bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>!-- 配置redis池，依次为最大实例数，最大空闲实例数，(创建实例时)最大等待时间，(创建实例时)是否验证 --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;jedisPoolConfig&quot; class=&quot;redis.clients.jedis.JedisPoolConfig&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxTotal&quot; value=&quot;${redis.maxTotal}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxIdle&quot; value=&quot;${redis.maxIdle}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxWaitMillis&quot; value=&quot;${redis.maxWaitMillis}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;testOnBorrow&quot; value=&quot;${redis.testOnBorrow}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>!-- redis连接配置，依次为主机ip，端口，是否使用池，(usePool=true时)redis的池配置 --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;jedisFactory&quot; class=&quot;org.springframework.data.redis.connection.jedis.JedisConnectionFactory&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;hostName&quot; value=&quot;${redis.host}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;port&quot; value=&quot;${redis.port}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;usePool&quot; value=&quot;true&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;poolConfig&quot; ref=&quot;jedisPoolConfig&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>!-- redis模板配置 --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;redisTemplate&quot; class=&quot;org.springframework.data.redis.core.RedisTemplate&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;connectionFactory&quot; ref=&quot;jedisFactory&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;defaultSerializer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>bean class=&quot;org.springframework.data.redis.serializer.StringRedisSerializer&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/property<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>序列化</h2>
 
@@ -98,77 +141,136 @@ compile "org.codehaus.jackson:jackson-core-asl:" + jacksonVersion
 
 <p>代码示例如下，使用redis进行set和get操作。</p>
 
-<p>{% codeblock MyUserRepository.java lang:java %}
-@Repository
-public class MyUserRepository {</p>
-
-<pre><code>//直接使用autowire就可以引用到配置文件中的redis-template
-@Autowired
-private RedisTemplate&lt;String, MyUser&gt; template;
-
-private ValueOperations&lt;String, MyUser&gt; operations;
-
-@PostConstruct
-public void init() {
-    //这里设置value的序列化方式为JacksonJsonRedisSerializer  
-    template.setValueSerializer(new JacksonJsonRedisSerializer&lt;&gt;(MyUser.class));
-    operations = template.opsForValue();
-}
-
-public void set(String key, MyUser value) {
-    operations.set(key, value);
-}
-
-public MyUser get(String key) {
-    return operations.get(key);
-}
-</code></pre>
-
-<p>}</p>
-
-<p>// model
-public class MyUser {</p>
-
-<pre><code>private String username;
-private int age;
-// ... setter and getter
-</code></pre>
-
-<p>}</p>
-
-<p>// 在Controller中调用
-@Controller
-public class MainController {</p>
-
-<pre><code>@Autowired
-private MyUserRepository myUserRepository;
-
-@RequestMapping(value = "/test", method = RequestMethod.GET)
-public
-@ResponseBody
-ResponseEntity&lt;?&gt; test() throws Exception {
-    MyUser user = new MyUser("zhaozhiming", 100);
-    String key = "my:user:zhaozhiming";
-    myUserRepository.set(key, user);
-    MyUser myUser = myUserRepository.get(key);
-    log.debug(String.format("my user:%s", myUser));
-    String result = mapper.writeValueAsString(user);
-    return new ResponseEntity&lt;&gt;(result, HttpStatus.OK);
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyUserRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Repository</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyUserRepository</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c1">//直接使用autowire就可以引用到配置文件中的redis-template</span>
+</span><span class='line'><span class="nd">@Autowired</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RedisTemplate</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">MyUser</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">template</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">private</span> <span class="n">ValueOperations</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">MyUser</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">operations</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@PostConstruct</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">//这里设置value的序列化方式为JacksonJsonRedisSerializer  </span>
+</span><span class='line'>    <span class="n">template</span><span class="o">.</span><span class="na">setValueSerializer</span><span class="o">(</span><span class="k">new</span> <span class="n">JacksonJsonRedisSerializer</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;&amp;</span><span class="n">gt</span><span class="o">;(</span><span class="n">MyUser</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">operations</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="na">opsForValue</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">MyUser</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">operations</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="n">MyUser</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">operations</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// model</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyUser</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="n">String</span> <span class="n">username</span><span class="o">;</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'><span class="c1">// ... setter and getter</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// 在Controller中调用</span>
+</span><span class='line'><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainController</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Autowired</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">MyUserRepository</span> <span class="n">myUserRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/test&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span>
+</span><span class='line'><span class="nd">@ResponseBody</span>
+</span><span class='line'><span class="n">ResponseEntity</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;?&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">test</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">MyUser</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyUser</span><span class="o">(</span><span class="s">&quot;zhaozhiming&quot;</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="s">&quot;my:user:zhaozhiming&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">myUserRepository</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">user</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">MyUser</span> <span class="n">myUser</span> <span class="o">=</span> <span class="n">myUserRepository</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;my user:%s&quot;</span><span class="o">,</span> <span class="n">myUser</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">writeValueAsString</span><span class="o">(</span><span class="n">user</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="n">ResponseEntity</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;&amp;</span><span class="n">gt</span><span class="o">;(</span><span class="n">result</span><span class="o">,</span> <span class="n">HttpStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>调用set方法后，可以在日志中看到get后的MyUser对象。</p>
 
-<p>{% codeblock lang:sh %}
- &ndash; my user:MyUser{age=100, username=&lsquo;zhaozhiming&rsquo;}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'> &amp;ndash; my user:MyUser<span class="o">{</span><span class="nv">age</span><span class="o">=</span>100, <span class="nv">username</span><span class="o">=</span>&amp;lsquo;zhaozhiming&amp;rsquo;<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>也可以在redis里面看到保存后的json字符串了。</p>
 
-<p>{% img /images/post/2015-4/redis_result.png %}</p>
+<p><img src="/images/post/2015-4/redis_result.png"></p>
 ]]></content>
   </entry>
   
@@ -177,7 +279,7 @@ ResponseEntity&lt;?&gt; test() throws Exception {
     <link href="http://zhaozhiming.github.io/blog/2014/05/11/redis-cluster-env-create/"/>
     <updated>2014-05-11T20:50:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/05/11/redis-cluster-env-create</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-5/redis-cluster.jpg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-5/redis-cluster.jpg"></p>
 
 <h3>环境</h3>
 
@@ -204,43 +306,50 @@ ResponseEntity&lt;?&gt; test() throws Exception {
 </ul>
 
 
-<p>{% codeblock lang:bash %}
-mkdir cluster-test
-cd cluster-test
-mkdir 7000 7001 7002 7003 7004 7005
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir cluster-test
+</span><span class='line'><span class="nb">cd </span>cluster-test
+</span><span class='line'>mkdir 7000 7001 7002 7003 7004 7005
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>在每个文件夹下面创建创建Redis配置文件，注意根据不同实例的端口号修改下面的配置文件，nodes.conf文件为Redis实例启动时自动生成。</li>
 </ul>
 
 
-<p>{% codeblock lang:bash %}
-port 7000
-cluster-enabled yes
-cluster-config-file nodes.conf
-cluster-node-timeout 5000
-appendonly yes
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>port 7000
+</span><span class='line'>cluster-enabled yes
+</span><span class='line'>cluster-config-file nodes.conf
+</span><span class='line'>cluster-node-timeout 5000
+</span><span class='line'>appendonly yes
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>开6个terminal窗口，分别启动这6个Redis实例。</li>
 </ul>
 
 
-<p>{% codeblock lang:bash %}
-cd 7000
-../redis-server ./redis.conf
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>7000
+</span><span class='line'>../redis-server ./redis.conf
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>当成功启动后，能看到每个terminal出现下面的字样，是因为node.conf文件不存在，所以给每个实例分配了一个新的ID。</li>
 </ul>
 
 
-<p>{% codeblock lang:bash %}
-[82462] 26 Nov 11:56:55.329 * No cluster configuration found, I&rsquo;m 97a3a64667477371c4479320d683e4c8db5858b1
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>82462<span class="o">]</span> 26 Nov 11:56:55.329 * No cluster configuration found, I&amp;rsquo;m 97a3a64667477371c4479320d683e4c8db5858b1
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>创建集群</h3>
 
@@ -249,62 +358,106 @@ cd 7000
 </ul>
 
 
-<p>{% codeblock lang:bash %}
-cd redis-3.0.0-beta3/src
-./redis-trib.rb create &mdash;replicas 1 127.0.0.1:7000 127.0.0.1:7001 \
-127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>redis-3.0.0-beta3/src
+</span><span class='line'>./redis-trib.rb create &amp;mdash;replicas 1 127.0.0.1:7000 127.0.0.1:7001 <span class="se">\</span>
+</span><span class='line'>127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>执行命令后会提示你是否接受提示的配置信息，默认的是前3台作为master机器，后3台作为slave机器，输入<code>yes</code>，出现最后的信息表示集群已经创建好了。</li>
 </ul>
 
 
-<p>{% codeblock lang:bash %}
-Creating cluster
-Connecting to node 127.0.0.1:7000: OK
-Connecting to node 127.0.0.1:7001: OK
-Connecting to node 127.0.0.1:7002: OK
-Connecting to node 127.0.0.1:7003: OK
-Connecting to node 127.0.0.1:7004: OK
-Connecting to node 127.0.0.1:7005: OK >>>
-Performing hash slots allocation on 6 nodes&hellip;
-Using 3 masters: 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002
-127.0.0.1:7000 replica #1 is 127.0.0.1:7003
-127.0.0.1:7001 replica #1 is 127.0.0.1:7004
-127.0.0.1:7002 replica #1 is 127.0.0.1:7005
-M: 9991306f0e50640a5684f1958fd754b38fa034c9 127.0.0.1:7000 slots:0-5460 (5461 slots) master
-M: e68e52cee0550f558b03b342f2f0354d2b8a083b 127.0.0.1:7001 slots:5461-10921 (5461 slots) master
-M: 393c6df5eb4b4cec323f0e4ca961c8b256e3460a 127.0.0.1:7002 slots:10922-16383 (5462 slots) master
-S: 48b728dbcedff6bf056231eb44990b7d1c35c3e0 127.0.0.1:7003
-S: 345ede084ac784a5c030a0387f8aaa9edfc59af3 127.0.0.1:7004
-S: 3375be2ccc321932e8853234ffa87ee9fde973ff 127.0.0.1:7005
-Can I set the above configuration? (type &lsquo;yes&rsquo; to accept): yes</p>
-
-<p>Nodes configuration updated >>>
-Sending CLUSTER MEET messages to join the cluster Waiting for the cluster to join&hellip; >>>
-Performing Cluster Check (using node 127.0.0.1:7000)
-M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7000
-   slots:0-5460 (5461 slots) master
-M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7001
-   slots:5461-10922 (5462 slots) master
-M: 73c22198cd1d0782ec24e3c9b03378030891c9a3 127.0.0.1:7002
-   slots:10923-16383 (5461 slots) master
-M: c785d85b95d7bdc28ec90384ab8a5885b289542c 127.0.0.1:7003
-   slots: (0 slots) master
-   replicates b949ea2d9c822ff069521a354b4ed48855ac6203
-M: 570c472fe553ba3c9d0fb3ba16fcdb8579b4fc86 127.0.0.1:7004
-   slots: (0 slots) master
-   replicates ebbb890e899244e4a2a6303826a29543ebf9885d
-M: f86667ec42cff41a5666162a912713173f5306d7 127.0.0.1:7005
-   slots: (0 slots) master
-   replicates 73c22198cd1d0782ec24e3c9b03378030891c9a3
-[OK] All nodes agree about slots configuration.</p>
-
-<blockquote><blockquote><blockquote><p>Check for open slots&hellip;
-Check slots coverage&hellip;
-[OK] All 16384 slots covered.
-{% endcodeblock %}</p></blockquote></blockquote></blockquote>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Creating cluster
+</span><span class='line'>Connecting to node 127.0.0.1:7000: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7001: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7002: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7003: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7004: OK
+</span><span class='line'>Connecting to node 127.0.0.1:7005: OK &gt;&gt;&gt;
+</span><span class='line'>Performing <span class="nb">hash </span>slots allocation on 6 nodes&amp;hellip;
+</span><span class='line'>Using 3 masters: 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002
+</span><span class='line'>127.0.0.1:7000 replica <span class="c">#1 is 127.0.0.1:7003</span>
+</span><span class='line'>127.0.0.1:7001 replica <span class="c">#1 is 127.0.0.1:7004</span>
+</span><span class='line'>127.0.0.1:7002 replica <span class="c">#1 is 127.0.0.1:7005</span>
+</span><span class='line'>M: 9991306f0e50640a5684f1958fd754b38fa034c9 127.0.0.1:7000 slots:0-5460 <span class="o">(</span>5461 slots<span class="o">)</span> master
+</span><span class='line'>M: e68e52cee0550f558b03b342f2f0354d2b8a083b 127.0.0.1:7001 slots:5461-10921 <span class="o">(</span>5461 slots<span class="o">)</span> master
+</span><span class='line'>M: 393c6df5eb4b4cec323f0e4ca961c8b256e3460a 127.0.0.1:7002 slots:10922-16383 <span class="o">(</span>5462 slots<span class="o">)</span> master
+</span><span class='line'>S: 48b728dbcedff6bf056231eb44990b7d1c35c3e0 127.0.0.1:7003
+</span><span class='line'>S: 345ede084ac784a5c030a0387f8aaa9edfc59af3 127.0.0.1:7004
+</span><span class='line'>S: 3375be2ccc321932e8853234ffa87ee9fde973ff 127.0.0.1:7005
+</span><span class='line'>Can I <span class="nb">set </span>the above configuration? <span class="o">(</span><span class="nb">type</span> &amp;lsquo;yes&amp;rsquo; to accept<span class="o">)</span>: yes&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Nodes configuration updated &gt;&gt;&gt;
+</span><span class='line'>Sending CLUSTER MEET messages to join the cluster Waiting <span class="k">for </span>the cluster to join&amp;hellip; &gt;&gt;&gt;
+</span><span class='line'>Performing Cluster Check <span class="o">(</span>using node 127.0.0.1:7000<span class="o">)</span>
+</span><span class='line'>M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7000
+</span><span class='line'>   slots:0-5460 <span class="o">(</span>5461 slots<span class="o">)</span> master
+</span><span class='line'>M: ebbb890e899244e4a2a6303826a29543ebf9885d 127.0.0.1:7001
+</span><span class='line'>   slots:5461-10922 <span class="o">(</span>5462 slots<span class="o">)</span> master
+</span><span class='line'>M: 73c22198cd1d0782ec24e3c9b03378030891c9a3 127.0.0.1:7002
+</span><span class='line'>   slots:10923-16383 <span class="o">(</span>5461 slots<span class="o">)</span> master
+</span><span class='line'>M: c785d85b95d7bdc28ec90384ab8a5885b289542c 127.0.0.1:7003
+</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
+</span><span class='line'>   replicates b949ea2d9c822ff069521a354b4ed48855ac6203
+</span><span class='line'>M: 570c472fe553ba3c9d0fb3ba16fcdb8579b4fc86 127.0.0.1:7004
+</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
+</span><span class='line'>   replicates ebbb890e899244e4a2a6303826a29543ebf9885d
+</span><span class='line'>M: f86667ec42cff41a5666162a912713173f5306d7 127.0.0.1:7005
+</span><span class='line'>   slots: <span class="o">(</span>0 slots<span class="o">)</span> master
+</span><span class='line'>   replicates 73c22198cd1d0782ec24e3c9b03378030891c9a3
+</span><span class='line'><span class="o">[</span>OK<span class="o">]</span> All nodes agree about slots configuration.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;blockquote&gt;&lt;blockquote&gt;&lt;blockquote&gt;&lt;p&gt;Check <span class="k">for </span>open slots&amp;hellip;
+</span><span class='line'>Check slots coverage&amp;hellip;
+</span><span class='line'><span class="o">[</span>OK<span class="o">]</span> All 16384 slots covered.
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote></blockquote></blockquote>
 
 <p>PS: 安装过程还发现RedHat系统上没有安装ruby，需要先安装ruby，而且公司机器还不能上网下载安装，只能通过离线的方式安装ruby，这里有离线安装的文档可以参考一下:<a href="https://rvm.io/rvm/offline">https://rvm.io/rvm/offline</a>。</p>
 
@@ -312,21 +465,33 @@ Check slots coverage&hellip;
 
 <p>可以使用Redis3.0的redis-cli客户端进行验证，需要加上<code>-c</code>参数，表示集群的意思。</p>
 
-<p>{% codeblock lang:bash %}
-$ redis-cli -c -p 7000
-redis 127.0.0.1:7000> set foo bar
-&ndash;> Redirected to slot [12182] located at 127.0.0.1:7002
-OK
-redis 127.0.0.1:7002> set hello world
-&ndash;> Redirected to slot [866] located at 127.0.0.1:7000
-OK
-redis 127.0.0.1:7000> get foo
-&ndash;> Redirected to slot [12182] located at 127.0.0.1:7002
-&ldquo;bar&rdquo;
-redis 127.0.0.1:7000> get hello
-&ndash;> Redirected to slot [866] located at 127.0.0.1:7000
-&ldquo;world&rdquo;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>redis-cli -c -p 7000
+</span><span class='line'>redis 127.0.0.1:7000&gt; <span class="nb">set </span>foo bar
+</span><span class='line'>&amp;ndash;&gt; Redirected to slot <span class="o">[</span>12182<span class="o">]</span> located at 127.0.0.1:7002
+</span><span class='line'>OK
+</span><span class='line'>redis 127.0.0.1:7002&gt; <span class="nb">set </span>hello world
+</span><span class='line'>&amp;ndash;&gt; Redirected to slot <span class="o">[</span>866<span class="o">]</span> located at 127.0.0.1:7000
+</span><span class='line'>OK
+</span><span class='line'>redis 127.0.0.1:7000&gt; get foo
+</span><span class='line'>&amp;ndash;&gt; Redirected to slot <span class="o">[</span>12182<span class="o">]</span> located at 127.0.0.1:7002
+</span><span class='line'>&amp;ldquo;bar&amp;rdquo;
+</span><span class='line'>redis 127.0.0.1:7000&gt; get hello
+</span><span class='line'>&amp;ndash;&gt; Redirected to slot <span class="o">[</span>866<span class="o">]</span> located at 127.0.0.1:7000
+</span><span class='line'>&amp;ldquo;world&amp;rdquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>更多的资料可以参考这里：<a href="http://redis.io/topics/cluster-tutorial">http://redis.io/topics/cluster-tutorial</a>。</p>
 ]]></content>
@@ -337,7 +502,7 @@ redis 127.0.0.1:7000> get hello
     <link href="http://zhaozhiming.github.io/blog/2014/05/07/redis-install-guide-in-redhat/"/>
     <updated>2014-05-07T19:53:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/05/07/redis-install-guide-in-redhat</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-5/redis.jpg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-5/redis.jpg"></p>
 
 <!--more-->
 
@@ -352,45 +517,56 @@ redis 127.0.0.1:7000> get hello
 
 <p>安装很简单，先下载redis的压缩包，下载地址见<a href="http://redis.io/download">这里</a>，然后拷贝到你的linux机器，接着执行下面的命令。</p>
 
-<p>{% codeblock lang:bash %}
-$ tar xzf redis-2.6.14.tar.gz
-$ cd redis-2.6.14
-$ make
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>tar xzf redis-2.6.14.tar.gz
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14
+</span><span class='line'><span class="nv">$ </span>make
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>启动</h2>
 
 <p>编译完后增加了src目录，执行src下面的redis-server脚本即可启动redis服务。</p>
 
-<p>{% codeblock lang:bash %}
-$ src/redis-server
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-server
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>调试</h2>
 
 <p>执行src目录下的redis-cli脚本，这个是redis的客户端。</p>
 
-<p>{% codeblock lang:bash %}
-$ src/redis-cli
-redis> set foo bar
-OK
-redis> get foo
-&ldquo;bar&rdquo;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>src/redis-cli
+</span><span class='line'>redis&gt; <span class="nb">set </span>foo bar
+</span><span class='line'>OK
+</span><span class='line'>redis&gt; get foo
+</span><span class='line'>&amp;ldquo;bar&amp;rdquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>java调用</h2>
 
 <ol>
 <li>Redis比较出名的java客户端是jedis，先下载jedis的jar包，可以去maven库搜下jedis就可以下载到，源码是放在github上：<a href="https://github.com/xetorthio/jedis">https://github.com/xetorthio/jedis</a>。</li>
 <li>简单写个main方法就可以调用。
-{% codeblock lang:java %}
- public static void main(String[] args) {
-     Jedis jedis = new Jedis(&ldquo;10.20.8.39&rdquo;); //redis服务器的ip，端口默认6379
-     jedis.set(&ldquo;foo&rdquo;, &ldquo;bar&rdquo;);
-     String value = jedis.get(&ldquo;foo&rdquo;);
-     System.out.println(value);
- }
-{% endcodeblock %}</li>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>     <span class="n">Jedis</span> <span class="n">jedis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Jedis</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mf">10.20</span><span class="o">.</span><span class="mf">8.39</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span> <span class="c1">//redis服务器的ip，端口默认6379</span>
+</span><span class='line'>     <span class="n">jedis</span><span class="o">.</span><span class="na">set</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">foo</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">bar</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'>     <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">jedis</span><span class="o">.</span><span class="na">get</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">foo</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'>     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></li>
 </ol>
 
 
@@ -398,25 +574,35 @@ redis> get foo
 
 <p>之前的启动方式不是后台进程方式的，终端关了服务也就停了，可以使用下面的命令将Redis作为后台进程启动，并添加到系统启动命名中。</p>
 
-<p>{% codeblock lang:bash %}
-$ cd redis-2.6.14/utils
-$./install_server
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>redis-2.6.14/utils
+</span><span class='line'><span class="nv">$.</span>/install_server
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>执行命令后，会提示你回答几个问题，可以一路回车过去，选择默认设置。</p>
 
-<p>{% codeblock lang:bash %}
-Please select the redis port for this instance: [6379]
-Selecting default: 6379
-Please select the redis config file name [/etc/redis/6379.conf]
-Selected default &ndash; /etc/redis/6379.conf
-Please select the redis log file name [/var/log/redis_6379.log]
-Selected default &ndash; /var/log/redis_6379.log
-Please select the data directory for this instance [/var/lib/redis/6379]
-Selected default &ndash; /var/lib/redis/6379
-Please select the redis executable path [/usr/local/bin/redis-server]
-&hellip;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Please <span class="k">select </span>the redis port <span class="k">for </span>this instance: <span class="o">[</span>6379<span class="o">]</span>
+</span><span class='line'>Selecting default: 6379
+</span><span class='line'>Please <span class="k">select </span>the redis config file name <span class="o">[</span>/etc/redis/6379.conf<span class="o">]</span>
+</span><span class='line'>Selected default &amp;ndash; /etc/redis/6379.conf
+</span><span class='line'>Please <span class="k">select </span>the redis log file name <span class="o">[</span>/var/log/redis_6379.log<span class="o">]</span>
+</span><span class='line'>Selected default &amp;ndash; /var/log/redis_6379.log
+</span><span class='line'>Please <span class="k">select </span>the data directory <span class="k">for </span>this instance <span class="o">[</span>/var/lib/redis/6379<span class="o">]</span>
+</span><span class='line'>Selected default &amp;ndash; /var/lib/redis/6379
+</span><span class='line'>Please <span class="k">select </span>the redis executable path <span class="o">[</span>/usr/local/bin/redis-server<span class="o">]</span>
+</span><span class='line'>&amp;hellip;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>后续可以通过下面的方式启停服务。<br/>
 1. /etc/init.d/redis_6379 start &mdash;启动<br/>

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: spring | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/spring/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-12-20T21:02:37+08:00</updated>
+  <updated>2016-02-28T20:50:23+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/05/11/spring-websocket-config/"/>
     <updated>2015-05-11T09:41:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/05/11/spring-websocket-config</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-5/websockets.png %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-5/websockets.png"></p>
 
 <p>Websocket是HTML5的一项新技术，可以让服务端和客户端进行实时的通信，主要的使用场景有: 实时的聊天系统，对实时性要求比较高的游戏，或者金融行业对股票市场数据的及时获取等。在Spring3的时候就已经有了对Websocket的支持，不过需要一些高版本的web容器来运行，比如Tomcat7.0.47+，Jetty9等。</p>
 
@@ -40,279 +40,507 @@
 </ul>
 
 
-<p>{% codeblock build.gradle lang:groovy %}
-String springVersion = &ldquo;4.1.4.RELEASE&rdquo;
-String jacksonDatabindVersion = &ldquo;2.5.0&rdquo;
-String jacksonVersion = &ldquo;1.9.13&rdquo;
-dependencies {</p>
-
-<pre><code>//websocket
-compile("javax.websocket:javax.websocket-api:1.1")
-compile("javax.servlet:javax.servlet-api:3.1.0")
-
-//spring
-compile("org.springframework:spring-messaging:" + springVersion)
-compile("org.springframework:spring-websocket:" + springVersion)
-
-//json
-compile "com.fasterxml.jackson.core:jackson-databind:" + jacksonDatabindVersion
-compile "org.codehaus.jackson:jackson-mapper-asl:" + jacksonVersion
-compile "org.codehaus.jackson:jackson-core-asl:" + jacksonVersion
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">String</span> <span class="n">springVersion</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mf">4.1</span><span class="o">.</span><span class="mi">4</span><span class="o">.</span><span class="na">RELEASE</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;</span>
+</span><span class='line'><span class="n">String</span> <span class="n">jacksonDatabindVersion</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mf">2.5</span><span class="o">.</span><span class="mi">0</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;</span>
+</span><span class='line'><span class="n">String</span> <span class="n">jacksonVersion</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mf">1.9</span><span class="o">.</span><span class="mi">13</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;</span>
+</span><span class='line'><span class="n">dependencies</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;//websocket</span>
+</span><span class='line'><span class="s">compile(&quot;javax.websocket:javax.websocket-api:1.1&quot;)</span>
+</span><span class='line'><span class="s">compile(&quot;javax.servlet:javax.servlet-api:3.1.0&quot;)</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">//spring</span>
+</span><span class='line'><span class="s">compile(&quot;org.springframework:spring-messaging:&quot; + springVersion)</span>
+</span><span class='line'><span class="s">compile(&quot;org.springframework:spring-websocket:&quot; + springVersion)</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">//json</span>
+</span><span class='line'><span class="s">compile &quot;com.fasterxml.jackson.core:jackson-databind:&quot; + jacksonDatabindVersion</span>
+</span><span class='line'><span class="s">compile &quot;org.codehaus.jackson:jackson-mapper-asl:&quot; + jacksonVersion</span>
+</span><span class='line'><span class="s">compile &quot;org.codehaus.jackson:jackson-core-asl:&quot; + jacksonVersion</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>xml配置（类配置）</h2>
 
 <p>我们有两种方式进行Websocket的配置，一种是通过xml文件的方式，在这里我们定义了websocket的配置信息，这样服务器往客户端发送消息就可以通过<code>/topic/xx</code>来发送，客户端则可以通过<code>/app/hello</code>来发送消息到服务端。</p>
 
-<p>{% codeblock lang:xml %}
-&lt;beans xmlns=&ldquo;<a href="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</a>&rdquo;</p>
-
-<pre><code>   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:websocket="http://www.springframework.org/schema/websocket"
-   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-    http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd"&gt;
-
-...... // other configurations
-
-&lt;websocket:message-broker application-destination-prefix="/app"&gt;
-    &lt;websocket:stomp-endpoint path="/hello"&gt;
-        &lt;websocket:sockjs/&gt;
-    &lt;/websocket:stomp-endpoint&gt;
-    &lt;websocket:simple-broker prefix="/topic"/&gt;
-&lt;/websocket:message-broker&gt;
-</code></pre>
-
-<p></beans>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>beans xmlns=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+</span><span class='line'>   xmlns:websocket=&quot;http://www.springframework.org/schema/websocket&quot;
+</span><span class='line'>   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+</span><span class='line'>    http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>...... // other configurations
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>websocket:message-broker application-destination-prefix=&quot;/app&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>websocket:stomp-endpoint path=&quot;/hello&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>websocket:sockjs/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/websocket:stomp-endpoint<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>websocket:simple-broker prefix=&quot;/topic&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/websocket:message-broker<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/beans&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>另外一种方式是通过类的方式，代码如下，功能与上面的xml配置相同:</p>
 
-<p>{% codeblock WebSocketConfig.java lang:java %}
-import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;</p>
-
-<p>@Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {</p>
-
-<pre><code>@Override
-public void configureMessageBroker(MessageBrokerRegistry config) {
-    config.enableSimpleBroker("/topic");
-    config.setApplicationDestinationPrefixes("/app");
-}
-
-@Override
-public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint("/hello").withSockJS();
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>WebSocketConfig.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.context.annotation.Configuration</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.messaging.simp.config.MessageBrokerRegistry</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.socket.config.annotation.StompEndpointRegistry</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@Configuration</span>
+</span><span class='line'><span class="nd">@EnableWebSocketMessageBroker</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketConfig</span> <span class="kd">extends</span> <span class="n">AbstractWebSocketMessageBrokerConfigurer</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">configureMessageBroker</span><span class="o">(</span><span class="n">MessageBrokerRegistry</span> <span class="n">config</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">config</span><span class="o">.</span><span class="na">enableSimpleBroker</span><span class="o">(</span><span class="s">&quot;/topic&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">config</span><span class="o">.</span><span class="na">setApplicationDestinationPrefixes</span><span class="o">(</span><span class="s">&quot;/app&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerStompEndpoints</span><span class="o">(</span><span class="n">StompEndpointRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">registry</span><span class="o">.</span><span class="na">addEndpoint</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">).</span><span class="na">withSockJS</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>消息类和Controller定义</h2>
 
 <p>Controller定义:</p>
 
-<p>{% codeblock WebSocketConfig.java lang:java %}
-import com.zzm.wechat.model.Greeting;
-import com.zzm.wechat.model.HelloMessage;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;</p>
-
-<p>@Controller
-public class GreetingController {</p>
-
-<pre><code>@MessageMapping("/hello")
-@SendTo("/topic/greetings")
-public Greeting greeting(HelloMessage message) throws Exception {
-    Thread.sleep(3000); // simulated delay
-    return new Greeting("Hello, " + message.getName() + "!");
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>WebSocketConfig.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.zzm.wechat.model.Greeting</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.zzm.wechat.model.HelloMessage</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.messaging.handler.annotation.MessageMapping</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.messaging.handler.annotation.SendTo</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreetingController</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@MessageMapping</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@SendTo</span><span class="o">(</span><span class="s">&quot;/topic/greetings&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">Greeting</span> <span class="nf">greeting</span><span class="o">(</span><span class="n">HelloMessage</span> <span class="n">message</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">3000</span><span class="o">);</span> <span class="c1">// simulated delay</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nf">Greeting</span><span class="o">(</span><span class="s">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>消息model的定义:</p>
 
-<p>{% codeblock WebSocketConfig.java lang:java %}
-public class Greeting {</p>
-
-<pre><code>private String content;
-
-public Greeting(String content) {
-    this.content = content;
-}
-
-public String getContent() {
-    return content;
-}
-</code></pre>
-
-<p>}</p>
-
-<p>public class HelloMessage {</p>
-
-<pre><code>private String name;
-
-public String getName() {
-    return name;
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>WebSocketConfig.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Greeting</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="n">String</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="nf">Greeting</span><span class="o">(</span><span class="n">String</span> <span class="n">content</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">getContent</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">content</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloMessage</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>在web.xml中设置controller的url前缀，这样可以避免一些页面的url被controller拦截。</p>
 
-<p>{% codeblock web.xml lang:xml %}</p>
-
-<pre><code>&lt;servlet&gt;
-    &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
-    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
-    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-&lt;/servlet&gt;
-
-&lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;/api/*&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>web.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>servlet<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>servlet-name<span class="ni">&amp;gt;</span>mvc-dispatcher<span class="ni">&amp;lt;</span>/servlet-name<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>servlet-class<span class="ni">&amp;gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="ni">&amp;lt;</span>/servlet-class<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>load-on-startup<span class="ni">&amp;gt;</span>1<span class="ni">&amp;lt;</span>/load-on-startup<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/servlet<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>servlet-mapping<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>servlet-name<span class="ni">&amp;gt;</span>mvc-dispatcher<span class="ni">&amp;lt;</span>/servlet-name<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>url-pattern<span class="ni">&amp;gt;</span>/api/*<span class="ni">&amp;lt;</span>/url-pattern<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/servlet-mapping<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>客户端页面</h2>
 
 <p>首先下载<code>stomp.js</code>和<code>sockjs.js</code>，然后编写一个html页面进行客户端websocket的连接，并实现发送消息和接收消息的功能。我们使用SockJS的方式来创建Websocket连接，注意url要加上domain名称(这里是<code>server</code>)和<code>api</code>前缀。</p>
 
-<p>{% codeblock demo.html lang:html %}
-&lt;!DOCTYPE html>
-<html>
-<head></p>
-
-<pre><code>&lt;title&gt;Hello WebSocket&lt;/title&gt;
-&lt;script src="resources/sockjs-0.3.4.js"&gt;&lt;/script&gt;
-&lt;script src="resources/stomp.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript"&gt;
-    var stompClient = null;
-
-    function setConnected(connected) {
-        document.getElementById('connect').disabled = connected;
-        document.getElementById('disconnect').disabled = !connected;
-        document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
-        document.getElementById('response').innerHTML = '';
-    }
-
-    function connect() {
-        var socket = new SockJS('/server/api/hello');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function(frame) {
-            setConnected(true);
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/greetings', function(greeting){
-                showGreeting(JSON.parse(greeting.body).content);
-            });
-        });
-    }
-
-    function disconnect() {
-        if (stompClient != null) {
-            stompClient.disconnect();
-        }
-        setConnected(false);
-        console.log("Disconnected");
-    }
-
-    function sendName() {
-        var name = document.getElementById('name').value;
-        stompClient.send("/app/hello", {}, JSON.stringify({ 'name': name }));
-    }
-
-    function showGreeting(message) {
-        var response = document.getElementById('response');
-        var p = document.createElement('p');
-        p.style.wordWrap = 'break-word';
-        p.appendChild(document.createTextNode(message));
-        response.appendChild(p);
-    }
-&lt;/script&gt;
-</code></pre>
-
-<p></head>
-<body onload="disconnect()">
-<noscript><h2 style="color: #ff0000">Seems your browser doesn&rsquo;t support Javascript! Websocket relies on Javascript being enabled. Please enable</p>
-
-<pre><code>Javascript and reload this page!&lt;/h2&gt;&lt;/noscript&gt;
-</code></pre>
-
-<div>
-    <div>
-        <button id="connect" onclick="connect();">Connect</button>
-        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
-    </div>
-    <div id="conversationDiv">
-        <label>What is your name?</label><input type="text" id="name" />
-        <button id="sendName" onclick="sendName();">Send</button>
-        <p id="response"></p>
-    </div>
-</div>
-
-
-<p></body>
-</html>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE html&gt;
+</span><span class='line'><span class="nt">&lt;html&gt;</span>
+</span><span class='line'><span class="nt">&lt;head&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>title<span class="ni">&amp;gt;</span>Hello WebSocket<span class="ni">&amp;lt;</span>/title<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>script src=&quot;resources/sockjs-0.3.4.js&quot;<span class="ni">&amp;gt;&amp;lt;</span>/script<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>script src=&quot;resources/stomp.js&quot;<span class="ni">&amp;gt;&amp;lt;</span>/script<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>script type=&quot;text/javascript&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    var stompClient = null;
+</span><span class='line'>
+</span><span class='line'>    function setConnected(connected) {
+</span><span class='line'>        document.getElementById(&#39;connect&#39;).disabled = connected;
+</span><span class='line'>        document.getElementById(&#39;disconnect&#39;).disabled = !connected;
+</span><span class='line'>        document.getElementById(&#39;conversationDiv&#39;).style.visibility = connected ? &#39;visible&#39; : &#39;hidden&#39;;
+</span><span class='line'>        document.getElementById(&#39;response&#39;).innerHTML = &#39;&#39;;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    function connect() {
+</span><span class='line'>        var socket = new SockJS(&#39;/server/api/hello&#39;);
+</span><span class='line'>        stompClient = Stomp.over(socket);
+</span><span class='line'>        stompClient.connect({}, function(frame) {
+</span><span class='line'>            setConnected(true);
+</span><span class='line'>            console.log(&#39;Connected: &#39; + frame);
+</span><span class='line'>            stompClient.subscribe(&#39;/topic/greetings&#39;, function(greeting){
+</span><span class='line'>                showGreeting(JSON.parse(greeting.body).content);
+</span><span class='line'>            });
+</span><span class='line'>        });
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    function disconnect() {
+</span><span class='line'>        if (stompClient != null) {
+</span><span class='line'>            stompClient.disconnect();
+</span><span class='line'>        }
+</span><span class='line'>        setConnected(false);
+</span><span class='line'>        console.log(&quot;Disconnected&quot;);
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    function sendName() {
+</span><span class='line'>        var name = document.getElementById(&#39;name&#39;).value;
+</span><span class='line'>        stompClient.send(&quot;/app/hello&quot;, {}, JSON.stringify({ &#39;name&#39;: name }));
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    function showGreeting(message) {
+</span><span class='line'>        var response = document.getElementById(&#39;response&#39;);
+</span><span class='line'>        var p = document.createElement(&#39;p&#39;);
+</span><span class='line'>        p.style.wordWrap = &#39;break-word&#39;;
+</span><span class='line'>        p.appendChild(document.createTextNode(message));
+</span><span class='line'>        response.appendChild(p);
+</span><span class='line'>    }
+</span><span class='line'><span class="ni">&amp;lt;</span>/script<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/head&gt;</span>
+</span><span class='line'><span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">&quot;disconnect()&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;noscript&gt;&lt;h2</span> <span class="na">style=</span><span class="s">&quot;color: #ff0000&quot;</span><span class="nt">&gt;</span>Seems your browser doesn<span class="ni">&amp;rsquo;</span>t support Javascript! Websocket relies on Javascript being enabled. Please enable<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>Javascript and reload this page!<span class="ni">&amp;lt;</span>/h2<span class="ni">&amp;gt;&amp;lt;</span>/noscript<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;connect&quot;</span> <span class="na">onclick=</span><span class="s">&quot;connect();&quot;</span><span class="nt">&gt;</span>Connect<span class="nt">&lt;/button&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;disconnect&quot;</span> <span class="na">disabled=</span><span class="s">&quot;disabled&quot;</span> <span class="na">onclick=</span><span class="s">&quot;disconnect();&quot;</span><span class="nt">&gt;</span>Disconnect<span class="nt">&lt;/button&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;conversationDiv&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;label&gt;</span>What is your name?<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">id=</span><span class="s">&quot;name&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;sendName&quot;</span> <span class="na">onclick=</span><span class="s">&quot;sendName();&quot;</span><span class="nt">&gt;</span>Send<span class="nt">&lt;/button&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">&quot;response&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>运行结果：</p>
 
-<p>{% img /images/post/2015-5/websocket-run.png %}</p>
+<p><img src="/images/post/2015-5/websocket-run.png"></p>
 
 <p>浏览器console信息:</p>
 
-<p>{% codeblock lang:sh %}
-Disconnected
-chrome-extension://fhhdlnnepfjhlhilgmeepgkhjmhhhjkh/js/detector.js:505 detector
-chrome-extension://fhhdlnnepfjhlhilgmeepgkhjmhhhjkh/js/detector.js:506 Object
-stomp.js:130 Opening Web Socket&hellip;
-stomp.js:130 Web Socket Opened&hellip;
-stomp.js:130 >>> CONNECT
-accept-version:1.1,1.0
-heart-beat:10000,10000</p>
-
-<p>&lt;&lt;&lt; CONNECTED
-version:1.1
-heart-beat:0,0</p>
-
-<p>connected to server undefined
-demo.html:22 Connected: CONNECTED
-heart-beat:0,0
-version:1.1</p>
-
-<blockquote><blockquote><blockquote><p>SUBSCRIBE
-id:sub-0
-destination:/topic/greetings</p>
-
-<p>SEND
-destination:/app/hello
-content-length:14</p></blockquote></blockquote></blockquote>
-
-<p>{&ldquo;name&rdquo;:&ldquo;zzm&rdquo;}
-&lt;&lt;&lt; MESSAGE
-destination:/topic/greetings
-content-type:application/json;charset=UTF-8
-subscription:sub-0
-message-id:3657pj5u-0
-content-length:25</p>
-
-<p>{&ldquo;content&rdquo;:&ldquo;Hello, zzm!&rdquo;}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Disconnected
+</span><span class='line'>chrome-extension://fhhdlnnepfjhlhilgmeepgkhjmhhhjkh/js/detector.js:505 detector
+</span><span class='line'>chrome-extension://fhhdlnnepfjhlhilgmeepgkhjmhhhjkh/js/detector.js:506 Object
+</span><span class='line'>stomp.js:130 Opening Web Socket&amp;hellip;
+</span><span class='line'>stomp.js:130 Web Socket Opened&amp;hellip;
+</span><span class='line'>stomp.js:130 &gt;&gt;&gt; CONNECT
+</span><span class='line'>accept-version:1.1,1.0
+</span><span class='line'>heart-beat:10000,10000&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;&amp;lt;&amp;lt;&amp;lt; CONNECTED
+</span><span class='line'>version:1.1
+</span><span class='line'>heart-beat:0,0&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;connected to server undefined
+</span><span class='line'>demo.html:22 Connected: CONNECTED
+</span><span class='line'>heart-beat:0,0
+</span><span class='line'>version:1.1&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;blockquote&gt;&lt;blockquote&gt;&lt;blockquote&gt;&lt;p&gt;SUBSCRIBE
+</span><span class='line'>id:sub-0
+</span><span class='line'>destination:/topic/greetings&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;SEND
+</span><span class='line'>destination:/app/hello
+</span><span class='line'>content-length:14&lt;/p&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">{</span>&amp;ldquo;name&amp;rdquo;:&amp;ldquo;zzm&amp;rdquo;<span class="o">}</span>
+</span><span class='line'>&amp;lt;&amp;lt;&amp;lt; MESSAGE
+</span><span class='line'>destination:/topic/greetings
+</span><span class='line'>content-type:application/json;charset<span class="o">=</span>UTF-8
+</span><span class='line'>subscription:sub-0
+</span><span class='line'>message-id:3657pj5u-0
+</span><span class='line'>content-length:25&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">{</span>&amp;ldquo;content&amp;rdquo;:&amp;ldquo;Hello, zzm!&amp;rdquo;<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>gradle运行jetty9</h2>
 
@@ -322,33 +550,58 @@ content-length:25</p>
 
 <p>在<code>build.gradle</code>中添加如下脚本:</p>
 
-<p>{% codeblock build.gradle lang:groovy %}
-buildscript {</p>
-
-<pre><code>repositories {
-    maven {
-        url "http://maven.oschina.net/content/groups/public/"
-    }
-}
-
-dependencies {
-    classpath 'org.akhikhl.gretty:gretty:+'
-}
-</code></pre>
-
-<p>}</p>
-
-<p>apply plugin: &lsquo;org.akhikhl.gretty&rsquo;
-// apply plugin: &lsquo;jetty&rsquo; 注意要注释掉原来的jetty插件</p>
-
-<p>gretty {</p>
-
-<pre><code>httpPort = 9898 // 指定web服务的http端口
-servletContainer = 'jetty9' // 这里可以指定tomcat,jetty的几个版本
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">buildscript</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;repositories {</span>
+</span><span class='line'><span class="s">    maven {</span>
+</span><span class='line'><span class="s">        url &quot;http://maven.oschina.net/</span><span class="n">content</span><span class="s">/groups/</span><span class="kd">public</span><span class="s">/&quot;</span>
+</span><span class='line'><span class="s">    }</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">dependencies {</span>
+</span><span class='line'><span class="s">    classpath &#39;org.akhikhl.gretty:gretty:+&#39;</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">apply</span> <span class="nl">plugin:</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="o">;</span><span class="n">org</span><span class="o">.</span><span class="na">akhikhl</span><span class="o">.</span><span class="na">gretty</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="o">;</span>
+</span><span class='line'><span class="c1">// apply plugin: &amp;lsquo;jetty&amp;rsquo; 注意要注释掉原来的jetty插件&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">gretty</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;httpPort = 9898 // 指定web服务的http端口</span>
+</span><span class='line'><span class="s">servletContainer = &#39;jetty9&#39; // 这里可以指定tomcat,jetty的几个版本</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>然后运行<code>gradle appRun</code>即可。</p>
 
@@ -356,34 +609,60 @@ servletContainer = 'jetty9' // 这里可以指定tomcat,jetty的几个版本
 
 <p>在<code>build.gradle</code>中添加如下脚本，注意要先下载jetty9的安装包并解压:</p>
 
-<p>{% codeblock build.gradle lang:groovy %}
-buildscript {</p>
-
-<pre><code>repositories {
-    maven {
-        url "http://maven.oschina.net/content/groups/public/"
-    }
-}
-
-dependencies {
-    classpath 'com.bmuschko:gradle-cargo-plugin:2.1'
-}
-</code></pre>
-
-<p>}</p>
-
-<p>apply plugin: &lsquo;com.bmuschko.cargo&rsquo;
-cargo {</p>
-
-<pre><code>containerId = 'jetty9x'
-port = 9898
-local {
-    homeDir = file('/Users/zhaozhiming/tools/jetty-distribution-9.2.10.v20150310')
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">buildscript</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;repositories {</span>
+</span><span class='line'><span class="s">    maven {</span>
+</span><span class='line'><span class="s">        url &quot;http://maven.oschina.net/</span><span class="n">content</span><span class="s">/groups/</span><span class="kd">public</span><span class="s">/&quot;</span>
+</span><span class='line'><span class="s">    }</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">dependencies {</span>
+</span><span class='line'><span class="s">    classpath &#39;com.bmuschko:gradle-cargo-plugin:2.1&#39;</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">apply</span> <span class="nl">plugin:</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="o">;</span><span class="n">com</span><span class="o">.</span><span class="na">bmuschko</span><span class="o">.</span><span class="na">cargo</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="o">;</span>
+</span><span class='line'><span class="n">cargo</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;containerId = &#39;jetty9x&#39;</span>
+</span><span class='line'><span class="s">port = 9898</span>
+</span><span class='line'><span class="s">local {</span>
+</span><span class='line'><span class="s">    homeDir = file(&#39;/</span><span class="n">Users</span><span class="s">/zhaozhiming/</span><span class="n">tools</span><span class="s">/jetty-distribution-9.2.10.v20150310&#39;)</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>然后运行<code>gradle war CargoRunLocal</code>，注意首先要打出war包，然后插件会自动部署war包到Jetty9的安装目录下，这种方式不大灵活，比如一些页面的修改都需要重新部署才能进行测试。</p>
 
@@ -396,7 +675,7 @@ local {
     <link href="http://zhaozhiming.github.io/blog/2015/04/12/spring-data-redis/"/>
     <updated>2015-04-12T15:15:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/04/12/spring-data-redis</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-4/spring-redis.jpg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-4/spring-redis.jpg"></p>
 
 <p><a href="http://redis.io/">Redis</a>相信大家都听说过，它是一个开源的key-value缓存数据库，有很多Java的客户端支持，比较有名的有Jedis，JRedis等（见<a href="http://redis.io/clients#java">这里</a>）。当然我们可以使用客户端的原生代码实现redis的操作，但实际上在spring中就已经集成了这些客户端的使用，下面我们就以Jedis为例来介绍一下Spring中关于Redis的配置。</p>
 
@@ -409,51 +688,94 @@ local {
 
 <p>首先要下载spring和redis相关的依赖包，最新的jedis版本是2.6.2，还需要下载jackson的包，这个后面会介绍为什么需要，以gradle脚本示例如下。</p>
 
-<p>{% codeblock build.gradle lang:sh %}</p>
-
-<pre><code>compile("redis.clients:jedis:" + jedisVersion)
-compile "org.springframework.data:spring-data-redis:" + springDataRedisVersion
-
-//json
-compile "com.fasterxml.jackson.core:jackson-databind:" + jacksonDatabindVersion
-compile "org.codehaus.jackson:jackson-mapper-asl:" + jacksonVersion
-compile "org.codehaus.jackson:jackson-core-asl:" + jacksonVersion
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;compile<span class="o">(</span><span class="s2">&quot;redis.clients:jedis:&quot;</span> + jedisVersion<span class="o">)</span>
+</span><span class='line'>compile <span class="s2">&quot;org.springframework.data:spring-data-redis:&quot;</span> + springDataRedisVersion
+</span><span class='line'>
+</span><span class='line'>//json
+</span><span class='line'>compile <span class="s2">&quot;com.fasterxml.jackson.core:jackson-databind:&quot;</span> + jacksonDatabindVersion
+</span><span class='line'>compile <span class="s2">&quot;org.codehaus.jackson:jackson-mapper-asl:&quot;</span> + jacksonVersion
+</span><span class='line'>compile <span class="s2">&quot;org.codehaus.jackson:jackson-core-asl:&quot;</span> + jacksonVersion
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>spring配置jedis</h2>
 
 <p>在spring的xml配置文件中，做如下配置。</p>
 
-<p>{% codeblock lang:xml %}</p>
-
-<pre><code>&lt;!-- 配置redis池，依次为最大实例数，最大空闲实例数，(创建实例时)最大等待时间，(创建实例时)是否验证 --&gt;
-&lt;bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"&gt;
-    &lt;property name="maxTotal" value="${redis.maxTotal}"/&gt;
-    &lt;property name="maxIdle" value="${redis.maxIdle}"/&gt;
-    &lt;property name="maxWaitMillis" value="${redis.maxWaitMillis}"/&gt;
-    &lt;property name="testOnBorrow" value="${redis.testOnBorrow}"/&gt;
-&lt;/bean&gt;
-
-&lt;!-- redis连接配置，依次为主机ip，端口，是否使用池，(usePool=true时)redis的池配置 --&gt;
-&lt;bean id="jedisFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"&gt;
-    &lt;property name="hostName" value="${redis.host}"/&gt;
-    &lt;property name="port" value="${redis.port}"/&gt;
-    &lt;property name="usePool" value="true"/&gt;
-    &lt;property name="poolConfig" ref="jedisPoolConfig"/&gt;
-&lt;/bean&gt;
-
-&lt;!-- redis模板配置 --&gt;
-&lt;bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"&gt;
-    &lt;property name="connectionFactory" ref="jedisFactory"/&gt;
-    &lt;property name="defaultSerializer"&gt;
-        &lt;bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>!-- 配置redis池，依次为最大实例数，最大空闲实例数，(创建实例时)最大等待时间，(创建实例时)是否验证 --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;jedisPoolConfig&quot; class=&quot;redis.clients.jedis.JedisPoolConfig&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxTotal&quot; value=&quot;${redis.maxTotal}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxIdle&quot; value=&quot;${redis.maxIdle}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxWaitMillis&quot; value=&quot;${redis.maxWaitMillis}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;testOnBorrow&quot; value=&quot;${redis.testOnBorrow}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>!-- redis连接配置，依次为主机ip，端口，是否使用池，(usePool=true时)redis的池配置 --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;jedisFactory&quot; class=&quot;org.springframework.data.redis.connection.jedis.JedisConnectionFactory&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;hostName&quot; value=&quot;${redis.host}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;port&quot; value=&quot;${redis.port}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;usePool&quot; value=&quot;true&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;poolConfig&quot; ref=&quot;jedisPoolConfig&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>!-- redis模板配置 --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;redisTemplate&quot; class=&quot;org.springframework.data.redis.core.RedisTemplate&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;connectionFactory&quot; ref=&quot;jedisFactory&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;defaultSerializer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>bean class=&quot;org.springframework.data.redis.serializer.StringRedisSerializer&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/property<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>序列化</h2>
 
@@ -476,77 +798,136 @@ compile "org.codehaus.jackson:jackson-core-asl:" + jacksonVersion
 
 <p>代码示例如下，使用redis进行set和get操作。</p>
 
-<p>{% codeblock MyUserRepository.java lang:java %}
-@Repository
-public class MyUserRepository {</p>
-
-<pre><code>//直接使用autowire就可以引用到配置文件中的redis-template
-@Autowired
-private RedisTemplate&lt;String, MyUser&gt; template;
-
-private ValueOperations&lt;String, MyUser&gt; operations;
-
-@PostConstruct
-public void init() {
-    //这里设置value的序列化方式为JacksonJsonRedisSerializer  
-    template.setValueSerializer(new JacksonJsonRedisSerializer&lt;&gt;(MyUser.class));
-    operations = template.opsForValue();
-}
-
-public void set(String key, MyUser value) {
-    operations.set(key, value);
-}
-
-public MyUser get(String key) {
-    return operations.get(key);
-}
-</code></pre>
-
-<p>}</p>
-
-<p>// model
-public class MyUser {</p>
-
-<pre><code>private String username;
-private int age;
-// ... setter and getter
-</code></pre>
-
-<p>}</p>
-
-<p>// 在Controller中调用
-@Controller
-public class MainController {</p>
-
-<pre><code>@Autowired
-private MyUserRepository myUserRepository;
-
-@RequestMapping(value = "/test", method = RequestMethod.GET)
-public
-@ResponseBody
-ResponseEntity&lt;?&gt; test() throws Exception {
-    MyUser user = new MyUser("zhaozhiming", 100);
-    String key = "my:user:zhaozhiming";
-    myUserRepository.set(key, user);
-    MyUser myUser = myUserRepository.get(key);
-    log.debug(String.format("my user:%s", myUser));
-    String result = mapper.writeValueAsString(user);
-    return new ResponseEntity&lt;&gt;(result, HttpStatus.OK);
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyUserRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Repository</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyUserRepository</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c1">//直接使用autowire就可以引用到配置文件中的redis-template</span>
+</span><span class='line'><span class="nd">@Autowired</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RedisTemplate</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">MyUser</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">template</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">private</span> <span class="n">ValueOperations</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">MyUser</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">operations</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@PostConstruct</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">//这里设置value的序列化方式为JacksonJsonRedisSerializer  </span>
+</span><span class='line'>    <span class="n">template</span><span class="o">.</span><span class="na">setValueSerializer</span><span class="o">(</span><span class="k">new</span> <span class="n">JacksonJsonRedisSerializer</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;&amp;</span><span class="n">gt</span><span class="o">;(</span><span class="n">MyUser</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">operations</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="na">opsForValue</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">MyUser</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">operations</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="n">MyUser</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">operations</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// model</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyUser</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="n">String</span> <span class="n">username</span><span class="o">;</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'><span class="c1">// ... setter and getter</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// 在Controller中调用</span>
+</span><span class='line'><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainController</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Autowired</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">MyUserRepository</span> <span class="n">myUserRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/test&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span>
+</span><span class='line'><span class="nd">@ResponseBody</span>
+</span><span class='line'><span class="n">ResponseEntity</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;?&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">test</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">MyUser</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyUser</span><span class="o">(</span><span class="s">&quot;zhaozhiming&quot;</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="s">&quot;my:user:zhaozhiming&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">myUserRepository</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">user</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">MyUser</span> <span class="n">myUser</span> <span class="o">=</span> <span class="n">myUserRepository</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;my user:%s&quot;</span><span class="o">,</span> <span class="n">myUser</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">writeValueAsString</span><span class="o">(</span><span class="n">user</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="n">ResponseEntity</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;&amp;</span><span class="n">gt</span><span class="o">;(</span><span class="n">result</span><span class="o">,</span> <span class="n">HttpStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>调用set方法后，可以在日志中看到get后的MyUser对象。</p>
 
-<p>{% codeblock lang:sh %}
- &ndash; my user:MyUser{age=100, username=&lsquo;zhaozhiming&rsquo;}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'> &amp;ndash; my user:MyUser<span class="o">{</span><span class="nv">age</span><span class="o">=</span>100, <span class="nv">username</span><span class="o">=</span>&amp;lsquo;zhaozhiming&amp;rsquo;<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>也可以在redis里面看到保存后的json字符串了。</p>
 
-<p>{% img /images/post/2015-4/redis_result.png %}</p>
+<p><img src="/images/post/2015-4/redis_result.png"></p>
 ]]></content>
   </entry>
   
@@ -555,7 +936,7 @@ ResponseEntity&lt;?&gt; test() throws Exception {
     <link href="http://zhaozhiming.github.io/blog/2014/12/18/use-spring-security-to-ldap-authentication/"/>
     <updated>2014-12-18T08:56:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/12/18/use-spring-security-to-ldap-authentication</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-12/spring-security.jpeg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-12/spring-security.jpeg"></p>
 
 <p>这里介绍一下如何是用Spring Security来做LDAP的认证，LDAP服务器只存放了用户的用户名和密码，没有角色等其他权限，所以这里介绍的是最简单的用户名密码认证。</p>
 
@@ -566,94 +947,166 @@ ResponseEntity&lt;?&gt; test() throws Exception {
 
 <p>下面是gradle的脚本配置，需要下载spring-security和ldap相关的JAR包。</p>
 
-<p>{% codeblock build.gradle lang:groovy %}
-String springSecurityVersion = &ldquo;3.2.5.RELEASE&rdquo;</p>
-
-<p>dependencies {</p>
-
-<pre><code>...//other spring jars
-
-//security
-compile "org.springframework.security:spring-security-core:" + springSecurityVersion
-compile "org.springframework.security:spring-security-web:" + springSecurityVersion
-compile "org.springframework.security:spring-security-config:" + springSecurityVersion
-compile "org.springframework.security:spring-security-ldap:" + springSecurityVersion
-compile "org.springframework.ldap:spring-ldap-core:2.0.2.RELEASE"
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">String</span> <span class="n">springSecurityVersion</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mf">3.2</span><span class="o">.</span><span class="mi">5</span><span class="o">.</span><span class="na">RELEASE</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;dependencies {&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;...</span><span class="c1">//other spring jars</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//security</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-core:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-web:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-config:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-ldap:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.ldap:spring-ldap-core:2.0.2.RELEASE&quot;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="s">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>配置web.xml</h2>
 
 <p>在web.xml配置<code>filter</code>，修改内容如下。</p>
 
-<p>{% codeblock web.xml lang:xml %}
-<filter>
-   &lt;filter-name>springSecurityFilterChain&lt;/filter-name>
-  &lt;filter-class>org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class>
-</filter>
-&lt;filter-mapping>
-   &lt;filter-name>springSecurityFilterChain&lt;/filter-name>
-   &lt;url-pattern>/*&lt;/url-pattern>
-&lt;/filter-mapping></p>
-
-<p><listener>
-   &lt;listener-class>org.springframework.web.context.ContextLoaderListener&lt;/listener-class>
-</listener></p>
-
-<p>&lt;context-param>
-   &lt;param-name>contextConfigLocation&lt;/param-name>
-   &lt;param-value>classpath:spring-security.xml&lt;/param-value>
-&lt;/context-param>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>web.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;filter&gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>filter-name&gt;springSecurityFilterChain<span class="ni">&amp;lt;</span>/filter-name&gt;
+</span><span class='line'>  <span class="ni">&amp;lt;</span>filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy<span class="ni">&amp;lt;</span>/filter-class&gt;
+</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>filter-mapping&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>filter-name&gt;springSecurityFilterChain<span class="ni">&amp;lt;</span>/filter-name&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>url-pattern&gt;/*<span class="ni">&amp;lt;</span>/url-pattern&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>/filter-mapping&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;listener&gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>listener-class&gt;org.springframework.web.context.ContextLoaderListener<span class="ni">&amp;lt;</span>/listener-class&gt;
+</span><span class='line'><span class="nt">&lt;/listener&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span><span class="ni">&amp;lt;</span>context-param&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>param-name&gt;contextConfigLocation<span class="ni">&amp;lt;</span>/param-name&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>param-value&gt;classpath:spring-security.xml<span class="ni">&amp;lt;</span>/param-value&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>/context-param&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>创建spring-security.xml</h2>
 
 <p>在web.xml里面指定了Application启动时需要加载spring-security.xml文件，我们的LDAP认证主要就配置在这个文件里面。</p>
 
-<p>{% codeblock spring-security.xml lang:xml %}
-&lt;beans xmlns=&ldquo;<a href="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</a>&rdquo;
-   xmlns:s=&ldquo;<a href="http://www.springframework.org/schema/security">http://www.springframework.org/schema/security</a>&rdquo; xmlns:context=&ldquo;<a href="http://www.springframework.org/schema/context">http://www.springframework.org/schema/context</a>&rdquo;
-   xmlns:xsi=&ldquo;<a href="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</a>&rdquo;
-   xsi:schemaLocation=&ldquo;<a href="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</a> <a href="http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</a></p>
-
-<pre><code>   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd"&gt;
-</code></pre>
-
-<p>   &lt;context:property-placeholder location=&ldquo;classpath:app.properties&rdquo; />  //1</p>
-
-<p>   &lt;s:http pattern=&ldquo;/resources/**&rdquo; security=&ldquo;none&rdquo; />  //2
-   &lt;s:http pattern=&ldquo;/login.html&rdquo; security=&ldquo;none&rdquo; />    //2</p>
-
-<p>   &lt;s:http use-expressions=&ldquo;true&rdquo;></p>
-
-<pre><code>  &lt;s:intercept-url pattern="/**" access="isAuthenticated()" /&gt;  //3
-  &lt;s:form-login login-page="/login.html"                        //4
-     authentication-failure-url="/login.html?error=true"        //5   
-     username-parameter="j_username" password-parameter="j_password"/&gt; //6
-  &lt;s:anonymous /&gt;
-  &lt;s:logout logout-success-url="/login.html?logout=true" /&gt;  //7
-</code></pre>
-
-<p>   &lt;/s:http></p>
-
-<p>   &lt;s:ldap-server url=&ldquo;${ldap_server}&rdquo; manager-dn=&ldquo;${ldap_user}&rdquo;//8</p>
-
-<pre><code>  manager-password="${ldap_password}" /&gt;
-</code></pre>
-
-<p>   &lt;s:authentication-manager></p>
-
-<pre><code>  &lt;s:ldap-authentication-provider
-     user-dn-pattern="${ldap_user_dn_pattern}" /&gt;  //9
-</code></pre>
-
-<p>   &lt;/s:authentication-manager></p>
-
-<p></beans>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring-security.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>beans xmlns=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:s=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/security&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/security<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span> xmlns:context=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/context&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/context<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:xsi=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="nt">&gt;</span>http://www.w3.org/2001/XMLSchema-instance<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xsi:schemaLocation=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans<span class="nt">&lt;/a&gt;</span> <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans/spring-beans-4.0.xsd&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans/spring-beans-4.0.xsd<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+</span><span class='line'>http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>context:property-placeholder location=<span class="ni">&amp;ldquo;</span>classpath:app.properties<span class="ni">&amp;rdquo;</span> /&gt;  //1<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:http pattern=<span class="ni">&amp;ldquo;</span>/resources/**<span class="ni">&amp;rdquo;</span> security=<span class="ni">&amp;ldquo;</span>none<span class="ni">&amp;rdquo;</span> /&gt;  //2
+</span><span class='line'>   <span class="ni">&amp;lt;</span>s:http pattern=<span class="ni">&amp;ldquo;</span>/login.html<span class="ni">&amp;rdquo;</span> security=<span class="ni">&amp;ldquo;</span>none<span class="ni">&amp;rdquo;</span> /&gt;    //2<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:http use-expressions=<span class="ni">&amp;ldquo;</span>true<span class="ni">&amp;rdquo;</span>&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>  <span class="ni">&amp;lt;</span>s:intercept-url pattern=&quot;/**&quot; access=&quot;isAuthenticated()&quot; /<span class="ni">&amp;gt;</span>  //3
+</span><span class='line'>  <span class="ni">&amp;lt;</span>s:form-login login-page=&quot;/login.html&quot;                        //4
+</span><span class='line'>     authentication-failure-url=&quot;/login.html?error=true&quot;        //5
+</span><span class='line'>     username-parameter=&quot;j_username&quot; password-parameter=&quot;j_password&quot;/<span class="ni">&amp;gt;</span> //6
+</span><span class='line'>  <span class="ni">&amp;lt;</span>s:anonymous /<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>s:logout logout-success-url=&quot;/login.html?logout=true&quot; /<span class="ni">&amp;gt;</span>  //7
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>/s:http&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:ldap-server url=<span class="ni">&amp;ldquo;</span>${ldap_server}<span class="ni">&amp;rdquo;</span> manager-dn=<span class="ni">&amp;ldquo;</span>${ldap_user}<span class="ni">&amp;rdquo;</span>//8<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>  manager-password=&quot;${ldap_password}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:authentication-manager&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>  <span class="ni">&amp;lt;</span>s:ldap-authentication-provider
+</span><span class='line'>     user-dn-pattern=&quot;${ldap_user_dn_pattern}&quot; /<span class="ni">&amp;gt;</span>  //9
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>/s:authentication-manager&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/beans&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ol>
 <li>指定properties文件，下面的ldap信息都是从properties文件里面取得。</li>
@@ -670,89 +1123,155 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 
 <p>下面是app.properties的内容。</p>
 
-<p>{% codeblock app.properties lang:properties %}</p>
-
-<h1>Ldap</h1>
-
-<p>ldap_server=ldap://your.ldap.server.com.:12356
-ldap_user=cn=yourname,cn=Users,dc=ldap,dc=server,dc=com
-ldap_password=123456
-ldap_user_dn_pattern=uid={0},ou=staff,ou=people,o=ldap.server.com
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>app.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="err">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;Ldap&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;ldap_server</span><span class="o">=</span><span class="s">ldap://your.ldap.server.com.:12356</span>
+</span><span class='line'><span class="na">ldap_user</span><span class="o">=</span><span class="s">cn=yourname,cn=Users,dc=ldap,dc=server,dc=com</span>
+</span><span class='line'><span class="na">ldap_password</span><span class="o">=</span><span class="s">123456</span>
+</span><span class='line'><span class="na">ldap_user_dn_pattern</span><span class="o">=</span><span class="s">uid={0},ou=staff,ou=people,o=ldap.server.com</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>创建登陆页面</h2>
 
 <p>创建用户登陆的Form，method为<code>post</code>，action为<code>j_spring_security_check</code>，用户录入框的name为<code>j_username</code>，密码录入框的name为<code>j_password</code>，这2个值与之前spring-security.xml里面配置的要保持一致。</p>
 
-<p>{% codeblock login.html lang:html %}
-<form name="LoginForm" method="post" action="j_spring_security_check"></p>
-
-<pre><code>&lt;div style="display: block;"&gt;
-    &lt;div&gt;
-        &lt;h1&gt;
-            &lt;span class="ui-icon add"&gt;&lt;/span&gt;用户登录
-        &lt;/h1&gt;
-    &lt;/div&gt;
-    &lt;div class="content"&gt;
-        &lt;div id="error" style="display: none; color: #c9302c" align="center"&gt;
-            &lt;h3&gt;认证失败，请重新登录&lt;/h3&gt;
-        &lt;/div&gt;
-        &lt;div id="logout" style="display: none; color: #02547f" align="center"&gt;
-            &lt;h3&gt;已成功登出&lt;/h3&gt;
-        &lt;/div&gt;
-
-        &lt;ul&gt;
-            &lt;li&gt;&lt;label&gt;
-                &lt;span&gt;用户名&lt;/span&gt;
-                &lt;input type="text" name="j_username"&gt;
-            &lt;/label&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;label&gt;
-                &lt;span&gt;密码&lt;/span&gt;
-                &lt;input type="password" name="j_password"&gt;
-            &lt;/label&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-    &lt;/div&gt;
-    &lt;div&gt;
-        &lt;button type="submit" name="logon" value="Logon"&gt;登录&lt;/button&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-
-<p></form>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>login.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;LoginForm&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_check&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div style=&quot;display: block;&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>h1<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>span class=&quot;ui-icon add&quot;<span class="ni">&amp;gt;&amp;lt;</span>/span<span class="ni">&amp;gt;</span>用户登录
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/h1<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;content&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>div id=&quot;error&quot; style=&quot;display: none; color: #c9302c&quot; align=&quot;center&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>h3<span class="ni">&amp;gt;</span>认证失败，请重新登录<span class="ni">&amp;lt;</span>/h3<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>div id=&quot;logout&quot; style=&quot;display: none; color: #02547f&quot; align=&quot;center&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>h3<span class="ni">&amp;gt;</span>已成功登出<span class="ni">&amp;lt;</span>/h3<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>ul<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>li<span class="ni">&amp;gt;&amp;lt;</span>label<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>span<span class="ni">&amp;gt;</span>用户名<span class="ni">&amp;lt;</span>/span<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>input type=&quot;text&quot; name=&quot;j_username&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/label<span class="ni">&amp;gt;&amp;lt;</span>/li<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>li<span class="ni">&amp;gt;&amp;lt;</span>label<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>span<span class="ni">&amp;gt;</span>密码<span class="ni">&amp;lt;</span>/span<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>input type=&quot;password&quot; name=&quot;j_password&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/label<span class="ni">&amp;gt;&amp;lt;</span>/li<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/ul<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>button type=&quot;submit&quot; name=&quot;logon&quot; value=&quot;Logon&quot;<span class="ni">&amp;gt;</span>登录<span class="ni">&amp;lt;</span>/button<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>相关的js代码如下:
-{% codeblock lang:js %}
-function getParameterByName(name) {</p>
-
-<pre><code>name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-var regex = new RegExp("[\\?&amp;]" + name + "=([^&amp;#]*)"),
-    results = regex.exec(location.search);
-return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-</code></pre>
-
-<p>}</p>
-
-<p>if(getParameterByName(&ldquo;error&rdquo;)) {</p>
-
-<pre><code>$("#error").show();
-</code></pre>
-
-<p>}</p>
-
-<p>if(getParameterByName(&ldquo;logout&rdquo;)) {</p>
-
-<pre><code>$("#logout").show();
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">getParameterByName</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\[]/</span><span class="p">,</span> <span class="s2">&quot;\\[&quot;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\]]/</span><span class="p">,</span> <span class="s2">&quot;\\]&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">regex</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;[\\?&amp;amp;]&quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;=([^&amp;amp;#]*)&quot;</span><span class="p">),</span>
+</span><span class='line'>    <span class="nx">results</span> <span class="o">=</span> <span class="nx">regex</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">);</span>
+</span><span class='line'><span class="k">return</span> <span class="nx">results</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="s2">&quot;&quot;</span> <span class="o">:</span> <span class="nb">decodeURIComponent</span><span class="p">(</span><span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\+/g</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">));</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="k">if</span><span class="p">(</span><span class="nx">getParameterByName</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">error</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;))</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#error&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="k">if</span><span class="p">(</span><span class="nx">getParameterByName</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">logout</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;))</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#logout&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>如果需要的话，可以配置自己的logout页面，只需要一个Form就可以了，方法为<code>post</code>，action为<code>j_spring_security_logout</code>，只要提交了这个Form就可以成功登出了。</p>
 
-<p>{% codeblock logout.html lang:html %}
-<form action="j_spring_security_logout" method="post" id="logoutForm"></form>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>logout.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_logout&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">id=</span><span class="s">&quot;logoutForm&quot;</span><span class="nt">&gt;&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>更多Spring Security的信息请查阅: <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/">Spring Security Reference</a>。</p>
 ]]></content>
@@ -763,7 +1282,7 @@ return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " ")
     <link href="http://zhaozhiming.github.io/blog/2014/11/15/spring4-and-mybatis/"/>
     <updated>2014-11-15T21:09:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/11/15/spring4-and-mybatis</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-11/mybatis-spring.png %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-11/mybatis-spring.png"></p>
 
 <p><a href="http://spring.io/">Spring4</a>已经不支持Ibatis了，但Ibatis的升级版<a href="http://mybatis.github.io/mybatis-3/zh/index.html">Mybatis</a>封装了支持Spring4的组件<a href="http://mybatis.github.io/spring/zh/">mybatis-spring</a>，通过使用它们可以让你在Spring4中轻松地使用Mybatis。</p>
 
@@ -776,15 +1295,22 @@ return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " ")
 
 <p>要在工程中引入Mybatis的组件，需要现在gradle的构建文件中增加Mybatis的依赖包。</p>
 
-<p>{% codeblock build.gradle lang:groovy %}
-dependencies {</p>
-
-<pre><code>compile 'org.mybatis:mybatis:3.2.8'
-compile 'org.mybatis:mybatis-spring:1.2.2'
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;compile &#39;org.mybatis:mybatis:3.2.8&#39;</span>
+</span><span class='line'><span class="s">compile &#39;org.mybatis:mybatis-spring:1.2.2&#39;</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>在spring中配置Mybatis</h2>
 
@@ -795,23 +1321,42 @@ compile 'org.mybatis:mybatis-spring:1.2.2'
 </ul>
 
 
-<p>{% codeblock spring.xml lang:xml %}</p>
-
-<pre><code>&lt;bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource " destroy-method="close"&gt;
-    &lt;property name="driverClass" value="com.mysql.jdbc.Driver"/&gt;
-    &lt;property name="jdbcUrl" value="jdbc:mysql://192.168.36.10:3306/pebms"/&gt;
-    &lt;property name="user" value="root"/&gt;
-    &lt;property name="password" value="root"/&gt;
-    &lt;property name="acquireIncrement" value="1"/&gt;
-    &lt;property name="initialPoolSize" value="5"/&gt;
-    &lt;property name="maxPoolSize" value="20"/&gt;
-    &lt;property name="minPoolSize" value="5"/&gt;
-    &lt;property name="maxStatements" value="100"/&gt;
-    &lt;property name="testConnectionOnCheckout" value="true"/&gt;
-&lt;/bean&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource &quot; destroy-method=&quot;close&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://192.168.36.10:3306/pebms&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;user&quot; value=&quot;root&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;password&quot; value=&quot;root&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;acquireIncrement&quot; value=&quot;1&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;initialPoolSize&quot; value=&quot;5&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxPoolSize&quot; value=&quot;20&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;minPoolSize&quot; value=&quot;5&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxStatements&quot; value=&quot;100&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;testConnectionOnCheckout&quot; value=&quot;true&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>接着定义Mybatis的SessionFactory。
@@ -826,83 +1371,142 @@ compile 'org.mybatis:mybatis-spring:1.2.2'
 </ul>
 
 
-<p>{% codeblock spring.xml lang:xml %}</p>
-
-<pre><code>&lt;bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"&gt;
-    &lt;property name="dataSource" ref="dataSource" /&gt;
-    &lt;property name="transactionFactory"&gt;
-        &lt;bean class="org.apache.ibatis.transaction.managed.ManagedTransactionFactory" /&gt;
-    &lt;/property&gt;
-    &lt;property name="configLocation" value="classpath:sql-map-config.xml"/&gt;
-    &lt;property name="mapperLocations" value="classpath:sql-mapping/farmer.xml" /&gt;
-&lt;/bean&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>bean id=&quot;sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;transactionFactory&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>bean class=&quot;org.apache.ibatis.transaction.managed.ManagedTransactionFactory&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/property<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;configLocation&quot; value=&quot;classpath:sql-map-config.xml&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;mapperLocations&quot; value=&quot;classpath:sql-mapping/farmer.xml&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>sql-map-config.xml简单示例如下，设置了缓存，延迟加载，超时时间等属性，更多的配置可以参照<a href="http://mybatis.github.io/mybatis-3/zh/configuration.html#setting">这里</a>。</li>
 </ul>
 
 
-<p>{% codeblock sql-map-config.xml lang:xml %}
-&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
-&lt;!DOCTYPE configuration PUBLIC &ldquo;&ndash;//mybatis.org//DTD Config 3.0//EN&rdquo; &ldquo;<a href="http://mybatis.org/dtd/mybatis-3-config.dtd">http://mybatis.org/dtd/mybatis-3-config.dtd</a>&rdquo;>
-<configuration></p>
-
-<pre><code>&lt;settings&gt;
-    &lt;setting name="cacheEnabled" value="true" /&gt;
-    &lt;setting name="lazyLoadingEnabled" value="true" /&gt;
-    &lt;setting name="multipleResultSetsEnabled" value="true" /&gt;
-    &lt;setting name="useColumnLabel" value="true" /&gt;
-    &lt;setting name="defaultExecutorType" value="REUSE" /&gt;
-    &lt;setting name="defaultStatementTimeout" value="25000" /&gt;
-&lt;/settings&gt;
-</code></pre>
-
-<p></configuration>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>sql-map-config.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;ldquo;</span>1.0<span class="ni">&amp;rdquo;</span> encoding=<span class="ni">&amp;ldquo;</span>UTF-8<span class="ni">&amp;rdquo;</span>?&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE configuration PUBLIC <span class="ni">&amp;ldquo;&amp;ndash;</span>//mybatis.org//DTD Config 3.0//EN<span class="ni">&amp;rdquo;</span> <span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span><span class="nt">&gt;</span>http://mybatis.org/dtd/mybatis-3-config.dtd<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>&gt;
+</span><span class='line'><span class="nt">&lt;configuration&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>settings<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;cacheEnabled&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;multipleResultSetsEnabled&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;useColumnLabel&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;defaultExecutorType&quot; value=&quot;REUSE&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;defaultStatementTimeout&quot; value=&quot;25000&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/settings<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/configuration&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>sql的映射文件简单示例如下。</li>
 </ul>
 
 
-<p>{% codeblock farmer.xml lang:xml %}
-&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo; ?>
-&lt;!DOCTYPE mapper PUBLIC &ldquo;&ndash;//mybatis.org//DTD Mapper 3.0//EN&rdquo; &ldquo;<a href="http://mybatis.org/dtd/mybatis-3-mapper.dtd">http://mybatis.org/dtd/mybatis-3-mapper.dtd</a>&rdquo; >
-<mapper namespace="com.farmer.baton.repo.FarmerMapper"></p>
-
-<pre><code>&lt;insert id="add-new-farmer" parameterType="com.farmer.baton.model.Farmer"&gt;
-  insert into farmers(id, name, age) values (
-    #{id},
-    #{name},
-    #{age}
-  )
-&lt;/insert&gt;
-</code></pre>
-
-<p></mapper>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>farmer.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;ldquo;</span>1.0<span class="ni">&amp;rdquo;</span> encoding=<span class="ni">&amp;ldquo;</span>UTF-8<span class="ni">&amp;rdquo;</span> ?&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE mapper PUBLIC <span class="ni">&amp;ldquo;&amp;ndash;</span>//mybatis.org//DTD Mapper 3.0//EN<span class="ni">&amp;rdquo;</span> <span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span><span class="nt">&gt;</span>http://mybatis.org/dtd/mybatis-3-mapper.dtd<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span> &gt;
+</span><span class='line'><span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">&quot;com.farmer.baton.repo.FarmerMapper&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>insert id=&quot;add-new-farmer&quot; parameterType=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  insert into farmers(id, name, age) values (
+</span><span class='line'>    #{id},
+</span><span class='line'>    #{name},
+</span><span class='line'>    #{age}
+</span><span class='line'>  )
+</span><span class='line'><span class="ni">&amp;lt;</span>/insert<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/mapper&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>继续在spring.xml文件里进行Mybatis的配置，定义Mybatis的DAO(数据库访问对象)和事务控制，这里配置了DAO的包路径。</li>
 </ul>
 
 
-<p>{% codeblock spring.xml lang:xml %}</p>
-
-<pre><code>&lt;bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"&gt;
-    &lt;property name="basePackage" value="com.farmer.baton.repo" /&gt;
-    &lt;property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /&gt;
-&lt;/bean&gt;
-
-&lt;bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"&gt;
-    &lt;property name="dataSource" ref="dataSource" /&gt;
-&lt;/bean&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;basePackage&quot; value=&quot;com.farmer.baton.repo&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;sqlSessionFactory&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Mybatis responsitory编写</h2>
 
@@ -913,48 +1517,82 @@ compile 'org.mybatis:mybatis-spring:1.2.2'
 </ul>
 
 
-<p>{% codeblock FarmerRepository.java lang:java %}
-package com.farmer.baton.repo;</p>
-
-<p>import com.farmer.baton.model.Farmer;</p>
-
-<p>import java.util.List;</p>
-
-<p>public interface FarmerRepository {</p>
-
-<pre><code>List&lt;Farmer&gt; findAll();
-</code></pre>
-
-<p>}</p>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">farmer</span><span class="o">.</span><span class="na">baton</span><span class="o">.</span><span class="na">repo</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">com.farmer.baton.model.Farmer</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">FarmerRepository</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmer</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">findAll</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>在xml映射文件里面实现findAll方法，这里要注意方法的签名必须和映射文件的sql的id一致，包括方法名和id一致，方法参数类型和sql的parameterType一致，方法返回类型和sql的resultType或resultMap类型一致。</li>
 </ul>
 
 
-<p>{% codeblock farmer.xml lang:xml %}
-&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo; ?>
-&lt;!DOCTYPE mapper PUBLIC &ldquo;&ndash;//mybatis.org//DTD Mapper 3.0//EN&rdquo; &ldquo;<a href="http://mybatis.org/dtd/mybatis-3-mapper.dtd">http://mybatis.org/dtd/mybatis-3-mapper.dtd</a>&rdquo; >
-<mapper namespace="com.farmer.baton.repo.FarmerRepository"></p>
-
-<pre><code>&lt;resultMap id="baseResultMap" type="com.farmer.baton.model.Farmer"&gt;
-    &lt;id column="id" property="id"/&gt;
-    &lt;result column="name" property="name"/&gt;
-    &lt;result column="age" property="age"/&gt;
-&lt;/resultMap&gt;
-
-&lt;select id="findAll" resultMap="baseResultMap"&gt;
-    select id as id,
-    name as name,
-    age as age
-    from farmers
-&lt;/select&gt;
-</code></pre>
-
-<p></mapper>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>farmer.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;ldquo;</span>1.0<span class="ni">&amp;rdquo;</span> encoding=<span class="ni">&amp;ldquo;</span>UTF-8<span class="ni">&amp;rdquo;</span> ?&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE mapper PUBLIC <span class="ni">&amp;ldquo;&amp;ndash;</span>//mybatis.org//DTD Mapper 3.0//EN<span class="ni">&amp;rdquo;</span> <span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span><span class="nt">&gt;</span>http://mybatis.org/dtd/mybatis-3-mapper.dtd<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span> &gt;
+</span><span class='line'><span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">&quot;com.farmer.baton.repo.FarmerRepository&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>resultMap id=&quot;baseResultMap&quot; type=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>id column=&quot;id&quot; property=&quot;id&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;name&quot; property=&quot;name&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;age&quot; property=&quot;age&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/resultMap<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>select id=&quot;findAll&quot; resultMap=&quot;baseResultMap&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    select id as id,
+</span><span class='line'>    name as name,
+</span><span class='line'>    age as age
+</span><span class='line'>    from farmers
+</span><span class='line'><span class="ni">&amp;lt;</span>/select<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/mapper&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>写好Repository和映射SQL就可以了，程序在调用Repository方法的时候就会自动执行到相关的SQL。</li>
@@ -968,38 +1606,62 @@ package com.farmer.baton.repo;</p>
 </ul>
 
 
-<p>{% codeblock spring.xml lang:xml %}
-&lt;beans xmlns:tx=&ldquo;<a href="http://www.springframework.org/schema/tx">http://www.springframework.org/schema/tx</a>&rdquo;</p>
-
-<pre><code>    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"&gt;
-...
-&lt;tx:annotation-driven/&gt;
-...
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>beans xmlns:tx=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/tx&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/tx<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>...
+</span><span class='line'><span class="ni">&amp;lt;</span>tx:annotation-driven/<span class="ni">&amp;gt;</span>
+</span><span class='line'>...
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>然后在调用Repository的方面前面加上Transactional标签，如下所示:</li>
 </ul>
 
 
-<p>{% codeblock FarmerService.java lang:java %}
-@Service
-public class FarmerService {</p>
-
-<pre><code>@Autowired
-private FarmerRepository farmerRepository;
-
-@Transactional
-public void updateTwoFarmers(Farmer farmer1, Farmer farmer2) {
-    farmerRepository.updateZhangsan(farmer1);
-    farmerRepository.updateWangwu(farmer2);
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerService.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Service</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FarmerService</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Autowired</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">FarmerRepository</span> <span class="n">farmerRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Transactional</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">updateTwoFarmers</span><span class="o">(</span><span class="n">Farmer</span> <span class="n">farmer1</span><span class="o">,</span> <span class="n">Farmer</span> <span class="n">farmer2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">farmerRepository</span><span class="o">.</span><span class="na">updateZhangsan</span><span class="o">(</span><span class="n">farmer1</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">farmerRepository</span><span class="o">.</span><span class="na">updateWangwu</span><span class="o">(</span><span class="n">farmer2</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Mybatis语法</h2>
 
@@ -1010,103 +1672,195 @@ public void updateTwoFarmers(Farmer farmer1, Farmer farmer2) {
 </ul>
 
 
-<p>{% codeblock lang:xml %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>insert id=&quot;add-new-farmer&quot; parameterType=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  insert into farmers(id, name, age) values
+</span><span class='line'>  <span class="ni">&amp;lt;</span>foreach collection=&quot;farmers&quot; item=&quot;farmer&quot; separator=&quot;,&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  (
+</span><span class='line'>    #{id},
+</span><span class='line'>    #{name},
+</span><span class='line'>    #{age}
+</span><span class='line'>  )
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/foreach<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/insert<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<pre><code>&lt;insert id="add-new-farmer" parameterType="com.farmer.baton.model.Farmer"&gt;
-  insert into farmers(id, name, age) values 
-  &lt;foreach collection="farmers" item="farmer" separator=","&gt;    
-  (
-    #{id},
-    #{name},
-    #{age}
-  )
-  &lt;/foreach&gt;
-&lt;/insert&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock FarmerRepository lang:java %}</p>
-
-<pre><code>void addFarmers(@Param("farmers") List&lt;Farmer&gt; farmers);
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerRepository </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kt">void</span> <span class="n">addFarmers</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;farmers&quot;</span><span class="o">)</span> <span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmer</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">farmers</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>多参数SQL映射</li>
 </ul>
 
 
-<p>{% codeblock lang:xml %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>resultMap id=&quot;farmer&quot; type=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>id column=&quot;id&quot; property=&quot;id&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;name&quot; property=&quot;name&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;age&quot; property=&quot;age&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/resultMap<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>select id=&quot;selectFarmersByNameAndAge&quot; parameterType=&quot;map&quot; resultMap=&quot;farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  select id as id,
+</span><span class='line'>    name as name,
+</span><span class='line'>    age as age
+</span><span class='line'>    from farmers
+</span><span class='line'>    where name = #{name}
+</span><span class='line'>    and age = #{age}
+</span><span class='line'><span class="ni">&amp;lt;</span>/select<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<pre><code>&lt;resultMap id="farmer" type="com.farmer.baton.model.Farmer"&gt;
-    &lt;id column="id" property="id"/&gt;
-    &lt;result column="name" property="name"/&gt;
-    &lt;result column="age" property="age"/&gt;
-&lt;/resultMap&gt;
-
-&lt;select id="selectFarmersByNameAndAge" parameterType="map" resultMap="farmer"&gt;
-  select id as id,
-    name as name,
-    age as age
-    from farmers
-    where name = #{name}
-    and age = #{age}
-&lt;/select&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock FarmerRepository.java lang:java %}</p>
-
-<pre><code>List&lt;Farmer&gt; selectFarmersByNameAndAge(@Param("name") String name, @Param("age") int age);
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmer</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">selectFarmersByNameAndAge</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;age&quot;</span><span class="o">)</span> <span class="kt">int</span> <span class="n">age</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>返回对象属性包含List</li>
 </ul>
 
 
-<p>{% codeblock lang:xml %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>resultMap id=&quot;farmer&quot; type=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>id column=&quot;id&quot; property=&quot;id&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;name&quot; property=&quot;name&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;age&quot; property=&quot;age&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>collection property=&quot;farmland&quot; ofType=&quot;com.farmer.baton.model.Farmland&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>result column=&quot;size&quot; property=&quot;size&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/collection<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/resultMap<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>select id=&quot;selectFarmersAndFarmlands&quot; resultMap=&quot;farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  select id as id,
+</span><span class='line'>    name as name,
+</span><span class='line'>    age as age
+</span><span class='line'>    from farmers a
+</span><span class='line'>    left outer join farmerlands b on a.id = b.farmer_id
+</span><span class='line'><span class="ni">&amp;lt;</span>/select<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<pre><code>&lt;resultMap id="farmer" type="com.farmer.baton.model.Farmer"&gt;
-    &lt;id column="id" property="id"/&gt;
-    &lt;result column="name" property="name"/&gt;
-    &lt;result column="age" property="age"/&gt;
-    &lt;collection property="farmland" ofType="com.farmer.baton.model.Farmland"&gt;
-        &lt;result column="size" property="size"/&gt;
-    &lt;/collection&gt;
-&lt;/resultMap&gt;
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmer</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">selectFarmersAndFarmlands</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-&lt;select id="selectFarmersAndFarmlands" resultMap="farmer"&gt;
-  select id as id,
-    name as name,
-    age as age
-    from farmers a 
-    left outer join farmerlands b on a.id = b.farmer_id
-&lt;/select&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock FarmerRepository.java lang:java %}</p>
-
-<pre><code>List&lt;Farmer&gt; selectFarmersAndFarmlands();
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock Farmer.java lang:java %}</p>
-
-<pre><code>private String name;
-private int age;
-private List&lt;Farmland&gt; farmlands;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Farmer.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmland</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">farmlands</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>具体的Demo可以参考我的github工程<a href="https://github.com/zhaozhiming/spring4-mybatis">spring4-mybatis</a>。</p>
 ]]></content>
@@ -1134,86 +1888,143 @@ private List&lt;Farmland&gt; farmlands;
 
 <p>Robot安装十分简单，但首先要安装Python环境（Python安装这里不介绍了，请自行google了解），然后执行以下语句进行安装。</p>
 
-<p>{% codeblock lang:sh %}
-sudo pip install robotframework
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>安装完成后验证是否安装成功。</p>
 
-<p>{% codeblock lang:sh %}
-pybot &mdash;version
-Robot Framework 2.8.5 (Python 2.7.3 on linux2)
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot &amp;mdash;version
+</span><span class='line'>Robot Framework 2.8.5 <span class="o">(</span>Python 2.7.3 on linux2<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>如果需要安装其他Lib包，同样是通过pip进行安装，下面以安装Selenium2Library为例。</p>
 
-<p>{% codeblock lang:sh %}
-sudo pip install robotframework_Selenium2Library
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pip install robotframework_Selenium2Library
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h4>Robot脚本</h4>
 
 <p>Robot安装完成后，就可以开始编写测试脚本了，下面是测试脚本和Resource文件的例子:</p>
 
-<p>{% codeblock lang:robotframework create_recipient.robot%}
-<strong><em> Settings </em></strong>
-Library    Selenium2Library
-Library    DatabaseLibrary
-Resource   resource.robot
-Test Setup      Open Browser  ${baseurl}/#/recipients  ${browser}
-Test Teardown   Close Browser</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>create_recipient.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Settings &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">Selenium2Library</span><span class="p"></span>
+</span><span class='line'><span class="c">Library</span><span class="p">    </span><span class="c">DatabaseLibrary</span><span class="p"></span>
+</span><span class='line'><span class="c">Resource</span><span class="p">   </span><span class="c">resource.robot</span><span class="p"></span>
+</span><span class='line'><span class="c">Test Setup</span><span class="p">      </span><span class="c">Open Browser</span><span class="p">  </span><span class="c">${baseurl}/#/recipients</span><span class="p">  </span><span class="c">${browser}</span><span class="p"></span>
+</span><span class='line'><span class="c">Test Teardown</span><span class="p">   </span><span class="c">Close Browser&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; TestCases &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">create new recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
+</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户成功</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;create exist recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Given execute sql</span><span class="p">  </span><span class="c">delete from recipients where email=&#39;zhaozhiming003@gmail.com&#39;</span><span class="p"></span>
+</span><span class='line'><span class="c">Given execute sql</span><span class="p">  </span><span class="c">insert into recipients(username,email) values(&#39;zhaozhiming&#39;,&#39;zhaozhiming003@gmail.com&#39;)</span><span class="p"></span>
+</span><span class='line'><span class="c">When create recipient</span><span class="p"></span>
+</span><span class='line'><span class="c">Then verify create recipient</span><span class="p">  </span><span class="c">添加用户失败</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;&lt;strong&gt;&lt;em&gt; Keywords &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">execute sql&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${sql}</span><span class="p"></span>
+</span><span class='line'><span class="c">Connect To Database Using Custom Params</span><span class="p">      </span><span class="c">cymysql</span><span class="p">    </span><span class="c">db=&#39;${dbname}&#39;,user=&#39;${dbuser}&#39;,passwd=&#39;${dbpassword}&#39;, host=&#39;${dbhost}&#39;,port=${dbport}</span><span class="p"></span>
+</span><span class='line'><span class="c">Execute Sql String</span><span class="p">    </span><span class="c">${sql}</span><span class="p"></span>
+</span><span class='line'><span class="c">Disconnect from database</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;create recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;Input text</span><span class="p">    </span><span class="c">username</span><span class="p">    </span><span class="c">zhaozhiming</span><span class="p"></span>
+</span><span class='line'><span class="c">Input text</span><span class="p">    </span><span class="c">email</span><span class="p">    </span><span class="c">zhaozhiming003@gmail.com</span><span class="p"></span>
+</span><span class='line'><span class="c">click element</span><span class="p">  </span><span class="c">css=.submit</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;verify create recipient&lt;/p&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;pre&gt;&lt;code&gt;[Arguments]</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
+</span><span class='line'><span class="c">sleep</span><span class="p">   </span><span class="c">2s</span><span class="p"></span>
+</span><span class='line'><span class="c">page should contain</span><span class="p">  </span><span class="c">${expectContent}</span><span class="p"></span>
+</span><span class='line'><span class="c">&lt;/code&gt;&lt;/pre&gt;</span><span class="p"></span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;p&gt;</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p><strong><em> TestCases </em></strong>
-create new recipient</p>
-
-<pre><code>Given execute sql  delete from recipients where email='zhaozhiming003@gmail.com'
-When create recipient
-Then verify create recipient  添加用户成功
-</code></pre>
-
-<p>create exist recipient</p>
-
-<pre><code>Given execute sql  delete from recipients where email='zhaozhiming003@gmail.com'
-Given execute sql  insert into recipients(username,email) values('zhaozhiming','zhaozhiming003@gmail.com')
-When create recipient
-Then verify create recipient  添加用户失败
-</code></pre>
-
-<p><strong><em> Keywords </em></strong>
-execute sql</p>
-
-<pre><code>[Arguments]  ${sql}
-Connect To Database Using Custom Params      cymysql    db='${dbname}',user='${dbuser}',passwd='${dbpassword}', host='${dbhost}',port=${dbport}
-Execute Sql String    ${sql}
-Disconnect from database
-</code></pre>
-
-<p>create recipient</p>
-
-<pre><code>Input text    username    zhaozhiming
-Input text    email    zhaozhiming003@gmail.com
-click element  css=.submit
-</code></pre>
-
-<p>verify create recipient</p>
-
-<pre><code>[Arguments]  ${expectContent}
-sleep   2s
-page should contain  ${expectContent}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock lang:robotframework resource.robot%}
-<strong><em> Variables </em></strong>
-${baseurl}  <a href="http://localhost:9898/oddemail">http://localhost:9898/oddemail</a>
-${dbhost}  localhost
-${dbport}  3306
-${dbname}  oms
-${dbuser}  root
-${dbpassword}  root
-${browser}  chrome
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>resource.robot</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='robotframework'><span class='line'><span class="c">&lt;strong&gt;&lt;em&gt; Variables &lt;/em&gt;&lt;/strong&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">${baseurl}</span><span class="p">  </span><span class="c">&lt;a href=&quot;http://localhost:9898/oddemail&quot;&gt;http://localhost:9898/oddemail&lt;/a&gt;</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbhost}</span><span class="p">  </span><span class="c">localhost</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbport}</span><span class="p">  </span><span class="c">3306</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbname}</span><span class="p">  </span><span class="c">oms</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbuser}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
+</span><span class='line'><span class="c">${dbpassword}</span><span class="p">  </span><span class="c">root</span><span class="p"></span>
+</span><span class='line'><span class="c">${browser}</span><span class="p">  </span><span class="c">chrome</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li><p>Settings下面是测试脚本需要引用的Lib包名，Resource文件，Setup和Teardown方法。</p>
@@ -1241,41 +2052,54 @@ ${browser}  chrome
 
 <p>因为这个测试案例是对web页面进行测试，所以在执行测试案例之前需要先将应用服务启起来，服务启起来后，执行下面的 语句:</p>
 
-<p>{% codeblock lang:sh%}
-pybot /your/robot/scripts/path/create_recipient.robot
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pybot /your/robot/scripts/path/create_recipient.robot
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>执行完后会看到系统自动打开浏览器，输入url，自动填写输入框，并验证是否正确，最后会产生几个报告文件，如果测试案例失败，还会自动将失败的页面截图存成文件。</p>
 
-<p>{% codeblock lang:sh%}
-Output:  /home/kingzzm/projects/odde-mail-server/output.xml
-Log:     /home/kingzzm/projects/odde-mail-server/log.html
-Report:  /home/kingzzm/projects/odde-mail-server/report.html
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Output:  /home/kingzzm/projects/odde-mail-server/output.xml
+</span><span class='line'>Log:     /home/kingzzm/projects/odde-mail-server/log.html
+</span><span class='line'>Report:  /home/kingzzm/projects/odde-mail-server/report.html
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>另外建议脚本存放到test目录下，建议目录结构如下:</p>
 
-<p>{% img /images/post/2014-6/robot_script_local.png %}</p>
+<p><img src="/images/post/2014-6/robot_script_local.png"></p>
 
 <h4>与Gradle集成</h4>
 
 <p>每次跑robot测试都需要手动启一个web服务比较麻烦，可以考虑在Gradle中通过任务的方式来执行robot测试，在跑测试之前先通过gradle启一个本地应用，然后开始跑robot测试，跑完测试后通过Gradle停掉本地服务。<br/>
 因为Gradle自带jetty容器，所以这一步实现起来也比较简单:</p>
 
-<p>{% codeblock lang:groovy %}
-[jettyRun, jettyStop]<em>.stopPort = 7654
-[jettyRun, jettyStop]</em>.stopKey = &lsquo;oddemail&rsquo;</p>
-
-<p>task uat(type:Exec, dependsOn: jettyRun) {</p>
-
-<pre><code>commandLine '/usr/local/bin/pybot', 'src/test/uat/testcase'
-doLast {
-    jettyStop.execute()
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="n">em</span><span class="o">&gt;.</span><span class="na">stopPort</span> <span class="o">=</span> <span class="mi">7654</span>
+</span><span class='line'><span class="o">[</span><span class="n">jettyRun</span><span class="o">,</span> <span class="n">jettyStop</span><span class="o">]&lt;</span><span class="s">/em&gt;.stopKey = &amp;lsquo;oddemail&amp;rsquo;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">task</span> <span class="n">uat</span><span class="o">(</span><span class="nl">type:</span><span class="n">Exec</span><span class="o">,</span> <span class="nl">dependsOn:</span> <span class="n">jettyRun</span><span class="o">)</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;commandLine &#39;/</span><span class="n">usr</span><span class="s">/local/</span><span class="n">bin</span><span class="s">/pybot&#39;, &#39;src/</span><span class="n">test</span><span class="s">/uat/</span><span class="n">testcase</span><span class="err">&#39;</span>
+</span><span class='line'><span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">jettyStop</span><span class="o">.</span><span class="na">execute</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="s">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>以后需要跑uat测试就执行<code>gradle uat</code>这个命令就可以了，这样还可以结合jenkins进行uat自动化测试。</p>
 ]]></content>

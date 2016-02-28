@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: picasso | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/picasso/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-12-20T21:02:37+08:00</updated>
+  <updated>2016-02-28T20:50:23+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/10/07/make-your-android-dev-life-easy-part-3/"/>
     <updated>2014-10-07T23:48:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/10/07/make-your-android-dev-life-easy-part-3</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-10/picasso.png %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-10/picasso.png"></p>
 
 <p><a href="http://square.github.io/picasso/">Picasso</a>是Android下一个强大的图片下载和缓存类库，代码借口简洁易懂，功能强大，Picasso有如下特性：</p>
 
@@ -47,31 +47,56 @@
 </ul>
 
 
-<p>{% codeblock DownloadTask.java lang:java %}</p>
-
-<p>import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ImageView;
-import com.github.zzm.bushu.app.model.LogTag;</p>
-
-<p>import java.io.*;
-import java.net.URL;</p>
-
-<p>public class DownloadTask extends AsyncTask&lt;String, Void, String> {</p>
-
-<pre><code>private File imageFile;
-private ImageView imageView;
-
-public DownloadTask(File imageFile, ImageView imageView) {
-    this.imageFile = imageFile;
-    this.imageView = imageView;
-}
-...
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>DownloadTask.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">android.graphics.BitmapFactory</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.os.AsyncTask</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.util.Log</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.ImageView</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.github.zzm.bushu.app.model.LogTag</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DownloadTask</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">,</span> <span class="n">Void</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="n">File</span> <span class="n">imageFile</span><span class="o">;</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">ImageView</span> <span class="n">imageView</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="nf">DownloadTask</span><span class="o">(</span><span class="n">File</span> <span class="n">imageFile</span><span class="o">,</span> <span class="n">ImageView</span> <span class="n">imageView</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">imageFile</span> <span class="o">=</span> <span class="n">imageFile</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">imageView</span> <span class="o">=</span> <span class="n">imageView</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>实现<code>doInBackground</code>方法。</li>
@@ -84,56 +109,102 @@ public DownloadTask(File imageFile, ImageView imageView) {
 
 <p>下面的代码中通过<code>new URL(url).openStream()</code>进行图片下载，然后新建一个文件输出流，将图片写到输出文件中。</p>
 
-<p>{% codeblock DownloadTask.java lang:java %}</p>
-
-<pre><code>@Override
-protected String doInBackground(String... urls) {
-    storageImage(urls[0]);
-    return null;
-}
-
-private void storageImage(String url) {
-    FileOutputStream outputStream;
-    try {
-        outputStream = new FileOutputStream(imageFile);
-        outputStream.write(getImageBytes(url));
-        outputStream.close();
-    } catch (Exception e) {
-        Log.e(LogTag.DownloadTask.name(), "storage image error:" + e.getMessage());
-    }
-}
-
-private byte[] getImageBytes(String url) throws IOException {
-    InputStream in = new BufferedInputStream(new URL(url).openStream());
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    byte[] buf = new byte[1024];
-    int n;
-    while (-1 != (n = in.read(buf))) {
-        out.write(buf, 0, n);
-    }
-    out.close();
-    in.close();
-    return out.toByteArray();
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>DownloadTask.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">protected</span> <span class="n">String</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">urls</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">storageImage</span><span class="o">(</span><span class="n">urls</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">storageImage</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">FileOutputStream</span> <span class="n">outputStream</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">outputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">imageFile</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">outputStream</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">getImageBytes</span><span class="o">(</span><span class="n">url</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">outputStream</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">LogTag</span><span class="o">.</span><span class="na">DownloadTask</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="s">&quot;storage image error:&quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">getImageBytes</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">InputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">openStream</span><span class="o">());</span>
+</span><span class='line'>    <span class="n">ByteArrayOutputStream</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">();</span>
+</span><span class='line'>    <span class="kt">byte</span><span class="o">[]</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1024</span><span class="o">];</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">n</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">while</span> <span class="o">(-</span><span class="mi">1</span> <span class="o">!=</span> <span class="o">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">buf</span><span class="o">)))</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">out</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">out</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>实现<code>onPostExecute</code>方法，这个方法是在图片下载完成后调用的，我们可以将下载的图片指定显示到某个imageView中。</li>
 </ul>
 
 
-<p>{% codeblock DownloadTask.java lang:java %}</p>
-
-<pre><code>@Override
-protected void onPostExecute(String ignore) {
-    imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()));
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>DownloadTask.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">String</span> <span class="n">ignore</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">imageView</span><span class="o">.</span><span class="na">setImageBitmap</span><span class="o">(</span><span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeFile</span><span class="o">(</span><span class="n">imageFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">()));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h4>图片缓存</h4>
 
@@ -144,75 +215,129 @@ protected void onPostExecute(String ignore) {
 </ul>
 
 
-<p>{% codeblock MyAdapter.java lang:java %}</p>
-
-<pre><code>File imageFile = getImageFile(bookName);
-
-private File getImageFile(String bookName) {
-    File imageFile = new File(context.getFilesDir(), bookName + ".png");
-    Log.d(LogTag.BooksAdapter.name(), "file path: " + imageFile.getAbsolutePath());
-    return imageFile;
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">File</span> <span class="n">imageFile</span> <span class="o">=</span> <span class="n">getImageFile</span><span class="o">(</span><span class="n">bookName</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">private</span> <span class="n">File</span> <span class="nf">getImageFile</span><span class="o">(</span><span class="n">String</span> <span class="n">bookName</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">File</span> <span class="n">imageFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">getFilesDir</span><span class="o">(),</span> <span class="n">bookName</span> <span class="o">+</span> <span class="s">&quot;.png&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">LogTag</span><span class="o">.</span><span class="na">BooksAdapter</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="s">&quot;file path: &quot;</span> <span class="o">+</span> <span class="n">imageFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">());</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">imageFile</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>判断文件是否存在，如果不存在则进行首次下载，如果已经存在了则直接从磁盘上面加载文件。</li>
 </ul>
 
 
-<p>{% codeblock MyAdapter.java lang:java %}</p>
-
-<pre><code>if (imageFileEmpty(imageFile)) {
-        downloadImage(bookName, imageView);
-    } else {
-        imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()));
-    }
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="o">(</span><span class="n">imageFileEmpty</span><span class="o">(</span><span class="n">imageFile</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">downloadImage</span><span class="o">(</span><span class="n">bookName</span><span class="o">,</span> <span class="n">imageView</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">imageView</span><span class="o">.</span><span class="na">setImageBitmap</span><span class="o">(</span><span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeFile</span><span class="o">(</span><span class="n">imageFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">()));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>判断是否有网络，有的话进行图片下载，调用刚才介绍的<code>DownloadTask</code>类，然后调用<code>execute</code>的方法即可，这样后台就会异步帮你将图片下载下来，然后进行显示。</li>
 </ul>
 
 
-<p>{% codeblock MyAdapter.java lang:java %}</p>
-
-<pre><code>private void downloadImage(String bookName, ImageView imageView) {
-    if (networkOk()) {
-        String url = format("%s%s/%s.png", STORAGE_BASE_URL, getScreenDensity(), bookName);
-        Log.d(LogTag.BooksAdapter.name(), format("url: %s", url));
-        new DownloadTask(getImageFile(bookName), imageView).execute(url);
-    }
-}
-
-private boolean networkOk() {
-    ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-    return (networkInfo != null &amp;&amp; networkInfo.isConnected());
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="kt">void</span> <span class="n">downloadImage</span><span class="o">(</span><span class="n">String</span> <span class="n">bookName</span><span class="o">,</span> <span class="n">ImageView</span> <span class="n">imageView</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">networkOk</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">url</span> <span class="o">=</span> <span class="n">format</span><span class="o">(</span><span class="s">&quot;%s%s/%s.png&quot;</span><span class="o">,</span> <span class="n">STORAGE_BASE_URL</span><span class="o">,</span> <span class="n">getScreenDensity</span><span class="o">(),</span> <span class="n">bookName</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">LogTag</span><span class="o">.</span><span class="na">BooksAdapter</span><span class="o">.</span><span class="na">name</span><span class="o">(),</span> <span class="n">format</span><span class="o">(</span><span class="s">&quot;url: %s&quot;</span><span class="o">,</span> <span class="n">url</span><span class="o">));</span>
+</span><span class='line'>        <span class="k">new</span> <span class="nf">DownloadTask</span><span class="o">(</span><span class="n">getImageFile</span><span class="o">(</span><span class="n">bookName</span><span class="o">),</span> <span class="n">imageView</span><span class="o">).</span><span class="na">execute</span><span class="o">(</span><span class="n">url</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">networkOk</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ConnectivityManager</span> <span class="n">connMgr</span> <span class="o">=</span> <span class="o">(</span><span class="n">ConnectivityManager</span><span class="o">)</span> <span class="n">context</span><span class="o">.</span><span class="na">getSystemService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">CONNECTIVITY_SERVICE</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">NetworkInfo</span> <span class="n">networkInfo</span> <span class="o">=</span> <span class="n">connMgr</span><span class="o">.</span><span class="na">getActiveNetworkInfo</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">(</span><span class="n">networkInfo</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="n">networkInfo</span><span class="o">.</span><span class="na">isConnected</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Picasso的图片下载功能</h2>
 
 <p>看完Android的图片下载功能，发现我们写了不少代码，现在来看看Picasso是怎么实现的。</p>
 
-<p>{% codeblock MyAdapter.java lang:java %}</p>
-
-<pre><code>Picasso.with(getContext()).load(url).into((ImageView) viewImage);
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyAdapter.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Picasso</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">getContext</span><span class="o">()).</span><span class="na">load</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">into</span><span class="o">((</span><span class="n">ImageView</span><span class="o">)</span> <span class="n">viewImage</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>一句话就搞定了，就是这么简单，是不是觉得生活美好了很多。</p>
 
 <p>Picasso会在应用的cache目录下新建一个<code>picasso-cache</code>文件夹，里面就是picasso的图片缓存文件。</p>
 
-<p>{% img /images/post/2014-10/picasso-cache.png %}</p>
+<p><img src="/images/post/2014-10/picasso-cache.png"></p>
 
 <h2>相关链接</h2>
 

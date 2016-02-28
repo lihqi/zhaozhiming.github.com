@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: idea | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/idea/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2015-12-20T21:02:37+08:00</updated>
+  <updated>2016-02-28T20:50:23+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,11 +18,9 @@
     <link href="http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1/"/>
     <updated>2014-08-31T10:59:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/08/31/make-your-android-dev-life-easy-part-1</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-8/intellijidea_android.gif %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-8/intellijidea_android.gif"></p>
 
-<p>{% blockquote 孔子 ——《春秋》 %}
-工欲善其事，必先利其器
-{% endblockquote %}</p>
+<p><blockquote><p>工欲善其事，必先利其器</p><footer><strong>孔子 ——《春秋》</strong></footer></blockquote></p>
 
 <p>介绍一下安卓开发的一些好用工具，可以让你的开发事半功倍。如果你是一个安卓新手，那么准备一套高效率的开发工具，会让你从一开始就养成使用好工具的习惯，从开始就比别人更快；如果你是一名安卓开发高手，也可以看看这些工具，说不定你已经在使用其中的一些工具了。</p>
 
@@ -44,7 +42,7 @@
 </ul>
 
 
-<p>{% img /images/post/2014-8/idea-android-project-1.png %}</p>
+<p><img src="/images/post/2014-8/idea-android-project-1.png"></p>
 
 <ul>
 <li>进入项目信息配置页面，可以看到有如下的选项，填写后点击Next；
@@ -62,170 +60,291 @@
 </ul>
 
 
-<p>{% img /images/post/2014-8/idea-android-project-2.png %}</p>
+<p><img src="/images/post/2014-8/idea-android-project-2.png"></p>
 
 <ul>
 <li>选择main_activity的样式，有9种可以选择，样式的效果在右边可以预览，我们可以选择最简单的<code>Blank Activity</code>，选择好了Next；</li>
 </ul>
 
 
-<p>{% img /images/post/2014-8/idea-android-project-3.png %}</p>
+<p><img src="/images/post/2014-8/idea-android-project-3.png"></p>
 
 <ul>
 <li>填写Activity名字和对应的展示层layout名字，填完Next；</li>
 </ul>
 
 
-<p>{% img /images/post/2014-8/idea-android-project-4.png %}</p>
+<p><img src="/images/post/2014-8/idea-android-project-4.png"></p>
 
 <ul>
 <li>填写工程名和选择工程文件路径，注意最下面的<code>Project format</code>，有2种格式，一种是<code>.idea</code>文件夹，一个是ipr文件，选择ipr文件的方式可以减少很多文件的生成，最后Finish；</li>
 </ul>
 
 
-<p>{% img /images/post/2014-8/idea-android-project-5.png %}</p>
+<p><img src="/images/post/2014-8/idea-android-project-5.png"></p>
 
 <p>生成的代码如下:</p>
 
-<p>{% codeblock MainActivity.java lang:java %}
-public class MainActivity extends ActionBarActivity {</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MainActivity.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">ActionBarActivity</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onCreateOptionsMenu</span><span class="o">(</span><span class="n">Menu</span> <span class="n">menu</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// Inflate the menu; this adds items to the action bar if it is present.</span>
+</span><span class='line'>    <span class="n">getMenuInflater</span><span class="o">().</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">menu</span><span class="o">.</span><span class="na">main</span><span class="o">,</span> <span class="n">menu</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onOptionsItemSelected</span><span class="o">(</span><span class="n">MenuItem</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// Handle action bar item clicks here. The action bar will</span>
+</span><span class='line'>    <span class="c1">// automatically handle clicks on the Home/Up button, so long</span>
+</span><span class='line'>    <span class="c1">// as you specify a parent activity in AndroidManifest.xml.</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemId</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">id</span> <span class="o">==</span> <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">action_settings</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">onOptionsItemSelected</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<pre><code>@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-}
-
-
-@Override
-public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.main, menu);
-    return true;
-}
-
-@Override
-public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
-    if (id == R.id.action_settings) {
-        return true;
-    }
-    return super.onOptionsItemSelected(item);
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
-
-<p>{% codeblock activity_main.xml lang:xml %}
-&lt;RelativeLayout xmlns:android=&ldquo;<a href="http://schemas.android.com/apk/res/android">http://schemas.android.com/apk/res/android</a>&rdquo;</p>
-
-<pre><code>xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:paddingLeft="@dimen/activity_horizontal_margin"
-android:paddingRight="@dimen/activity_horizontal_margin"
-android:paddingTop="@dimen/activity_vertical_margin"
-android:paddingBottom="@dimen/activity_vertical_margin"
-tools:context="com.github.zzm.myapplication1.app.MainActivity"&gt;
-
-&lt;TextView
-    android:text="@string/hello_world"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" /&gt;
-</code></pre>
-
-<p></RelativeLayout>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>activity_main.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>RelativeLayout xmlns:android=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span><span class="nt">&gt;</span>http://schemas.android.com/apk/res/android<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+</span><span class='line'>android:layout_width=&quot;match_parent&quot;
+</span><span class='line'>android:layout_height=&quot;match_parent&quot;
+</span><span class='line'>android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+</span><span class='line'>android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+</span><span class='line'>android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+</span><span class='line'>android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot;
+</span><span class='line'>tools:context=&quot;com.github.zzm.myapplication1.app.MainActivity&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>TextView
+</span><span class='line'>    android:text=&quot;@string/hello_world&quot;
+</span><span class='line'>    android:layout_width=&quot;wrap_content&quot;
+</span><span class='line'>    android:layout_height=&quot;wrap_content&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/RelativeLayout&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>运行的效果如下:</p>
 
-<p>{% img /images/post/2014-8/idea-android-project-6.png 250 350%}</p>
+<p><img src="/images/post/2014-8/idea-android-project-6.png" width="250" height="350"></p>
 
 <h3>Gradle脚本</h3>
 
 <p>可以看到工程目录下有2个build.gradle脚本，一个是根目录的构建文件(如下)，如果想提高构建速度，可以将脚本中的mavenCentral()改为<code>maven {url "http://maven.oschina.net/content/groups/public/"}</code>，就是将maven的国外镜像库改成国内的库。</p>
 
-<p>{% codeblock root/build.gradle lang:groovy %}
-// Top-level build file where you can add configuration options common to all sub-projects/modules.</p>
-
-<p>buildscript {</p>
-
-<pre><code>repositories {
-    mavenCentral()
-}
-dependencies {
-    classpath 'com.android.tools.build:gradle:0.9.+'
-}
-</code></pre>
-
-<p>}</p>
-
-<p>allprojects {</p>
-
-<pre><code>repositories {
-    mavenCentral()
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>root/build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// Top-level build file where you can add configuration options common to all sub-projects/modules.&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">buildscript</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;repositories {</span>
+</span><span class='line'><span class="s">    mavenCentral()</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">dependencies {</span>
+</span><span class='line'><span class="s">    classpath &#39;com.android.tools.build:gradle:0.9.+&#39;</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">allprojects</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;repositories {</span>
+</span><span class='line'><span class="s">    mavenCentral()</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>另外一个是app目录下的构建文件，可以看到指定了sdk的最小最大版本，需要的依赖包等。<br/>
-{% codeblock app/build.gradle lang:groovy %}
-buildscript {</p>
-
-<pre><code>repositories {
-    mavenCentral()
-}
-dependencies {
-    classpath 'com.android.tools.build:gradle:0.9.+'
-}
-</code></pre>
-
-<p>}
-apply plugin: &lsquo;android&rsquo;</p>
-
-<p>repositories {</p>
-
-<pre><code>mavenCentral()
-</code></pre>
-
-<p>}</p>
-
-<p>android {</p>
-
-<pre><code>compileSdkVersion 20
-buildToolsVersion "20.0.0"
-
-defaultConfig {
-    minSdkVersion 8
-    targetSdkVersion 20
-    versionCode 1
-    versionName "1.0"
-}
-buildTypes {
-    release {
-        runProguard false
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-    }
-}
-</code></pre>
-
-<p>}</p>
-
-<p>dependencies {</p>
-
-<pre><code>compile fileTree(dir: 'libs', include: ['*.jar'])
-compile 'com.android.support:appcompat-v7:20.0.0'
-</code></pre>
-
-<p>}</p>
-
-<p>{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>app/build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">buildscript</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;repositories {</span>
+</span><span class='line'><span class="s">    mavenCentral()</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">dependencies {</span>
+</span><span class='line'><span class="s">    classpath &#39;com.android.tools.build:gradle:0.9.+&#39;</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;}</span>
+</span><span class='line'><span class="s">apply plugin: &amp;lsquo;android&amp;rsquo;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">repositories</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;mavenCentral()</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">android</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;compileSdkVersion 20</span>
+</span><span class='line'><span class="s">buildToolsVersion &quot;20.0.0&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">defaultConfig {</span>
+</span><span class='line'><span class="s">    minSdkVersion 8</span>
+</span><span class='line'><span class="s">    targetSdkVersion 20</span>
+</span><span class='line'><span class="s">    versionCode 1</span>
+</span><span class='line'><span class="s">    versionName &quot;1.0&quot;</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">buildTypes {</span>
+</span><span class='line'><span class="s">    release {</span>
+</span><span class='line'><span class="s">        runProguard false</span>
+</span><span class='line'><span class="s">        proguardFiles getDefaultProguardFile(&#39;proguard-android.txt&#39;), &#39;proguard-rules.txt&#39;</span>
+</span><span class='line'><span class="s">    }</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">dependencies</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;compile fileTree(dir: &#39;libs&#39;, include: [&#39;*.jar&#39;])</span>
+</span><span class='line'><span class="s">compile &#39;com.android.support:appcompat-v7:20.0.0&#39;</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="s">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>相关链接</h2>
 
