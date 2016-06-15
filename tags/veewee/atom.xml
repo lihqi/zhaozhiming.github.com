@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: veewee | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/veewee/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-05-31T21:00:13+08:00</updated>
+  <updated>2016-06-15T11:12:36+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/11/29/use-veewee-to-create-vagrant-box/"/>
     <updated>2014-11-29T08:06:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/11/29/use-veewee-to-create-vagrant-box</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-11/iso_to_box.jpg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-11/iso_to_box.jpg"></p>
 
 <p>虽然<a href="https://www.vagrantup.com/">Vagrant</a>官网上已经有了很多OS的box，比如Ubuntu，CentOS，Debian等，但像RHEL这种不免费的OS，Vagrant上面就没有它的box，如果需要用到RHEL的box，我们就需要自己来制作。下面讲下从iso文件到box文件的一个制作过程。</p>
 
@@ -45,39 +45,46 @@
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ veewee vbox templates
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>veewee vbox templates
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>命令会列出veewee可以用的模板，如果我们要制作RHEL6.5的Box，可以找CentOS6.5的模板来制作。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ veewee vbox define rhel65-64bit &lsquo;CentOS-6.5-x86_64-netboot&rsquo;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>veewee vbox define rhel65-64bit &amp;lsquo;CentOS-6.5-x86_64-netboot&amp;rsquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>命令执行完后，会在当前目录下产生一个<code>definitions</code>的文件夹，这时我们需要修改下面的一些文件。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ vi definitions/rhel65-64bit/definition.rb
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vi definitions/rhel65-64bit/definition.rb
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p><code>definition.rb</code>是Veewee的创建脚本，我们将其中的<code>iso-file</code>的值修改为iso的文件名，比如<code>rhel-server-6.5-x86_64-dvd.iso</code>，其他iso开头的选项可以不修改或删除。</p>
 
-<p>{% codeblock definition.rb lang:ruby %}
-Veewee::Session.declare({
-  &hellip;
-  &hellip;
-  :iso_file => &ldquo;rhel-server-6.5-x86_64-dvd.iso&rdquo;,
-  &hellip;
-  &hellip;
-  })
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>definition.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Veewee</span><span class="p">:</span><span class="ss">:Session</span><span class="o">.</span><span class="n">declare</span><span class="p">({</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span>
+</span><span class='line'>  <span class="ss">:iso_file</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">rhel</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="mi">6</span><span class="o">.</span><span class="mi">5</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="n">dvd</span><span class="o">.</span><span class="n">iso</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>然后下载rhel6.5的iso文件，上网查一下资源还是比较多的，这里就不贴iso文件的链接了，怕链接以后会失效，请自行搜索。</li>
@@ -85,40 +92,44 @@ Veewee::Session.declare({
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ mkdir iso
-$ mv /your/iso/path/rhel-server-6.5-x86_64-dvd.iso iso
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mkdir iso
+</span><span class='line'><span class="nv">$ </span>mv /your/iso/path/rhel-server-6.5-x86_64-dvd.iso iso
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>执行命令创建Box，然后去喝杯咖啡，等一会儿回来看看RHEL6.5的VM应该就创建好了。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ veewee vbox build &lsquo;rhel65-64bit&rsquo;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>veewee vbox build &amp;lsquo;rhel65-64bit&amp;rsquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>进到VirtualBox的虚拟机目录(比如在OSX下是<code>~/VirtualBox VMs</code>)，进行vagrant创建box文件操作。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ cd ~/VirtualBox\ VMs/rhel65-64bit/
-$ vagrant package &mdash;base rhel65-64bit &mdash;output rhel65-64bit.box
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/VirtualBox<span class="se">\ </span>VMs/rhel65-64bit/
+</span><span class='line'><span class="nv">$ </span>vagrant package &amp;mdash;base rhel65-64bit &amp;mdash;output rhel65-64bit.box
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>最后使用vagrant启动vm，正常启动证明我们的box已经正确创建了。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ vagrant box add &mdash;name rhel65-64bit rhel65-64bit.box
-$ vagrant init rhel65-64bit
-$ vagrant up
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vagrant box add &amp;mdash;name rhel65-64bit rhel65-64bit.box
+</span><span class='line'><span class="nv">$ </span>vagrant init rhel65-64bit
+</span><span class='line'><span class="nv">$ </span>vagrant up
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>手动创建Box</h2>
 
@@ -132,41 +143,50 @@ $ vagrant up
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ visudo
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>visudo
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>在最后一行增加以下内容:</p>
 
-<p>{% codeblock visudo lang:sh %}
-vagrant ALL=(ALL) NOPASSWD:ALL
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>visudo </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>vagrant <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD:ALL
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>安装Guset Additions，这个是为了可以使用vagrant来创建共享文件夹。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ wget <a href="http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso">http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso</a>
-$ sudo mkdir -p /media/VBoxGuestAdditions
-$ sudo mount -o loop,ro VBoxGuestAdditions_4.3.8.iso /media/VBoxGuestAdditions
-$ sudo /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso&quot;</span>&gt;http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso&lt;/a&gt;
+</span><span class='line'><span class="nv">$ </span>sudo mkdir -p /media/VBoxGuestAdditions
+</span><span class='line'><span class="nv">$ </span>sudo mount -o loop,ro VBoxGuestAdditions_4.3.8.iso /media/VBoxGuestAdditions
+</span><span class='line'><span class="nv">$ </span>sudo /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>修改ssh配置，让vagrant可以无密码ssh登陆VM。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ cd /home/vagrant
-$ mkdir .ssh
-$ wget <a href="https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub">https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub</a> -O .ssh/authorized_keys
-$ chmod 700 .ssh
-$ chmod 600 .ssh/authorized_keys
-$ chown -R vagrant:vagrant .ssh
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /home/vagrant
+</span><span class='line'><span class="nv">$ </span>mkdir .ssh
+</span><span class='line'><span class="nv">$ </span>wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub&quot;</span>&gt;https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub&lt;/a&gt; -O .ssh/authorized_keys
+</span><span class='line'><span class="nv">$ </span>chmod 700 .ssh
+</span><span class='line'><span class="nv">$ </span>chmod 600 .ssh/authorized_keys
+</span><span class='line'><span class="nv">$ </span>chown -R vagrant:vagrant .ssh
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>上面这些做好以后，就可以退出VM，后面的步骤就跟Veewee创建Box一样了，就是使用vagrant来生成box文件，添加box，启动VM。</p>
 ]]></content>

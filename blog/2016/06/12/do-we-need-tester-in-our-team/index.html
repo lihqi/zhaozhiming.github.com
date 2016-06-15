@@ -1,0 +1,243 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>开发团队里是否需要测试人员？ - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="开发团队里是否需要测试人员？">
+	<meta name="keywords" content="tester">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='/stylesheets/slackey.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/fjalla_one.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/amethysta.css' rel='stylesheet' type='text/css'>
+	<script src="http://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">开发团队里是否需要测试人员？</h2>
+	<div class="entry-content"><p><img src="/images/post/2016/06/qa.png" width="400" height="300"></p>
+
+<p>最近在看“<a href="https://book.douban.com/subject/4163938">软件随想录</a>”，里面有个非常有名的“<a href="http://www.joelonsoftware.com/articles/fog0000000043.html">乔尔测试</a>”，其中有一个问题是“你的团队里面是否有测试人员”，如果有的话就加分，表明团队对产品质量比较重视。</p>
+
+<p>但是在现在的软件开发团队中是否真的需要测试人员呢？</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>如何替代测试人员的工作</h2>
+
+<p>我们先来看一下测试人员的工作是什么？测试人员的工作是尽可能的找出bug，然后提交给开发人员进行修复。如果团队里面没有测试人员，开发人员要如何找bug呢？</p>
+
+<p>首先我们来看测试人员做的最多的测试——功能测试，对于功能测试我们有什么办法可以来替代呢？</p>
+
+<h4>单元测试</h4>
+
+<p>单元测试是开发人员找出代码中潜在bug的自我救赎行为，相比手工测试功能，开发人员一般更倾向于写代码来测试功能代码，即所谓的单元测试。只要能想到相应的测试案例，就能写出单元测试，可以测试包括正常，异常，分支，边界等情况下的问题。</p>
+
+<h4>集成测试</h4>
+
+<p>单元测试虽然可以找到一些bug，但还不能完全替代测试人员的工作，单元测试只能测试细粒度级别的功能，比如某个方法的功能，如果需要对几个功能点一起测试的话，单元测试就满足不了了。但没有关系，开发同样可以用代码来写测试，这种粒度稍大的测试就是集成测试，比如测试一个后端的api，验证输入参数和输出结果，这个api的真正功能可能是后端调用数据库等一系列的操作，你一个测试方法就可以把这个api的各个功能点串起来一起验证。</p>
+
+<h4>UI测试</h4>
+
+<p>还有粒度更大的测试，一个页面上的按钮的点击可以看成是UI测试，相对于集成测试，这个测试的范围涉及了前端和后端，测试包括验证前端的页面是否正确，到点击按钮后触发的后端功能是否正确。现在市面上有很多端到端的测试框架，涵盖各种语言和浏览器。</p>
+
+<h4>性能测试</h4>
+
+<p>除了功能测试，测试人员还会做一些性能测试，同样地，开发可以通过代码或者脚本来调用性能测试工具来对系统进行性能测试。</p>
+
+<h4>持续集成</h4>
+
+<p>如果不想像测试人员一样每天做重复性的劳动，就可以将以上那些测试代码放到持续集成上面，让机器帮你运行，想象一下，几百上千个测试，如果手工跑的话可能要花不止一天的时间，而通过持续集成，可能在一天就能跑完好几轮所有测试。</p>
+
+<h2>不能替代的测试工作</h2>
+
+<p>如果我们做到了以上这些，是否就可以完全代替测试人员了呢？其实有些测试是机器无法测试的，比如网页的样式，机器只能判断是否有显示，但无法判断显示的是否好看。还有一些交互效果，也只有通过人工才能识别效果是否正确，还有其他各个领域的测试，目前是不能通过代码或者机器来替代的。</p>
+
+<h2>高级测试工程师</h2>
+
+<p>可能有人会说上面提到的用代码来执行测试的工作，高级测试工程师也能做。其实我觉得软件开发和软件测试到了越高的位置，技能重合的领域就越大，两者都同时会写代码，做测试，可能还会部署，会运维，这个时候我觉得不如就叫高级工程师好了，或者全栈工程师。</p>
+
+<h2>结论</h2>
+
+<p>说了这么多，所以结论是什么呢？</p>
+
+<p>具体情况要具体分析，不能一概而论说完全不需要测试人员，团队不需要测试人员的条件是：</p>
+
+<ul>
+<li>团队的开发人员可以写的单元测试，集成测试和UI测试</li>
+<li>没有太多需要人工测试的功能，比如团队开发的是常规的web系统或者纯后端应用等</li>
+</ul>
+
+</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/blog/2016/06/12/do-we-need-tester-in-our-team/#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	<section id="comment">
+	    <h2 class="title">Comments</h2>
+	    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+	</section>
+	
+</div>
+
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2016
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'zhaozhiming';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2016/06/12/do-we-need-tester-in-our-team/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2016/06/12/do-we-need-tester-in-our-team/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

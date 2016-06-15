@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-05-31T21:00:13+08:00</updated>
+  <updated>2016-06-15T11:12:36+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -14,11 +14,75 @@
 
   
   <entry>
+    <title type="html"><![CDATA[开发团队里是否需要测试人员？]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2016/06/12/do-we-need-tester-in-our-team/"/>
+    <updated>2016-06-12T20:06:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2016/06/12/do-we-need-tester-in-our-team</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2016/06/qa.png" width="400" height="300"></p>
+
+<p>最近在看“<a href="https://book.douban.com/subject/4163938">软件随想录</a>”，里面有个非常有名的“<a href="http://www.joelonsoftware.com/articles/fog0000000043.html">乔尔测试</a>”，其中有一个问题是“你的团队里面是否有测试人员”，如果有的话就加分，表明团队对产品质量比较重视。</p>
+
+<p>但是在现在的软件开发团队中是否真的需要测试人员呢？</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>如何替代测试人员的工作</h2>
+
+<p>我们先来看一下测试人员的工作是什么？测试人员的工作是尽可能的找出bug，然后提交给开发人员进行修复。如果团队里面没有测试人员，开发人员要如何找bug呢？</p>
+
+<p>首先我们来看测试人员做的最多的测试——功能测试，对于功能测试我们有什么办法可以来替代呢？</p>
+
+<h4>单元测试</h4>
+
+<p>单元测试是开发人员找出代码中潜在bug的自我救赎行为，相比手工测试功能，开发人员一般更倾向于写代码来测试功能代码，即所谓的单元测试。只要能想到相应的测试案例，就能写出单元测试，可以测试包括正常，异常，分支，边界等情况下的问题。</p>
+
+<h4>集成测试</h4>
+
+<p>单元测试虽然可以找到一些bug，但还不能完全替代测试人员的工作，单元测试只能测试细粒度级别的功能，比如某个方法的功能，如果需要对几个功能点一起测试的话，单元测试就满足不了了。但没有关系，开发同样可以用代码来写测试，这种粒度稍大的测试就是集成测试，比如测试一个后端的api，验证输入参数和输出结果，这个api的真正功能可能是后端调用数据库等一系列的操作，你一个测试方法就可以把这个api的各个功能点串起来一起验证。</p>
+
+<h4>UI测试</h4>
+
+<p>还有粒度更大的测试，一个页面上的按钮的点击可以看成是UI测试，相对于集成测试，这个测试的范围涉及了前端和后端，测试包括验证前端的页面是否正确，到点击按钮后触发的后端功能是否正确。现在市面上有很多端到端的测试框架，涵盖各种语言和浏览器。</p>
+
+<h4>性能测试</h4>
+
+<p>除了功能测试，测试人员还会做一些性能测试，同样地，开发可以通过代码或者脚本来调用性能测试工具来对系统进行性能测试。</p>
+
+<h4>持续集成</h4>
+
+<p>如果不想像测试人员一样每天做重复性的劳动，就可以将以上那些测试代码放到持续集成上面，让机器帮你运行，想象一下，几百上千个测试，如果手工跑的话可能要花不止一天的时间，而通过持续集成，可能在一天就能跑完好几轮所有测试。</p>
+
+<h2>不能替代的测试工作</h2>
+
+<p>如果我们做到了以上这些，是否就可以完全代替测试人员了呢？其实有些测试是机器无法测试的，比如网页的样式，机器只能判断是否有显示，但无法判断显示的是否好看。还有一些交互效果，也只有通过人工才能识别效果是否正确，还有其他各个领域的测试，目前是不能通过代码或者机器来替代的。</p>
+
+<h2>高级测试工程师</h2>
+
+<p>可能有人会说上面提到的用代码来执行测试的工作，高级测试工程师也能做。其实我觉得软件开发和软件测试到了越高的位置，技能重合的领域就越大，两者都同时会写代码，做测试，可能还会部署，会运维，这个时候我觉得不如就叫高级工程师好了，或者全栈工程师。</p>
+
+<h2>结论</h2>
+
+<p>说了这么多，所以结论是什么呢？</p>
+
+<p>具体情况要具体分析，不能一概而论说完全不需要测试人员，团队不需要测试人员的条件是：</p>
+
+<ul>
+<li>团队的开发人员可以写的单元测试，集成测试和UI测试</li>
+<li>没有太多需要人工测试的功能，比如团队开发的是常规的web系统或者纯后端应用等</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[如何写好办公室邮件]]></title>
     <link href="http://zhaozhiming.github.io/blog/2016/05/31/how-to-write-email-in-office/"/>
     <updated>2016-05-31T08:12:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2016/05/31/how-to-write-email-in-office</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2016/05/email.jpg 400 300 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2016/05/email.jpg" width="400" height="300"></p>
 
 <p>一封电子邮件可以让人看出你的职业素养和专业水平，以前我在平安科技公司工作，在那里沟通主要是通过电子邮件的方式来进行，所以我也学到了一些关于电子邮件的规范和注意事项，在这里分享给大家。</p>
 
@@ -77,7 +141,7 @@
     <link href="http://zhaozhiming.github.io/blog/2016/02/28/how-to-know-well-new-project-quickly/"/>
     <updated>2016-02-28T17:05:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2016/02/28/how-to-know-well-new-project-quickly</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2016/02/new_guy.jpg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2016/02/new_guy.jpg"></p>
 
 <p>很多工程师都会遇到这样一种情况：被指派到另外一个项目参与开发工作，这个项目已经开发了一段时间了，代码还比较多，作为一个项目的新人，要如何尽快地熟悉项目融入团队呢？</p>
 
@@ -138,7 +202,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/09/21/the-mysterious-tools-of-developer/"/>
     <updated>2015-09-21T10:06:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/09/21/the-mysterious-tools-of-developer</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-9/toolbox.jpeg 400 300 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-9/toolbox.jpeg" width="400" height="300"></p>
 
 <p>需求、时间和质量是项目管理的三个平衡点，如果需求多、开发时间短必将会导致项目质量下降，那开发人员有什么办法在短时间内交付大量的需求（虽然质量低）呢？其实每个开发人员都有一套“神秘”的工具箱，在万不得已的时候就会开始使用它（这部分内容是以前参加<a href="https://www.linkedin.com/in/dteng">Daniel</a>的CSM课程的时候听到的，觉得很有意思，想和大家分享一下）。</p>
 
@@ -147,9 +211,7 @@
 
 <p></p>
 
-<p>{% blockquote 火云邪神 %}
-天下武功，唯快不破
-{% endblockquote %}</p>
+<p><blockquote><p>天下武功，唯快不破</p><footer><strong>火云邪神</strong></footer></blockquote></p>
 
 <h2>复制粘贴</h2>
 
@@ -199,7 +261,7 @@
 
 <p>加班除了聊天吃饭打游戏外，最重要的是让BOSS知道我在加班，凌晨半夜发个邮件到整个公司邮箱是必须的，下班走的时候在朋友圈晒张"加班的夜晚真美"之类的照片也是极好的。让BOSS知道我就算没有功劳也有苦劳，到时候项目完不成也不要怪我，因为我已经加班了。</p>
 
-<p>{% img /images/post/2015-9/sb1.jpeg 300 300 %}</p>
+<p><img src="/images/post/2015-9/sb1.jpeg" width="300" height="300"></p>
 ]]></content>
   </entry>
   
@@ -208,7 +270,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/09/15/say-something-about-develop-by-tdd/"/>
     <updated>2015-09-15T14:35:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/09/15/say-something-about-develop-by-tdd</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-9/tdd.png 400 300 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-9/tdd.png" width="400" height="300"></p>
 
 <p>TDD是由<a href="https://en.wikipedia.org/wiki/Extreme_programming">极限编程</a>提出的一个编程实践，与通常的编程行为相反，TDD是先编写测试案例，然后再编写功能代码，重复这样的一个过程直到功能实现完成为止。</p>
 
@@ -259,160 +321,6 @@
 <p>红帽子也比较重要，TDD——测试驱动开发，要先写出测试案例和验收条件，而这需要先分析需求、提炼需求，将需求转化为测试用例，测试驱动开发实际上是需求驱动开发，所以能写出一个好的测试用例，实际上就等于已经对功能代码做好了设计。经历过结对编程的人就有这种感觉，一个人写好测试案例，再由另外一个人来写功能代码，第二个人基本上不用费什么劲就可以写出功能代码，为什么呢？因为思路已经在测试案例中体现出来了，你只要照着写就可以了。</p>
 
 <p>要学习TDD网上有很多资料，甚至还有不少视频是演示怎么做TDD的，这里就不详细举例子了，大家可以自行在网上查阅。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[如何学习Python]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2015/09/05/how-to-learn-python/"/>
-    <updated>2015-09-05T15:01:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2015/09/05/how-to-learn-python</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-9/python.jpg 400 300 %}</p>
-
-<p>Python语言相对Java来说，最大的特点就是易用易学，基本上每个linux系统都有安装python，不像Java一样还需要自己下JVM、安装、设置环境变量等。有了其他编程语言的基础再来学习Python其实是非常简单的，因为Python语言是基于<a href="https://en.wikipedia.org/wiki/ABC_(programming_language)">ABC</a>语言开发出来的，ABC语言是以教学为目的的语言，其宗旨是让编程变得容易阅读和理解，所以Python语言也很容易理解和学习。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>Pyhotn学习介绍</h2>
-
-<p>关于Python的学习网上有很多介绍，我在这里介绍一下我的学习过程，包括书籍，网站和一些工具等。</p>
-
-<h4>书籍</h4>
-
-<p>关于Python的书我推荐<a href="http://book.douban.com/subject/3112503/">《Python核心编程（第二版）》</a>，这本书看起来很厚其实读起来非常浅显易懂，重点可以看看下面这几章。</p>
-
-<p>{% codeblock lang:sh %}
-第4章 Python对象
-6.8 Unicode
-8.11 迭代器和iter()函数
-第9章 文件的输入和输出
-第10章 错误和异常
-第11章 函数和函数式编程
-第12章 模块
-第13章 面向对象编程
-第14章 执行环境
-第15章 正则表达式
-第18章 多线程编程
-20.2 使用Python进行Web应用：创建一个简单的Web客户端
-{% endcodeblock %}</p>
-
-<p>如果不想看这种太多理论的书的话，可以看这本实战的书<a href="http://learnpythonthehardway.org/">《Learn Python The Hard Way》</a>，里面的例子从浅到深让你一步步的学习Python，比较适合没有编程经验的新手。里面的例子不要只是把它们打出来，最好自己可以举一反三做一些关于知识点的挑战和扩展。</p>
-
-<h4>网站</h4>
-
-<p>除了看书编码外，平时业余时间可以订阅一些Python的blog和网站，下面是我最近收集的一些Python博客，分享一下:</p>
-
-<ul>
-<li><a href="http://planetpython.org/">Planet Python</a>: 这是最出名的python博客其中之一，快去看看，我希望你能找到对你有用的东西。</li>
-<li><a href="http://lucumr.pocoo.org/">lucumr</a>: 博主是flask（一个python web框架）的创始人</li>
-<li><a href="https://doughellmann.com">Doug Hellmann</a>: 博主是PYMOTW(Python Module Of the Week)成员之一，博客里面包含了很多python library的知识。如果你是在寻找一些实用的python库的话，你可以在这里找找。</li>
-<li><a href="http://www.blog.pythonlibrary.org/">Mouse Vs Python</a>: 这个博客更新也比较频繁。</li>
-<li><a href="http://www.pydanny.com/">pydanny</a>: 这是一个主要关注Django的博客，但也有很多关于Python的东西。</li>
-</ul>
-
-
-<h4>工具 &amp; 技巧</h4>
-
-<p>pip和setuptools就不说了，Python开发必备，下载管理依赖包就靠他们了，其他最有用的Python工具要数<a href="http://docs.python-guide.org/en/latest/dev/virtualenvs/">virtualenv</a>了，它可以创建一个虚拟的Python执行环境，因为Python的虚拟机不像JVM那么大，创建出来之后的文件夹非常小（大概只有10M），在这个虚拟环境里面安装执行Python程序不会污染你操作系统的主Python环境。</p>
-
-<p>{% codeblock lang:sh %}</p>
-
-<h1>安装virtualenv</h1>
-
-<p>pip install virtualenv</p>
-
-<h1>创建Python虚拟环境</h1>
-
-<p>virtualenv venv</p>
-
-<h1>让虚拟环境生效</h1>
-
-<p>source venv/bin/activate</p>
-
-<h1>取消虚拟环境</h1>
-
-<p>deactivate
-{% endcodeblock %}</p>
-
-<p>另外Pyhton的调试也非常方便，只要在需要设置断点的地方添加代码<code>import pdb;pdb.set_trace()</code>即可，然后执行程序就会在断点出停止，你可以通过打印下面命令进行调试:</p>
-
-<ul>
-<li><code>c</code>: 让程序继续往下走，continue的意思</li>
-<li><code>s</code>: 进入子方法内部，相当于step into</li>
-<li><code>n</code>: 跳到下一句
-这里介绍的只是一些基本的命令，更多的命令可以看<a href="https://docs.python.org/2/library/pdb.html">这里</a>，另外还可以打印断点处的各种变量和执行各种语句。</li>
-</ul>
-
-
-<h2>简洁的Python</h2>
-
-<p>在Python中执行<code>import this</code>可以看到Python之禅。</p>
-
-<p>{% blockquote %}
-The Zen of Python, by Tim Peters</p>
-
-<p>Beautiful is better than ugly.
-Explicit is better than implicit.
-Simple is better than complex.
-Complex is better than complicated.
-Flat is better than nested.
-Sparse is better than dense.
-Readability counts.
-Special cases aren&rsquo;t special enough to break the rules.
-Although practicality beats purity.
-Errors should never pass silently.
-Unless explicitly silenced.
-In the face of ambiguity, refuse the temptation to guess.
-There should be one&mdash; and preferably only one &mdash;obvious way to do it.
-Although that way may not be obvious at first unless you&rsquo;re Dutch.
-Now is better than never.
-Although never is often better than <em>right</em> now.
-If the implementation is hard to explain, it&rsquo;s a bad idea.
-If the implementation is easy to explain, it may be a good idea.
-Namespaces are one honking great idea &mdash; let&rsquo;s do more of those!
-{% endblockquote %}</p>
-
-<p>从Python之禅中我们可以看到Python是一门追求简洁，追求优雅的语言，语言设计者对代码质量要求比较高，希望编写Python代码的开发人员也能写出高质量的代码。</p>
-
-<p>由于Python简洁而强大的函数式编程，我们可以很方便的创建结构稍微复杂的对象，特别复杂的还是建议使用class来创建对象。</p>
-
-<p>比如我们有这样的一个数据结构，一个字典里面包含多个集合，用Java来初始化大概是这个样子:</p>
-
-<p>{% codeblock lang:java %}
-Map&lt;String, List<String>> map = new HashMap&lt;String, List<String>>();
-List<String> list1 = new ArrayList<String>();
-list1.add(&ldquo;foo1&rdquo;);
-list1.add(&ldquo;bar1&rdquo;);
-map.put(&ldquo;list1&rdquo;, list1);</p>
-
-<p>List<String> list2 = new ArrayList<String>();
-list2.add(&ldquo;foo2&rdquo;);
-list2.add(&ldquo;bar2&rdquo;);
-map.put(&ldquo;list2&rdquo;, list2);
-{% endcodeblock %}</p>
-
-<p>而用Python一行代码就可以搞定:</p>
-
-<p>{% codeblock lang:python %}
-my_map = {&lsquo;list1&rsquo;: [foo1, bar1], &lsquo;list2&rsquo;: [&lsquo;foo2'，'bar2&rsquo;]}
-{% endcodeblock %}</p>
-
-<p>所以说Java是一门很啰嗦的语言，虽然新版本的Java加了lambda，然而并不能减少多少Java语言本身的繁杂性。</p>
-
-<h2>Djaogo学习介绍</h2>
-
-<p>Python来实现一些小工具小应用是十分方便的，但Python也可以用来做Web开发，Python比较有名的Web框架有Django，Flask，Tormado等，其中Djaongo使用最为广泛，集成的东西也比较多，不管你是使用关系系数据库还是非关系数据库，是否使用缓存等都可以使用Django，其最好的一个特点是集成了管理员功能，可以省却开发者很大的一部分开发量。</p>
-
-<p>有人可能会说Django比较重，对于新手来说学习成本比较高，对于这个我没有什么意见，因为工作需要使用Django，对于其他的框架还没有接触过，但我使用后的体验是Django虽然要配置的东西比较多，但只要配置好了，开发效率还是挺快的，也可能是我以前大部分时间使用Spring来开发，相对Spring来说Django的配置还算比较轻的，所以对我来说没有什么感觉:)</p>
-
-<p>学习Django可以上Django的<a href="http//www.djangoproject.com">官网</a>，上面有startup的向导，通过向导一步步的操作可以让你快速了解一个web项目的开发，另外上面还有很多文档，可以知道Django的所有内容。</p>
-
-<p>另外一个学习Django比较好的是《Django Book》这本书，这里有它的<a href="http://www.djangobook.com/en/2.0/index.html">网站</a>，书很浅显易读，详细讲解了Django各个部分的内容，有时候是先通过一个比较简单的实现方案实现需求，然后利用Django的特性让代码得到优化，更少的代码来实现更多的内容，这也体现了Django的思想，简洁优雅，复用性高。</p>
-
-<p>理论知识学习的差不多了，最后当然是做项目练手了，可以自己动手做一个web项目来熟悉Python和Django，在实际操作的过程中遇到不懂的问题就google一下，然后记录下来，做过一两个项目之后你应该对Python和Django比较了解了:)</p>
 ]]></content>
   </entry>
   

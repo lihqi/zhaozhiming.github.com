@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: eclipse | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/eclipse/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-05-31T21:00:13+08:00</updated>
+  <updated>2016-06-15T11:12:36+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,13 +18,11 @@
     <link href="http://zhaozhiming.github.io/blog/2014/10/09/why-intellij-idea-better-than-eclipse/"/>
     <updated>2014-10-09T02:36:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/10/09/why-intellij-idea-better-than-eclipse</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-10/idea-vs-eclipse.jpeg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-10/idea-vs-eclipse.jpeg"></p>
 
 <p>经常有人问我Intellij IDEA比Eclipse好用在哪里？问我的人大部分都是没用过IDEA的，因为用过IDEA的大部分人都知道好在哪里。IDEA和Eclipse之争不像Vim vs. Emacs、IOS vs. Android、Java vs. C++等，因为后面这些<code>vs</code>都没有绝对的优胜者，都各自有各自的优缺点，但IDEA vs. Eclipse是有结果的，那就是:</p>
 
-<p>{% blockquote %}
-Intellij IDEA明显比Eclipse好&hellip;很多。
-{% endblockquote %}</p>
+<p><blockquote><p>Intellij IDEA明显比Eclipse好&hellip;很多。</p></blockquote></p>
 
 <!--more-->
 
@@ -43,45 +41,65 @@ Intellij IDEA明显比Eclipse好&hellip;很多。
 
 <p>比如下面这段代码:</p>
 
-<p>{% codeblock lang:java %}</p>
-
-<pre><code>@Test
-public void should_() throws Exception {
-    Assert.null
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Assert</span><span class="o">.</span><span class="na">null</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>IDEA会提示assertNull, assertNotnull等方法，而Eclipse则完全没有提示。</p>
 
-<p>{% img /images/post/2014-10/idea-auto-complete-2.png idea %}</p>
+<p><img src="/images/post/2014-10/idea-auto-complete-2.png" title="idea" ></p>
 
-<p>{% img /images/post/2014-10/eclipse-auto-complete-2.png eclipse %}</p>
+<p><img src="/images/post/2014-10/eclipse-auto-complete-2.png" title="eclipse" ></p>
 
 <p>又比如下面这段代码:</p>
 
-<p>{% codeblock lang:java %}</p>
-
-<pre><code>@Test
-public void should_() throws Exception {
-    assertThat();
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>IDEA按下<code>alt + Enter</code>IDEA会自动提示你是否要静态导入<code>assertThat</code>这个方法，而Eclipse按<code>ctrl + 1</code>只会提示你创建新方法。</p>
 
-<p>{% img /images/post/2014-10/idea-auto-complete.png idea %}</p>
+<p><img src="/images/post/2014-10/idea-auto-complete.png" title="idea" ></p>
 
-<p>{% img /images/post/2014-10/eclipse-auto-complete.png eclipse %}</p>
+<p><img src="/images/post/2014-10/eclipse-auto-complete.png" title="eclipse" ></p>
 
 <p>IDEA不仅对Java有自动补全，对其他类型的文件也有自动补全的功能，而Eclipse我只能呵呵了。</p>
 
-<p>{% img /images/post/2014-10/idea-auto-complete-xml.png %}</p>
+<p><img src="/images/post/2014-10/idea-auto-complete-xml.png"></p>
 
-<p>{% img /images/post/2014-10/idea-auto-complete-html.png %}</p>
+<p><img src="/images/post/2014-10/idea-auto-complete-html.png"></p>
 
 <h4>重构</h4>
 
@@ -89,111 +107,169 @@ public void should_() throws Exception {
 
 <p>比如我们要抽取下面name和age那2行为一个方法。</p>
 
-<p>{% codeblock lang:java %}</p>
-
-<pre><code>@Test
-public void should_() throws Exception {
-    String name = "Tom";
-    int age = 11;
-
-    System.out.println(name + age);
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Tom&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">11</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="n">age</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>IDEA可以自动将其封装成为一个对象。</p>
 
-<p>{% img /images/post/2014-10/idea-refactor-1.png %}
-{% img /images/post/2014-10/idea-refactor-2.png %}</p>
+<p><img src="/images/post/2014-10/idea-refactor-1.png">
+<img src="/images/post/2014-10/idea-refactor-2.png"></p>
 
 <p>重构后的结果:</p>
 
-<p>{% codeblock lang:java %}</p>
-
-<pre><code>@Test
-public void should_() throws Exception {
-    Person person = new Person().invoke();
-    String name = person.getName();
-    int age = person.getAge();
-
-    System.out.println(name + age);
-}
-
-private class Person {
-    private String name;
-    private int age;
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public Person invoke() {
-        name = "Tom";
-        age = 11;
-        return this;
-    }
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">().</span><span class="na">invoke</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="na">getAge</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="n">age</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">private</span> <span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getAge</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Person</span> <span class="nf">invoke</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Tom&quot;</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">age</span> <span class="o">=</span> <span class="mi">11</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>而Eclipse则告诉你我办不到。</p>
 
-<p>{% img /images/post/2014-10/eclipse-refactor-1.png %}</p>
+<p><img src="/images/post/2014-10/eclipse-refactor-1.png"></p>
 
 <p>IDEA还可以通过重构自动创建工厂方法、builder，Eclipse则无能为力。</p>
 
-<p>{% img /images/post/2014-10/idea-refactor-3.png %}</p>
+<p><img src="/images/post/2014-10/idea-refactor-3.png"></p>
 
-<p>{% img /images/post/2014-10/eclipse-refactor-2.png %}</p>
+<p><img src="/images/post/2014-10/eclipse-refactor-2.png"></p>
 
 <h4>导航</h4>
 
 <p>IDEA可以从任何地方导航到你想要去的地方，<code>ctrl + shift + A</code>可以进到任何你要去的地方(包括配置)，最新的功能连续2次<code>shift</code>可以选择跳转到相关的文件。</p>
 
-<p>{% img /images/post/2014-10/idea-navigate-1.png %}
-{% img /images/post/2014-10/idea-navigate-2.png %}</p>
+<p><img src="/images/post/2014-10/idea-navigate-1.png">
+<img src="/images/post/2014-10/idea-navigate-2.png"></p>
 
 <p>IDEA文件间的跳转不限于Java，XML、JavaScript等文件也可以通过<code>ctrl + 鼠标左键</code>进入目标，而Eclipse只能在Java文件里面做到。</p>
 
-<p>{% img /images/post/2014-10/idea-navigate-3.png %}</p>
+<p><img src="/images/post/2014-10/idea-navigate-3.png"></p>
 
 <h4>静态代码检查</h4>
 
 <p>IDEA有很强大的静态代码检查功能，能帮助你改掉一些不好的编码习惯，比如下面的代码IDEA会提示if分支可以简化，直接返回equal结果就可以，但Eclipse则是持着你代码烂关我P事的态度对待你的代码。</p>
 
-<p>{% codeblock lang:java %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kt">boolean</span> <span class="n">check</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">name</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<pre><code>public boolean check() {
-    if ("".equals(name)) {
-        return true;
-    }
-    return false;
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% img /images/post/2014-10/idea-static-code-1.png %}</p>
+<p><img src="/images/post/2014-10/idea-static-code-1.png"></p>
 
 <p>方法没有被其他类用到也会有提示。</p>
 
-<p>{% img /images/post/2014-10/idea-static-code-2.png %}</p>
+<p><img src="/images/post/2014-10/idea-static-code-2.png"></p>
 
 <p>老的for循环提示使用foreach。</p>
 
-<p>{% img /images/post/2014-10/idea-static-code-3.png %}</p>
+<p><img src="/images/post/2014-10/idea-static-code-3.png"></p>
 
 <h4>集成众多成熟插件</h4>
 
 <p>IDEA不像Eclipse需要安装很多插件，标准的安装已经包含了很多成熟的插件，比如版本管理工具就包含了SVN，GIT，ClearCase等。这有点像苹果的个人电脑，不需要用户了解其中的各种细节，安装好之后就能舒舒服服的使用，但IDEA又不像苹果那么封闭，它还是可以安装插件，但其本身的插件就已经很够用了，没有太大必要再去安装其他插件。</p>
 
-<p>{% img /images/post/2014-10/idea-plugin.png %}</p>
+<p><img src="/images/post/2014-10/idea-plugin.png"></p>
 
 <h2>Eclipse的优点</h2>
 
@@ -218,7 +294,7 @@ private class Person {
     <link href="http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu/"/>
     <updated>2014-04-13T15:54:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-4/pycharm_and_eclipse.jpg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-4/pycharm_and_eclipse.jpg"></p>
 
 <p>我比较喜欢Pycharm，因为这个是JetBrains公司出的python IDE工具，该公司下的java IDE工具——IDEA，无论从界面还是操作上都甩eclipse几条街，但项目组里有些人使用eclipse比较久了，一时让他们转pycharm比较困难，所以还是两边的设置都介绍一下吧。</p>
 
@@ -235,16 +311,16 @@ private class Person {
 <li>将pycharm安装目录下的pycharm-debug.egg文件拷贝到远程机器上（如果是python3的话就拷贝pycharm-debug-py3k.egg文件）。</li>
 <li>在远程机器上安装pycharm-debug.egg，安装命令： <code>easy_install pycharm-debug.egg</code>。</li>
 <li><p>在pycharm中设置断点监听配置。<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-1.png %}<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-2.png %}<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-3.png %}</p></li>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-1.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-2.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-3.png"></p></li>
 <li><p>启动调试监听程序。<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-4.png %}<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-5.png %}</p></li>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-4.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-5.png"></p></li>
 <li><p>在远程机器上启动服务并发起http请求。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-10.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
 <li><p>pycharm监听到请求会进入断点。
-{% img /images/post/2014-4/pycharm-debug/pycharm-6.png %}</p></li>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-6.png"></p></li>
 </ol>
 
 
@@ -259,27 +335,27 @@ private class Person {
 <li><p>PyDev可以按照<a href="http://pydev.org/manual_101_install.html">官网的向导</a>进行安装。<br/>
 安装完后按照下面的步骤进行远程调试。</p></li>
 <li><p>在window->Preperences->PyDev->Debug中，设置debug端口，比如12306。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-1.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-1.png"></p></li>
 <li><p>新增PyDev视图。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-2.png %}<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-3.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-2.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-3.png"></p></li>
 <li><p>在Pydev试图中增加remote debug菜单。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-4.png %}<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-5.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-4.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-5.png"></p></li>
 <li><p>在远程机器的源码里面添加调试代码和断点。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-6.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-6.png"></p></li>
 <li><p>断点设置语句：<br/>
 <code>pydevd.settrace('192.168.8.128', port=12306, stdoutToServer=True, stderrToServer=True)</code><br/>
 注意：这里的ip是指设置了调试监听的机器ip。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-7.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-7.png"></p></li>
 <li><p>通过Pydev菜单打开调试监听。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-8.png %}<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-8.png"><br/>
 开始监听显示信息如下：<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-9.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-9.png"></p></li>
 <li><p>启动远程服务并发起http请求。
-{% img /images/post/2014-4/eclipse-debug/eclipse-10.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
 <li><p>Pydev监听到请求后就会进入断点。
-{% img /images/post/2014-4/eclipse-debug/eclipse-11.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-11.png"></p></li>
 </ul>
 
 

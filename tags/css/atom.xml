@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: css | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/css/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-05-31T21:00:13+08:00</updated>
+  <updated>2016-06-15T11:12:36+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2013/12/16/hello-semantic-ui/"/>
     <updated>2013-12-16T07:16:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2013/12/16/hello-semantic-ui</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/semantic-ui.png %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/semantic-ui.png"></p>
 
 <h2>semancti-ui介绍</h2>
 
@@ -42,9 +42,7 @@
 <p>什么是响应式设计？响应式Web设计(Responsive Web design)的理念是，页面的设计与开发应当根据用户行为以及设备环境(系统平台、屏幕尺寸、屏幕定向等)进行相应的响应和调整。具体的实践方式由多方面组成，包括弹性网格和布局、图片、CSS media query的使用等。无论用户正在使用笔记本还是iPad，我们的页面都应该能够自动切换分辨率、图片尺寸及相关脚本功能等，以适应不同设备;换句话说，页面应该有能力去自动响应用户的设备环境。这样，我们就可以不必为不断到来的新设备做专门的版本设计和开发了。</p>
 
 <p>在semantci-ui的官网里面是这样说的：<br/>
-{% blockquote %}
-Every component is defined using em and rem so that components can be resized simply on the fly. Want a menu to get smaller on mobile? Simply have it&rsquo;s font-size change using a media query.
-{% endblockquote %}</p>
+<blockquote><p>Every component is defined using em and rem so that components can be resized simply on the fly. Want a menu to get smaller on mobile? Simply have it&rsquo;s font-size change using a media query.</p></blockquote></p>
 
 <p>semantic-ui的每个组件都是使用“em”和“rem"，所以组件可以在不同的显示设备上自动地调整大小。</p>
 
@@ -82,16 +80,27 @@ Every component is defined using em and rem so that components can be resized si
 
 <h4>代码如下</h4>
 
-<p>{% codeblock lang:html %}</p>
-
-<div class="ui buttons">
-  <div class="ui button">Cancel</div>
-  <div class="or"></div>
-  <div class="ui positive button">Save</div>
-</div>
-
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui buttons&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui button&quot;</span><span class="nt">&gt;</span>Cancel<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;or&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui positive button&quot;</span><span class="nt">&gt;</span>Save<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <div class="ui divider"></div>
 
@@ -118,25 +127,45 @@ Every component is defined using em and rem so that components can be resized si
 
 <h4>代码如下</h4>
 
-<p>{% codeblock lang:html %}</p>
-
-<div class="ui two column grid" style="display: block;">
-  <div class="row">
-    <div class="column">
-      <div class="ui raised segment">
-        <div class="ui ribbon label">Dogs</div>
-        <p>Pretty nice animals.</p>
-        <div class="ui teal ribbon label">Cats</div>
-        <p>Also pretty nice animals, but can prefer solitude.</p>
-        <div class="ui red ribbon label">Ogres and monsters</div>
-        <p>Never seen one as a pet before, but I imagine they'd make pretty terrible companions.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui two column grid&quot;</span> <span class="na">style=</span><span class="s">&quot;display: block;&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;column&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui raised segment&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui ribbon label&quot;</span><span class="nt">&gt;</span>Dogs<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>Pretty nice animals.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui teal ribbon label&quot;</span><span class="nt">&gt;</span>Cats<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>Also pretty nice animals, but can prefer solitude.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui red ribbon label&quot;</span><span class="nt">&gt;</span>Ogres and monsters<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;p&gt;</span>Never seen one as a pet before, but I imagine they&#39;d make pretty terrible companions.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <div class="ui divider"></div>
 
@@ -162,24 +191,43 @@ Every component is defined using em and rem so that components can be resized si
 
 <h4>代码如下</h4>
 
-<p>{% codeblock lang:html %}</p>
-
-<div class="ui comments">
-  <div class="comment">
-    <a class="avatar">
-      <img src="http://zhaozhiming.github.io/images/post/photo2.jpg">
-    </a>
-    <div class="content">
-      <a class="author">Dog Doggington</a>
-      <div class="text">
-        I think this is a great idea and i am voting on it
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ui comments&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;comment&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;avatar&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://zhaozhiming.github.io/images/post/photo2.jpg&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;author&quot;</span><span class="nt">&gt;</span>Dog Doggington<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;text&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        I think this is a great idea and i am voting on it
+</span><span class='line'>      <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>是不是非常酷？想使用这些很酷很炫的特性，就赶快使用semantic-ui吧～</p>
 ]]></content>

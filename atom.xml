@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-05-31T20:58:03+08:00</updated>
+  <updated>2016-06-15T11:12:36+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,70 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[开发团队里是否需要测试人员？]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2016/06/12/do-we-need-tester-in-our-team/"/>
+    <updated>2016-06-12T20:06:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2016/06/12/do-we-need-tester-in-our-team</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2016/06/qa.png" width="400" height="300"></p>
+
+<p>最近在看“<a href="https://book.douban.com/subject/4163938">软件随想录</a>”，里面有个非常有名的“<a href="http://www.joelonsoftware.com/articles/fog0000000043.html">乔尔测试</a>”，其中有一个问题是“你的团队里面是否有测试人员”，如果有的话就加分，表明团队对产品质量比较重视。</p>
+
+<p>但是在现在的软件开发团队中是否真的需要测试人员呢？</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>如何替代测试人员的工作</h2>
+
+<p>我们先来看一下测试人员的工作是什么？测试人员的工作是尽可能的找出bug，然后提交给开发人员进行修复。如果团队里面没有测试人员，开发人员要如何找bug呢？</p>
+
+<p>首先我们来看测试人员做的最多的测试——功能测试，对于功能测试我们有什么办法可以来替代呢？</p>
+
+<h4>单元测试</h4>
+
+<p>单元测试是开发人员找出代码中潜在bug的自我救赎行为，相比手工测试功能，开发人员一般更倾向于写代码来测试功能代码，即所谓的单元测试。只要能想到相应的测试案例，就能写出单元测试，可以测试包括正常，异常，分支，边界等情况下的问题。</p>
+
+<h4>集成测试</h4>
+
+<p>单元测试虽然可以找到一些bug，但还不能完全替代测试人员的工作，单元测试只能测试细粒度级别的功能，比如某个方法的功能，如果需要对几个功能点一起测试的话，单元测试就满足不了了。但没有关系，开发同样可以用代码来写测试，这种粒度稍大的测试就是集成测试，比如测试一个后端的api，验证输入参数和输出结果，这个api的真正功能可能是后端调用数据库等一系列的操作，你一个测试方法就可以把这个api的各个功能点串起来一起验证。</p>
+
+<h4>UI测试</h4>
+
+<p>还有粒度更大的测试，一个页面上的按钮的点击可以看成是UI测试，相对于集成测试，这个测试的范围涉及了前端和后端，测试包括验证前端的页面是否正确，到点击按钮后触发的后端功能是否正确。现在市面上有很多端到端的测试框架，涵盖各种语言和浏览器。</p>
+
+<h4>性能测试</h4>
+
+<p>除了功能测试，测试人员还会做一些性能测试，同样地，开发可以通过代码或者脚本来调用性能测试工具来对系统进行性能测试。</p>
+
+<h4>持续集成</h4>
+
+<p>如果不想像测试人员一样每天做重复性的劳动，就可以将以上那些测试代码放到持续集成上面，让机器帮你运行，想象一下，几百上千个测试，如果手工跑的话可能要花不止一天的时间，而通过持续集成，可能在一天就能跑完好几轮所有测试。</p>
+
+<h2>不能替代的测试工作</h2>
+
+<p>如果我们做到了以上这些，是否就可以完全代替测试人员了呢？其实有些测试是机器无法测试的，比如网页的样式，机器只能判断是否有显示，但无法判断显示的是否好看。还有一些交互效果，也只有通过人工才能识别效果是否正确，还有其他各个领域的测试，目前是不能通过代码或者机器来替代的。</p>
+
+<h2>高级测试工程师</h2>
+
+<p>可能有人会说上面提到的用代码来执行测试的工作，高级测试工程师也能做。其实我觉得软件开发和软件测试到了越高的位置，技能重合的领域就越大，两者都同时会写代码，做测试，可能还会部署，会运维，这个时候我觉得不如就叫高级工程师好了，或者全栈工程师。</p>
+
+<h2>结论</h2>
+
+<p>说了这么多，所以结论是什么呢？</p>
+
+<p>具体情况要具体分析，不能一概而论说完全不需要测试人员，团队不需要测试人员的条件是：</p>
+
+<ul>
+<li>团队的开发人员可以写的单元测试，集成测试和UI测试</li>
+<li>没有太多需要人工测试的功能，比如团队开发的是常规的web系统或者纯后端应用等</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何写好办公室邮件]]></title>
@@ -68,7 +132,7 @@
 
 <h3>吸引眼球</h3>
 
-<p>如果邮件内容比较长，需要收件人了解的内容又比较多怎么办呢？这个时候可以适当地将一段文字标成<code>红色</code>或者将其<code>加粗字号加大</code>，这样阅读者在读邮件的时候就会被<code>重点</code>标注的地方所吸引。</p>
+<p>如果邮件内容比较长，需要收件人了解的内容又比较多怎么办呢？这个时候可以适当地将一段文字标成<code>红色</code>或者将其<code>加粗字号加大</code>，这样阅读者在读邮件的时候就会被<code>重点</code>标注的地方所吸引了。</p>
 ]]></content>
   </entry>
   
@@ -2722,591 +2786,6 @@
 <p>要做一个好的程序员，持续地学习是必不可少的，在新的工作环境里，大家都很喜欢学习，每次有部门分享时大家都很兴奋地讨论即将get的新技能，也经常看到有人分享一些新的学习网站，新的工具，因为大家对工作效率的提高也比较感兴趣。</p>
 
 <p>最后，希望在新的环境中，学习到更多的东西，更多地提高自己的能力，创造更多的价值。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[如何在Spring中配置Websocket]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2015/05/11/spring-websocket-config/"/>
-    <updated>2015-05-11T09:41:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2015/05/11/spring-websocket-config</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2015-5/websockets.png"></p>
-
-<p>Websocket是HTML5的一项新技术，可以让服务端和客户端进行实时的通信，主要的使用场景有: 实时的聊天系统，对实时性要求比较高的游戏，或者金融行业对股票市场数据的及时获取等。在Spring3的时候就已经有了对Websocket的支持，不过需要一些高版本的web容器来运行，比如Tomcat7.0.47+，Jetty9等。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<p>在Spring的官网上有关于Websocket的示例工程，<a href="https://spring.io/guides/gs/messaging-stomp-websocket/">https://spring.io/guides/gs/messaging-stomp-websocket/</a>，里面简单介绍了如何通过Spring-boot来进行Websocket系统的构建。我们的例子将基于这个例子进行修改，但是是使用传统的Spring的方式进行配置。</p>
-
-<h2>依赖包</h2>
-
-<p>首先我们需要添加相关的依赖包:</p>
-
-<ul>
-<li>Websocket需要servlet3.1的版本</li>
-<li>spring-websocket和spring-messaging是Spring关于Websocket的组件</li>
-<li>使用Jackson进行json数据的处理</li>
-</ul>
-
-
-<figure class='code'><figcaption><span>build.gradle </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">String</span> <span class="n">springVersion</span> <span class="o">=</span> <span class="s2">&quot;4.1.4.RELEASE&quot;</span>
-</span><span class='line'><span class="n">String</span> <span class="n">jacksonDatabindVersion</span> <span class="o">=</span> <span class="s2">&quot;2.5.0&quot;</span>
-</span><span class='line'><span class="n">String</span> <span class="n">jacksonVersion</span> <span class="o">=</span> <span class="s2">&quot;1.9.13&quot;</span>
-</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//websocket</span>
-</span><span class='line'>    <span class="n">compile</span><span class="o">(</span><span class="s2">&quot;javax.websocket:javax.websocket-api:1.1&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="n">compile</span><span class="o">(</span><span class="s2">&quot;javax.servlet:javax.servlet-api:3.1.0&quot;</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1">//spring</span>
-</span><span class='line'>    <span class="n">compile</span><span class="o">(</span><span class="s2">&quot;org.springframework:spring-messaging:&quot;</span> <span class="o">+</span> <span class="n">springVersion</span><span class="o">)</span>
-</span><span class='line'>    <span class="n">compile</span><span class="o">(</span><span class="s2">&quot;org.springframework:spring-websocket:&quot;</span> <span class="o">+</span> <span class="n">springVersion</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//json</span>
-</span><span class='line'>    <span class="n">compile</span> <span class="s2">&quot;com.fasterxml.jackson.core:jackson-databind:&quot;</span> <span class="o">+</span> <span class="n">jacksonDatabindVersion</span>
-</span><span class='line'>    <span class="n">compile</span> <span class="s2">&quot;org.codehaus.jackson:jackson-mapper-asl:&quot;</span> <span class="o">+</span> <span class="n">jacksonVersion</span>
-</span><span class='line'>    <span class="n">compile</span> <span class="s2">&quot;org.codehaus.jackson:jackson-core-asl:&quot;</span> <span class="o">+</span> <span class="n">jacksonVersion</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>xml配置（类配置）</h2>
-
-<p>我们有两种方式进行Websocket的配置，一种是通过xml文件的方式，在这里我们定义了websocket的配置信息，这样服务器往客户端发送消息就可以通过<code>/topic/xx</code>来发送，客户端则可以通过<code>/app/hello</code>来发送消息到服务端。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span>
-</span><span class='line'>       <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
-</span><span class='line'>       <span class="na">xmlns:websocket=</span><span class="s">&quot;http://www.springframework.org/schema/websocket&quot;</span>
-</span><span class='line'>       <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
-</span><span class='line'><span class="s">        http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>    ...... // other configurations
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;websocket:message-broker</span> <span class="na">application-destination-prefix=</span><span class="s">&quot;/app&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;websocket:stomp-endpoint</span> <span class="na">path=</span><span class="s">&quot;/hello&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;websocket:sockjs/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/websocket:stomp-endpoint&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;websocket:simple-broker</span> <span class="na">prefix=</span><span class="s">&quot;/topic&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/websocket:message-broker&gt;</span>
-</span><span class='line'><span class="nt">&lt;/beans&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>另外一种方式是通过类的方式，代码如下，功能与上面的xml配置相同:</p>
-
-<figure class='code'><figcaption><span>WebSocketConfig.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.context.annotation.Configuration</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.messaging.simp.config.MessageBrokerRegistry</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.socket.config.annotation.StompEndpointRegistry</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Configuration</span>
-</span><span class='line'><span class="nd">@EnableWebSocketMessageBroker</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketConfig</span> <span class="kd">extends</span> <span class="n">AbstractWebSocketMessageBrokerConfigurer</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nd">@Override</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configureMessageBroker</span><span class="o">(</span><span class="n">MessageBrokerRegistry</span> <span class="n">config</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">config</span><span class="o">.</span><span class="na">enableSimpleBroker</span><span class="o">(</span><span class="s">&quot;/topic&quot;</span><span class="o">);</span>
-</span><span class='line'>      <span class="n">config</span><span class="o">.</span><span class="na">setApplicationDestinationPrefixes</span><span class="o">(</span><span class="s">&quot;/app&quot;</span><span class="o">);</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nd">@Override</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerStompEndpoints</span><span class="o">(</span><span class="n">StompEndpointRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">registry</span><span class="o">.</span><span class="na">addEndpoint</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">).</span><span class="na">withSockJS</span><span class="o">();</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>消息类和Controller定义</h2>
-
-<p>Controller定义:</p>
-
-<figure class='code'><figcaption><span>WebSocketConfig.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.zzm.wechat.model.Greeting</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">com.zzm.wechat.model.HelloMessage</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.messaging.handler.annotation.MessageMapping</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.messaging.handler.annotation.SendTo</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Controller</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreetingController</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@MessageMapping</span><span class="o">(</span><span class="s">&quot;/hello&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="nd">@SendTo</span><span class="o">(</span><span class="s">&quot;/topic/greetings&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Greeting</span> <span class="nf">greeting</span><span class="o">(</span><span class="n">HelloMessage</span> <span class="n">message</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">3000</span><span class="o">);</span> <span class="c1">// simulated delay</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">Greeting</span><span class="o">(</span><span class="s">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>消息model的定义:</p>
-
-<figure class='code'><figcaption><span>WebSocketConfig.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Greeting</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">content</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Greeting</span><span class="o">(</span><span class="n">String</span> <span class="n">content</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getContent</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">content</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloMessage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在web.xml中设置controller的url前缀，这样可以避免一些页面的url被controller拦截。</p>
-
-<figure class='code'><figcaption><span>web.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="nt">&lt;servlet&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;servlet-name&gt;</span>mvc-dispatcher<span class="nt">&lt;/servlet-name&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;servlet-class&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="nt">&lt;/servlet-class&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;load-on-startup&gt;</span>1<span class="nt">&lt;/load-on-startup&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/servlet&gt;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nt">&lt;servlet-mapping&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;servlet-name&gt;</span>mvc-dispatcher<span class="nt">&lt;/servlet-name&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;url-pattern&gt;</span>/api/*<span class="nt">&lt;/url-pattern&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/servlet-mapping&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>客户端页面</h2>
-
-<p>首先下载<code>stomp.js</code>和<code>sockjs.js</code>，然后编写一个html页面进行客户端websocket的连接，并实现发送消息和接收消息的功能。我们使用SockJS的方式来创建Websocket连接，注意url要加上domain名称(这里是<code>server</code>)和<code>api</code>前缀。</p>
-
-<figure class='code'><figcaption><span>demo.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="cp">&lt;!DOCTYPE html&gt;</span>
-</span><span class='line'><span class="nt">&lt;html&gt;</span>
-</span><span class='line'><span class="nt">&lt;head&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;title&gt;</span>Hello WebSocket<span class="nt">&lt;/title&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;resources/sockjs-0.3.4.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;resources/stomp.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="kd">var</span> <span class="nx">stompClient</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">function</span> <span class="nx">setConnected</span><span class="p">(</span><span class="nx">connected</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;connect&#39;</span><span class="p">).</span><span class="nx">disabled</span> <span class="o">=</span> <span class="nx">connected</span><span class="p">;</span>
-</span><span class='line'>            <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;disconnect&#39;</span><span class="p">).</span><span class="nx">disabled</span> <span class="o">=</span> <span class="o">!</span><span class="nx">connected</span><span class="p">;</span>
-</span><span class='line'>            <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;conversationDiv&#39;</span><span class="p">).</span><span class="nx">style</span><span class="p">.</span><span class="nx">visibility</span> <span class="o">=</span> <span class="nx">connected</span> <span class="o">?</span> <span class="s1">&#39;visible&#39;</span> <span class="o">:</span> <span class="s1">&#39;hidden&#39;</span><span class="p">;</span>
-</span><span class='line'>            <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;response&#39;</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">function</span> <span class="nx">connect</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>            <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SockJS</span><span class="p">(</span><span class="s1">&#39;/server/api/hello&#39;</span><span class="p">);</span>
-</span><span class='line'>            <span class="nx">stompClient</span> <span class="o">=</span> <span class="nx">Stomp</span><span class="p">.</span><span class="nx">over</span><span class="p">(</span><span class="nx">socket</span><span class="p">);</span>
-</span><span class='line'>            <span class="nx">stompClient</span><span class="p">.</span><span class="nx">connect</span><span class="p">({},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">frame</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="nx">setConnected</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
-</span><span class='line'>                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Connected: &#39;</span> <span class="o">+</span> <span class="nx">frame</span><span class="p">);</span>
-</span><span class='line'>                <span class="nx">stompClient</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;/topic/greetings&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">greeting</span><span class="p">){</span>
-</span><span class='line'>                    <span class="nx">showGreeting</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">greeting</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">content</span><span class="p">);</span>
-</span><span class='line'>                <span class="p">});</span>
-</span><span class='line'>            <span class="p">});</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">function</span> <span class="nx">disconnect</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="nx">stompClient</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="nx">stompClient</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>            <span class="nx">setConnected</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
-</span><span class='line'>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Disconnected&quot;</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">function</span> <span class="nx">sendName</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>            <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">).</span><span class="nx">value</span><span class="p">;</span>
-</span><span class='line'>            <span class="nx">stompClient</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s2">&quot;/app/hello&quot;</span><span class="p">,</span> <span class="p">{},</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="nx">name</span> <span class="p">}));</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">function</span> <span class="nx">showGreeting</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;response&#39;</span><span class="p">);</span>
-</span><span class='line'>            <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">);</span>
-</span><span class='line'>            <span class="nx">p</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">wordWrap</span> <span class="o">=</span> <span class="s1">&#39;break-word&#39;</span><span class="p">;</span>
-</span><span class='line'>            <span class="nx">p</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">createTextNode</span><span class="p">(</span><span class="nx">message</span><span class="p">));</span>
-</span><span class='line'>            <span class="nx">response</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">p</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="nt">&lt;/script&gt;</span>
-</span><span class='line'><span class="nt">&lt;/head&gt;</span>
-</span><span class='line'><span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">&quot;disconnect()&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;noscript&gt;&lt;h2</span> <span class="na">style=</span><span class="s">&quot;color: #ff0000&quot;</span><span class="nt">&gt;</span>Seems your browser doesn&#39;t support Javascript! Websocket relies on Javascript being enabled. Please enable
-</span><span class='line'>    Javascript and reload this page!<span class="nt">&lt;/h2&gt;&lt;/noscript&gt;</span>
-</span><span class='line'><span class="nt">&lt;div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;connect&quot;</span> <span class="na">onclick=</span><span class="s">&quot;connect();&quot;</span><span class="nt">&gt;</span>Connect<span class="nt">&lt;/button&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;disconnect&quot;</span> <span class="na">disabled=</span><span class="s">&quot;disabled&quot;</span> <span class="na">onclick=</span><span class="s">&quot;disconnect();&quot;</span><span class="nt">&gt;</span>Disconnect<span class="nt">&lt;/button&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;conversationDiv&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;label&gt;</span>What is your name?<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">id=</span><span class="s">&quot;name&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;sendName&quot;</span> <span class="na">onclick=</span><span class="s">&quot;sendName();&quot;</span><span class="nt">&gt;</span>Send<span class="nt">&lt;/button&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">&quot;response&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;/body&gt;</span>
-</span><span class='line'><span class="nt">&lt;/html&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>运行结果：</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2015-5/websocket-run.png"></p>
-
-<p>浏览器console信息:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Disconnected
-</span><span class='line'>chrome-extension://fhhdlnnepfjhlhilgmeepgkhjmhhhjkh/js/detector.js:505 detector
-</span><span class='line'>chrome-extension://fhhdlnnepfjhlhilgmeepgkhjmhhhjkh/js/detector.js:506 Object
-</span><span class='line'>stomp.js:130 Opening Web Socket...
-</span><span class='line'>stomp.js:130 Web Socket Opened...
-</span><span class='line'>stomp.js:130 &gt;&gt;&gt; CONNECT
-</span><span class='line'>accept-version:1.1,1.0
-</span><span class='line'>heart-beat:10000,10000
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;&lt;&lt;</span> CONNECTED
-</span><span class='line'>version:1.1
-</span><span class='line'>heart-beat:0,0
-</span><span class='line'>
-</span><span class='line'>connected to server undefined
-</span><span class='line'>demo.html:22 Connected: CONNECTED
-</span><span class='line'>heart-beat:0,0
-</span><span class='line'>version:1.1
-</span><span class='line'>
-</span><span class='line'>&gt;&gt;&gt; SUBSCRIBE
-</span><span class='line'>id:sub-0
-</span><span class='line'>destination:/topic/greetings
-</span><span class='line'>
-</span><span class='line'>&gt;&gt;&gt; SEND
-</span><span class='line'>destination:/app/hello
-</span><span class='line'>content-length:14
-</span><span class='line'>
-</span><span class='line'><span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;zzm&quot;</span><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;&lt;&lt;</span> MESSAGE
-</span><span class='line'>destination:/topic/greetings
-</span><span class='line'>content-type:application/json;charset<span class="o">=</span>UTF-8
-</span><span class='line'>subscription:sub-0
-</span><span class='line'>message-id:3657pj5u-0
-</span><span class='line'>content-length:25
-</span><span class='line'>
-</span><span class='line'><span class="o">{</span><span class="s2">&quot;content&quot;</span>:<span class="s2">&quot;Hello, zzm!&quot;</span><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>gradle运行jetty9</h2>
-
-<p>gradle内置的Jetty版本是Jetty6，由于版本较低不支持websocket，所以我们测试的话需要打包并部署到Jetty9或Tomcat7.0.47+上，但我们可以通过其他gradle插件来把我们的本地服务运行到Jetty9上。这里介绍2个插件，<a href="https://github.com/akhikhl/gretty">Gretty</a>和<a href="https://github.com/bmuschko/gradle-cargo-plugin">Cargo</a>。</p>
-
-<h4>Gretty</h4>
-
-<p>在<code>build.gradle</code>中添加如下脚本:</p>
-
-<figure class='code'><figcaption><span>build.gradle </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">buildscript</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">url</span> <span class="s2">&quot;http://maven.oschina.net/content/groups/public/&quot;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">classpath</span> <span class="s1">&#39;org.akhikhl.gretty:gretty:+&#39;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;org.akhikhl.gretty&#39;</span>
-</span><span class='line'><span class="c1">// apply plugin: &#39;jetty&#39; 注意要注释掉原来的jetty插件</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">gretty</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">httpPort</span> <span class="o">=</span> <span class="mi">9898</span> <span class="c1">// 指定web服务的http端口</span>
-</span><span class='line'>    <span class="n">servletContainer</span> <span class="o">=</span> <span class="s1">&#39;jetty9&#39;</span> <span class="c1">// 这里可以指定tomcat,jetty的几个版本</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后运行<code>gradle appRun</code>即可。</p>
-
-<h4>Cargo</h4>
-
-<p>在<code>build.gradle</code>中添加如下脚本，注意要先下载jetty9的安装包并解压:</p>
-
-<figure class='code'><figcaption><span>build.gradle </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">buildscript</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">url</span> <span class="s2">&quot;http://maven.oschina.net/content/groups/public/&quot;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">dependencies</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">classpath</span> <span class="s1">&#39;com.bmuschko:gradle-cargo-plugin:2.1&#39;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;com.bmuschko.cargo&#39;</span>
-</span><span class='line'><span class="n">cargo</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">containerId</span> <span class="o">=</span> <span class="s1">&#39;jetty9x&#39;</span>
-</span><span class='line'>    <span class="n">port</span> <span class="o">=</span> <span class="mi">9898</span>
-</span><span class='line'>    <span class="n">local</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">homeDir</span> <span class="o">=</span> <span class="n">file</span><span class="o">(</span><span class="s1">&#39;/Users/zhaozhiming/tools/jetty-distribution-9.2.10.v20150310&#39;</span><span class="o">)</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后运行<code>gradle war CargoRunLocal</code>，注意首先要打出war包，然后插件会自动部署war包到Jetty9的安装目录下，这种方式不大灵活，比如一些页面的修改都需要重新部署才能进行测试。</p>
-
-<p>最后附上Spring关于Websocket的文档链接，请见<a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html">这里</a>。</p>
 ]]></content>
   </entry>
   

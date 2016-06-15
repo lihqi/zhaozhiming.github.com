@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: JMockit | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/jmockit/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-05-31T21:00:13+08:00</updated>
+  <updated>2016-06-15T11:12:36+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -29,43 +29,77 @@
 
 <p>首先我们还是来看一下使用了JMockit的Controller单元测试是怎么写的，Controller的功能代码可以查看上一篇post。</p>
 
-<p>{% codeblock lang:java %}
-import com.odde.mail.model.Result;
-import com.odde.mail.service.MailService;
-import mockit.Expectations;
-import mockit.Injectable;
-import mockit.Tested;
-import mockit.integration.junit4.JMockit;
-import org.junit.Test;
-import org.junit.runner.RunWith;</p>
-
-<p>import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;</p>
-
-<p>@RunWith(JMockit.class)
-public class MailControllerTest {</p>
-
-<pre><code>@Tested
-MailController mailController;
-
-@Injectable
-private MailService mailService;
-
-@Test
-public void should_return_status_success_when_send_mail_success() throws Exception {
-    new Expectations() { {
-        mailService.send("test@test.com", "test", "test");
-        result = new Result("成功");
-    } };
-
-    String result = mailController.send("test@test.com", "test", "test");
-
-    assertThat(result, is("{\"status\":\"成功\"}"));
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.service.MailService</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Expectations</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Injectable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Tested</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.integration.junit4.JMockit</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">CoreMatchers</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JMockit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailControllerTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Tested</span>
+</span><span class='line'><span class="n">MailController</span> <span class="n">mailController</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Injectable</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">MailService</span> <span class="n">mailService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_status_success_when_send_mail_success</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">new</span> <span class="nf">Expectations</span><span class="o">()</span> <span class="o">{</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mailService</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Result</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mailController</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s">&quot;test@test.com&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;{\&quot;status\&quot;:\&quot;成功\&quot;}&quot;</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>@RunWith(JMockit.class): 指定单元测试的执行类为JMockit.class;</li>
@@ -81,41 +115,73 @@ public void should_return_status_success_when_send_mail_success() throws Excepti
 
 <p>再来看一下Service的单元测试要怎么改写，同样Service的功能代码可以看上一篇Post。</p>
 
-<p>{% codeblock lang:java %}
-import com.odde.mail.model.Recipient;
-import com.odde.mail.model.Result;
-import com.odde.mail.repo.RecipientRepository;
-import mockit.Injectable;
-import mockit.NonStrictExpectations;
-import mockit.Tested;
-import mockit.integration.junit4.JMockit;
-import org.junit.Test;
-import org.junit.runner.RunWith;</p>
-
-<p>import java.util.List;</p>
-
-<p>import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;</p>
-
-<p>@RunWith(JMockit.class)
-public class RecipientServiceTest {</p>
-
-<pre><code>@Tested
-private RecipientService recipientService;
-
-@Injectable
-private RecipientRepository recipientRepository;
-
-@Test
-public void should_return_success_when_add_recipient_not_exist() throws Exception {
-    Result result = recipientService.add("Tom", "test@test.com");
-    assertThat(result.getStatus(), is("成功"));
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Recipient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.model.Result</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.odde.mail.repo.RecipientRepository</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Injectable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.NonStrictExpectations</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.Tested</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">mockit.integration.junit4.JMockit</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">Is</span><span class="o">.</span><span class="na">is</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JMockit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RecipientServiceTest</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Tested</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RecipientService</span> <span class="n">recipientService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Injectable</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">RecipientRepository</span> <span class="n">recipientRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_return_success_when_add_recipient_not_exist</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Result</span> <span class="n">result</span> <span class="o">=</span> <span class="n">recipientService</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;Tom&quot;</span><span class="o">,</span> <span class="s">&quot;test@test.com&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">getStatus</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;成功&quot;</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>相对Controller Test这里少了一步对recipientRepository对象findByEmail方法的mock，因为如果不通过Expectations进行方法mock的话，方法会默认返回null，而我们要测试的场景正是需要findByEmail方法返回null，所以mock方法这一步我们也省了。<br/>
 改写后的整体代码也比原来的少了很多，而且速度更快。</p>
