@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: sql | Hacker and Geeker's Way]]></title>
+  <link href="http://zhaozhiming.github.io/tags/sql/atom.xml" rel="self"/>
+  <link href="http://zhaozhiming.github.io/"/>
+  <updated>2016-07-20T19:25:53+08:00</updated>
+  <id>http://zhaozhiming.github.io/</id>
+  <author>
+    <name><![CDATA[赵芝明]]></name>
+    <email><![CDATA[kingzzm1982@sina.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[让你的 SQL 脚本自动升级]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2016/07/17/make-your-sql-script-auto-upgrade/"/>
+    <updated>2016-07-17T17:12:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2016/07/17/make-your-sql-script-auto-upgrade</id>
+    <content type="html"><![CDATA[<p><img src="/images/post/2016/07/sql_upgrade.png" width="400" height="300"></p>
+
+<p>以前的公司在部署 SQL 脚本的时候比较麻烦，需要写一份部署文档，上面写了这次部署需要执行的 SQL 脚本，然后由部署人员人工来执行这些脚本。现在发现一种比较简便的方法，可以让系统自己检查要执行哪些 SQL 脚本然后执行，减少了人力成本并提高了效率。</p>
+
+<!--more-->
+
+
+<h2>背景</h2>
+
+<p>项目使用 <a href="https://www.sqlite.org/">sqlite</a> 来存储数据，因为还没上生产环境，开发人员在升级数据表结构时都是删掉数据库文件然后重新生成，这种方法一旦在生产环境执行的话就会将生产数据全部清除，所以需要使用增量升级数据库的方法来维护数据库。</p>
+
+<h2>设计</h2>
+
+<p>因为程序员都比较懒，加上又没有专职的部署人员，所以我们决定写个程序来让我们的数据库自动增量更新。大概的思路是这样的：</p>
+
+<p><strong>在数据库中和系统文件中各记录一个版本号，系统启动时对比这 2 个版本号，如果数据库版本号小于等于系统文件版本号，则循环执行<code>数据库版本号 + 1</code>的脚本，每循环一次数据库版本号递增 1，直到数据库版本号大于系统文件版本号</strong></p>
+
+<h2>步骤</h2>
+
+<p>上面是概要设计，下面是具体的步骤：</p>
+
+<ul>
+<li>在数据库中记录一个版本号，然后在系统文件（比如<code>package.json</code>）也记录一个版本号</li>
+<li>数据库版本号初始值为 0，系统文件版本号为部署 SQL 脚本的次数，比如还没执行过任何 SQL 脚本值为 0，执行了 1 次值为 1</li>
+<li>系统启动时对比这 2 个版本号，如果数据库版本号小于等于系统文件版本号，则开始循环执行 SQL 脚本</li>
+<li>每一次循环根据不同的版本号执行不同的 SQL 脚本，然后将数据库版本号值加 1</li>
+<li>当数据库版本号大于系统文件版本号时，退出循环</li>
+</ul>
+
+
+<h2>流程</h2>
+
+<p><img src="/images/post/2016/07/flow_chart.png"></p>
+
+<h2>结论</h2>
+
+<p>这样实现后，以后如果有新的 SQL 脚本改动，只需要修改相应循环里面代码，增加新版本的 SQL 脚本的 if 分支，然后把系统文件版本加 1 即可，系统启动就会自动执行了。</p>
+]]></content>
+  </entry>
+  
+</feed>
