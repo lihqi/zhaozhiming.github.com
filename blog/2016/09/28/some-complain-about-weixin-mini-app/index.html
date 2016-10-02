@@ -1,0 +1,282 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>微信小程序之槽点一二三 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="微信小程序之槽点一二三">
+	<meta name="keywords" content="weixin, wechat, mini-app">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='/stylesheets/slackey.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/fjalla_one.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/amethysta.css' rel='stylesheet' type='text/css'>
+	<script src="http://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">微信小程序之槽点一二三</h2>
+	<div class="entry-content"><p><img src="/images/post/2016/09/wechat.jpg"></p>
+
+<p>微信小程序最近火爆IT界，抱着尝鲜的心理我也下载了<strong>微信web开发者工具</strong>并撸了一个Demo小程序，撸完之后发现微信小程序就开发过程而言，就像背影很美正面像鬼的女子，远没有外界所说的那么好，在实际开发过程中有各种不爽，下面我就来一一说下。</p>
+
+<!--more-->
+
+
+<p></p>
+
+<h2>不能npm install</h2>
+
+<p>微信小程序最大的一个痛点是不能使用第三方包，只能用原生的JavaScript的功能，虽然可以支持ES6了，但是像Lodash这种工具包要是能用的话，可以少写很多代码。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// 用原生的JavaScript</span>
+</span><span class='line'><span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">todos</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">todo</span> <span class="o">=</span> <span class="nx">todos</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nb">Number</span><span class="p">(</span><span class="nx">todoId</span><span class="p">)</span> <span class="o">===</span> <span class="nx">todo</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">todo</span><span class="p">.</span><span class="nx">completed</span> <span class="o">=</span> <span class="o">!</span><span class="nx">todo</span><span class="p">.</span><span class="nx">completed</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">todos</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">todo</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">setData</span><span class="p">({</span>
+</span><span class='line'>      <span class="nx">todos</span><span class="o">:</span> <span class="nx">todos</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>    <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 使用了lodash</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">todos</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">(</span><span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">todoId</span><span class="o">===</span> <span class="nx">x</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+</span><span class='line'><span class="nx">_</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">todos</span><span class="p">,</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nx">index</span><span class="p">}.</span><span class="nx">completed</span><span class="err">`</span><span class="p">,</span> <span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">todos</span><span class="p">,</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nx">index</span><span class="p">}.</span><span class="nx">completed</span><span class="err">`</span><span class="p">));</span>
+</span><span class='line'><span class="k">this</span><span class="p">.</span><span class="nx">setData</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">todos</span><span class="o">:</span> <span class="nx">todos</span><span class="p">,</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>不能使用第三方包的最大坏处是不能复用代码，想象一下我在一个项目有几个组件写的非常好，可以在提供给其他项目使用，但由于小程序不能使用第三方包，就只能把原来的代码拷贝到新项目里面去。这样导致的结果就是每个小程序项目充斥着重复的代码，一旦公共代码要改动会要牵扯到很多个地方的修改。</p>
+
+<h2>css调试器不能自动补全</h2>
+
+<p><img class="right" src="/images/post/2016/09/chrome_css.png" width="400" height="300"></p>
+
+<p>我们在调试页面样式时，很多时候会借助Chrome浏览器的开发者工具，在里面对某个元素添加样式非常方便，而且在输入css属性和值时工具会有自动补全的提示，这一点非常有用，即使你忘记了一些css也可以完成调试样式的工作。</p>
+
+<p><img class="right" src="/images/post/2016/09/wechat_css.png" width="400" height="300"></p>
+
+<p>但是在微信开发者工具里面就不是这样了，工具不会自动补全css属性和值，作为开发者不可能记住每个css的属性，没有了自动补全让开发效率低了很多。</p>
+
+<h2>UI组件不好用</h2>
+
+<p>微信开发者工具提供了很多UI组件，基本上可以满足大部分的开发场景，但还是不得不吐槽里面一些组件的缺点。</p>
+
+<h4><code>checkbox</code>不能单独使用</h4>
+
+<p>开放的<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/component/checkbox.html?t=1474974357075"><code>checkbox</code></a>组件需要包含在<code>checkbox-group</code>里面才能使用，如果直接使用<code>checkbox</code>组件，一个是不能监听change事件，二个是通过tap事件不能获取到check值。</p>
+
+<p>所以只能结合<code>checkbox-group</code>一起使用，而多个<code>checkbox</code>的场景又比较少，所以感觉这个UI组件很鸡肋。</p>
+
+<h4>icon 太少</h4>
+
+<p>还有要吐槽的一个组件是<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/component/icon.html?t=1475052051701">icon</a>，里面提供的icon非常非常的少，只有可怜的15个。可以预想到以后随着小程序逐渐复杂，开发者需要开发自己的icon组件，但开发出来的组件又不能复用（参见上面第一条），所以小程序项目会到处充斥着重复的代码。</p>
+
+<h2>刷新没用，每次都要重新编译</h2>
+
+<p>微信开发者工具的动作菜单有<code>项目重建</code>和<code>刷新</code>两个子菜单，把这两个菜单放在一起很容易给人这样一种错觉，<code>项目重建</code>是重新编译项目，而<code>刷新</code>是不重新编译项目只刷新页面。<code>项目重建</code>没有什么问题，但是<code>刷新</code>菜单就不知道有什么用了，按了之后页面有进度条加载，但是并没有发生变化，而且大部分时候会导致console报错，真心不知道这个菜单有什么鸟用。</p>
+
+<h2>不能写测试</h2>
+
+<p>测试是项目质量的保障，但在小程序里面没有示例代码和文档来指导你如何写测试代码，其实根本没法让你写单元测试。微信团队你们难道指望每个小程序都是靠手工测试来保证质量吗？我猜测微信开发者工具的开发团队（可能是腾讯的前端团队）平时也很少甚至不写单元测试，所以在开发者工具中就没有关于单元测试的考虑👎。</p>
+
+<h2>总结</h2>
+
+<p>微信小程序刚推出不久，有一些缺点毛病是正常的，但如果腾讯希望小程序以后能掀起一股开发热潮，就请在开发者工具上加强开发体验，让开发者开发爽了，才能做出让用户爽的小程序来。</p>
+
+<p>最后附上我练手的小玩意儿，项目地址是：<a href="https://github.com/zhaozhiming/wechat-todolist">https://github.com/zhaozhiming/wechat-todolist</a></p>
+
+<p><img src="/images/post/2016/09/wechat-todo.gif"></p>
+</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/blog/2016/09/28/some-complain-about-weixin-mini-app/#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	<section id="comment">
+	    <h2 class="title">Comments</h2>
+	    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+	</section>
+	
+</div>
+
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2016
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'zhaozhiming';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2016/09/28/some-complain-about-weixin-mini-app/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2016/09/28/some-complain-about-weixin-mini-app/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>
