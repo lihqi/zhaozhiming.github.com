@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: docker | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/docker/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-12-04T15:46:58+08:00</updated>
+  <updated>2016-12-13T11:25:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/11/18/hello-docker/"/>
     <updated>2014-11-18T21:45:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/11/18/hello-docker</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-11/docker.png"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2014-11/docker.png %}</p>
 
 <p>作为这个时代的程序员真的很幸福，每天不但有一些改变世界的产品出现，而且提高程序员开发效率的工具也是层出不穷。之前介绍过如何使用<a href="http://zhaozhiming.github.io/blog/2014/10/02/ceph-install-with-vagrant-and-ansible/">Vagrant来创建Ceph环境</a>，使用Vagrant可以很方便的管理我们的虚拟机，同时来定制开发团队的开发环境，现在又出现了Docker，让我们有了一个更好的选择。</p>
 
@@ -31,11 +31,15 @@
 
 <p>Docker的介绍也是不断在变，以前官方的Docker的概括是这样的:</p>
 
-<p><blockquote><p>An open source project to pack, ship and run any application as a lightweight container.</p></blockquote></p>
+<p>{% blockquote %}
+An open source project to pack, ship and run any application as a lightweight container.
+{% endblockquote %}</p>
 
 <p>现在是这样的:</p>
 
-<p><blockquote><p>An open platform for distributed applications for developers and sysadmins.</p></blockquote></p>
+<p>{% blockquote %}
+An open platform for distributed applications for developers and sysadmins.
+{% endblockquote %}</p>
 
 <p>但不管怎样，Docker是一个很好的东西，可以让我们快速创建自己的开发环境，真正做到<code>Build once, Run anywhere</code>。</p>
 
@@ -62,7 +66,7 @@
 
 <p>在Docker官网上可以看到已经有很多做好的镜像，比如Ubuntu，CentOS，MySql等，而且每天都有一些新的镜像不断在上传，因为上传一个镜像就像github上传代码一样简单。</p>
 
-<p><img src="/images/post/2014-11/docker-images.png"></p>
+<p>{% img /images/post/2014-11/docker-images.png %}</p>
 
 <p>但是Docker在下载镜像的时候会发现速度很慢，有时候甚至连不上，这时候需要翻墙(可以看看我之前的文章，<a href="http://zhaozhiming.github.io/blog/2014/08/29/let-the-router-cross-great-wall-part-1/">让路由飞越长城(一)</a>，<a href="http://zhaozhiming.github.io/blog/2014/08/30/let-the-router-cross-great-wall-part-2/">让路由飞越长城(二)</a>)，或者找一下国内的镜像(可以看下<a href="https://docker.cn/">这里</a>)，虽然国内的镜像没有Docker官网的那么全，但基本的镜像还是有的。</p>
 
@@ -74,7 +78,7 @@
 
 <p>如果我们有虚拟化环境就不会存在这种问题了，在虚拟环境安装各种服务，不需要的话销毁环境重新创建一个即可，简单又方便。</p>
 
-<p><img src="/images/post/2014-11/docker_vagrant_small.png"></p>
+<p>{% img /images/post/2014-11/docker_vagrant_small.png %}</p>
 
 <p>在Docker推出之后，网上就有各种比较Docker和Vagrant的文章，可以看看StackOverFlow上面的<a href="http://stackoverflow.com/questions/16647069/should-i-use-vagrant-or-docker-io-for-creating-an-isolated-environment">这篇文章</a>，连Docker的作者也来回答这个问题。</p>
 
@@ -88,7 +92,7 @@
 
 <p>有趣的是，当名字随机到<code>boring_wozniak</code>的时候，程序会跳过生成这个名字，而继续生成下个随机名字，旁边有段注释是<code>Steve Wozniak is not boring</code>，相当好玩。</p>
 
-<p><img src="/images/post/2014-11/docker-humorous.png"></p>
+<p>{% img /images/post/2014-11/docker-humorous.png %}</p>
 ]]></content>
   </entry>
   

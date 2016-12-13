@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: redhat | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/redhat/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-12-04T15:46:58+08:00</updated>
+  <updated>2016-12-13T11:25:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/09/17/red-hat-enterprise-offline-env-install-dokuwiki/"/>
     <updated>2014-09-17T12:23:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/09/17/red-hat-enterprise-offline-env-install-dokuwiki</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-9/dokuwiki.png"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2014-9/dokuwiki.png %}</p>
 
 <h2><a href="https://www.dokuwiki.org">Dokuwiki</a>介绍</h2>
 
@@ -40,7 +40,11 @@
 
 <p>下面是Dokuwiki的系统要求:</p>
 
-<p><blockquote><p>DokuWiki System Requirements<br/>1. Webserver supporting PHP<br/>2. PHP version 5.2 or later</p></blockquote></p>
+<p>{% blockquote %}
+DokuWiki System Requirements
+1. Webserver supporting PHP
+2. PHP version 5.2 or later
+{% endblockquote %}</p>
 
 <h2>安装Apache Http Server(httpd)</h2>
 
@@ -55,23 +59,16 @@
 
 <p>先确定系统已经安装了这2个软件，如果没有的话先到<a href="http://apr.apache.org">Apache APR</a>下载源码包，下载完成后分别解压到httpd的<code>scrlib/apr</code>和<code>srclib/apr-util</code>(<code>srclib</code>在httpd的压缩文件解压后的目录里面)，解压后的目录结构如下。后面在安装httpd的时候使用<code>./configure</code>命令时加上<code>--with-included-apr</code>就可以了。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>httpd-2.4.10
-</span><span class='line'>&amp;mdash;|scrlib
-</span><span class='line'>&amp;mdash;&amp;mdash;|apr
-</span><span class='line'>&amp;mdash;&amp;mdash;&amp;mdash;|apr.exp
-</span><span class='line'>&amp;mdash;&amp;mdash;&amp;mdash;|&amp;hellip;other apr files
-</span><span class='line'>&amp;mdash;&amp;mdash;|apr-util
-</span><span class='line'>&amp;mdash;&amp;mdash;&amp;mdash;|aprutil.dep
-</span><span class='line'>&amp;mdash;&amp;mdash;&amp;mdash;|&amp;hellip;other apr-util files
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+httpd-2.4.10
+&mdash;|scrlib
+&mdash;&mdash;|apr
+&mdash;&mdash;&mdash;|apr.exp
+&mdash;&mdash;&mdash;|&hellip;other apr files
+&mdash;&mdash;|apr-util
+&mdash;&mdash;&mdash;|aprutil.dep
+&mdash;&mdash;&mdash;|&hellip;other apr-util files
+{% endcodeblock %}</p>
 
 <ul>
 <li>Perl-Compatible Regular Expressions Library (<a href="http://www.pcre.org">PCRE</a>)
@@ -79,99 +76,83 @@ PCRE安装比较简单，去pcre的网站下载源码包后解压，cd到解压�
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>./configure
-</span><span class='line'>make
-</span><span class='line'>make install
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+./configure
+make
+make install
+{% endcodeblock %}</p>
 
 <p>安装完依赖的软件后，就可以开始安装httpd了，到Apache的网站下载最新版的<a href="http://httpd.apache.org/download.cgi">Apache Http Server软件</a>，执行以下命令，最后一步是启动httpd服务，如果安装成功的话在浏览器输入<code>http://127.0.0.1</code>可以看到<code>It Works!</code>的字样。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>./configure &amp;mdash;prefix<span class="o">=</span>/usr/local/apache2 &amp;mdash;with-included-apr
-</span><span class='line'>make
-</span><span class='line'>make install
-</span><span class='line'>/usr/local/apache2/bin/apachectl -k start
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+./configure &mdash;prefix=/usr/local/apache2 &mdash;with-included-apr
+make
+make install
+/usr/local/apache2/bin/apachectl -k start
+{% endcodeblock %}</p>
 
 <h2>安装<a href="http://php.net">PHP</a></h2>
 
 <p>安装PHP也需要安装其他软件，需要先安装<a href="http://xmlsoft.org">libxml2</a>，先到网站下载源码包，然后执行下面的命令安装。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>./configure &amp;mdash;prefix<span class="o">=</span>/usr/local/libxml2
-</span><span class='line'>make
-</span><span class='line'>make install
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+./configure &mdash;prefix=/usr/local/libxml2
+make
+make install
+{% endcodeblock %}</p>
 
 <p>安装完libxml2后，到PHP网站下载最新版的源码，然后执行下面的命令安装，注意configure要带&mdash;with-apx2参数，指向apache2的apx2命令。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>./configure &amp;mdash;prefix<span class="o">=</span>/usr/local/php &amp;mdash;with-apxs2<span class="o">=</span>/usr/local/apache2/bin/apxs &amp;mdash;with-libxml-dir<span class="o">=</span>/usr/local/libxml2
-</span><span class='line'>make
-</span><span class='line'>make install
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+./configure &mdash;prefix=/usr/local/php &mdash;with-apxs2=/usr/local/apache2/bin/apxs &mdash;with-libxml-dir=/usr/local/libxml2
+make
+make install
+{% endcodeblock %}</p>
 
 <p>编辑httpd的配置文件即/usr/local/apache2/conf/httpd.conf，并添加以下内容:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>AddType application/x-httpd-php .php
-</span><span class='line'>AddType application/x-httpd-php-source .phps
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+AddType application/x-httpd-php .php
+AddType application/x-httpd-php-source .phps
+{% endcodeblock %}</p>
 
 <p>复制php.ini文件到PHP的安装目录，源码包里有2个php.ini文件，随便哪一个都可以。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>cp ~/tools/php-5.6.0/php.ini-production /usr/local/php/php.ini
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+cp ~/tools/php-5.6.0/php.ini-production /usr/local/php/php.ini
+{% endcodeblock %}</p>
 
 <p>重启httpd。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>/usr/local/apache2/bin/apachectl -k restart
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+/usr/local/apache2/bin/apachectl -k restart
+{% endcodeblock %}</p>
 
 <p>建立test.php文件放在httpd目录(/usr/local/apache2/)下的htdocs下，内容如下，通过浏览器查看<code>http://127.0.0.1/test.php</code>，如果显示了内容就表示PHP安装成功了。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="o">?</span><span class="nx">php</span>
-</span><span class='line'><span class="nb">phpinfo</span><span class="p">();</span>
-</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:php %}
+&lt;?php
+phpinfo();
+?>
+{% endcodeblock %}</p>
 
 <h2>安装dokuwiki</h2>
 
 <p>到dokuwiki网站下载源码包，执行下面的命令进行安装。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>mv 下载目录/dokuwiki-xxxx.tgz /usr/local/apache2/htdocs
-</span><span class='line'><span class="nb">cd</span> /usr/local/apache2/htdocs
-</span><span class='line'>tar -xvf dokuwiki-xxxx.tgz
-</span><span class='line'>mv dokuwiki-xxxx dokuwiki
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+mv 下载目录/dokuwiki-xxxx.tgz /usr/local/apache2/htdocs
+cd /usr/local/apache2/htdocs
+tar -xvf dokuwiki-xxxx.tgz
+mv dokuwiki-xxxx dokuwiki
+{% endcodeblock %}</p>
 
 <p>查询httpd的用户是什么，这样才可以将dokuwiki的文件夹授权给这个用户，执行下面命令可以看到httpd进程的用户，我查到的是daemon。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>lsof -i | grep :http
-</span><span class='line'>chown -R daemon:daemon dokuwiki
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+lsof -i | grep :http
+chown -R daemon:daemon dokuwiki
+{% endcodeblock %}</p>
 
 <p>在浏览器中输入<code>http://127.0.0.1/dokuwiki/install.php</code>可以看到安装向导页面，根据向导安装dokuwiki即可。</p>
 
@@ -181,23 +162,16 @@ PCRE安装比较简单，去pcre的网站下载源码包后解压，cd到解压�
 
 <p>安装系统是Ubuntu 14.04 LTS，执行完下面的命令，dokuwiki就安装完成了。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo apt-get update
-</span><span class='line'>sudo apt-get install apache2
-</span><span class='line'>sudo apt-get install php5
-</span><span class='line'><span class="nb">cd</span> /var/www
-</span><span class='line'>sudo cp ~/Download/dokuwiki-xxx.tgz .
-</span><span class='line'>sudo tar -zxvf dokuwiki-xxxx.tgz
-</span><span class='line'>sudo mv dokuwiki-xxxx dokuwiki
-</span><span class='line'>sudo chown -R www-data:www-data dokuwiki
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+sudo apt-get update
+sudo apt-get install apache2
+sudo apt-get install php5
+cd /var/www
+sudo cp ~/Download/dokuwiki-xxx.tgz .
+sudo tar -zxvf dokuwiki-xxxx.tgz
+sudo mv dokuwiki-xxxx dokuwiki
+sudo chown -R www-data:www-data dokuwiki
+{% endcodeblock %}</p>
 ]]></content>
   </entry>
   

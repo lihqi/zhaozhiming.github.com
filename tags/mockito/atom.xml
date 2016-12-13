@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: mockito | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/mockito/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-12-04T15:46:58+08:00</updated>
+  <updated>2016-12-13T11:25:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -28,61 +28,34 @@
 <p>解决办法：修改方法的参数类型，去掉泛型通配符。我遇到的相关代码去掉通配符之后也是运行正常的，如果去掉后运行不正常，可能需要寻找其他解决办法，具体没有研究。</p>
 
 <p>2.mock对象的方法有多个参数，如果对第一个参数使用any()方法匹配，则后面的所有参数都需要使用any匹配，而不能使用真实对象作为参数。<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>error info &ndash; test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">This</span> <span class="n">exception</span> <span class="n">may</span> <span class="n">occur</span> <span class="k">if</span> <span class="n">matchers</span> <span class="n">are</span> <span class="n">combined</span> <span class="n">with</span> <span class="n">raw</span> <span class="nl">values:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c1">//incorrect:</span>
-</span><span class='line'><span class="n">someMethod</span><span class="o">(</span><span class="n">anyObject</span><span class="o">(),</span> <span class="s">&quot;raw String&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">When</span> <span class="n">using</span> <span class="n">matchers</span><span class="o">,</span> <span class="n">all</span> <span class="n">arguments</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">provided</span> <span class="n">by</span> <span class="n">matchers</span><span class="o">.</span>
-</span><span class='line'><span class="n">For</span> <span class="nl">example:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c1">//correct:</span>
-</span><span class='line'><span class="n">someMethod</span><span class="o">(</span><span class="n">anyObject</span><span class="o">(),</span> <span class="n">eq</span><span class="o">(</span><span class="s">&quot;String by matcher&quot;</span><span class="o">));</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock error info &ndash; test.java lang:java %}
+This exception may occur if matchers are combined with raw values:</p>
+
+<pre><code>//incorrect:
+someMethod(anyObject(), "raw String");
+</code></pre>
+
+<p>When using matchers, all arguments have to be provided by matchers.
+For example:</p>
+
+<pre><code>//correct:
+someMethod(anyObject(), eq("String by matcher"));
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <p>3.在setUp方法里面进行方法mock，直接在IDE里面运行junit成功，但用ant运行则会报错，其实这是另外一个测试类里面verify方法使用错误，如下：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>code &ndash; test.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c1">//错误</span>
-</span><span class='line'><span class="n">verify</span><span class="o">(</span><span class="n">packageBuildContext</span><span class="o">.</span><span class="na">getPackageBuilder</span><span class="o">());</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">//正确</span>
-</span><span class='line'><span class="n">verify</span><span class="o">(</span><span class="n">packageBuildContext</span><span class="o">).</span><span class="na">getPackageBuilder</span><span class="o">()</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock code &ndash; test.java lang:java %}</p>
+
+<pre><code>//错误
+verify(packageBuildContext.getPackageBuilder());
+
+//正确
+verify(packageBuildContext).getPackageBuilder()
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <p>很奇怪，在用ant跑单元测试的时候，这个测试类的错误不是在这个类的测试报告里体现，而是出现在另外一个类的测试报告里，而且直接在IDE里面运行junit不会报错。</p>
 ]]></content>
