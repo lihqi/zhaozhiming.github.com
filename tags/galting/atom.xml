@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: galting | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/galting/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-12-13T11:25:35+08:00</updated>
+  <updated>2017-01-10T20:58:43+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/02/28/hello-galting/"/>
     <updated>2014-02-28T07:30:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/02/28/hello-galting</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-2/gatling.png %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-2/gatling.png"></p>
 
 <p>为什么要写Gatling呢？网上已经有一些介绍Gatling的好文章了，比如两位TW同事的文章，可以看<a href="http://www.infoq.com/cn/articles/new-generation-server-testing-tool-gatling">这里</a>（我知道Gatling也是因为这位作者介绍的），还有<a href="http://www.cnblogs.com/huang0925/p/3488313.html">这里</a>。主要是因为最近在使用Gatling做压力测试，感觉这个工具非常好用，所以想结合自己的使用情况也推荐一下。Gatling是基于scala写的一个开源的压力测试工具，它的特点是简单易用，测试报告简洁漂亮，api通俗易懂。</p>
 
@@ -39,13 +39,20 @@
 
 <p>看过Galting的api的人就会发现，它的语法很像自然语言，比如测试一个get类型的http请求，它可能会这样写：</p>
 
-<p>{% codeblock demo lang:scala %}
-exec(http(&ldquo;demo&rdquo;)</p>
-
-<pre><code>.get("http://www.myweb.com/helloworld")
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">demo</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;.</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;http://www.myweb.com/helloworld&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>是不是很容易懂，这种就是基于DSL来写的代码，关于DSL可以看<a href="http://book.douban.com/subject/21964984/">这本书</a>，这本书我还没怎么看，等看完了以后再做分享，DSL不单单只是把代码写得像自然语言那样简单。</p>
 
@@ -53,29 +60,52 @@ exec(http(&ldquo;demo&rdquo;)</p>
 
 <p>要想了解Gatling的各种api，这里推荐看Gatling源码里面的HttpCompileTest这个测试类，这里包含了http几乎所有的api使用示例。下面是截取的代码片段，全部代码可以看<a href="https://github.com/excilys/gatling/blob/f5aeee2492dedd665b0dcf0b5b60f0a2227a53b6/gatling-bundle/src/test/scala/io/gatling/bundle/test/HTTPCompileTest.scala">这里</a>。</p>
 
-<p>{% codeblock demo lang:scala %}
-.group(&ldquo;C'est ici qu'on trouve des Poneys&rdquo;) {</p>
-
-<pre><code>        exec(http("Catégorie Poney").post("/")
-            .param("baz", "${qix}")
-            .multivaluedParam("foo", Seq("bar")))
-            .exec(http("Catégorie Poney").post("/").multivaluedParam("foo", "${bar}"))
-            .exec(http("Catégorie Poney").get("/").queryParam("omg", "foo"))
-            .exec(http("Catégorie Poney").get("/").queryParam("omg", "${foo}"))
-            .exec(http("Catégorie Poney").get("/").queryParam("omg", session =&gt; "foo"))
-            .exec(http("Catégorie Poney").get("/").multivaluedQueryParam("omg", List("foo")))
-            .exec(http("Catégorie Poney").get("/").multivaluedQueryParam("omg", "${foo}"))
-            .exec(http("Catégorie Poney").get("/").multivaluedQueryParam("omg", List("foo")))
-    }
-    .uniformRandomSwitch(exec(http("Catégorie Poney").get("/")), exec(http("Catégorie Licorne").get("/")))
-    .randomSwitch(
-        40d -&gt; exec(http("Catégorie Poney").get("/")),
-        50d -&gt; exec(http("Catégorie Licorne").get("/")))
-    .randomSwitch(40d -&gt; exec(http("Catégorie Poney").get("/")))
-    .pause(pause2)
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="o">.</span><span class="n">group</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">C</span><span class="-Symbol">&#39;est</span> <span class="n">ici</span> <span class="n">qu</span><span class="-Symbol">&#39;on</span> <span class="n">trouve</span> <span class="n">des</span> <span class="nc">Poneys</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">post</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">param</span><span class="o">(</span><span class="s">&quot;baz&quot;</span><span class="o">,</span> <span class="s">&quot;${qix}&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">multivaluedParam</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">&quot;bar&quot;</span><span class="o">)))</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">post</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">multivaluedParam</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;${bar}&quot;</span><span class="o">))</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">queryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">))</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">queryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="s">&quot;${foo}&quot;</span><span class="o">))</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">queryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="n">session</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="s">&quot;foo&quot;</span><span class="o">))</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">multivaluedQueryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="nc">List</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)))</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">multivaluedQueryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="s">&quot;${foo}&quot;</span><span class="o">))</span>
+</span><span class='line'>            <span class="o">.</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">).</span><span class="n">multivaluedQueryParam</span><span class="o">(</span><span class="s">&quot;omg&quot;</span><span class="o">,</span> <span class="nc">List</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)))</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">uniformRandomSwitch</span><span class="o">(</span><span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)),</span> <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Licorne&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)))</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">randomSwitch</span><span class="o">(</span>
+</span><span class='line'>        <span class="mi">40</span><span class="n">d</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)),</span>
+</span><span class='line'>        <span class="mi">50</span><span class="n">d</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Licorne&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)))</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">randomSwitch</span><span class="o">(</span><span class="mi">40</span><span class="n">d</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">exec</span><span class="o">(</span><span class="n">http</span><span class="o">(</span><span class="s">&quot;Catégorie Poney&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)))</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">pause</span><span class="o">(</span><span class="n">pause2</span><span class="o">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这里说下randomSwitch这个方法，这个方法可以模拟负载均衡，比如上面40d和50d的两行代码，会有40%的几率执行上面一行代码，50%的几率执行下面一行代码。</p>
 
@@ -87,7 +117,7 @@ exec(http(&ldquo;demo&rdquo;)</p>
 
 <p>下面是Gatling的报告截图，界面很漂亮，而且参数很齐全，包括全部的请求数，成功/失败的请求数，请求的最大/最小/平均响应时间等。</p>
 
-<p>{% img /images/post/2014-2/gatling_report.png %}</p>
+<p><img src="/images/post/2014-2/gatling_report.png"></p>
 
 <h2>Http &amp; JMS</h2>
 

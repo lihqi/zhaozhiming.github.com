@@ -6,7 +6,7 @@
 	<title>Hacker and Geeker's Way</title>
     <meta name="author" content="赵芝明">
     
-	<meta name="description" content="Published on: Feb 4th, 2013 Tags: code 上一篇blog介绍了插件开发中要注意的一些问题， 我们再来介绍插件开发完成后，如何上传到jenkins的插件中心（这里假设你的代码是放在github上的，使用svn或其他版本管理工具的请参考其他文章）。 Read on &hellip;">
+	<meta name="description" content="Published on: May 19th, 2013 Tags: code 在上一篇blog中，我们将sonar几个需要的环境都搭建好了，包括sonar的服务器，sonar runner，sonar的javascript插件。现在我们就来讲如何自定义JS扫描规则。 Read on &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -18,6 +18,7 @@
     <link href='/stylesheets/slackey.css' rel='stylesheet' type='text/css'>
     <link href='/stylesheets/fjalla_one.css' rel='stylesheet' type='text/css'>
     <link href='/stylesheets/amethysta.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/css_grid.css' rel='stylesheet' type='text/css'>
 	<script src="http://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
@@ -117,23 +118,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/01/10/complete-guide-grid-zhcn-part3/">Grid 的完整介绍（三）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/09/complete-guide-grid-zhcn-part2/">Grid 的完整介绍（二）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/08/complete-guide-grid-zhcn-part1/">Grid 的完整介绍（一）</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/12/11/develpers-side-project-zh-cn/">开发人员的业余项目</a>
       </li>
     
       <li class="post">
         <a href="/blog/2016/09/28/some-complain-about-weixin-mini-app/">微信小程序之槽点一二三</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/08/20/use-gitpage-to-publis-your-site-with-custom-domain/">使用 GitHub Page 来发布属于你自己的网站</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/07/17/make-your-sql-script-auto-upgrade/">让你的 SQL 脚本自动升级</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/06/12/do-we-need-tester-in-our-team/">开发团队里是否需要测试人员？</a>
       </li>
     
   </ul>
@@ -142,11 +143,11 @@
   <h1>Tags</h1>
   <ul class="tag-cloud">
 	<a style="font-size: 194%" href="/tags/ant/">ant</a>
+<a style="font-size: 159%" href="/tags/css/">css</a>
 <a style="font-size: 171%" href="/tags/jacoco/">jacoco</a>
 <a style="font-size: 200%" href="/tags/java/">java</a>
 <a style="font-size: 187%" href="/tags/javascript/">javascript</a>
 <a style="font-size: 210%" href="/tags/jenkins/">jenkins</a>
-<a style="font-size: 159%" href="/tags/js/">js</a>
 <a style="font-size: 159%" href="/tags/react/">react</a>
 <a style="font-size: 194%" href="/tags/sonar/">sonar</a>
 <a style="font-size: 187%" href="/tags/spring/">spring</a>
@@ -233,7 +234,7 @@
 </section>
 <section>
   <h1>文章归档</h1>
-  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2016 (11)</li><ul class="month_list"><li class="month"><a href='/blog/2016/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2016/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2016/08/'>AUG (1)</a></li><li class="month"><a href='/blog/2016/07/'>JUL (1)</a></li><li class="month"><a href='/blog/2016/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2016/05/'>MAY (2)</a></li><li class="month"><a href='/blog/2016/03/'>MAR (3)</a></li><li class="month"><a href='/blog/2016/02/'>FEB (1)</a></li></ul><li class="year first_open">2015 (21)</li><ul class="month_list"><li class="month"><a href='/blog/2015/12/'>DEC (2)</a></li><li class="month"><a href='/blog/2015/11/'>NOV (4)</a></li><li class="month"><a href='/blog/2015/10/'>OCT (1)</a></li><li class="month"><a href='/blog/2015/09/'>SEP (3)</a></li><li class="month"><a href='/blog/2015/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2015/05/'>MAY (1)</a></li><li class="month"><a href='/blog/2015/04/'>APR (2)</a></li><li class="month"><a href='/blog/2015/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2015/01/'>JAN (2)</a></li></ul><li class="year first_open">2014 (36)</li><ul class="month_list"><li class="month"><a href='/blog/2014/12/'>DEC (3)</a></li><li class="month"><a href='/blog/2014/11/'>NOV (4)</a></li><li class="month"><a href='/blog/2014/10/'>OCT (4)</a></li><li class="month"><a href='/blog/2014/09/'>SEP (3)</a></li><li class="month"><a href='/blog/2014/08/'>AUG (4)</a></li><li class="month"><a href='/blog/2014/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2014/05/'>MAY (6)</a></li><li class="month"><a href='/blog/2014/04/'>APR (4)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul><li class="year first_open">2010 (1)</li><ul class="month_list"><li class="month"><a href='/blog/2010/01/'>JAN (1)</a></li></ul></ul></div>
+  <div class="monthly_archive"><ul class="year_list"><li class="year first_open">2017 (3)</li><ul class="month_list"><li class="month"><a href='/blog/2017/01/'>JAN (3)</a></li></ul><li class="year first_open">2016 (11)</li><ul class="month_list"><li class="month"><a href='/blog/2016/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2016/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2016/08/'>AUG (1)</a></li><li class="month"><a href='/blog/2016/07/'>JUL (1)</a></li><li class="month"><a href='/blog/2016/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2016/05/'>MAY (2)</a></li><li class="month"><a href='/blog/2016/03/'>MAR (3)</a></li><li class="month"><a href='/blog/2016/02/'>FEB (1)</a></li></ul><li class="year first_open">2015 (21)</li><ul class="month_list"><li class="month"><a href='/blog/2015/12/'>DEC (2)</a></li><li class="month"><a href='/blog/2015/11/'>NOV (4)</a></li><li class="month"><a href='/blog/2015/10/'>OCT (1)</a></li><li class="month"><a href='/blog/2015/09/'>SEP (3)</a></li><li class="month"><a href='/blog/2015/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2015/05/'>MAY (1)</a></li><li class="month"><a href='/blog/2015/04/'>APR (2)</a></li><li class="month"><a href='/blog/2015/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2015/01/'>JAN (2)</a></li></ul><li class="year first_open">2014 (36)</li><ul class="month_list"><li class="month"><a href='/blog/2014/12/'>DEC (3)</a></li><li class="month"><a href='/blog/2014/11/'>NOV (4)</a></li><li class="month"><a href='/blog/2014/10/'>OCT (4)</a></li><li class="month"><a href='/blog/2014/09/'>SEP (3)</a></li><li class="month"><a href='/blog/2014/08/'>AUG (4)</a></li><li class="month"><a href='/blog/2014/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2014/05/'>MAY (6)</a></li><li class="month"><a href='/blog/2014/04/'>APR (4)</a></li><li class="month"><a href='/blog/2014/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2014/02/'>FEB (4)</a></li></ul><li class="year first_open">2013 (16)</li><ul class="month_list"><li class="month"><a href='/blog/2013/12/'>DEC (1)</a></li><li class="month"><a href='/blog/2013/10/'>OCT (5)</a></li><li class="month"><a href='/blog/2013/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2013/06/'>JUN (1)</a></li><li class="month"><a href='/blog/2013/05/'>MAY (3)</a></li><li class="month"><a href='/blog/2013/03/'>MAR (1)</a></li><li class="month"><a href='/blog/2013/02/'>FEB (3)</a></li><li class="month"><a href='/blog/2013/01/'>JAN (1)</a></li></ul><li class="year first_open">2012 (33)</li><ul class="month_list"><li class="month"><a href='/blog/2012/12/'>DEC (5)</a></li><li class="month"><a href='/blog/2012/11/'>NOV (2)</a></li><li class="month"><a href='/blog/2012/09/'>SEP (1)</a></li><li class="month"><a href='/blog/2012/08/'>AUG (3)</a></li><li class="month"><a href='/blog/2012/07/'>JUL (4)</a></li><li class="month"><a href='/blog/2012/06/'>JUN (3)</a></li><li class="month"><a href='/blog/2012/05/'>MAY (5)</a></li><li class="month"><a href='/blog/2012/04/'>APR (2)</a></li><li class="month"><a href='/blog/2012/03/'>MAR (7)</a></li><li class="month"><a href='/blog/2012/02/'>FEB (1)</a></li></ul><li class="year first_open">2010 (1)</li><ul class="month_list"><li class="month"><a href='/blog/2010/01/'>JAN (1)</a></li></ul></ul></div>
 </section>
 
       
@@ -243,6 +244,141 @@
   <div class="left-content">
     <div class="left-post">
       
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2/">
+		
+			利用Sonar定制自定义JS扫描规则（二）——自定义JS扫描规则</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-19T11:20:00+08:00" pubdate data-updated="true">May 19<span>th</span>, 2013</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>在上一篇blog中，我们将sonar几个需要的环境都搭建好了，包括sonar的服务器，sonar runner，sonar的javascript插件。现在我们就来讲如何自定义JS扫描规则。</p>
+
+
+		
+		<a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-2//blog/page/9/index.html#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/">
+		
+			利用Sonar定制自定义JS扫描规则（一）——sonar环境搭建</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-19T11:20:00+08:00" pubdate data-updated="true">May 19<span>th</span>, 2013</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/code/'>code</a>
+
+
+</div>
+    </div>
+		<p>接触sonar已经有段时间了，最早是在一个项目组里面听到这个框架，后来在公司持续集成活动的推动下，也逐渐学习了sonar的具体功能。sonar集成了findbugs，pmd，checkstyle各种静态代码检查工具的功能，并且可以将各种扫描结果组合成一张张漂亮的报告，功能很是强大。下面介绍一下如何使用sonar来自定义javascrpit的扫描规则。</p>
+
+
+		
+		<a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/blog/2013/05/19/use-sonar-create-customer-js-verify-rule-part-1//blog/page/9/index.html#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+      
+      
+          <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/03/05/continuous-delivery/">
+		
+			持续交付——发布可靠软件的系统方法</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-05T15:53:00+08:00" pubdate data-updated="true">Mar 5<span>th</span>, 2013</time></div>
+      <div class="tags">Tags: 
+
+
+	<a class='category' href='/blog/categories/read/'>read</a>
+
+
+</div>
+    </div>
+		<p>断断续续看完了《持续交付——发布可靠软件的系统方法》一书，中间有几次由于事情太忙而中断，直到今天才把书读完。书的内容很精彩，大致分持续集成，测试和部署三大块，还有介绍包括软件开发、项目管理等其他内容。我下面介绍几个我印象比较深刻的内容。</p>
+
+
+		
+		<a href="/blog/2013/03/05/continuous-delivery/" class="more-link">Read on</a>
+	</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/blog/2013/03/05/continuous-delivery//blog/page/9/index.html#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
       
       
           <article class="post">
@@ -561,143 +697,6 @@
 </div>
 </article>
       
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/">
-		
-			在jenkins和sonar中集成jacoco(四)&#8211;在sonar中集成jacoco</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-02T14:46:00+08:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/code/'>code</a>
-
-
-</div>
-    </div>
-		<p>首先要得到之前的单元测试和集成测试的覆盖率文件，还有对应的class文件以及单元测试的覆盖率报告，材料准备齐全之后，使用如下命令：</p>
-
-
-		
-		<a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-		<span class="comments"><a href="/blog/2012/12/02/use-jacoco-in-jenkins-and-sonar-part-4//blog/page/9/index.html#disqus_thread">Comments</a></span>
-	
-</div>
-</article>
-      
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/">
-		
-			在jenkins和sonar中集成jacoco(三)&#8211;使用jacoco收集集成测试的覆盖率</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-01T14:45:00+08:00" pubdate data-updated="true">Dec 1<span>st</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/code/'>code</a>
-
-
-</div>
-    </div>
-		<p>我们系统使用weblogic做服务器，集成测试框架使用的是junit+selenium。</p>
-
-<p>首先，要把jacoco的jacocoagent.jar包放到部署应用的服务器上，接着在系统服务的JAVA_OPTIONS 后面添加如下参数：</p>
-
-
-		
-		<a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-		<span class="comments"><a href="/blog/2012/12/01/use-jacoco-in-jenkins-and-sonar-part-3//blog/page/9/index.html#disqus_thread">Comments</a></span>
-	
-</div>
-</article>
-      
-      
-          <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/">
-		
-			在jenkins和sonar中集成jacoco(二)&#8211;在jenkins中生成jacoco覆盖率报告</a>
-	</h2>
-    <div class="entry-content">
-    <div class="meta">
-      <div class="date">Published on: 
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-30T14:45:00+08:00" pubdate data-updated="true">Nov 30<span>th</span>, 2012</time></div>
-      <div class="tags">Tags: 
-
-
-	<a class='category' href='/blog/categories/code/'>code</a>
-
-
-</div>
-    </div>
-		<p>先要在jenkins上安装jacoco的插件，安装完成之后在job的配置项中可以增加这个选项：</p>
-
-
-		
-		<a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2/" class="more-link">Read on</a>
-	</div>
-
-<div class="meta">
-	
-		<span class="comments"><a href="/blog/2012/11/30/use-jacoco-in-jenkins-and-sonar-part-2//blog/page/9/index.html#disqus_thread">Comments</a></span>
-	
-</div>
-</article>
-      
       <nav id="pagenavi">
           
               <a href="/blog/page/8/" class="prev">Prev</a>
@@ -713,7 +712,7 @@
 	    </div>
 	    <footer id="footer">
 	    <div style="display:inline">
-    Copyright &copy; 2016
+    Copyright &copy; 2017
 
     赵芝明
 . Powered by <a href="http://octopress.org">Octopress</a> | 

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: grepcode | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/grepcode/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-12-13T11:25:35+08:00</updated>
+  <updated>2017-01-10T20:58:43+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/09/14/find-your-jar-quickly/"/>
     <updated>2014-09-14T17:41:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/09/14/find-your-jar-quickly</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-9/class-not-found.jpeg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-9/class-not-found.jpeg"></p>
 
 <p>在做Java开发时，经常遇到<code>Class not found</code>的错误，一般的做法就是在google上搜索class名字，然后再搜索这个class所在的jar包是哪个，最后才找到可以下载jar包的链接。过程比较繁琐，有没有更好的方法可以快速的找到缺少的class所在的jar包呢？答案是肯定的。</p>
 
@@ -29,45 +29,57 @@
 
 <p>这个网站可以通过class名称直接搜索到拥有这个class的所有的jar包，比如说我们运行Java程序时报下面的错误，发现<code>cn/com/starit/io/SystemDemo02</code>找不到。</p>
 
-<p>{% codeblock lang:sh %}
-java.lang.NoClassDefFoundError: cn/com/starit/io/SystemDemo02
-Caused by: java.lang.ClassNotFoundException: cn.com.starit.io.SystemDemo02</p>
-
-<pre><code>at java.net.URLClassLoader$1.run(URLClassLoader.java:200)
-at java.security.AccessController.doPrivileged(Native Method)
-at java.net.URLClassLoader.findClass(URLClassLoader.java:188)
-at java.lang.ClassLoader.loadClass(ClassLoader.java:307)
-at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
-at java.lang.ClassLoader.loadClass(ClassLoader.java:252)
-at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:320)
-</code></pre>
-
-<p>Exception in thread &ldquo;main&rdquo;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>java.lang.NoClassDefFoundError: cn/com/starit/io/SystemDemo02
+</span><span class='line'>Caused by: java.lang.ClassNotFoundException: cn.com.starit.io.SystemDemo02&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;at java.net.URLClassLoader<span class="nv">$1</span>.run<span class="o">(</span>URLClassLoader.java:200<span class="o">)</span>
+</span><span class='line'>at java.security.AccessController.doPrivileged<span class="o">(</span>Native Method<span class="o">)</span>
+</span><span class='line'>at java.net.URLClassLoader.findClass<span class="o">(</span>URLClassLoader.java:188<span class="o">)</span>
+</span><span class='line'>at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:307<span class="o">)</span>
+</span><span class='line'>at sun.misc.Launcher<span class="nv">$AppClassLoader</span>.loadClass<span class="o">(</span>Launcher.java:301<span class="o">)</span>
+</span><span class='line'>at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:252<span class="o">)</span>
+</span><span class='line'>at java.lang.ClassLoader.loadClassInternal<span class="o">(</span>ClassLoader.java:320<span class="o">)</span>
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Exception in thread &amp;ldquo;main&amp;rdquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>进入grepcode首页，输入<code>cn/com/starit/io/SystemDemo02</code>进行查询。</li>
 </ul>
 
 
-<p>{% img /images/post/2014-9/grepcode-1.png %}</p>
+<p><img src="/images/post/2014-9/grepcode-1.png"></p>
 
 <ul>
 <li>可以看到查询结果涵盖了所有可能包含这个class的jar包，最前面的是相似度最接近的jar包名称，点开版本号还可以看到具体的源码。</li>
 </ul>
 
 
-<p>{% img /images/post/2014-9/grepcode-2.png %}</p>
+<p><img src="/images/post/2014-9/grepcode-2.png"></p>
 
 <h2><a href="http://mvnrepository.com/">mvnrepository</a></h2>
 
 <p>知道Jar包的名称后，我们就可以通过mvnrepository这个网站来下载对应的jar包了，操作也很简单，输入jar名称就可以查询到相关的jar版本信息，里面还有maven，gradle等构建工具的配置脚本信息。</p>
 
-<p>{% img /images/post/2014-9/mvn-repository-1.png %}</p>
+<p><img src="/images/post/2014-9/mvn-repository-1.png"></p>
 
-<p>{% img /images/post/2014-9/mvn-repository-2.png %}</p>
+<p><img src="/images/post/2014-9/mvn-repository-2.png"></p>
 
-<p>{% img /images/post/2014-9/mvn-repository-3.png %}</p>
+<p><img src="/images/post/2014-9/mvn-repository-3.png"></p>
 
 <p>结合这两个网站就可以很方便的找到缺失的Jar包了。</p>
 ]]></content>

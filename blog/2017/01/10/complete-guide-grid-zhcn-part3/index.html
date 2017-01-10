@@ -1,0 +1,526 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Grid 的完整介绍（三） - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="Grid 的完整介绍（三）">
+	<meta name="keywords" content="css,grid">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='/stylesheets/slackey.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/fjalla_one.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/amethysta.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/css_grid.css' rel='stylesheet' type='text/css'>
+	<script src="http://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="http://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="http://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+    
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="http://weibo.com/u/2497707964" class="weibo" title="sinaWeibo"></a>
+  </li>
+  
+  
+  <!-- QQ -->
+  <li>
+  <a href="http://user.qzone.qq.com/4533524" class="qq" title="QQ"></a>
+  </li>
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">Grid 的完整介绍（三）</h2>
+	<div class="entry-content"><p><img src="/images/post/2017/01/css_grid3.jpeg" width="400" height="350"></p>
+
+<p>接着上篇 blog，这篇继续介绍 Grid 的网格子项属性，内容没有那么长了。</p>
+
+<p>原文地址见这里：<a href="https://css-tricks.com/snippets/css/complete-guide-grid/">A Complete Guide to Grid</a>。</p>
+
+<ul>
+<li><a href="">Grid 的完整介绍（一）</a></li>
+<li><a href="">Grid 的完整介绍（二）</a></li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>Grid 的完整介绍（三）</h2>
+
+<h3>网格子项的属性</h3>
+
+<ul>
+<li><a href="#grid-column-start">grid-column-start</a></li>
+<li><a href="#grid-column-end">grid-column-end</a></li>
+<li><a href="#grid-row-start">grid-row-start</a></li>
+<li><a href="#grid-row-end">grid-row-end</a></li>
+<li><a href="#grid-column">grid-column</a></li>
+<li><a href="#grid-row">grid-row</a></li>
+<li><a href="#grid-area">grid-area</a></li>
+<li><a href="#justify-self">justify-self</a></li>
+<li><a href="#align-self">align-self</a></li>
+</ul>
+
+
+<h4>grid-column-start</h4>
+
+<h4>grid-column-end</h4>
+
+<h4>grid-row-start</h4>
+
+<h4>grid-row-end</h4>
+
+<p>通过参考指定的网格线来决定网格中一个网格子项的位置，<code>grid-column-start/grid-row-start</code>是指网格子项开始的线，<code>grid-column-end/grid-row-end</code>是指网格子项结束的线。</p>
+
+<p>值有：</p>
+
+<ul>
+<li><code>&lt;line&gt;</code> &ndash; 可以是一个数字以适用被标记了数字号的网格线，或者是一个名字以适用命名了的网格线</li>
+<li>span <code>&lt;number&gt;</code> &ndash; 子项将跨越指定数字的网格轨迹</li>
+<li>span <code>&lt;name&gt;</code> &ndash; 子项将跨越到指定名字之前的网格线</li>
+<li>auto &ndash; 表示自动布局，自动跨越或者默认跨越一个</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="k">auto</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="k">auto</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="k">auto</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="k">auto</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>举个例子：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="m">2</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="n">five</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="n">row1</span><span class="o">-</span><span class="n">start</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="m">3</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-a.png"></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-b</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="n">span</span> <span class="n">col4</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="m">2</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="n">span</span> <span class="m">2</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="http://chris.house/images/grid-start-end-b.png"></p>
+
+<p>如果<code>grid-column-end/grid-row-end</code>没有生命，网格子项将默认跨越一个网格轨迹。</p>
+
+<p>网格子项可以互相重叠，你可以使用<code>z-index</code>来控制他们的层叠顺序。</p>
+
+<h4>grid-column</h4>
+
+<h4>grid-row</h4>
+
+<p><code>grid-column-start</code> + <code>grid-column-end</code>，和<code>grid-row-start</code> + <code>grid-row-end</code>的简写，分别独立。</p>
+
+<p>值有：</p>
+
+<ul>
+<li>&lt;start-line> / &lt;end-line> &ndash; 每一个属性都可以接收普通模式的值，包括<code>span</code></li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">start</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&lt;</span><span class="n">end</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">start</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">/</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">start</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&lt;</span><span class="n">end</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">start</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">/</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>举例：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-c</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">:</span> <span class="m">3</span> <span class="o">/</span> <span class="n">span</span> <span class="m">2</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">:</span> <span class="n">third</span><span class="o">-</span><span class="n">line</span> <span class="o">/</span> <span class="m">4</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-c.png"></p>
+
+<p>如果没有声明结束网格线的值，那么网格子项将默认跨越 1 个网格轨迹。</p>
+
+<h4>grid-area</h4>
+
+<p>给网格子项取一个名字以让它被由<code>grid-template-areas</code>属性创建的模板引用。同时，这个属性也可以用来更简短地表示<code>grid-row-start</code>+ <code>grid-column-start</code> + <code>grid-row-end</code>+ <code>grid-column-end</code>。</p>
+
+<p>值有：</p>
+
+<ul>
+<li><code>&lt;name&gt;</code> &ndash; 一个你选择的名字</li>
+<li>&lt;row-start> / &lt;column-start> / &lt;row-end> / &lt;column-end> &ndash; 可以是网格线的数字或名字</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">row</span><span class="o">-</span><span class="n">start</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&lt;</span><span class="n">column</span><span class="o">-</span><span class="n">start</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&lt;</span><span class="n">row</span><span class="o">-</span><span class="n">end</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&lt;</span><span class="n">column</span><span class="o">-</span><span class="n">end</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>举例：</p>
+
+<p>作为分配一个名字给网格子项的一种方式：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
+</span><span class='line'><span class="o">.</span><span class="n">item</span><span class="o">-</span><span class="n">d</span><span class="err">{</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="n">header</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>作为<code>grid-row-start</code>+ <code>grid-column-start</code> + <code>grid-row-end</code>+ <code>grid-column-end</code>的一种简写：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-d</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="m">1</span> <span class="o">/</span> <span class="n">col4</span><span class="o">-</span><span class="n">start</span> <span class="o">/</span> <span class="n">last</span><span class="o">-</span><span class="n">line</span> <span class="o">/</span> <span class="m">6</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-d.png"></p>
+
+<h4>justify-self</h4>
+
+<p>让网格子项的内容以列轴对齐（与之相反<code>align-self</code>是跟行轴对齐），这个值可以应用在单个网格子项的内容中。</p>
+
+<p>值有：</p>
+
+<ul>
+<li>start &ndash; 让内容在网格区域左对齐</li>
+<li>end &ndash; 让内容在网格区域右对齐</li>
+<li>center &ndash; 让内容在网格区域中间对齐</li>
+<li>stretch &ndash; 填充着呢个网络区域的宽度（默认值）</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
+</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">start</span> <span class="o">|</span> <span class="n">end</span> <span class="o">|</span> <span class="k">center</span> <span class="o">|</span> <span class="n">stretch</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>举例：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
+</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">start</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-start.png"></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
+</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">end</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-end.png"></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
+</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-center.png"></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
+</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">stretch</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-stretch.png"></p>
+
+<p>为了让网格中的所有子项都对齐，这个行为也可以通过设置网格容器中的<code>justify-items</code>属性来实现。</p>
+
+<h4>align-self</h4>
+
+<p>让网格子项的内容以行轴对齐（与之相反<code>justify-self</code>是跟列轴对齐），这个值可以应用在单个网格子项的内容中。</p>
+
+<p>值有：</p>
+
+<ul>
+<li>start &ndash; 让内容在网格区域上对齐</li>
+<li>end &ndash; 让内容在网格区域下对齐</li>
+<li>center &ndash; 让内容在网格区域中间对齐</li>
+<li>stretch &ndash; 填充着呢个网络区域的高度（默认值）</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">start</span> <span class="o">|</span> <span class="n">end</span> <span class="o">|</span> <span class="k">center</span> <span class="o">|</span> <span class="n">stretch</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>举例：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">start</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-start.png"></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">end</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-end.png"></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-center.png"></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">stretch</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-stretch.png"></p>
+
+<p>为了让网格中的所有子项都对齐，这个行为也可以通过设置网格容器中的<code>align-items</code>属性来实现。</p>
+</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/blog/2017/01/10/complete-guide-grid-zhcn-part3/#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	<section id="comment">
+	    <h2 class="title">Comments</h2>
+	    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+	</section>
+	
+</div>
+
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2017
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'zhaozhiming';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2017/01/10/complete-guide-grid-zhcn-part3/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2017/01/10/complete-guide-grid-zhcn-part3/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

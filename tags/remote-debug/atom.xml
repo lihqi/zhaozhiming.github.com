@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: remote debug | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/remote-debug/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2016-12-13T11:25:35+08:00</updated>
+  <updated>2017-01-10T20:58:43+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu/"/>
     <updated>2014-04-13T15:54:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/04/13/python-remote-debug-setting-by-pycharm-and-eclipse-in-ubuntu</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-4/pycharm_and_eclipse.jpg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-4/pycharm_and_eclipse.jpg"></p>
 
 <p>我比较喜欢Pycharm，因为这个是JetBrains公司出的python IDE工具，该公司下的java IDE工具——IDEA，无论从界面还是操作上都甩eclipse几条街，但项目组里有些人使用eclipse比较久了，一时让他们转pycharm比较困难，所以还是两边的设置都介绍一下吧。</p>
 
@@ -35,16 +35,16 @@
 <li>将pycharm安装目录下的pycharm-debug.egg文件拷贝到远程机器上（如果是python3的话就拷贝pycharm-debug-py3k.egg文件）。</li>
 <li>在远程机器上安装pycharm-debug.egg，安装命令： <code>easy_install pycharm-debug.egg</code>。</li>
 <li><p>在pycharm中设置断点监听配置。<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-1.png %}<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-2.png %}<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-3.png %}</p></li>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-1.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-2.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-3.png"></p></li>
 <li><p>启动调试监听程序。<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-4.png %}<br/>
-{% img /images/post/2014-4/pycharm-debug/pycharm-5.png %}</p></li>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-4.png"><br/>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-5.png"></p></li>
 <li><p>在远程机器上启动服务并发起http请求。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-10.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
 <li><p>pycharm监听到请求会进入断点。
-{% img /images/post/2014-4/pycharm-debug/pycharm-6.png %}</p></li>
+<img src="/images/post/2014-4/pycharm-debug/pycharm-6.png"></p></li>
 </ol>
 
 
@@ -59,27 +59,27 @@
 <li><p>PyDev可以按照<a href="http://pydev.org/manual_101_install.html">官网的向导</a>进行安装。<br/>
 安装完后按照下面的步骤进行远程调试。</p></li>
 <li><p>在window->Preperences->PyDev->Debug中，设置debug端口，比如12306。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-1.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-1.png"></p></li>
 <li><p>新增PyDev视图。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-2.png %}<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-3.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-2.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-3.png"></p></li>
 <li><p>在Pydev试图中增加remote debug菜单。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-4.png %}<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-5.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-4.png"><br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-5.png"></p></li>
 <li><p>在远程机器的源码里面添加调试代码和断点。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-6.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-6.png"></p></li>
 <li><p>断点设置语句：<br/>
 <code>pydevd.settrace('192.168.8.128', port=12306, stdoutToServer=True, stderrToServer=True)</code><br/>
 注意：这里的ip是指设置了调试监听的机器ip。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-7.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-7.png"></p></li>
 <li><p>通过Pydev菜单打开调试监听。<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-8.png %}<br/>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-8.png"><br/>
 开始监听显示信息如下：<br/>
-{% img /images/post/2014-4/eclipse-debug/eclipse-9.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-9.png"></p></li>
 <li><p>启动远程服务并发起http请求。
-{% img /images/post/2014-4/eclipse-debug/eclipse-10.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-10.png"></p></li>
 <li><p>Pydev监听到请求后就会进入断点。
-{% img /images/post/2014-4/eclipse-debug/eclipse-11.png %}</p></li>
+<img src="/images/post/2014-4/eclipse-debug/eclipse-11.png"></p></li>
 </ul>
 
 
