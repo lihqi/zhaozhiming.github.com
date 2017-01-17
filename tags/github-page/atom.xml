@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: github-page | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/github-page/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2017-01-15T10:31:35+08:00</updated>
+  <updated>2017-01-17T22:18:15+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2016/08/20/use-gitpage-to-publis-your-site-with-custom-domain/"/>
     <updated>2016-08-20T14:51:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2016/08/20/use-gitpage-to-publis-your-site-with-custom-domain</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2016/08/github-pages.jpg"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2016/08/github-pages.jpg %}</p>
 
 <p>GitHub Page 是一个由 Github 公司推出的一个静态网站托管服务，可以结合 GitHub 中的用户或者项目来发布相关的静态网站，适用于发布项目 Demo，个人博客，产品介绍等，下面介绍一下 GitHub Page 的使用方法，并介绍如何绑定自定义域名，包括如何在 <a href="https://www.namesilo.com/">namesilo</a> 上购买域名，以及如何配置 DNS 解析服务等操作。</p>
 
@@ -52,7 +52,7 @@
 * 在浏览器中访问你的网站，`http(s)://&lt;username&gt;.github.io/&lt;projectname&gt;`
 </code></pre>
 
-<p><img src="/images/post/2016/08/gh-pages.png" width="200" height="300"></p>
+<p>{% img /images/post/2016/08/gh-pages.png 200 300 %}</p>
 
 <h3>发布的 3 种方式</h3>
 
@@ -78,7 +78,7 @@
 
 <p>比如下面这个截图是 DomComp 网站上的一个 namesilo 的优惠码信息，上面的是优惠码，下面的是有效截止时间。</p>
 
-<p><img src="/images/post/2016/08/domcomp.png" width="300" height="300"></p>
+<p>{% img /images/post/2016/08/domcomp.png 300 300 %}</p>
 
 <p>PS: 网站上面有很多<code>1&amp;1</code>这个域名注册商的优惠码，他们的域名价格比较便宜，但是口碑不是很好，图便宜的同学请谨慎考虑。</p>
 
@@ -96,15 +96,15 @@
 
 <p>登陆 namesilo 进到域名管理的界面，点击域名那一栏后面那个蓝色图标。</p>
 
-<p><img src="/images/post/2016/08/namesilo_dns1.png" width="250" height="100"></p>
+<p>{% img /images/post/2016/08/namesilo_dns1.png 250 100 %}</p>
 
 <p>下面有很多网站的 DNS 配置模板供你选择，我们选择 Github 这个模板。</p>
 
-<p><img src="/images/post/2016/08/namesilo_dns2.png"></p>
+<p>{% img /images/post/2016/08/namesilo_dns2.png %}</p>
 
 <p>模板会为你添加一个类型为<code>A</code>，地址为<code>192.30.252.153</code>的记录和类型为 CNAME 的子域名记录，子域名那一行的地址要填上自己的 github 用户域名<code>&lt;username&gt;.github.io</code>。</p>
 
-<p><img src="/images/post/2016/08/namesilo_dns3.png"></p>
+<p>{% img /images/post/2016/08/namesilo_dns3.png %}</p>
 
 <p>配置成功后，一般要等几个小时后才能生效，生效后 GitHub 项目 setting 里面的提示信息会变成绿色。</p>
 
@@ -114,11 +114,11 @@
 
 <p>配置非常简单，还是进到 namesilo 的域名管理界面，选中域名那一栏最前面的勾选框，然后上面一排灰色的图标会显示出颜色，选择其中的<code>Change Namesevers</code>图标。</p>
 
-<p><img src="/images/post/2016/08/namesilo_ns1.png"></p>
+<p>{% img /images/post/2016/08/namesilo_ns1.png %}</p>
 
 <p>在<code>NameServer1</code>和<code>NameServer2</code>中填写 DNSPod 的 nameserver 地址<code>f1g1ns1.dnspod.net</code>，<code>f1g1ns2.dnspod.net</code>。</p>
 
-<p><img src="/images/post/2016/08/namesilo_ns2.png" width="300" height="100"></p>
+<p>{% img /images/post/2016/08/namesilo_ns2.png 300 100 %}</p>
 
 <p>配置完成后网站的访问速度绝对是一个质的飞跃！</p>
 ]]></content>

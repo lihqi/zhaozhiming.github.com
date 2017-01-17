@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: windows | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/windows/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2017-01-15T10:31:35+08:00</updated>
+  <updated>2017-01-17T22:18:15+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -43,29 +43,28 @@
 
 <p>先用ubuntu的启动光盘进入试用版ubuntu，然后打开终端，输入下面命令查询ubuntu的安装区，我的是sda9。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo fdisk -l
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+sudo fdisk -l
+{% endcodeblock %}</p>
 
 <p>然后创建了一个临时目录，这个目录是为了后面mount ubuntu启动分区用的，命令如下：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>mkdir /media/tmpdir
-</span><span class='line'>mount  /dev/sda8  /media/tmpdir
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+mkdir /media/tmpdir
+mount  /dev/sda8  /media/tmpdir
+{% endcodeblock %}</p>
 
 <p>接下来是最重要的一步，输入命令下面命令：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo grub-install &amp;mdash;root-directory<span class="o">=</span>/media/tmpdir /dev/sda
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+sudo grub-install &mdash;root-directory=/media/tmpdir /dev/sda
+{% endcodeblock %}</p>
 
 <p>注意，这里就是sda，后面不要写成sda9，如果显示no error report，则表示基本成功了。然后保存重启系统，会发现ubuntu的菜单已经有了，但是看起来比较乱，版本信息也不是安装的系统版本信息，所以接下来进入ubuntu系统，打开终端，输入：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo update-grub2
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+sudo update-grub2
+{% endcodeblock %}</p>
 
 <p>完了之后再次重启系统就会发现ubuntu正常的启动引导菜单了。如果想把win放在前面，就照之前说的方法改下ubuntu的配置文件就OK了。</p>
 
