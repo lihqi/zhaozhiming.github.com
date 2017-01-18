@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: thrift | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/thrift/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2017-01-17T22:18:15+08:00</updated>
+  <updated>2017-01-18T09:43:01+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/01/25/hello-thrift/"/>
     <updated>2015-01-25T19:07:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/01/25/hello-thrift</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-1/thrift.jpeg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-1/thrift.jpeg"></p>
 
 <p><a href="https://thrift.apache.org/">Thrift</a>是Fackbook推出的一个跨语言通讯框架，相比常用的以json为载体的rest http方式来说，性能上更加优越。另外Thrift集成了RPC（Remote Procedure Call Protocol）的实现，比同类型的产品<a href="https://code.google.com/p/protobuf/">Protobuf</a>功能要更全面。</p>
 
@@ -34,42 +34,48 @@
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-sudo apt-get install libboost-dev libboost-test-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo apt-get install libboost-dev libboost-test-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>接着安装对应语言的编译器，以Java为例，需要安装JDK和Ant，顺便把Maven也装上。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-sudo apt-get install openjdk-7-jdk ant maven
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo apt-get install openjdk-7-jdk ant maven
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>下载Thrift的包，最新的版本是0.9.2，但不知道什么原因，0.9.2版本安装会有问题，退一个版本就OK了，我们安装0.9.1版本。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-wget <a href="http://apache.fayea.com/thrift/0.9.1/thrift-0.9.1.tar.gz">http://apache.fayea.com/thrift/0.9.1/thrift-0.9.1.tar.gz</a>
-tar -zxvf thrift-0.9.1.tar.gz
-cd thrift-0.9.1
-sudo ./configure &mdash;without-tests
-sudo make
-sudo make install
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://apache.fayea.com/thrift/0.9.1/thrift-0.9.1.tar.gz&quot;</span>&gt;http://apache.fayea.com/thrift/0.9.1/thrift-0.9.1.tar.gz&lt;/a&gt;
+</span><span class='line'>tar -zxvf thrift-0.9.1.tar.gz
+</span><span class='line'><span class="nb">cd </span>thrift-0.9.1
+</span><span class='line'>sudo ./configure &amp;mdash;without-tests
+</span><span class='line'>sudo make
+</span><span class='line'>sudo make install
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>最后跑一下thrift的命令测试一下是否安装成功</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ thrift &mdash;version
-Thrift version 0.9.1
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>thrift &amp;mdash;version
+</span><span class='line'>Thrift version 0.9.1
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>如果嫌安装比较麻烦，也可以使用下面Vagrant或者Docker的Thrift镜像。
@@ -86,22 +92,30 @@ Thrift version 0.9.1
 
 <p>安装完成Thrift之后，我们来编写一个thrift文件，定义服务端的接口。</p>
 
-<p>{% codeblock hello.thrift lang:java %}
- namespace java service.demo
- service Hello{
-  string helloString(1:string para)
-  i32 helloInt(1:i32 para)
-  bool helloBoolean(1:bool para)
-  void helloVoid()
-  string helloNull()
- }
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>hello.thrift </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">namespace</span> <span class="n">java</span> <span class="n">service</span><span class="o">.</span><span class="na">demo</span>
+</span><span class='line'> <span class="n">service</span> <span class="n">Hello</span><span class="o">{</span>
+</span><span class='line'>  <span class="n">string</span> <span class="nf">helloString</span><span class="o">(</span><span class="mi">1</span><span class="o">:</span><span class="n">string</span> <span class="n">para</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">i32</span> <span class="nf">helloInt</span><span class="o">(</span><span class="mi">1</span><span class="o">:</span><span class="n">i32</span> <span class="n">para</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">bool</span> <span class="nf">helloBoolean</span><span class="o">(</span><span class="mi">1</span><span class="o">:</span><span class="n">bool</span> <span class="n">para</span><span class="o">)</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="nf">helloVoid</span><span class="o">()</span>
+</span><span class='line'>  <span class="n">string</span> <span class="nf">helloNull</span><span class="o">()</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>可以看到我们定义了5个不同的接口，接着使用Thrift对文件进行编译，产生对应语言的程序文件，下面以Java为例。</p>
 
-<p>{% codeblock lang:sh %}
-thrift —gen java hello.thrift
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>thrift —gen java hello.thrift
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>命令执行完成后，会生成一个Hello.java的文件。</p>
 
@@ -109,121 +123,220 @@ thrift —gen java hello.thrift
 
 <p>前面只是定义了接口的签名，现在我们来对接口进行实现，实现类需要实现Hello.Iface，代码如下:</p>
 
-<p>{% codeblock HelloServiceImpl lang:java %}
-package service.demo;</p>
-
-<p>import org.apache.thrift.TException;</p>
-
-<p>public class HelloServiceImpl implements Hello.Iface {</p>
-
-<pre><code>@Override
-public boolean helloBoolean(boolean para) throws TException {
-    System.out.printf("hello true/false");
-    return para;
-}
-
-@Override
-public int helloInt(int para) throws TException {
-    System.out.println("hello times: " + para);
-    return para;
-}
-
-@Override
-public String helloNull() throws TException {
-    System.out.println("hello null");
-    return null;
-}
-
-@Override
-public String helloString(String para) throws TException {
-    System.out.println("hello " + para);
-    return para;
-}
-
-@Override
-public void helloVoid() throws TException {
-    System.out.println("Hello World");
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>HelloServiceImpl </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">service</span><span class="o">.</span><span class="na">demo</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">org.apache.thrift.TException</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloServiceImpl</span> <span class="kd">implements</span> <span class="n">Hello</span><span class="o">.</span><span class="na">Iface</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">helloBoolean</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">para</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">TException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;hello true/false&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">para</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">int</span> <span class="nf">helloInt</span><span class="o">(</span><span class="kt">int</span> <span class="n">para</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">TException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;hello times: &quot;</span> <span class="o">+</span> <span class="n">para</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">para</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">helloNull</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">TException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;hello null&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">helloString</span><span class="o">(</span><span class="n">String</span> <span class="n">para</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">TException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;hello &quot;</span> <span class="o">+</span> <span class="n">para</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">para</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">helloVoid</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">TException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello World&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>服务端代码的实现</h2>
 
 <p>接着我们来编写我们的服务器代码:</p>
 
-<p>{% codeblock HelloServiceImpl lang:java %}
-package service.server;</p>
-
-<p>import org.apache.thrift.TProcessor;
-import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TThreadPoolServer;
-import org.apache.thrift.transport.TServerSocket;
-import org.apache.thrift.transport.TTransportException;
-import service.demo.Hello;
-import service.demo.HelloServiceImpl;</p>
-
-<p>public class HelloServiceServer {</p>
-
-<pre><code>public static void main(String[] args) {
-    try {
-        // 设置服务端口为 9527 
-        TServerSocket serverTransport = new TServerSocket(9527);
-        // 关联处理器与 Hello 服务的实现
-        TProcessor processor = new Hello.Processor(new HelloServiceImpl());
-        TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).processor(processor));
-
-        System.out.println("Start server on port 9527...");
-        server.serve();
-    } catch (TTransportException e) {
-        e.printStackTrace();
-    }
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>HelloServiceImpl </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">service</span><span class="o">.</span><span class="na">server</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">org.apache.thrift.TProcessor</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.thrift.server.TServer</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.thrift.server.TThreadPoolServer</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.thrift.transport.TServerSocket</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.thrift.transport.TTransportException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">service.demo.Hello</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">service.demo.HelloServiceImpl</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloServiceServer</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="n">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// 设置服务端口为 9527 </span>
+</span><span class='line'>        <span class="n">TServerSocket</span> <span class="n">serverTransport</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TServerSocket</span><span class="o">(</span><span class="mi">9527</span><span class="o">);</span>
+</span><span class='line'>        <span class="c1">// 关联处理器与 Hello 服务的实现</span>
+</span><span class='line'>        <span class="n">TProcessor</span> <span class="n">processor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Hello</span><span class="o">.</span><span class="na">Processor</span><span class="o">(</span><span class="k">new</span> <span class="n">HelloServiceImpl</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">TServer</span> <span class="n">server</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TThreadPoolServer</span><span class="o">(</span><span class="k">new</span> <span class="n">TThreadPoolServer</span><span class="o">.</span><span class="na">Args</span><span class="o">(</span><span class="n">serverTransport</span><span class="o">).</span><span class="na">processor</span><span class="o">(</span><span class="n">processor</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Start server on port 9527...&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">server</span><span class="o">.</span><span class="na">serve</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">TTransportException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>客户端代码的实现</h2>
 
 <p>最后来完成我们的客户端代码，客户端我们也是用Java来实现。</p>
 
-<p>{% codeblock HelloServiceImpl lang:java %}
-package service.client;</p>
-
-<p>import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
-import service.demo.Hello;</p>
-
-<p>public class HelloServiceClient {</p>
-
-<pre><code>public static void main(String[] args) {
-    try {
-        // 设置调用的服务地址为本地，端口为 9527
-        TTransport transport = new TSocket("localhost", 9527);
-        transport.open();
-        // 设置传输协议为 TBinaryProtocol
-        TProtocol protocol = new TBinaryProtocol(transport);
-        Hello.Client client = new Hello.Client(protocol);
-        // 调用服务的 helloVoid 方法
-        client.helloVoid();
-
-        transport.close();
-    } catch (TTransportException e) {
-        e.printStackTrace();
-    } catch (TException e) {
-        e.printStackTrace();
-    }
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>HelloServiceImpl </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">service</span><span class="o">.</span><span class="na">client</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">org.apache.thrift.TException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.thrift.protocol.TBinaryProtocol</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.thrift.protocol.TProtocol</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.thrift.transport.TSocket</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.thrift.transport.TTransport</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.thrift.transport.TTransportException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">service.demo.Hello</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloServiceClient</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="n">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// 设置调用的服务地址为本地，端口为 9527</span>
+</span><span class='line'>        <span class="n">TTransport</span> <span class="n">transport</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TSocket</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span> <span class="mi">9527</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">transport</span><span class="o">.</span><span class="na">open</span><span class="o">();</span>
+</span><span class='line'>        <span class="c1">// 设置传输协议为 TBinaryProtocol</span>
+</span><span class='line'>        <span class="n">TProtocol</span> <span class="n">protocol</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TBinaryProtocol</span><span class="o">(</span><span class="n">transport</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Hello</span><span class="o">.</span><span class="na">Client</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Hello</span><span class="o">.</span><span class="na">Client</span><span class="o">(</span><span class="n">protocol</span><span class="o">);</span>
+</span><span class='line'>        <span class="c1">// 调用服务的 helloVoid 方法</span>
+</span><span class='line'>        <span class="n">client</span><span class="o">.</span><span class="na">helloVoid</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">transport</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">TTransportException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">TException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>代码完成后，可以先运行HelloServiceServer的main方式，然后再运行HelloServiceClient的main方法，可以在HelloServiceServer的输出结果中看到客户端打印的<code>Hello World</code>字样。</p>
 
@@ -231,35 +344,62 @@ import service.demo.Hello;</p>
 
 <p>参考了一些资料后，决定使用Jar包来启动thrift服务，并使用<a href="http://supervisord.org/">Supervisor</a>来进行进程的监控和自动重启，下面是supervisor的配置文件，里面配置了我们的thrift程序。</p>
 
-<p>{% codeblock /etc/supervisord.conf lang:sh %}
-[program:thrift]
-command=/usr/bin/java -jar /home/vagrant/thrift-hello/demo.jar
-stderr_logfile=/home/vagrant/logs/err.log
-stdout_logfile=/home/vagrant/logs/out.log
-autostart=true</p>
-
-<p>[unix_http_server]
-file = /tmp/supervisor.sock
-chmod = 0777
-chown= nobody:nogroup</p>
-
-<p>[inet_http_server]
-port = 127.0.0.1:9001</p>
-
-<p>[supervisord]
-logfile = /tmp/supervisord.log
-logfile_maxbytes = 50MB
-logfile_backups=10
-loglevel = info
-pidfile = /tmp/supervisord.pid
-nodaemon = false</p>
-
-<p>[supervisorctl]
-serverurl = unix:///tmp/supervisor.sock</p>
-
-<p>[rpcinterface:supervisor]
-supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/etc/supervisord.conf </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>program:thrift<span class="o">]</span>
+</span><span class='line'><span class="nb">command</span><span class="o">=</span>/usr/bin/java -jar /home/vagrant/thrift-hello/demo.jar
+</span><span class='line'><span class="nv">stderr_logfile</span><span class="o">=</span>/home/vagrant/logs/err.log
+</span><span class='line'><span class="nv">stdout_logfile</span><span class="o">=</span>/home/vagrant/logs/out.log
+</span><span class='line'><span class="nv">autostart</span><span class="o">=</span><span class="nb">true</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>unix_http_server<span class="o">]</span>
+</span><span class='line'><span class="nv">file</span> <span class="o">=</span> /tmp/supervisor.sock
+</span><span class='line'><span class="nv">chmod</span> <span class="o">=</span> 0777
+</span><span class='line'><span class="nv">chown</span><span class="o">=</span> nobody:nogroup&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>inet_http_server<span class="o">]</span>
+</span><span class='line'><span class="nv">port</span> <span class="o">=</span> 127.0.0.1:9001&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>supervisord<span class="o">]</span>
+</span><span class='line'><span class="nv">logfile</span> <span class="o">=</span> /tmp/supervisord.log
+</span><span class='line'><span class="nv">logfile_maxbytes</span> <span class="o">=</span> 50MB
+</span><span class='line'><span class="nv">logfile_backups</span><span class="o">=</span>10
+</span><span class='line'><span class="nv">loglevel</span> <span class="o">=</span> info
+</span><span class='line'><span class="nv">pidfile</span> <span class="o">=</span> /tmp/supervisord.pid
+</span><span class='line'><span class="nv">nodaemon</span> <span class="o">=</span> <span class="nb">false</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>supervisorctl<span class="o">]</span>
+</span><span class='line'><span class="nv">serverurl</span> <span class="o">=</span> unix:///tmp/supervisor.sock&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span>rpcinterface:supervisor<span class="o">]</span>
+</span><span class='line'>supervisor.rpcinterface_factory <span class="o">=</span> supervisor.rpcinterface:make_main_rpcinterface
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>参考资料: <a href="http://stackoverflow.com/questions/17639442/deploy-and-serve-a-thrift-server">http://stackoverflow.com/questions/17639442/deploy-and-serve-a-thrift-server</a></p>
 ]]></content>

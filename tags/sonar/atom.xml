@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: sonar | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/sonar/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2017-01-17T22:18:15+08:00</updated>
+  <updated>2017-01-18T09:43:01+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -24,13 +24,13 @@
 
 
 <p>首先通过在<a href="http://repository.codehaus.org/org/codehaus/sonar-plugins/javascript/sslr-javascript-toolkit/1.3/sslr-javascript-toolkit-1.3.jar">这里</a>下载SSLR JavaScript Toolkit 工具，下载下来是一个jar包，在cmd窗口使用java -jar sslr-javascript-toolkit-1.3.jar打开这个工具，操作界面如下：<br/>
-{% img  /images/post/02073536-58b547f5394041cdb795a717087eca35.png %}</p>
+<img src="/images/post/02073536-58b547f5394041cdb795a717087eca35.png"></p>
 
 <p>左上方的窗口是用来输入你的源代码，右上方的窗口是来显示你的AST，最下面的窗口是来输入你的XPath规则。</p>
 
 <p>我们现在左上方输入一些简单的javascript代码，然后点击 Parse Source Code按钮，可以得到源代码的语法树：</p>
 
-<p>{% img  /images/post/02074124-ca30984af1704101962348b52d4a5f34.png %}</p>
+<p><img src="/images/post/02074124-ca30984af1704101962348b52d4a5f34.png"></p>
 
 <p>得到语法树后，我们也可以点击右边窗口的XML页面，得到的是语法树的XML文档。有了XML文档，就可以通过XPath轻松得到你想要的语句了。</p>
 
@@ -38,7 +38,7 @@
 
 <p>在最下方的窗口输入XPath语法规则，点击Evaluate XPath按钮，如果语法正确，就会出现返回结果，并高亮选中你想要查询的代码，如下：</p>
 
-<p>{% img  /images/post/02074943-45053229678b4effbec60cf2c363b076.png %}</p>
+<p><img src="/images/post/02074943-45053229678b4effbec60cf2c363b076.png"></p>
 
 <p>如果语法错误，右边的窗口会给出提示，如果查询语句不正确，任何源代码都不会被选中。更多的XPath语法可以参考<a href="http://www.w3schools.com/xpath/">http://www.w3schools.com/xpath/</a>。<br/>
 总结：sonar其实很早就支持了对JS的代码校验，但是你如果想自己定制校验规则，最简单的方式就是通过sonar的web接口增加XPath规则，这个需要在XPath语法上多花点力气，如果写出来的查询语法不正确，可以多试几遍，用SSLR JavaScript Toolkit 可以很方便的调试。最后祝大家都可以在sonar上配置自己的自定义规则。</p>
@@ -72,43 +72,43 @@
 <p>sonar为大部分流行的语言（C, C#, C++, Cobol, Flex, JavaScript, PL/I, PL/SQL, Python and VB.NET）提供了一个简洁的方式来增加代码规则。这些新增规则必须使用<a href="http://en.wikipedia.org/wiki/XPath">XPath</a>来实现，这样的话语言的每一部分都可以映射到<a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Tree</a>（AST）。对于每一种语言，SSLR Toolkit 工具提供了代码转AST的功能，该工具具体的使用在下面会介绍，这里是<a href="http://repository.codehaus.org/org/codehaus/sonar-plugins/javascript/sslr-javascript-toolkit/1.3/sslr-javascript-toolkit-1.3.jar">SSLR Javascript Toolkit</a>工具的下载。如果对XPath不熟悉，可以参考这里看一下例子<a href="http://www.w3schools.com/xpath/">http://www.w3schools.com/xpath/</a>。<br/>
 1、首先使用管理员的角色登录sonar，然后去到Settings > Quality Profile页面，选择Js规则（如下图所示）。</p>
 
-<p>{% img  /images/post/02070803-9bce5fab1bf543059071fafff2ae37d8.png %}</p>
+<p><img src="/images/post/02070803-9bce5fab1bf543059071fafff2ae37d8.png"></p>
 
 <p>2、接着在Coding rules页面输入查询条件，找到XPath规则：</p>
 
-<p>{% img  /images/post/02070943-c9a5b7732ea6478fba266555c308fc29.png %}</p>
+<p><img src="/images/post/02070943-c9a5b7732ea6478fba266555c308fc29.png"></p>
 
 <p>3、查询结果出来后，点击Copy rule连接来新增规则：</p>
 
-<p>{% img  /images/post/02071054-da90a48498234fc19d34aff75c84a104.png %}</p>
+<p><img src="/images/post/02071054-da90a48498234fc19d34aff75c84a104.png"></p>
 
 <p>4、按照XPath的语法编写自己的规则：</p>
 
-<p>{% img  /images/post/02071436-15c170e9f4eb4f6684d95df76fe6e628.png %}</p>
+<p><img src="/images/post/02071436-15c170e9f4eb4f6684d95df76fe6e628.png"></p>
 
 <p>如果对XPath不熟悉，建议先学习一些XPath的语法，下面给出3个javascript xpath的规则：</p>
 
 <h5>不要使用document.write:</h5>
 
-<p>{% codeblock lang:text %}
-//callExpression/memberExpression[count(*) = 3 and primaryExpression[@tokenValue = &ldquo;document&rdquo;] and identifierName[@tokenValue = &ldquo;write&rdquo;]]
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>//callExpression/memberExpression[count(*) = 3 and primaryExpression[@tokenValue = &amp;ldquo;document&amp;rdquo;] and identifierName[@tokenValue = &amp;ldquo;write&amp;rdquo;]]
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h5>if/else语句后面必须接大括号：</h5>
 
-<p>{% codeblock lang:text %}
-//ifStatement/statement[not(block)]
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>//ifStatement/statement[not(block)]
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h5>本地变量名以XX开头：</h5>
 
-<p>{% codeblock lang:text %}
-//functionBody//variableDeclaration/IDENTIFIER[not(starts-with(@tokenValue,&lsquo;zzm&rsquo;))]
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>//functionBody//variableDeclaration/IDENTIFIER[not(starts-with(@tokenValue,&amp;lsquo;zzm&amp;rsquo;))]
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>5、创建好规则之后，把规则设置为active，将规则的级别调高一些就会自动变为active，然后重新跑一下规则分析，这样新增的规则就生效了。</p>
 
-<p>{% img  /images/post/02072520-4308a5a558d04ded998bb54f452c71f7.png %}</p>
+<p><img src="/images/post/02072520-4308a5a558d04ded998bb54f452c71f7.png"></p>
 ]]></content>
   </entry>
   
@@ -132,13 +132,22 @@
 
 <p>sonar服务的启动是要有数据库来支持的，sonar本身自带了H2内存数据库，可以直接使用。在解压目录下的conf目录下，有一个sonar.properties的配置文件是来保存sonar的配置，如果你使用的是H2数据库的话，将配置文件中的下面部分代码注释去掉即可。</p>
 
-<p>{% codeblock sonar.properties lang:properties %}</p>
-
-<h1>sonar.jdbc.url:                            jdbc:h2:tcp://localhost:9092/sonar</h1>
-
-<h1>sonar.jdbc.driverClassName:                org.h2.Driver</h1>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>sonar.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="err">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;h1&gt;sonar.jdbc.url</span><span class="o">:</span>                            <span class="s">jdbc:h2:tcp://localhost:9092/sonar&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;h1&gt;sonar.jdbc.driverClassName</span><span class="o">:</span>                <span class="s">org.h2.Driver&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>在解压目录下的extras\database\mysql目录，有2个mysql的sql文件，其中1个是创建sonar数据库和用户的脚本，可以参照这个脚本来创建H2的sonar相关数据库和用户。</p>
 
@@ -148,15 +157,26 @@
 
 <p>我们以mysql为例，首先安装mysql（安装mysql的过程就不再详细描述，网上有很多），这里要注意将数据库的字符集设置为UTF-8。安装完成之后，同样修改conf目录下的sonar.properties文件，将mysql部分的配置项打开。然后在mysql中将上面提到的那个创建sonar数据库和用户脚本施行一遍。</p>
 
-<p>{% codeblock sonar.properties lang:properties %}</p>
-
-<h1>&mdash;&mdash;&ndash; MySQL 5.x</h1>
-
-<h1>Comment the embedded database and uncomment the following line to use MySQL</h1>
-
-<h1>sonar.jdbc.url:                            jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8&amp;rewriteBatchedStatements=true</h1>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>sonar.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="err">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;&amp;mdash</span><span class="c">;&amp;mdash;&amp;ndash; MySQL 5.x&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;Comment</span> <span class="err">the</span> <span class="err">embedded</span> <span class="err">database</span> <span class="err">and</span> <span class="err">uncomment</span> <span class="err">the</span> <span class="err">following</span> <span class="err">line</span> <span class="err">to</span> <span class="err">use</span> <span class="err">MySQL&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;h1&gt;sonar.jdbc.url</span><span class="o">:</span>                            <span class="s">jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;amp;characterEncoding=utf8&amp;amp;rewriteBatchedStatements=true&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h4>启动服务</h4>
 
@@ -168,53 +188,94 @@
 
 <p>首先去到sonar官网下载Sonar Runner的压缩包，和sonar的压缩包一样，先解压到你要安装的目录。然后增加SONAR_RUNNER_HOME这个环境变量，变量值为你runner的解压目录，然后将$SONAR_RUNNER_HOME$/bin的加到PATH变量后面（配置过java环境变量的同学都懂的）。这样就安装完成了，打开cmd验证一下，打出sonar-runner -h，如果出现下面的提示信息，即表示你的runner安装成功了。</p>
 
-<p>{% codeblock lang:sh %}
-usage: sonar-runner [options]</p>
-
-<p>Options:
- -h,&mdash;help             Display help information
- -X,&mdash;debug            Produce execution debug output
- -D,&mdash;define <arg>     Define property
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>usage: sonar-runner <span class="o">[</span>options<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Options:
+</span><span class='line'> -h,&amp;mdash;help             Display <span class="nb">help </span>information
+</span><span class='line'> -X,&amp;mdash;debug            Produce execution debug output
+</span><span class='line'> -D,&amp;mdash;define &lt;arg&gt;     Define property
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>安装完runner以后，在你的项目根目录下，增加sonar-project.properties文件，内容如下：</p>
 
-<p>{% codeblock sonar.properties lang:properties %}</p>
-
-<h1>required metadata</h1>
-
-<p>sonar.projectKey=my:project
-sonar.projectName=My project
-sonar.projectVersion=1.0</p>
-
-<h1>optional description</h1>
-
-<p>sonar.projectDescription=Fake description</p>
-
-<h1>path to source directories (required)</h1>
-
-<p>sonar.sources=srcDir1,srcDir2</p>
-
-<h1>path to test source directories (optional)</h1>
-
-<p>sonar.tests=testDir1,testDir2</p>
-
-<h1>path to project binaries (optional), for example directory of Java bytecode</h1>
-
-<p>sonar.binaries=binDir</p>
-
-<h1>optional comma-separated list of paths to libraries. Only path to JAR file is supported.</h1>
-
-<p>sonar.libraries=path/to/library/<em>.jar,path/to/specific/library/myLibrary.jar,parent/</em>/*.jar</p>
-
-<h1>The value of the property must be the key of the language.</h1>
-
-<p>sonar.language=java</p>
-
-<h1>Additional parameters</h1>
-
-<p>sonar.my.property=value
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>sonar.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="err">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;required</span> <span class="err">metadata&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;sonar.projectKey</span><span class="o">=</span><span class="s">my:project</span>
+</span><span class='line'><span class="na">sonar.projectName</span><span class="o">=</span><span class="s">My project</span>
+</span><span class='line'><span class="na">sonar.projectVersion</span><span class="o">=</span><span class="s">1.0&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;optional</span> <span class="err">description&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;sonar.projectDescription</span><span class="o">=</span><span class="s">Fake description&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;path</span> <span class="err">to</span> <span class="err">source</span> <span class="err">directories</span> <span class="err">(required)&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;sonar.sources</span><span class="o">=</span><span class="s">srcDir1,srcDir2&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;path</span> <span class="err">to</span> <span class="err">test</span> <span class="err">source</span> <span class="err">directories</span> <span class="err">(optional)&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;sonar.tests</span><span class="o">=</span><span class="s">testDir1,testDir2&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;path</span> <span class="err">to</span> <span class="err">project</span> <span class="err">binaries</span> <span class="err">(optional),</span> <span class="err">for</span> <span class="err">example</span> <span class="err">directory</span> <span class="err">of</span> <span class="err">Java</span> <span class="err">bytecode&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;sonar.binaries</span><span class="o">=</span><span class="s">binDir&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;optional</span> <span class="err">comma-separated</span> <span class="err">list</span> <span class="err">of</span> <span class="err">paths</span> <span class="err">to</span> <span class="err">libraries.</span> <span class="err">Only</span> <span class="err">path</span> <span class="err">to</span> <span class="err">JAR</span> <span class="err">file</span> <span class="err">is</span> <span class="err">supported.&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;sonar.libraries</span><span class="o">=</span><span class="s">path/to/library/&lt;em&gt;.jar,path/to/specific/library/myLibrary.jar,parent/&lt;/em&gt;/*.jar&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;The</span> <span class="err">value</span> <span class="err">of</span> <span class="err">the</span> <span class="err">property</span> <span class="err">must</span> <span class="err">be</span> <span class="err">the</span> <span class="err">key</span> <span class="err">of</span> <span class="err">the</span> <span class="err">language.&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;sonar.language</span><span class="o">=</span><span class="s">java&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;Additional</span> <span class="err">parameters&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;sonar.my.property</span><span class="o">=</span><span class="s">value</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>上面的配置项根据名字和说明大概知道是做什么用的了，填上自己项目中对应的值即可。然后打开cmd窗口，去到你的项目根目录下，执行sonar-runner命令，这样sonar就开始分析你的项目代码了，分析完成之后，在浏览器中刚才那个9000端口地址的网页中就可以看到你的项目了。</p>
 
@@ -222,7 +283,7 @@ sonar.projectVersion=1.0</p>
 
 <p>使用管理员的角色登录sonar，根据这个路径进入更新中心：Settings > System > Update Center。在Available Plugins窗口找到javascript插件，点击其中的install按钮进行安装（如下图所示）。安装完后重启sonar服务器即可。</p>
 
-<p>{% img /images/post/01202231-c4477ac31ac3411686f1a4b98ae3ece1.png %}</p>
+<p><img src="/images/post/01202231-c4477ac31ac3411686f1a4b98ae3ece1.png"></p>
 ]]></content>
   </entry>
   
@@ -236,43 +297,80 @@ sonar.projectVersion=1.0</p>
 <!--more-->
 
 
-<p>{% codeblock build.xml lang:xml %}
-<taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml"></p>
-
-<pre><code>    &lt;classpath path="${env.SONAR-ANT-TASK.JAR}"/&gt;
-&lt;/taskdef&gt;
-
-&lt;target name="sonar"&gt;
-    &lt;sonar:sonar key="${sonar.project.key}" version="${sonar.project.version}" xmlns:sonar="antlib:org.sonar.ant"&gt;
-        &lt;sources&gt;
-            &lt;path location="${src.dir}" /&gt;
-        &lt;/sources&gt;
-
-        &lt;property key="sonar.projectName" value="jacoco_demo" /&gt;
-        &lt;property key="sonar.sourceEncoding" value="UTF-8" /&gt;
-        &lt;property key="sonar.dynamicAnalysis" value="reuseReports" /&gt;
-        &lt;property key="sonar.surefire.reportsPath" value="${junit.dir}" /&gt;
-        &lt;property key="sonar.core.codeCoveragePlugin" value="jacoco" /&gt;
-        &lt;property key="sonar.jacoco.reportPath" value="${basedir}/ut.exec" /&gt;
-        &lt;property key="sonar.jacoco.itReportPath" value="${basedir}/uat.exec" /&gt;
-
-        &lt;tests&gt;
-            &lt;path location="${src.test.dir}" /&gt;
-        &lt;/tests&gt;
-
-        &lt;binaries&gt;
-            &lt;path location="${build.src.class}" /&gt;
-            &lt;path location="${build.test.class}" /&gt;
-        &lt;/binaries&gt;
-
-        &lt;libraries&gt;
-            &lt;path location="${build.lib.dir}" /&gt;
-        &lt;/libraries&gt;
-    &lt;/sonar:sonar&gt;
-&lt;/target&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.sonar.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/sonar/ant/antlib.xml&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>classpath path=&quot;${env.SONAR-ANT-TASK.JAR}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/taskdef<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>target name=&quot;sonar&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>sonar:sonar key=&quot;${sonar.project.key}&quot; version=&quot;${sonar.project.version}&quot; xmlns:sonar=&quot;antlib:org.sonar.ant&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>sources<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${src.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/sources<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.projectName&quot; value=&quot;jacoco_demo&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.sourceEncoding&quot; value=&quot;UTF-8&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.dynamicAnalysis&quot; value=&quot;reuseReports&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.surefire.reportsPath&quot; value=&quot;${junit.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.core.codeCoveragePlugin&quot; value=&quot;jacoco&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.jacoco.reportPath&quot; value=&quot;${basedir}/ut.exec&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.jacoco.itReportPath&quot; value=&quot;${basedir}/uat.exec&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>tests<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${src.test.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/tests<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>binaries<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${build.src.class}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${build.test.class}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/binaries<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>libraries<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${build.lib.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/libraries<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/sonar:sonar<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/target<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>参数解释：</p>
 
@@ -288,8 +386,8 @@ sonar.projectVersion=1.0</p>
 <p>更多参数可以参考这里：<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Unit+Tests">单元测试</a>，<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Integration+Tests">集成测试</a><br/>
 在sonar 3.3的版本会自动将单元测试和集成测试的覆盖率合并，最后附上sonar上的覆盖率显示：</p>
 
-<p>{% img /images/post/2012112914305954.png %}<br/>
-{% img /images/post/2012112914311753.png %}</p>
+<p><img src="/images/post/2012112914305954.png"><br/>
+<img src="/images/post/2012112914311753.png"></p>
 ]]></content>
   </entry>
   
@@ -306,9 +404,9 @@ sonar.projectVersion=1.0</p>
 
 
 <p>
-{% codeblock lang:sh %}
--javaagent:[yourpath/]jacocoagent.jar=includes=com.xxx.xxx.*,output=tcpserver,address=xxx.xxx.xxx.xxx,port=xxxxx
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>-javaagent:<span class="o">[</span>yourpath/<span class="o">]</span>jacocoagent.jar<span class="o">=</span><span class="nv">includes</span><span class="o">=</span>com.xxx.xxx.*,output<span class="o">=</span>tcpserver,address<span class="o">=</span>xxx.xxx.xxx.xxx,port<span class="o">=</span>xxxxx
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>参数解释：</p>
 
@@ -323,14 +421,22 @@ sonar.projectVersion=1.0</p>
 <p>更多参数可以参考<a href="http://www.eclemma.org/jacoco/trunk/doc/agent.html">java agent</a>。<br/>
 配置完应用服务的JAVA_OPTIONS之后，启动服务器，然后可以开始跑你的集成测试，跑完之后，实际上jacocoagent已经将覆盖率数据记录下来了，我们可以使用下面的ant任务来dump出覆盖率文件：</p>
 
-<p>{% codeblock build.xml lang:xml %}
-　 <target name="downloadUatCoverageData"></p>
-
-<pre><code>    &lt;jacoco:dump address="xxx.xxx.xxx.xxx" port="xxxx" reset="true" destfile="${basedir}/uat.exec" append="false"/&gt;
-&lt;/target&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　 <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;downloadUatCoverageData&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>jacoco:dump address=&quot;xxx.xxx.xxx.xxx&quot; port=&quot;xxxx&quot; reset=&quot;true&quot; destfile=&quot;${basedir}/uat.exec&quot; append=&quot;false&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/target<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这里的address和port是刚才在JAVA_OPTIONS里面写的address和port的值，destfile是指生成的覆盖率文件路径。</p>
 
@@ -346,16 +452,24 @@ sonar.projectVersion=1.0</p>
 
 <p>得到集成测试的覆盖率文件之后，结合之前取到的单元测试覆盖率文件，我们可以将2个文件合并，得到综合的覆盖率文件，命令如下：</p>
 
-<p>{% codeblock build.xml lang:xml %}
-　<target name="mergeCoverage"></p>
-
-<pre><code>    &lt;jacoco:merge destfile="merged.exec"&gt;
-        &lt;fileset dir="${basedir}" includes="*.exec"/&gt;
-    &lt;/jacoco:merge&gt;
-</code></pre>
-
-<p>   </target>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;mergeCoverage&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>jacoco:merge destfile=&quot;merged.exec&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>fileset dir=&quot;${basedir}&quot; includes=&quot;*.exec&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/jacoco:merge<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

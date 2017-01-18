@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vps | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/vps/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2017-01-17T22:18:15+08:00</updated>
+  <updated>2017-01-18T09:43:01+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/11/07/use-shadowsocks-and-vps/"/>
     <updated>2015-11-07T10:31:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/11/07/use-shadowsocks-and-vps</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-11/ss_vultr.jpg 400 350 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-11/ss_vultr.jpg" width="400" height="350"></p>
 
 <p>前段时间AppStore出了一款神器<a href="https://itunes.apple.com/cn/app/surge-web-developer-tool-proxy/id1040100637?ls=1&amp;mt=8">Surge</a>，可以让iOS像其他平台使用<a href="https://github.com/shadowsocks/shadowsocks/wiki">Shadowsocks</a>（以下简称ss）一样地轻松科学上网，因为以前都是用买的SSH或VPN科学上网，所以对自建的VPN服务这一块没有太多关注，甚至错过了ss这种成熟的工具。最近试用了过后觉得非常方便，所以在这里记录一下。</p>
 
@@ -43,11 +43,11 @@
 
 <p>vps就是一台云服务器，创建的时候要选择机房的物理位置、对应的操作系统和服务器配置，vultr最低的配置是5美元/月，对普通的搭搭博客和搭建VPN的需求是绰绰有余了。</p>
 
-<p>{% img /images/post/2015-11/vultr_size.png %}</p>
+<p><img src="/images/post/2015-11/vultr_size.png"></p>
 
 <p>搭建完后就可以对机器进行相关的配置了，最常用的就是配置自己的访问电脑<code>SSH KEYS</code>，这样每次ssh登陆就可以不用输入密码了。</p>
 
-<p>{% img /images/post/2015-11/vultr_ssh.png %}</p>
+<p><img src="/images/post/2015-11/vultr_ssh.png"></p>
 
 <h2>ss服务端</h2>
 
@@ -61,17 +61,17 @@
 
 <p>ss安卓客户端的下载地址在这里：<a href="https://github.com/shadowsocks/shadowsocks-android/releases">ss安卓客户端</a>。App中文名字叫<code>影梭</code>，安装完成后打开配置界面，填写服务器ip，远程端口，本地端口，密码和加密方法，这些都是和服务端的配置文件内容一致的，完了点击连接，然后你的手机就可以科学上网了，赶紧把Fackbook, Twitter这些下下来玩一下吧。</p>
 
-<p>{% img /images/post/2015-11/ss_android.jpg 200 150 %}</p>
+<p><img src="/images/post/2015-11/ss_android.jpg" width="200" height="150"></p>
 
 <h2>ss客户端——mac</h2>
 
 <p>ss在Mac上的客户端在这里：<a href="https://github.com/shadowsocks/shadowsocks-iOS/wiki/Shadowsocks-for-OSX-%E5%B8%AE%E5%8A%A9">ssMac客户端</a>。下载后直接安装即可，安装完成后在右上角菜单栏有个箭头的Logo就是ss了。如下图所示，进入ss的Server来配置服务端的信息。</p>
 
-<p>{% img /images/post/2015-11/ss_mac.png 200 150 %}</p>
+<p><img src="/images/post/2015-11/ss_mac.png" width="200" height="150"></p>
 
 <p>配置完成后，点击<code>Turn Shadowsocks On</code>就可以开启ss客户端了，然后在Chrome浏览器中安装SwitchySharp插件，配置信息如下，以后只要选择了这个代理就可以科学上网了。</p>
 
-<p>{% img /images/post/2015-11/chrome_proxy.png 400 350 %}</p>
+<p><img src="/images/post/2015-11/chrome_proxy.png" width="400" height="350"></p>
 
 <h2>proxifier</h2>
 
@@ -82,14 +82,14 @@
 </ul>
 
 
-<p>{% img /images/post/2015-11/proxy_create.png 400 350 %}</p>
+<p><img src="/images/post/2015-11/proxy_create.png" width="400" height="350"></p>
 
 <ul>
 <li>然后再创建规则，注意这时要将Mac上的ss客户端ShadowsocksX设为<code>直连</code>，其他应用设为走ss代理。</li>
 </ul>
 
 
-<p>{% img /images/post/2015-11/proxy_rule.png 400 350 %}</p>
+<p><img src="/images/post/2015-11/proxy_rule.png" width="400" height="350"></p>
 
 <ul>
 <li>最后观看proxifier的连接信息，就可以看到电脑上应用的网络连接信息了。</li>
