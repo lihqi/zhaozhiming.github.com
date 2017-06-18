@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2017-06-11T12:24:03+08:00</updated>
+  <updated>2017-06-18T16:24:23+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,321 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[超乎你想像的 styled-components]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2017/06/18/styled-component-beyond-the-expected/"/>
+    <updated>2017-06-18T11:32:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2017/06/18/styled-component-beyond-the-expected</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2017/06/styled-components.png" width="400" height="350"></p>
+
+<p>Css 在 React 中的写法一直在持续改进，从原生的 Css 到 <a href="https://github.com/css-modules/css-modules">CSS Modules</a>，再到 Css In Js，目标是让开发者更高效地写组件的样式。
+<a href="https://www.styled-components.com/"><code>styled-components</code></a> 是基于 Css In Js 方式实现的一个库，刚开始看到这个库时，我简单地以为它只是使用了内联方式来实现 React 组件的样式，但试用了之后，才发现不仅它的实现不是内联的方式，而且因为样式是写在 JS 里面，所以它的强大远超过我的预期。</p>
+
+<!--more-->
+
+
+<h2>使用 ES6 的字符串模板</h2>
+
+<p>使用过 React 的同学可能比较清楚，如果要在一个组件通过 JS 来定义 css 样式，就必须在 React 组件里面通过<code>style</code>属性来写。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">Home</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">style</span><span class="o">=&gt;</span><span class="nx">Hello</span> <span class="nx">World</span><span class="o">&lt;</span><span class="err">/div&gt;;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这种方式有很多<code>缺点</code>：</p>
+
+<ul>
+<li>样式属性与原生 css 的写法不一致，样式名称必须用驼峰的命名方式来命令，而不是多个单词用<code>-</code>号分隔；单位的写法也不一致，百分比是用字符串形式，而<code>pixel</code>值是用数字型形式。</li>
+<li>无法写伪元素，要实现<code>hover</code>的话就必须使用<code>onMouseOver</code>事件来实现，而且要写很多 JS 代码，像<code>before</code>和<code>after</code>这类伪元素则根本没法通过这种方式实现。</li>
+</ul>
+
+
+<p><code>styled-components</code> 最吸引开发者的是使用了 ES6 的字符串模板方式来定义 css 样式，这样使得 css 的写法与原生的 css 写法基本一致，克服了上述的缺点。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">Button</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">a</span><span class="err">`</span>
+</span><span class='line'>  <span class="nx">display</span><span class="o">:</span> <span class="nx">inline</span><span class="o">-</span><span class="nx">block</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">border</span><span class="o">-</span><span class="nx">radius</span><span class="o">:</span> <span class="mi">3</span><span class="nx">px</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">padding</span><span class="o">:</span> <span class="mf">0.5</span><span class="nx">rem</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">margin</span><span class="o">:</span> <span class="mf">0.5</span><span class="nx">rem</span> <span class="mi">1</span><span class="nx">rem</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">width</span><span class="o">:</span> <span class="mi">11</span><span class="nx">rem</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">background</span><span class="o">:</span> <span class="nx">transparent</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">color</span><span class="o">:</span> <span class="nx">white</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">border</span><span class="o">:</span> <span class="mi">2</span><span class="nx">px</span> <span class="nx">solid</span> <span class="nx">white</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">&amp;</span> <span class="nx">hover</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">color</span><span class="o">:</span> <span class="nx">blue</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">&amp;</span> <span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="err">`</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>那么 <code>styled-components</code> 的底层原理是什么？为什么通过 ES6 的字符串模板可以实现这种功能？感兴趣的同学可以看下下面<code>推荐阅读</code>的文章<code>styled-components-magic-explained</code>。</p>
+
+<p>这里列举几个例子简单感受一下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// 我们有个方法来打印方法参数</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">logArgs</span> <span class="o">=</span> <span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(...</span><span class="nx">args</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="kr">const</span> <span class="nx">favoriteFood</span> <span class="o">=</span> <span class="s1">&#39;pizza&#39;</span>
+</span><span class='line'><span class="c1">// 用正常的方法调用，输出结果跟预期一样，是一句完整的句子。</span>
+</span><span class='line'><span class="nx">logArgs</span><span class="p">(</span><span class="err">`</span><span class="nx">I</span> <span class="nx">like</span> <span class="nx">$</span><span class="p">{</span><span class="nx">favoriteFood</span><span class="p">}.</span><span class="err">`</span><span class="p">)</span> <span class="c1">// -&gt; I like pizza.</span>
+</span><span class='line'><span class="c1">// 而用字符串模板的方式来调用方法，则会变成这样：句子会被变量分隔成 2 个字符串，变量值变成数组后面的参数。</span>
+</span><span class='line'><span class="nx">logArgs</span><span class="err">`</span><span class="nx">I</span> <span class="nx">like</span> <span class="nx">$</span><span class="p">{</span><span class="nx">favoriteFood</span><span class="p">}.</span><span class="err">`</span> <span class="c1">// -&gt; [&quot;I like &quot;, &quot;.&quot;] &quot;pizza&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>生成一个随机的 class 名称</h2>
+
+<p>开始看到 <code>styled-components</code> 时我天真地以为它的样式是通过内联的方式放入到组件里面，其实不是，它的样式最终还是封装成一个 class 然后再放到组件里面。</p>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2017/06/styled-components-class1.png">
+<img src="http://zhaozhiming.github.io/images/post/2017/06/styled-components-class2.png">
+<img src="http://zhaozhiming.github.io/images/post/2017/06/styled-components-class3.png"></p>
+
+<p>这样不仅避免了内联样式的局限性，而且class 的名称是一个随机的字符串，这样也完美解决了 Css 的一个大难题：样式名称重复的问题。</p>
+
+<h2>Css In Js 的好处</h2>
+
+<p>使用 JS 来写 css 的好处，就是可以利用 JS 的语法来封装 CSS 对象，比如可以使用<code>if</code>语句来判断需要使用哪个样式值。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// 这里利用了 `styled-components` 的特性</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">Button</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="err">`</span>
+</span><span class='line'>  <span class="nx">color</span><span class="o">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">props</span> <span class="o">=&gt;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">isActive</span> <span class="o">?</span> <span class="s1">&#39;blue&#39;</span><span class="o">:</span> <span class="s1">&#39;red&#39;</span><span class="p">};</span>
+</span><span class='line'><span class="err">`</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或者通过一个方法来返回一个样式对象，通过参数来动态定义样式。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">Button</span> <span class="o">=</span> <span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="err">`</span>
+</span><span class='line'>    <span class="nx">color</span><span class="o">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">color</span><span class="p">};</span>
+</span><span class='line'>  <span class="err">`</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个是不是很眼熟？有点像<code>sass</code>等 css 预处理器中的方法？没错！通过 JS 的特性就可以让你在 JS 中做预处理器中做的事情。</p>
+
+<h2><code>styled-components</code> 的预处理工具</h2>
+
+<p>说到 CSS 的预处理器，其实 <code>styled-components</code> 也有一套用 JS 实现的预处理器工具库——<a href="https://github.com/styled-components/polished">polished</a>，其中包括一些常用的 CSS 方法，比如 clearfix、hsl、mix 等，让开发者可以完全不再使用 css 预处理器来写 css 了。</p>
+
+<h2><code>theme</code> 特性</h2>
+
+<p><code>styled-components</code> 里面还有一个比较特别的特性是<code>theme</code>，它利用了 React 的<code>context</code>特性来传递其中的参数，可以让样式对象直接从最上层的组件传递到最下层的组件。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// 首先定义一个`theme`样式对象</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">styleGuide</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">cloudy</span><span class="o">:</span> <span class="s1">&#39;#F2F4F7&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">darkGray</span><span class="o">:</span> <span class="s1">&#39;#4A637C&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">gray</span><span class="o">:</span> <span class="s1">&#39;#7A8D9F&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="c1">// ...more colors or mixins</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="p">(</span>
+</span><span class='line'>  <span class="c1">// 将`theme`对象传递给上层组件`ThemeProvider`（这也是 `styled-components` 的一个 API），这样下层组件就可以通过&quot;props.theme.gray&quot;来引用其中的样式了</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="nx">ThemeProvider</span> <span class="nx">theme</span><span class="o">=</span><span class="p">{</span><span class="nx">styleGuide</span><span class="p">}</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="nx">App</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="nx">Switch</span><span class="o">&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="nx">AuthRoute</span> <span class="nx">auth</span><span class="o">=</span><span class="p">{</span><span class="nx">auth</span><span class="p">}</span> <span class="nx">exact</span> <span class="nx">path</span><span class="o">=</span><span class="s2">&quot;/&quot;</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">DashboardView</span><span class="p">}</span> <span class="o">/&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="nx">AuthRoute</span> <span class="nx">auth</span><span class="o">=</span><span class="p">{</span><span class="nx">auth</span><span class="p">}</span> <span class="nx">path</span><span class="o">=</span><span class="s2">&quot;/profile&quot;</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">DashboardView</span><span class="p">}</span> <span class="o">/&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="nx">Route</span> <span class="nx">path</span><span class="o">=</span><span class="s2">&quot;/login&quot;</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">LoginView</span><span class="p">}</span> <span class="o">/&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="nx">Route</span> <span class="nx">path</span><span class="o">=</span><span class="s2">&quot;/logout&quot;</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">LogoutView</span><span class="p">}</span> <span class="o">/&gt;</span>
+</span><span class='line'>        <span class="p">{</span><span class="cm">/* ...more routes */</span><span class="p">}</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="nx">Route</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">NotFoundView</span><span class="p">}</span> <span class="o">/&gt;</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="err">/Switch&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="err">/App&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="err">/ThemeProvider&gt;</span>
+</span><span class='line'><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Define our button, but with the use of props.theme this time</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">Button</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">button</span><span class="err">`</span>
+</span><span class='line'>  <span class="nx">font</span><span class="o">-</span><span class="nx">size</span><span class="o">:</span> <span class="mi">1</span><span class="nx">em</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">margin</span><span class="o">:</span> <span class="mi">1</span><span class="nx">em</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">padding</span><span class="o">:</span> <span class="mf">0.25</span><span class="nx">em</span> <span class="mi">1</span><span class="nx">em</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">border</span><span class="o">-</span><span class="nx">radius</span><span class="o">:</span> <span class="mi">3</span><span class="nx">px</span><span class="p">;</span>
+</span><span class='line'>  <span class="cm">/* Color the border and text with theme properties */</span>
+</span><span class='line'>  <span class="nx">color</span><span class="o">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">props</span> <span class="o">=&gt;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">.</span><span class="nx">darkGray</span><span class="p">};</span>
+</span><span class='line'>  <span class="nx">border</span><span class="o">:</span> <span class="mi">2</span><span class="nx">px</span> <span class="nx">solid</span> <span class="nx">$</span><span class="p">{</span><span class="nx">props</span> <span class="o">=&gt;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">.</span><span class="nx">darkGray</span><span class="p">};</span>
+</span><span class='line'><span class="err">`</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>可以对样式对象下面的子元素进行样式定义</h2>
+
+<p>在使用原生 css 的时候，经常会这样写样式。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.foo</span> <span class="nt">h1</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">font-size</span><span class="o">:</span> <span class="m">16px</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nc">.foo</span> <span class="nt">h2</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">color</span><span class="o">:</span> <span class="nb">red</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>很多 <code>styled-components</code> 新手（比如我）会为每个 h1 和 h2 定义一个样式对象，这样其实多写了很多代码，也没有必要，其实可以通过这种方式来定义子元素的样式。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nt">const</span> <span class="nt">FooDiv</span> <span class="o">=</span> <span class="nt">styled</span><span class="nc">.div</span><span class="err">`</span>
+</span><span class='line'>  <span class="o">&amp;</span> <span class="nt">h1</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">font-size</span><span class="o">:</span> <span class="m">16px</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">&amp;</span> <span class="nt">h2</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">color</span><span class="o">:</span> <span class="nb">red</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="err">`</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>独立样式文件</h2>
+
+<p>在一般的 React 组件中，样式和组件文件是分离的（比如 App.js 和 style.css），使用了 <code>styled-components</code> 后其实也可以沿用这种方式来组织文件，定义一个<code>style.js</code>文件来写样式对象，然后在组件文件中引入该样式文件。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// style.js</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">styled</span> <span class="nx">from</span> <span class="s1">&#39;styled-components&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppDiv</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="err">`</span>
+</span><span class='line'>  <span class="nx">display</span><span class="o">:</span> <span class="nx">flex</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">justify</span><span class="o">-</span><span class="nx">content</span><span class="o">:</span> <span class="nx">space</span><span class="o">-</span><span class="nx">between</span><span class="p">;</span>
+</span><span class='line'><span class="err">`</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// App.js</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">css</span> <span class="nx">from</span> <span class="s1">&#39;./style&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kr">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">css</span><span class="p">.</span><span class="nx">AppDiv</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="nx">World</span><span class="o">&lt;</span><span class="err">/css.AppDiv&gt;;</span>
+</span><span class='line'><span class="kr">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>缺点</h2>
+
+<h3>不能用 stylelint 检查你的 Css 代码</h3>
+
+<p>在使用 <code>styled-components</code> 的过程中也会遇到一些问题，比如我们的项目会用<code>stylelint</code>来做样式代码的检查，但是使用了 styled-compoents 后就没办法让<code>stylelint</code>的规则生效了。</p>
+
+<h3>不能用 prettier 来格式化你的 Css 代码</h3>
+
+<p>现在<code>prettier</code>不仅可以帮你格式化 JS 代码，还可以格式化 CSS 代码，但如果使用了<code>styled-components</code>的话，JS 中的字符串模板内容没有办法使用<code>prettier</code>来格式化，这个也比较尴尬。</p>
+
+<h2>推荐阅读</h2>
+
+<ul>
+<li><a href="http://mxstbr.blog/2016/11/styled-components-magic-explained/">styled-components-magic-explained</a></li>
+<li><a href="https://building.sentisis.com/embracing-the-power-of-styled-components-7b79a166c01b">embracing-the-power-of-styled-components</a></li>
+<li><a href="https://medium.com/seek-blog/a-unified-styling-language-d0c208de2660">a-unified-styling-language</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何安全地使用 React 的 context]]></title>
@@ -3823,69 +4138,6 @@
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[保存并恢复你的tmux]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2015/11/22/save-and-restore-your-tmux/"/>
-    <updated>2015-11-22T19:11:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2015/11/22/save-and-restore-your-tmux</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2015-11/tmux.jpg" width="400" height="350"></p>
-
-<p><a href="https://tmux.github.io/">Tmux</a>是一个终端下的工具，可以方便地在一个终端窗口下进行分屏，配合vim可以打造任何IDE所需要的窗口模式，让你的生产力大大提升。介绍Tmux的文章网上有很多，所以我就不赘述了，今天介绍Tmux的一款工具，可以方便的保存Tmux的状态并在任何时候进行恢复。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>为什么需要恢复这个工具</h2>
-
-<p>Tmux虽然功能十分强大，但却不能像IDE一样保存已经定制好的窗口模式，每次电脑重启后，你需要重新划分你的终端屏幕。程序员都是比较懒的，为了不用每次重启机器都要重新设置一遍Tmux，我们找到了<a href="https://github.com/tmux-plugins/tmux-resurrect">tmux-resurrect</a>这个工具。在介绍这个工具之前，我们先介绍tmux的插件管理工具，因为tmux-resurrect推荐使用它来进行安装。</p>
-
-<h2>Tmux插件管理工具</h2>
-
-<p>Tmux也像Vim等其他软件一样可以通过安装插件来扩充其强大的功能，推荐的方式是使用Tmux的插件管理工具<a href="https://github.com/tmux-plugins/tpm">TPM</a>（Tmux Plugin Manager）来安装插件。安装TPM非常简单，参考其github工程的README文档就可以了。</p>
-
-<p>安装了TPM之后，以后要安装Tmux插件就很方便了，首先在<code>~/tmux.conf</code>中写入你要安装的插件名：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">set</span> -g @plugin <span class="s1">&#39;...&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后在tmux中按<code>前缀键+大写I</code>就可以提示你进行插件安装了，安装过程如下：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Already installed <span class="s2">&quot;tpm&quot;</span>                                                                                                                                                         <span class="o">[</span>0/0<span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>TMUX environment reloaded.
-</span><span class='line'>
-</span><span class='line'>Done, press ENTER to <span class="k">continue</span>.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>tmux-resurrect</h2>
-
-<p>安装完TPM后，我们再来安装tmux-resurrect，跟安装其他插件一样，先在<code>~/tmux.conf</code>下录入tmux-resurrect：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">set</span> -g @plugin <span class="s1">&#39;tmux-plugins/tmux-resurrect&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后按<code>前缀键+I</code>就可以了。</p>
-
-<p>tmux-resurrect的使用非常简单，在Tmux窗口中按<code>前缀键+ctrl+s</code>就是保存你的tmux窗口，按<code>前缀键+ctrl+r</code>是恢复你的tmux窗口。以后只要在开机后，进入Tmux，然后用<code>前缀键+ctrl+r</code>就可以一键恢复你之前的tmux窗口了:&ndash;)</p>
-
-<h2>tmux-sessionist</h2>
-
-<p>刚用tmux-resurrect的同学可能还以为它只是保存Tmux当前一个窗口，其实它保存的是Tmux的所有窗口。那要如何切换Tmux的窗口呢？那就要用到另外一个Tmux的插件——<a href="https://github.com/tmux-plugins/tmux-sessionist">tmux-sessionist</a>了，它可以快速的切换Tmux之间的seesion窗口，安装之后通过<code>前缀键+g</code>就可以了，感兴趣的小伙伴赶紧试一试吧。</p>
 ]]></content>
   </entry>
   
