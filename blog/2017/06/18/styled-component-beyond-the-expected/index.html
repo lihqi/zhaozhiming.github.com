@@ -129,8 +129,9 @@
 	<h2 class="title">超乎你想像的 Styled-components</h2>
 	<div class="entry-content"><p><img src="/images/post/2017/06/styled-components.png" width="400" height="350"></p>
 
-<p>Css 在 React 中的写法一直在持续改进，从原生的 Css 到 <a href="https://github.com/css-modules/css-modules">CSS Modules</a>，再到 Css In Js，目标是让开发者更高效地写组件的样式。
-<a href="https://www.styled-components.com/"><code>styled-components</code></a> 是基于 Css In Js 方式实现的一个库，刚开始看到这个库时，我简单地以为它只是使用了内联方式来实现 React 组件的样式，但试用了之后，才发现不仅它的实现不是内联的方式，而且因为样式是写在 JS 里面，所以它的强大远超过我的预期。</p>
+<p>Css 在 React 中的写法一直在持续改进，从原生的 Css 到 <a href="https://github.com/css-modules/css-modules">CSS Modules</a>，再到 Css In Js，目标是让开发者更高效地写组件的样式。</p>
+
+<p><a href="https://www.styled-components.com/"><code>styled-components</code></a> 是基于 Css In Js 方式实现的一个库，刚开始看到这个库时，我简单地以为它只是使用了内联方式来实现 React 组件的样式，但试用了之后，才发现不仅它的实现不是内联的方式，而且因为样式是写在 JS 里面，所以它的强大远超过我的预期。</p>
 
 <!--more-->
 
@@ -139,8 +140,8 @@
 
 <p>使用过 React 的同学可能比较清楚，如果要在一个组件通过 JS 来定义 css 样式，就必须在 React 组件里面通过<code>style</code>属性来写。</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">Home</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">style</span><span class="o">=&gt;</span><span class="nx">Hello</span> <span class="nx">World</span><span class="o">&lt;</span><span class="err">/div&gt;;</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">Home</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">style</span><span class="o">=</span><span class="p">{{</span> <span class="nx">marginLeft</span><span class="o">:</span> <span class="mi">10</span> <span class="p">}}</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="nx">World</span><span class="o">&lt;</span><span class="err">/div&gt;;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
