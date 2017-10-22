@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ant | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/ant/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2017-10-11T19:05:35+08:00</updated>
+  <updated>2017-10-22T11:05:03+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -32,30 +32,19 @@
 
 <p>配置完后重新进行sonar分析即可看到覆盖率报告成产生了。下面是具体代码：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.dynamicAnalysis&quot;</span> <span class="na">value=</span><span class="s">&quot;reuseReports&quot;</span> <span class="nt">/&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;!--unnit test--&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.surefire.reportsPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/unitTestReportDir&quot;</span> <span class="nt">/&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;!--coverage--&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;property</span> <span class="na">name=</span><span class="s">&quot;sonar.cobertura.reportPath&quot;</span> <span class="na">value=</span><span class="s">&quot;[baseDir]/myReports/coverage.xml&quot;</span> <span class="nt">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock build.xml lang:xml %}
+<property name="sonar.dynamicAnalysis" value="reuseReports" /></p>
+
+<!--unnit test-->
+
+
+<p><property name="sonar.surefire.reportsPath" value="[baseDir]/myReports/unitTestReportDir" /></p>
+
+<!--coverage-->
+
+
+<p><property name="sonar.cobertura.reportPath" value="[baseDir]/myReports/coverage.xml" />
+{% endcodeblock %}</p>
 ]]></content>
   </entry>
   
@@ -72,36 +61,22 @@
 
 
 <p>
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;batchtest</span> <span class="na">todir=</span><span class="s">&quot;${junit.dir}&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>fileset dir=&quot;${test1.dir}&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>include name=&quot;**/*Test.java&quot;/<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/fileset<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>fileset dir=&quot;${test2.dir}&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>include name=&quot;**/*Test.java&quot;/<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/fileset<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>fileset dir=&quot;${test3.dir}&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>include name=&quot;**/*Test.java&quot;/<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/fileset<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;/batchtest&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock build.xml lang:xml %}
+<batchtest todir="${junit.dir}"></p>
+
+<pre><code>&lt;fileset dir="${test1.dir}"&gt;
+    &lt;include name="**/*Test.java"/&gt;
+&lt;/fileset&gt;
+&lt;fileset dir="${test2.dir}"&gt;
+    &lt;include name="**/*Test.java"/&gt;
+&lt;/fileset&gt;
+&lt;fileset dir="${test3.dir}"&gt;
+    &lt;include name="**/*Test.java"/&gt;
+&lt;/fileset&gt;
+</code></pre>
+
+<p></batchtest>
+{% endcodeblock %}</p>
 
 <p>其次在同一个目录下，test case 的运行顺序是根据包名的顺序来执行的。比如：a.a.a这个包名里面的test case会比a.a.b这个包名的test case先跑。</p>
 
@@ -126,35 +101,40 @@
 
 
 <p>
-<blockquote><p>I have instrumented my classes but am not getting any coverage data&hellip; <br/><br/>This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.</p></blockquote>
+{% blockquote %}
+I have instrumented my classes but am not getting any coverage data&hellip; <br/>
+This question has been asked several times and in all cases the users forgot to package or deploy the instrumented versions of their classes. Please check that your build places EMMA-instrumented classes ahead of the normal application classpath at runtime.
+{% endblockquote %}
 意思是emma会根据工程里面的class文件产生自己的instrumented class，junit在跑单元测试的时候，classpath要把定义emma的class文件路径放在项目class文件路径前面，才能产生coverage data文件。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;junit</span> <span class="err">...</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${emma.classes.dir}&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;classpath</span> <span class="na">location=</span><span class="s">&quot;${project.classes.dir}&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'><span class="ni">&amp;hellip;</span>
-</span><span class='line'><span class="nt">&lt;/junit&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:xml %}
+<junit ...>
+  <classpath location="${emma.classes.dir}"/>
+  <classpath location="${project.classes.dir}"/>
+&hellip;
+</junit>
+{% endcodeblock %}</p>
 
 <p><strong>2.emma的示例代码里面，report的sourcepath属性只有一个src路径，如果项目里面有多个src路径同时要进行覆盖率检查的话，则需要这样写：</strong></p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;report</span> <span class="na">sourcepath=</span><span class="s">&quot;${src1};${src2};${src3}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   <span class="ni">&amp;hellip;</span>
-</span><span class='line'><span class="nt">&lt;/report&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+<p>{% codeblock lang:xml %}
+<report sourcepath="${src1};${src2};${src3}">
+   &hellip;
+</report>
+{% endcodeblock %}<br/>
 不同的src路径用操作系统的classpath分隔符或逗号隔开，比如window用分号隔开，官网是这样解释的：<br/>
-<blockquote><p>sourcepath : An optional source path to use for report generation (a path-like structure). It is interpreted as a list of directories (separated by the OS-specific classpath separator or comma) containing .java source files. The local path names within each directory should reflect class package names. (Currently, only the HTML report generator uses this data, and only atmethod report depth.)</p></blockquote></p>
+{% blockquote %}
+ sourcepath : An optional source path to use for report generation (a path-like structure). It is interpreted as a list of directories (separated by the OS-specific classpath separator or comma) containing .java source files. The local path names within each directory should reflect class package names. (Currently, only the HTML report generator uses this data, and only atmethod report depth.)
+{% endblockquote %}</p>
 
 <p><strong>3.jenkins的emma插件可以显示覆盖率的趋势，已经包，类，方法的覆盖率情况，但不支持链接显示代码源文件，看了下jenkins的官网，有人已经对插件提了这样一个需求，但回复说无法实现，说明如下：</strong>  <br/>
-<blockquote><p>This was an obvious feature and so I tried to do this, but the problem is that the HTML file names and anchors that EMMA puts are just random numbers. So Hudson cannot link to the appropriate portion of those HTML files.</p></p><p><p>I also thought about generating those reports by myself in Hudson, but EMMA doesn&rsquo;t leave the line-by-line coverage information in XML file either.</p></p><p><p>So that leaves me no choice but to parse emma&rsquo;s data file directly. So this is bit involving.　　</p></blockquote></p>
+{% blockquote %}
+ This was an obvious feature and so I tried to do this, but the problem is that the HTML file names and anchors that EMMA puts are just random numbers. So Hudson cannot link to the appropriate portion of those HTML files.</p>
+
+<p>I also thought about generating those reports by myself in Hudson, but EMMA doesn&rsquo;t leave the line-by-line coverage information in XML file either.</p>
+
+<p>So that leaves me no choice but to parse emma&rsquo;s data file directly. So this is bit involving.　　
+{% endblockquote %}</p>
 
 <p>意思是说emma的html源文件是用随机数字命名，所以在xml文件中无法链接这些html源文件，emma没有修复这个问题，插件作者也无法完成这个需求:(</p>
 
@@ -172,12 +152,10 @@
 <!--more-->
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.java </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="n">XXX</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getProtectionDomain</span><span class="o">().</span><span class="na">getCodeSource</span><span class="o">().</span><span class="na">getLocation</span><span class="o">().</span><span class="na">getFile</span><span class="o">();</span>
-</span><span class='line'><span class="n">File</span> <span class="n">jarFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">path</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock demo.java lang:java %}
+String path = XXX.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+File jarFile = new File(path);
+{% endcodeblock %}</p>
 
 <p>其中的XXX指已经知道的类名，然后通过后面的方法可以直接获取到JAR包，具体这些方法是干嘛的，下来研究后再补充。</p>
 ]]></content>
@@ -193,34 +171,19 @@
 <!--more-->
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>jar basedir=&quot;${build.class}&quot; destfile=&quot;${build.out}/myjar.jar&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>manifest<span class="ni">&amp;gt;</span>
-</span><span class='line'>            <span class="ni">&amp;lt;</span>attribute name=&quot;Main-Class&quot; value=&quot;Main&quot;/<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>/manifest<span class="ni">&amp;gt;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>zipfileset excludes=&quot;META-INF/*.SF&quot; src=&quot;${project.lib}/1.jar&quot; /<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>zipfileset excludes=&quot;META-INF/*.SF&quot; src=&quot;${project.lib}/2.jar&quot; /<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>/jar<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+<p>{% codeblock build.xml lang:xml %}</p>
+
+<pre><code>    &lt;jar basedir="${build.class}" destfile="${build.out}/myjar.jar"&gt;
+        &lt;manifest&gt;
+            &lt;attribute name="Main-Class" value="Main"/&gt;
+        &lt;/manifest&gt;
+
+        &lt;zipfileset excludes="META-INF/*.SF" src="${project.lib}/1.jar" /&gt;
+        &lt;zipfileset excludes="META-INF/*.SF" src="${project.lib}/2.jar" /&gt;
+    &lt;/jar&gt;
+</code></pre>
+
+<p>{% endcodeblock %}<br/>
 执行之后，依赖jar包就会解压到要打包的jar文件里面，只要依赖包里面的class和自己的class没有冲突，一般是没有问题的。</p>
 ]]></content>
   </entry>
