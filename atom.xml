@@ -4,7 +4,7 @@
   <title><![CDATA[Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2017-10-22T11:13:39+08:00</updated>
+  <updated>2017-11-01T07:44:18+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -12,6 +12,223 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何处理 Echarts 中的地图散列点点击事件]]></title>
+    <link href="http://zhaozhiming.github.io/blog/2017/10/27/how-to-handle-map-scatter-click-event-in-echarts/"/>
+    <updated>2017-10-27T14:33:00+08:00</updated>
+    <id>http://zhaozhiming.github.io/blog/2017/10/27/how-to-handle-map-scatter-click-event-in-echarts</id>
+    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2017/10/echarts.png" width="400" height="300"></p>
+
+<p>Echarts 是百度比较成功的一个开源图形库，现在国内很多公司和项目都使用它。今天介绍一下基于 Echarts 3.0，如何处理地图散列点的点击事件。</p>
+
+<!--more-->
+
+
+<h2>问题介绍</h2>
+
+<p><img src="http://zhaozhiming.github.io/images/post/2017/10/echarts_map.png"></p>
+
+<p>我们想在地图上处理散列点（图中红点）的点击事件，比如点击某个点的时候弹出一个 Modal 框，或者跳转一个新页面什么的。但是 Echarts 提供给我们的事件 API 非常有限，就只有一个比较笼统的<code>click</code>事件 API，我们如何通过这个 API 来实现我们需要的效果呢？</p>
+
+<h2>地图散列点效果</h2>
+
+<p>首先我们来看下实现该图形的核心代码，如下所示：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>  <span class="kr">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">series</span><span class="o">:</span> <span class="p">[</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;map&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">geoIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">data</span><span class="o">:</span> <span class="p">[</span><span class="cm">/* 地图相关数据 */</span><span class="p">],</span>
+</span><span class='line'>        <span class="nx">zlevel</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'>      <span class="p">},</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>        <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;effectScatter&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">animation</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">data</span><span class="o">:</span> <span class="p">[</span><span class="cm">/* 散列点数据 */</span><span class="p">],</span>
+</span><span class='line'>        <span class="nx">coordinateSystem</span><span class="o">:</span> <span class="s1">&#39;geo&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">showEffectOn</span><span class="o">:</span> <span class="s1">&#39;render&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">rippleEffect</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">scale</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">brushType</span><span class="o">:</span> <span class="s1">&#39;fill&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="p">},</span>
+</span><span class='line'>        <span class="nx">itemStyle</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">normal</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">color</span><span class="o">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="nx">shadowBlur</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+</span><span class='line'>            <span class="nx">shadowColor</span><span class="o">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
+</span><span class='line'>          <span class="p">},</span>
+</span><span class='line'>        <span class="p">},</span>
+</span><span class='line'>        <span class="nx">zlevel</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>      <span class="p">},</span>
+</span><span class='line'>    <span class="p">],</span>
+</span><span class='line'>  <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里主要列出 Echarts 里面的 options 参数，对 Echarts 开发比较熟悉的同学应该会知道，options 是每个 Echarts 图形的配置对象。</p>
+
+<p>上面代码显示了中国地图各个省份的指数分布，另外还显示了一些地图上的散列点，所以这里面有 2 种不同类型的数据。</p>
+
+<p>可以看到 options 里面 series 属性包含了 2 种对象，一种 type 是<code>map</code>的对象，表示地图各个省份的指数分布；另外一种对象的 type 是<code>effectScatter</code>，表示的是地图上面的散列点。</p>
+
+<h2>Echarts 的点击事件</h2>
+
+<p>然后我们再来看 Echarts 的点击事件，官方代码如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">myChart</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// 点击事件操作</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>对，就只有一个<code>click</code>事件，没有针对不同类型图形的点击事件。</p>
+
+<p>我们可以试用一下这个点击事件，看看里面的<code>params</code>参数能不能对我们有所帮助？下面是一个点击全国地图某省份事件的<code>params</code>参数：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">componentSubType</span><span class="o">:</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">componentType</span><span class="o">:</span><span class="s2">&quot;series&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">data</span><span class="o">:</span> <span class="p">{</span><span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;西藏&quot;</span><span class="p">,</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">75</span><span class="p">},</span>
+</span><span class='line'>    <span class="nx">dataIndex</span><span class="o">:</span><span class="mi">27</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;西藏&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">seriesId</span><span class="o">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">seriesIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">seriesName</span><span class="o">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">seriesType</span><span class="o">:</span><span class="s2">&quot;map&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">value</span><span class="o">:</span> <span class="mi">75</span><span class="p">,</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以看到这个对象里面包含了很多属性，有类型、数据对象，系列名称、值等，但这里面看不出有什么是我们需要的。</p>
+
+<p>那我们再来看下点击了某个散列点后的参数，看看有什么不同。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">componentSubType</span><span class="err"> </span><span class="o">:</span><span class="err"> </span><span class="s2">&quot;effectScatter&quot;</span><span class="p">,</span><span class="err"> </span>
+</span><span class='line'>    <span class="nx">componentType</span><span class="err"> </span><span class="o">:</span><span class="err"> </span><span class="s2">&quot;series&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">data</span><span class="err"> </span><span class="o">:</span><span class="err"> </span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="err"> </span><span class="s2">&quot;point1&quot;</span><span class="p">,</span><span class="err"> </span><span class="nx">value</span><span class="o">:</span><span class="err"> </span><span class="nb">Array</span><span class="p">(</span><span class="mi">3</span><span class="p">)},</span><span class="err"> </span>
+</span><span class='line'>    <span class="nx">dataIndex</span><span class="err"> </span><span class="o">:</span><span class="err"> </span><span class="mi">0</span><span class="p">,</span><span class="err"> </span>
+</span><span class='line'>    <span class="nx">name</span><span class="err"> </span><span class="o">:</span><span class="err"> </span><span class="s2">&quot;point1&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">seriesId</span><span class="err"> </span><span class="o">:</span><span class="err"> </span><span class="s2">&quot;-0&quot;</span><span class="p">,</span><span class="err"> </span>
+</span><span class='line'>    <span class="nx">seriesIndex</span><span class="err"> </span><span class="o">:</span><span class="err"> </span><span class="mi">1</span><span class="p">,</span><span class="err"> </span>
+</span><span class='line'>    <span class="nx">seriesName</span><span class="err"> </span><span class="o">:</span><span class="err"> </span><span class="s2">&quot;-&quot;</span><span class="p">,</span><span class="err"> </span>
+</span><span class='line'>    <span class="nx">seriesType</span><span class="err"> </span><span class="o">:</span><span class="err"> </span><span class="s2">&quot;effectScatter&quot;</span><span class="p">,</span><span class="err"> </span>
+</span><span class='line'>    <span class="nx">type</span><span class="o">:</span><span class="err"> </span><span class="s2">&quot;click&quot;</span><span class="p">,</span><span class="err"> </span>
+</span><span class='line'>    <span class="nx">value</span><span class="o">:</span><span class="p">[</span><span class="mf">125.03</span><span class="p">,</span><span class="err"> </span><span class="mf">46.58</span><span class="p">,</span><span class="err"> </span><span class="mi">20</span><span class="p">],</span><span class="err"> </span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>对比发现，我们可以通过<code>seriesType</code>知道是哪种类型数据的点击事件，或者通过<code>seriesIndex</code>也可以知道。</p>
+
+<p>然后通过<code>dataIndex</code>我们可以得到数据在原始数组中的位置，或者直接通过<code>data</code>和<code>value</code>来直接获取点的相关数据。</p>
+
+<h2>根据参数判断是哪种图形的点击事件</h2>
+
+<p>其实饶了这么一大圈就是想让大家知道，我们可以在<code>click</code>事件中，通过这些参数来判断哪种图形的点击事件是我们想要处理的，如果不是我们需要处理的点击事件，我们直接跳出函数就可以了。示例代码如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">myChart</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="p">{</span> <span class="nx">seriesIndex</span><span class="p">,</span> <span class="nx">seriesType</span><span class="err"> </span><span class="p">}</span> <span class="o">=</span> <span class="nx">params</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">// 方法一：通过 seriesIndex 来判断，map 类型的 seriesIndex 为 0</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">seriesIndex</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// 方法二：通过 seriesType 来判断</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">seriesType</span> <span class="o">===</span> <span class="s1">&#39;map&#39;</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// 通过上面判断逻辑走到这里的就是散列点的事件了</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>缺点分析</h2>
+
+<p>虽然这个方法可以解决问题，但是有个不好的地方需要指出，就是点击散列点的时候，鼠标点击的位置必须非常准确，要点击散列点的中心位置才能捕获到该类型事件，否则看起来就像点击没有效果一样。</p>
+
+<h2>Echarts 的地图数据</h2>
+
+<p>另外在这里提示一下，很多同学可能以为 Echarts 的地图数据不能下载了，因为 <a href="http://ecomfe.github.io/echarts-map-tool/">Echarts 的官方网站</a> 上也是这么写的，但是 Echarts 的 github 项目中并没有删除这些数据 (<a href="https://github.com/ecomfe/echarts/tree/master/map">见这里</a>)，所以大家不要被 Echarts 忽悠了😄。</p>
+
+<p>这些数据包括<code>js</code>和<code>json</code>两种格式的，内容包括中国地图及各省份的地图。</p>
+
+<h2>总结</h2>
+
+<p>文章介绍了处理 Echarts 地图散列点事件的方法，如果大家有更好的方法，希望留言一起讨论，最后附上文章相关的在线 Demo 例子。<a href="https://codesandbox.io/s/lxljr76vp7">本文的 Demo</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用 CSS 显示元素的四个角边框]]></title>
@@ -3639,73 +3856,6 @@
 <h3>吸引眼球</h3>
 
 <p>如果邮件内容比较长，需要收件人了解的内容又比较多怎么办呢？这个时候可以适当地将一段文字标成<code>红色</code>或者将其<code>加粗字号加大</code>，这样阅读者在读邮件的时候就会被<code>重点</code>标注的地方所吸引了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[『我』的产品说明书]]></title>
-    <link href="http://zhaozhiming.github.io/blog/2016/05/17/use-my-product-manual-to-introduce-team/"/>
-    <updated>2016-05-17T07:54:00+08:00</updated>
-    <id>http://zhaozhiming.github.io/blog/2016/05/17/use-my-product-manual-to-introduce-team</id>
-    <content type="html"><![CDATA[<p><img src="http://zhaozhiming.github.io/images/post/2016/05/product_manual.png" width="400" height="300"></p>
-
-<p>最近使用引导者方法——<code>我</code>的产品说明书，为团队做了一次沟通交流，让大家彼此加深了了解，同时从中得到了团队成员的喜好、特长等信息，大家觉得这种方式挺有意思，所以今天在这里分享一下。</p>
-
-<!--more-->
-
-
-<p></p>
-
-<h2>什么是<code>我</code>的产品说明书</h2>
-
-<p>产品说明书大家应该都知道，比如家电的使用说明，软件的说明文档等，说明书主要介绍了产品的使用范围，注意事项，功能说明，保养事宜等。而<code>我</code>的产品说明书的方式呢，就是让团队每个人以产品说明书的方式来介绍自己，把自己当成一件很牛B的产品，说出自己的想法，比如自己有什么特长，使用<code>我</code>的时候有什么注意事项等，通过这样的一种方式介绍自己，会让人有种耳目一新的感觉。</p>
-
-<p>下面是<code>我</code>的产品说明书的内容清单：</p>
-
-<ul>
-<li>规格： 专长，值得记录的经验，强项，卖点等</li>
-<li>用途： 特别建议在 OO 时候 或 XX 场合 使用</li>
-<li>我喜欢被委托的事与被委托的方式</li>
-<li>会让我觉得开心的称赞或激发干劲的环境</li>
-<li>偏爱的指正、斥责的方式</li>
-<li>周围的人不能说的“禁忌字眼”和不能做的“NG行为”</li>
-<li>状态不佳时，会有以下症状&hellip;&hellip;（症状、原因、处理方法）</li>
-<li>周遭的人若能这样做，那就太好了</li>
-<li>自己做得到的事</li>
-</ul>
-
-
-<h2>流程步骤</h2>
-
-<p>作为一种会议引导方式，我们有必要了解会议的流程和步骤。</p>
-
-<ul>
-<li>首先为团队介绍会议的目的和流程，目的可能是为了让新团队成员互相了解，或者是改变团队现有的状态。</li>
-<li>然后让团队成员填写一份产品说明书表格（右面有模板可以参考），时间大概为20~30分钟。</li>
-<li>大家填写完后，让每个人逐一分享自己的说明书，如果人数比较多，可以分成几个小组，每个小组派代表发言</li>
-<li>在成员分享的过程中，注意要引导分享者讲一些实际的例子，或者引导其讲出真正的原因，同时注意气氛的调节，保持轻松幽默的氛围可以更好地吸引其他成员倾听。每个人的分享大概控制在10分钟内为宜。</li>
-<li>全部介绍完后，让大家总结一下今天的收获，感想等。</li>
-</ul>
-
-
-<h2>心得体会</h2>
-
-<p>团队通过这次分享，我觉得有以下收获：</p>
-
-<ul>
-<li>加深彼此了解——平时大家上班沟通都比较少（不在同一个项目组），通过这次机会能更好的了解彼此。</li>
-<li>搜集成员信息——除了表格中的信息外，还包括一些平时不为人知的<code>秘密</code>，比如有些人的特长还有<code>撩妹</code>这一项技能，让人颇感意外：）</li>
-<li>创造发言环境——其实无论哪种引导方式，目的就是为了让大家能畅所欲言，说出心中的想法，通过这种特殊的方式，大家更愿意说出心理话。</li>
-</ul>
-
-
-<h2>说明书表格</h2>
-
-<p>最后附上<code>我</code>的产品说明书模板，大家也可以在团队中尝试做一下哈。</p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2016/05/my_product_manual_1.png"></p>
-
-<p><img src="http://zhaozhiming.github.io/images/post/2016/05/my_product_manual_2.png"></p>
 ]]></content>
   </entry>
   
