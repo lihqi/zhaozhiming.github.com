@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: hibernate | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/hibernate/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-01-16T14:47:17+08:00</updated>
+  <updated>2018-02-13T09:24:19+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -33,73 +33,43 @@
 
 <p>一般使用Jsoup连接url都不会有什么问题，正常的写法如下：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:java %}</p>
+
+<pre><code>Jsoup.connect(url).get();
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <p>但有些网站会获取用户的浏览器信息，而上面的写法是没有浏览器信息的，这个时候就会报403的错误，需要在连接时加上userAngent。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">userAgent</span><span class="o">(</span><span class="s">&quot;Mozilla&quot;</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:java %}</p>
+
+<pre><code>Jsoup.connect(url).userAgent("Mozilla").get();
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <h3>Css Selector</h3>
 
 <p>使用Jsoup来抓取网页信息，最简单的一种方式就是通过Css selector，这样可以让你少写很多代码。比如下面的一段html:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div id=&quot;main&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;header&quot;<span class="ni">&amp;gt;&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:html %}</p>
+
+<pre><code>&lt;div id="main"&gt;
+    &lt;div class="header"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <p>使用css selector可以这样简单的获得。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">doc</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="s">&quot;#main div.header&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:java %}</p>
+
+<pre><code>doc.select("#main div.header")
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <h2>Velocity</h2>
 
@@ -107,63 +77,42 @@
 
 <ul>
 <li><p>先配置velocityConfigurer的bean，这里定义了模板文件的路径，属性和编码等信息。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;velocityConfigurer&quot;</span>
-</span><span class='line'>        <span class="na">class=</span><span class="s">&quot;org.springframework.web.servlet.view.velocity.VelocityConfigurer&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;resourceLoaderPath&quot;</span> <span class="na">value=</span><span class="s">&quot;WEB-INF/velocity&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;velocityProperties&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;props&gt;</span>
-</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.name&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                  loopCounter
-</span><span class='line'>              <span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;directive.foreach.counter.initial.value&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                  0
-</span><span class='line'>              <span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;input.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>              <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;output.encoding&quot;</span><span class="nt">&gt;</span>UTF-8<span class="nt">&lt;/prop&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;/props&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
+{% codeblock lang:xml %}
+  <bean id="velocityConfigurer"
+        class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+      <property name="resourceLoaderPath" value="WEB-INF/velocity" />
+      <property name="velocityProperties">
+          <props>
+              <prop key="directive.foreach.counter.name">
+                  loopCounter
+              </prop>
+              <prop key="directive.foreach.counter.initial.value">
+                  0
+              </prop>
+              <prop key="input.encoding">UTF-8</prop>
+              <prop key="output.encoding">UTF-8</prop>
+          </props>
+      </property>
+  </bean>
+{% endcodeblock %}</p></li>
 <li><p>在需要使用的Sevice里面引入，这样就可以在service里面使用到Velocity的配置信息了。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Service</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MailService</span> <span class="o">{</span>
-</span><span class='line'>  <span class="nd">@Resource</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">velocityConfigurer</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
-</span><span class='line'>  <span class="kd">private</span> <span class="n">VelocityConfigurer</span> <span class="n">velocityConfigurer</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span> <span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
+{% codeblock lang:java %}
+@Service
+public class MailService {
+  @Resource(name = &ldquo;velocityConfigurer&rdquo;)
+  private VelocityConfigurer velocityConfigurer;
+} <br/>
+{% endcodeblock %}</p></li>
 <li><p>使用Velocity的工具类来得到生成的文件信息。</p>
 
 <ul>
 <li>temple是模板文件的名称。</li>
 <li>model是生成文件所需的参数。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="n">content</span> <span class="o">=</span> <span class="n">VelocityEngineUtils</span><span class="o">.</span><span class="na">mergeTemplateIntoString</span><span class="o">(</span>
-</span><span class='line'>          <span class="n">velocityConfigurer</span><span class="o">.</span><span class="na">getVelocityEngine</span><span class="o">(),</span> <span class="n">temple</span><span class="o">,</span>
-</span><span class='line'>          <span class="n">MAIL_ENCODING</span><span class="o">,</span> <span class="n">model</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></li>
+{% codeblock lang:java %}
+String content = VelocityEngineUtils.mergeTemplateIntoString(
+          velocityConfigurer.getVelocityEngine(), temple,
+          MAIL_ENCODING, model);
+{% endcodeblock %}</li>
 </ul>
 </li>
 </ul>
@@ -178,68 +127,39 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">queryData</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>            <span class="s2">&quot;depGroup&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#dep_group&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s2">&quot;website&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#website&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s2">&quot;startDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#start_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s2">&quot;endDate&quot;</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#end_date&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;&quot;</span>
-</span><span class='line'>        <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-</span><span class='line'>            <span class="p">});</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}</p>
+
+<pre><code>var queryData = {
+            "depGroup": $("#dep_group").val() || "",
+            "website": $("#website").val() || "",
+            "startDate": $("#start_date").val() || "",
+            "endDate": $("#end_date").val() || ""
+        };
+
+$http.post('api/search', queryData).success(function (data) {
+                $scope.blogs = data;
+            });
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <ul>
 <li>接收不到参数的原因是angularjs把参数转成了json导致后台接收不到，需要在发起请求时将参数转换一下，修改后的代码如下：</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">postConfig</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">},</span>
-</span><span class='line'>    <span class="nx">transformRequest</span><span class="o">:</span> <span class="nx">transform</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/search&#39;</span><span class="p">,</span> <span class="nx">queryData</span><span class="err">，</span><span class="nx">postConfig</span><span class="p">).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="nx">$scope</span><span class="p">.</span><span class="nx">blogs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}</p>
+
+<pre><code>var postConfig = {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+    transformRequest: transform
+};
+
+$http.post('api/search', queryData，postConfig).success(function (data) {
+                $scope.blogs = data;
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <h3>Semantic-ui</h3>
 
@@ -251,98 +171,52 @@
 
 
 <p>js代码:<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">rules</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">searchKeyword</span><span class="o">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">identifier</span><span class="o">:</span> <span class="s1">&#39;searchKeyword&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">rules</span><span class="o">:</span> <span class="p">[</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;empty&#39;</span><span class="p">,</span>
-</span><span class='line'>                <span class="nx">prompt</span><span class="o">:</span> <span class="s1">&#39;请输入查询关键字&#39;</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">]</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">var</span> <span class="nx">setting</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">onSuccess</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// 发http请求</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#searchForm&#39;</span><span class="p">).</span><span class="nx">form</span><span class="p">(</span><span class="nx">rules</span><span class="p">,</span> <span class="nx">setting</span><span class="p">);</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock lang:js %}</p>
+
+<pre><code>var rules = {
+    searchKeyword: {
+        identifier: 'searchKeyword',
+        rules: [
+            {
+                type: 'empty',
+                prompt: '请输入查询关键字'
+            }
+        ]
+    }
+};
+
+var setting = {
+    onSuccess: function () {
+        // 发http请求
+    }
+};
+
+$('#searchForm').form(rules, setting);
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <p>html代码:
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div id=&quot;searchForm&quot; class=&quot;ui form&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;two fields&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>div class=&quot;field&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>            <span class="ni">&amp;lt;</span>div class=&quot;ui icon input&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>                <span class="ni">&amp;lt;</span>input id=&quot;searchKeyword&quot; type=&quot;text&quot; name=&quot;searchKeyword&quot; placeholder=&quot;请输入查询关键字...&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>                <span class="ni">&amp;lt;</span>i class=&quot;search icon&quot;<span class="ni">&amp;gt;&amp;lt;</span>/i<span class="ni">&amp;gt;</span>
-</span><span class='line'>            <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>div class=&quot;field&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'>            <span class="ni">&amp;lt;</span>div id=&quot;searchBtn&quot; class=&quot;ui blue submit button&quot;<span class="ni">&amp;gt;</span>查询<span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;ui error message&quot;<span class="ni">&amp;gt;&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock lang:html %}</p>
+
+<pre><code>&lt;div id="searchForm" class="ui form"&gt;
+    &lt;div class="two fields"&gt;
+        &lt;div class="field"&gt;
+            &lt;div class="ui icon input"&gt;
+                &lt;input id="searchKeyword" type="text" name="searchKeyword" placeholder="请输入查询关键字..."&gt;
+                &lt;i class="search icon"&gt;&lt;/i&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="field"&gt;
+            &lt;div id="searchBtn" class="ui blue submit button"&gt;查询&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="ui error message"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 ]]></content>
   </entry>
   
@@ -383,157 +257,87 @@ JPA有个好处就是操作数据库时不用写太多代码，不用像以前�
 
 <ul>
 <li><p>首先增加JPA的多persistence-unit的管理Bean。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;persistenceUnitManager&quot;</span>
-</span><span class='line'>        <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceXmlLocation&quot;</span> <span class="na">value=</span><span class="s">&quot;classpath:META-INF/persistence.xml&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="c">&lt;!--  comment dataSourceLooup to use jndi --&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;dataSourceLookup&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.jdbc.datasource.lookup.BeanFactoryDataSourceLookup&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
+{% codeblock lang:xml %}
+  <bean id="persistenceUnitManager"
+        class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
+      <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
+      <!--  comment dataSourceLooup to use jndi -->
+      <property name="dataSourceLookup">
+          <bean class="org.springframework.jdbc.datasource.lookup.BeanFactoryDataSourceLookup"/>
+      </property>
+  </bean>
+{% endcodeblock %}</p></li>
 <li><p>然后配置多套DataSource，EntityManagerFactory，TransactionManger和jpa:repository，这里要重点注意jps:repository的配置也要有多套，否则启动就会报<code>No unique bean of type [javax.persistence.EntityManagerFactory] is defined: expected single bean but found 2</code>的错误。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="c">&lt;!--write persistence unit config--&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeJpaVendor&quot;</span>
-</span><span class='line'>        <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;showSql&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;generateDdl&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeDataSource&quot;</span> <span class="na">class=</span><span class="s">&quot;com.mchange.v2.c3p0.ComboPooledDataSource &quot;</span> <span class="na">destroy-method=</span><span class="s">&quot;close&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;driverClass&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jdbcUrl&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;acquireIncrement&quot;</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;initialPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;minPoolSize&quot;</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;maxStatements&quot;</span> <span class="na">value=</span><span class="s">&quot;100&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;testConnectionOnCheckout&quot;</span> <span class="na">value=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="na">ref=</span><span class="s">&quot;persistenceUnitManager&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitName&quot;</span> <span class="na">value=</span><span class="s">&quot;mainPersistenceUnit&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaVendorAdapter&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeJpaVendor&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;loadTimeWeaver&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;writeTransactionManager&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.JpaTransactionManager&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;entityManagerFactory&quot;</span> <span class="na">ref=</span><span class="s">&quot;writeEntityManagerFactory&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;qualifier</span> <span class="na">value=</span><span class="s">&quot;writeEm&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jpaDialect&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/bean&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="ni">&amp;lt;</span>jpa:repositories base-package=<span class="ni">&amp;ldquo;</span>com.github.dba.repo.write<span class="ni">&amp;rdquo;</span>
-</span><span class='line'>                    entity-manager-factory-ref=<span class="ni">&amp;ldquo;</span>writeEntityManagerFactory<span class="ni">&amp;rdquo;</span>
-</span><span class='line'>                    transaction-manager-ref=<span class="ni">&amp;ldquo;</span>writeTransactionManager<span class="ni">&amp;rdquo;</span> /&gt;<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="ni">&amp;lt;</span>tx:annotation-driven transaction-manager=<span class="ni">&amp;ldquo;</span>writeTransactionManager<span class="ni">&amp;rdquo;</span>/&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
+{% codeblock lang:xml %}
+  <!--write persistence unit config-->
+  <bean id="writeJpaVendor"
+        class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+      <property name="showSql" value="true"/>
+      <property name="generateDdl" value="true"/>
+  </bean></p>
+
+<p>  <bean id="writeDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource " destroy-method="close">
+      <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+      <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/deblog"/>
+      <property name="user" value="root"/>
+      <property name="password" value="root"/>
+      <property name="acquireIncrement" value="1"/>
+      <property name="initialPoolSize" value="5"/>
+      <property name="maxPoolSize" value="20"/>
+      <property name="minPoolSize" value="5"/>
+      <property name="maxStatements" value="100"/>
+      <property name="testConnectionOnCheckout" value="true"/>
+  </bean></p>
+
+<p>  <bean id="writeEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="persistenceUnitManager" ref="persistenceUnitManager" />
+      <property name="persistenceUnitName" value="mainPersistenceUnit"/>
+      <property name="jpaVendorAdapter" ref="writeJpaVendor" />
+      <property name="loadTimeWeaver">
+          <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
+      </property>
+      <property name="jpaDialect">
+          <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+      </property>
+  </bean></p>
+
+<p>  <bean id="writeTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+      <property name="entityManagerFactory" ref="writeEntityManagerFactory"/>
+      <qualifier value="writeEm" />
+      <property name="jpaDialect">
+          <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+      </property>
+  </bean></p>
+
+<p>  &lt;jpa:repositories base-package=&ldquo;com.github.dba.repo.write&rdquo;
+                    entity-manager-factory-ref=&ldquo;writeEntityManagerFactory&rdquo;
+                    transaction-manager-ref=&ldquo;writeTransactionManager&rdquo; /></p>
+
+<p>  &lt;tx:annotation-driven transaction-manager=&ldquo;writeTransactionManager&rdquo;/>
+{% endcodeblock %}</p></li>
 <li><p>在persistence.xml文件中增加多个unit,这里以一个unit为例，多个的话只要persistence-unit的name不一样就可以了。下面的例子引用了之前的datasource的配置，可以不需要再配置一次jdbc信息。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="ni">&amp;lt;</span>persistence-unit name=<span class="ni">&amp;ldquo;</span>mainPersistenceUnit<span class="ni">&amp;rdquo;</span> transaction-type=<span class="ni">&amp;ldquo;</span>RESOURCE_LOCAL<span class="ni">&amp;rdquo;</span>&gt;
-</span><span class='line'>      <span class="nt">&lt;provider&gt;</span>org.hibernate.ejb.HibernatePersistence<span class="nt">&lt;/provider&gt;</span>
-</span><span class='line'>      <span class="ni">&amp;lt;</span>non-jta-data-source&gt;writeDataSource<span class="ni">&amp;lt;</span>/non-jta-data-source&gt;
-</span><span class='line'>      <span class="nt">&lt;class&gt;</span>com.github.dba.model.Blog<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepGroup<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;class&gt;</span>com.github.dba.model.DepMember<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;class&gt;</span>com.github.dba.model.BlogView<span class="nt">&lt;/class&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;properties&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.driver&quot;</span> <span class="na">value=</span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.url&quot;</span> <span class="na">value=</span><span class="s">&quot;jdbc:mysql://localhost:3306/deblog&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.user&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javax.persistence.jdbc.password&quot;</span> <span class="na">value=</span><span class="s">&quot;root&quot;</span> <span class="nt">/&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>      <span class="ni">&amp;lt;</span>property name=&quot;hibernate.dialect&quot; value=&quot;org.hibernate.dialect.MySQLDialect&quot; /<span class="ni">&amp;gt;</span>
-</span><span class='line'>      <span class="ni">&amp;lt;</span>property name=&quot;hibernate.show_sql&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
-</span><span class='line'>      <span class="ni">&amp;lt;</span>property name=&quot;hibernate.hbm2ddl.auto&quot; value=&quot;update&quot; /<span class="ni">&amp;gt;</span>
-</span><span class='line'>  <span class="ni">&amp;lt;</span>/properties<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="ni">&amp;lt;</span>/persistence-unit&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p></li>
+{% codeblock lang:xml %}
+  &lt;persistence-unit name=&ldquo;mainPersistenceUnit&rdquo; transaction-type=&ldquo;RESOURCE_LOCAL&rdquo;>
+      <provider>org.hibernate.ejb.HibernatePersistence</provider>
+      &lt;non-jta-data-source>writeDataSource&lt;/non-jta-data-source>
+      <class>com.github.dba.model.Blog</class>
+      <class>com.github.dba.model.DepGroup</class>
+      <class>com.github.dba.model.DepMember</class>
+      <class>com.github.dba.model.BlogView</class>
+      <properties>
+          <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+          <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/deblog" />
+          <property name="javax.persistence.jdbc.user" value="root" />
+          <property name="javax.persistence.jdbc.password" value="root" /></p>
+
+<pre><code>      &lt;property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" /&gt;
+      &lt;property name="hibernate.show_sql" value="true" /&gt;
+      &lt;property name="hibernate.hbm2ddl.auto" value="update" /&gt;
+  &lt;/properties&gt;
+</code></pre>
+
+<p>  &lt;/persistence-unit>
+{% endcodeblock %}</p></li>
 </ul>
 
 
@@ -551,105 +355,58 @@ JPA有个好处就是操作数据库时不用写太多代码，不用像以前�
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">static</span> <span class="n">Specification</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Blog</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">querySpecification</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">depGroup</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">website</span><span class="o">,</span>
-</span><span class='line'>                                                     <span class="kd">final</span> <span class="n">String</span> <span class="n">startDate</span><span class="o">,</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">endDate</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">Specifications</span><span class="o">.</span><span class="na">where</span><span class="o">(</span><span class="k">new</span> <span class="n">Specification</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Blog</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="nd">@Override</span>
-</span><span class='line'>        <span class="kd">public</span> <span class="n">Predicate</span> <span class="nf">toPredicate</span><span class="o">(</span><span class="n">Root</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Blog</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">root</span><span class="o">,</span> <span class="n">CriteriaQuery</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;?&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">query</span><span class="o">,</span> <span class="n">CriteriaBuilder</span> <span class="n">cb</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">Predicate</span> <span class="n">predicate</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="na">conjunction</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">depGroup</span><span class="o">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">depGroup</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
-</span><span class='line'>                        <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Author</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;author&quot;</span><span class="o">).&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;groupName&quot;</span><span class="o">),</span> <span class="n">depGroup</span><span class="o">));</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">website</span><span class="o">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="o">!</span><span class="s">&quot;*&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">website</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span>
-</span><span class='line'>                        <span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">root</span><span class="o">.&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;website&quot;</span><span class="o">),</span> <span class="n">website</span><span class="o">));</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">startDate</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">startDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
-</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">ge</span><span class="o">(</span><span class="n">root</span><span class="o">.&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Long</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">startDate</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">Strings</span><span class="o">.</span><span class="na">isNullOrEmpty</span><span class="o">(</span><span class="n">endDate</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">DbaUtil</span><span class="o">.</span><span class="na">parseTimeStringToLong</span><span class="o">(</span><span class="n">endDate</span><span class="o">,</span> <span class="n">PAGE_DATE_FORMAT</span><span class="o">);</span>
-</span><span class='line'>                    <span class="n">predicate</span><span class="o">.</span><span class="na">getExpressions</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">le</span><span class="o">(</span><span class="n">root</span><span class="o">.&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Long</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="n">time</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="s">&quot;%s parse to date error:&quot;</span><span class="o">,</span> <span class="n">endDate</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">return</span> <span class="n">predicate</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">});</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:java %}</p>
+
+<pre><code>public static Specification&lt;Blog&gt; querySpecification(final String depGroup, final String website,
+                                                     final String startDate, final String endDate) {
+    return Specifications.where(new Specification&lt;Blog&gt;() {
+        @Override
+        public Predicate toPredicate(Root&lt;Blog&gt; root, CriteriaQuery&lt;?&gt; query, CriteriaBuilder cb) {
+            Predicate predicate = cb.conjunction();
+
+            if (!Strings.isNullOrEmpty(depGroup) &amp;&amp; !"*".equals(depGroup)) {
+                predicate.getExpressions().add(
+                        cb.equal(root.&lt;Author&gt;get("author").&lt;String&gt;get("groupName"), depGroup));
+            }
+
+            if (!Strings.isNullOrEmpty(website) &amp;&amp; !"*".equals(website)) {
+                predicate.getExpressions().add(
+                        cb.equal(root.&lt;String&gt;get("website"), website));
+            }
+
+            if (!Strings.isNullOrEmpty(startDate)) {
+                try {
+                    long time = DbaUtil.parseTimeStringToLong(startDate, PAGE_DATE_FORMAT);
+                    predicate.getExpressions().add(cb.ge(root.&lt;Long&gt;get("time"), time));
+                } catch (ParseException e) {
+                    throw new RuntimeException(format("%s parse to date error:", startDate));
+                }
+            }
+
+            if (!Strings.isNullOrEmpty(endDate)) {
+                try {
+                    long time = DbaUtil.parseTimeStringToLong(endDate, PAGE_DATE_FORMAT);
+                    predicate.getExpressions().add(cb.le(root.&lt;Long&gt;get("time"), time));
+                } catch (ParseException e) {
+                    throw new RuntimeException(format("%s parse to date error:", endDate));
+                }
+            }
+
+            return predicate;
+        }
+    });
+}
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <ul>
 <li>写好了动态查询条件后，就要把它放到查询语句里面了，比如要查询所有数据，示例如下，例子还加了一个对时间的排序条件。<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'>      <span class="n">List</span><span class="o">&lt;</span><span class="n">Blog</span><span class="o">&gt;</span> <span class="n">blogs</span> <span class="o">=</span> <span class="n">blogReadRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">(</span>
-</span><span class='line'>              <span class="n">Blog</span><span class="o">.</span><span class="na">querySpecification</span><span class="o">(</span><span class="n">depGroup</span><span class="o">,</span> <span class="n">website</span><span class="o">,</span> <span class="n">startDate</span><span class="o">,</span> <span class="n">endDate</span><span class="o">),</span>
-</span><span class='line'>              <span class="k">new</span> <span class="nf">Sort</span><span class="o">(</span><span class="n">Sort</span><span class="o">.</span><span class="na">Direction</span><span class="o">.</span><span class="na">DESC</span><span class="o">,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">time</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;));</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></li>
+{% codeblock lang:java %}
+      List<Blog> blogs = blogReadRepository.findAll(
+              Blog.querySpecification(depGroup, website, startDate, endDate),
+              new Sort(Sort.Direction.DESC, &ldquo;time&rdquo;));
+{% endcodeblock %}</li>
 </ul>
 
 
@@ -658,49 +415,29 @@ JPA有个好处就是操作数据库时不用写太多代码，不用像以前�
 <p>这个可能跟JPA没有多大关系，更多是跟Hibernate有关，但都属于db层面的，就写在一起了。</p>
 
 <p>比如有张表是Blog，这样用Hibernate-orm对应到程序就有一个Blog类，如果Blog属性比较多的话，后续就会变成了一个大类。我们想在数据库只对应一张表的情况下，可以对应到程序的多个类，比如Blog类下面有个Author的类，要怎么做呢？可以用<code>@Embedded</code>标签来解决这个问题。<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">blogs</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Blog</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Id</span>
-</span><span class='line'><span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@Embedded</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">Author</span> <span class="n">author</span><span class="o">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@Embeddable</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Author</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Basic</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div><br/>
+{% codeblock lang:java %}
+@Entity(name = &ldquo;blogs&rdquo;)
+public class Blog {</p>
+
+<pre><code>@Id
+@GeneratedValue(strategy = GenerationType.AUTO)
+private Long id;
+
+@Embedded
+private Author author;
+</code></pre>
+
+<p>}</p>
+
+<p>@Embeddable
+public class Author {</p>
+
+<pre><code>@Basic
+private String name;
+</code></pre>
+
+<p>}
+{% endcodeblock %}<br/>
 分离成多个对象的话，有个好处就是可以在不同的model添加不同的逻辑计算，避免把所有逻辑都放在一个类里面，这也是面向对象设计时要考虑的一个问题。但数据库始终只对应一张表，操作简单。</p>
 
 <p>下一篇: <a href="http://zhaozhiming.github.io/blog/2014/05/31/some-tips-in-my-recent-project-2/">最近小项目的一些记录（二）</a></p>

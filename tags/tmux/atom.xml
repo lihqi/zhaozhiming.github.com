@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: tmux | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/tmux/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-01-16T14:47:17+08:00</updated>
+  <updated>2018-02-13T09:24:19+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/11/22/save-and-restore-your-tmux/"/>
     <updated>2015-11-22T19:11:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/11/22/save-and-restore-your-tmux</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2015-11/tmux.jpg" width="400" height="350"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2015-11/tmux.jpg 400 350 %}</p>
 
 <p><a href="https://tmux.github.io/">Tmux</a>是一个终端下的工具，可以方便地在一个终端窗口下进行分屏，配合vim可以打造任何IDE所需要的窗口模式，让你的生产力大大提升。介绍Tmux的文章网上有很多，所以我就不赘述了，今天介绍Tmux的一款工具，可以方便的保存Tmux的状态并在任何时候进行恢复。</p>
 
@@ -37,31 +37,27 @@
 
 <p>安装了TPM之后，以后要安装Tmux插件就很方便了，首先在<code>~/tmux.conf</code>中写入你要安装的插件名：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">set</span> -g @plugin &amp;lsquo;&amp;hellip;&amp;rsquo;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+set -g @plugin &lsquo;&hellip;&rsquo;
+{% endcodeblock %}</p>
 
 <p>然后在tmux中按<code>前缀键+大写I</code>就可以提示你进行插件安装了，安装过程如下：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Already installed &amp;ldquo;tpm&amp;rdquo;                                                                                                                                                         <span class="o">[</span>0/0<span class="o">]</span>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;TMUX environment reloaded.&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;Done, press ENTER to <span class="k">continue</span>.
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+Already installed &ldquo;tpm&rdquo;                                                                                                                                                         [0/0]</p>
+
+<p>TMUX environment reloaded.</p>
+
+<p>Done, press ENTER to continue.
+{% endcodeblock %}</p>
 
 <h2>tmux-resurrect</h2>
 
 <p>安装完TPM后，我们再来安装tmux-resurrect，跟安装其他插件一样，先在<code>~/tmux.conf</code>下录入tmux-resurrect：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">set</span> -g @plugin &amp;lsquo;tmux-plugins/tmux-resurrect&amp;rsquo;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+set -g @plugin &lsquo;tmux-plugins/tmux-resurrect&rsquo;
+{% endcodeblock %}</p>
 
 <p>然后按<code>前缀键+I</code>就可以了。</p>
 

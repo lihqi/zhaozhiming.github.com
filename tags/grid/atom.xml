@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: grid | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/grid/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-01-16T14:47:17+08:00</updated>
+  <updated>2018-02-13T09:24:19+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2017/01/10/complete-guide-grid-zhcn-part3/"/>
     <updated>2017-01-10T19:30:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2017/01/10/complete-guide-grid-zhcn-part3</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2017/01/css_grid3.jpeg" width="400" height="350"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2017/01/css_grid3.jpeg 400 350 %}</p>
 
 <p>接着上篇 blog，这篇继续介绍 Grid 的网格子项属性，内容没有那么长了。</p>
 
@@ -70,53 +70,38 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="k">auto</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="k">auto</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="k">auto</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">number</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="k">auto</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item{
+  grid-column-start: <number> | <name> | span <number> | span <name> | auto
+  grid-column-end: <number> | <name> | span <number> | span <name> | auto
+  grid-row-start: <number> | <name> | span <number> | span <name> | auto
+  grid-row-end: <number> | <name> | span <number> | span <name> | auto
+}
+{% endcodeblock %}</p>
 
 <p>举个例子：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="m">2</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="n">five</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="n">row1</span><span class="o">-</span><span class="n">start</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="m">3</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  grid-column-start: 2;
+  grid-column-end: five;
+  grid-row-start: row1-start
+  grid-row-end: 3
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-a.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-a.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-a.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-a.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-b</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="n">span</span> <span class="n">col4</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">start</span><span class="o">:</span> <span class="m">2</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">end</span><span class="o">:</span> <span class="n">span</span> <span class="m">2</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-b{
+  grid-column-start: 1;
+  grid-column-end: span col4-start;
+  grid-row-start: 2
+  grid-row-end: span 2
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="http://chris.house/images/grid-start-end-b.png">http://chris.house/images/grid-start-end-b.png</a>"></p>
+<p>{% img <a href="http://chris.house/images/grid-start-end-b.png">http://chris.house/images/grid-start-end-b.png</a> %}</p>
 
 <p>如果<code>grid-column-end/grid-row-end</code>没有生命，网格子项将默认跨越一个网格轨迹。</p>
 
@@ -135,29 +120,23 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">start</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">end</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">start</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">/</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">start</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">end</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">start</span><span class="o">-</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">/</span> <span class="n">span</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item{
+  grid-column: &lt;start-line> / &lt;end-line> | &lt;start-line> / span <value>;
+  grid-row: &lt;start-line> / &lt;end-line> | &lt;start-line> / span <value>;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-c</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">:</span> <span class="m">3</span> <span class="o">/</span> <span class="n">span</span> <span class="m">2</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">:</span> <span class="n">third</span><span class="o">-</span><span class="n">line</span> <span class="o">/</span> <span class="m">4</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-c{
+  grid-column: 3 / span 2;
+  grid-row: third-line / 4;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-c.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-c.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-c.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-c.png</a> %}</p>
 
 <p>如果没有声明结束网格线的值，那么网格子项将默认跨越 1 个网格轨迹。</p>
 
@@ -173,39 +152,32 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">row</span><span class="o">-</span><span class="n">start</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">column</span><span class="o">-</span><span class="n">start</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">row</span><span class="o">-</span><span class="n">end</span><span class="o">&gt;</span> <span class="o">/</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">column</span><span class="o">-</span><span class="n">end</span><span class="o">&gt;</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item{
+  grid-area: <name> | &lt;row-start> / &lt;column-start> / &lt;row-end> / &lt;column-end>;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
 <p>作为分配一个名字给网格子项的一种方式：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
-</span><span class='line'><span class="o">.</span><span class="n">item</span><span class="o">-</span><span class="n">d</span><span class="err">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="n">header</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item{
+.item-d{
+  grid-area: header
+}
+{% endcodeblock %}</p>
 
 <p>作为<code>grid-row-start</code>+ <code>grid-column-start</code> + <code>grid-row-end</code>+ <code>grid-column-end</code>的一种简写：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-d</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="m">1</span> <span class="o">/</span> <span class="n">col4</span><span class="o">-</span><span class="n">start</span> <span class="o">/</span> <span class="n">last</span><span class="o">-</span><span class="n">line</span> <span class="o">/</span> <span class="m">6</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-d{
+  grid-area: 1 / col4-start / last-line / 6
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-d.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-d.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-d.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-start-end-d.png</a> %}</p>
 
 <h4>justify-self</h4>
 
@@ -221,55 +193,45 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">start</span> <span class="o">|</span> <span class="n">end</span> <span class="o">|</span> <span class="k">center</span> <span class="o">|</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item{
+  justify-self: start | end | center | stretch;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">start</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  justify-self: start;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-start.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-start.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">end</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  justify-self: end;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-end.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-end.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  justify-self: center;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-center.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-center.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  justify-self: stretch;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-stretch.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-self-stretch.png</a> %}</p>
 
 <p>为了让网格中的所有子项都对齐，这个行为也可以通过设置网格容器中的<code>justify-items</code>属性来实现。</p>
 
@@ -287,55 +249,45 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">start</span> <span class="o">|</span> <span class="n">end</span> <span class="o">|</span> <span class="k">center</span> <span class="o">|</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item{
+  align-self: start | end | center | stretch;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">start</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  align-self: start;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-start.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-start.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">end</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  align-self: end;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-end.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-end.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  align-self: center;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-center.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-center.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">self</span><span class="o">:</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  align-self: stretch;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-stretch.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-self-stretch.png</a> %}</p>
 
 <p>为了让网格中的所有子项都对齐，这个行为也可以通过设置网格容器中的<code>align-items</code>属性来实现。</p>
 ]]></content>
@@ -346,7 +298,7 @@
     <link href="http://zhaozhiming.github.io/blog/2017/01/09/complete-guide-grid-zhcn-part2/"/>
     <updated>2017-01-09T19:30:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2017/01/09/complete-guide-grid-zhcn-part2</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2017/01/css_grid2.png" width="400" height="350"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2017/01/css_grid2.png 400 350 %}</p>
 
 <p>全篇 blog 太长，分成三篇文章分享。</p>
 
@@ -397,13 +349,11 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">display</span><span class="o">:</span> <span class="n">grid</span> <span class="o">|</span> <span class="k">inline</span><span class="o">-</span><span class="n">grid</span> <span class="o">|</span> <span class="n">subgrid</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  display: grid | inline-grid | subgrid;
+}
+{% endcodeblock %}</p>
 
 <p>注意：<code>column</code>, <code>float</code>, <code>clear</code>和<code>vertical-align</code>对网格容器没有效果。</p>
 
@@ -421,95 +371,76 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">track</span><span class="o">-</span><span class="k">size</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span> <span class="o">|</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">line</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">track</span><span class="o">-</span><span class="k">size</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">track</span><span class="o">-</span><span class="k">size</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span> <span class="o">|</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">line</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">track</span><span class="o">-</span><span class="k">size</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: &lt;track-size> &hellip; | &lt;line-name> &lt;track-size> &hellip;;
+  grid-template-rows: &lt;track-size> &hellip; | &lt;line-name> &lt;track-size> &hellip;;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
 <p>当你在轨迹值中间留空格，网格线将被自动以数字命名：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">40px</span> <span class="m">50px</span> <span class="k">auto</span> <span class="m">50px</span> <span class="m">40px</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="m">25</span><span class="o">%</span> <span class="m">100px</span> <span class="k">auto</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: 40px 50px auto 50px 40px;
+  grid-template-rows: 25% 100px auto;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-numbers.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-numbers.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-numbers.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-numbers.png</a> %}</p>
 
 <p>但你可以给网格线指定一个名字，注意网格线命名时的中括号语法：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="m">40px</span> <span class="p">[</span><span class="n">line2</span><span class="p">]</span> <span class="m">50px</span> <span class="p">[</span><span class="n">line3</span><span class="p">]</span> <span class="k">auto</span> <span class="p">[</span><span class="n">col4</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="m">50px</span> <span class="p">[</span><span class="n">five</span><span class="p">]</span> <span class="m">40px</span> <span class="p">[</span><span class="n">end</span><span class="p">];</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="p">[</span><span class="n">row1</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="m">25</span><span class="o">%</span> <span class="p">[</span><span class="n">row1</span><span class="o">-</span><span class="n">end</span><span class="p">]</span> <span class="m">100px</span> <span class="p">[</span><span class="n">third</span><span class="o">-</span><span class="n">line</span><span class="p">]</span> <span class="k">auto</span> <span class="p">[</span><span class="n">last</span><span class="o">-</span><span class="n">line</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: [first] 40px [line2] 50px [line3] auto [col4-start] 50px [five] 40px [end];
+  grid-template-rows: [row1-start] 25% [row1-end] 100px [third-line] auto [last-line];
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-names.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-names.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-names.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-names.png</a> %}</p>
 
 <p>注意一根网格线可以有多个名字，例如在下面的例子中第二根线有两个名字：<code>row1-end</code> 和 <code>row2-start</code>。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="p">[</span><span class="n">row1</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="m">25</span><span class="o">%</span> <span class="p">[</span><span class="n">row1</span><span class="o">-</span><span class="n">end</span> <span class="n">row2</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="m">25</span><span class="o">%</span> <span class="p">[</span><span class="n">row2</span><span class="o">-</span><span class="n">end</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-rows: [row1-start] 25% [row1-end row2-start] 25% [row2-end];
+}
+{% endcodeblock %}</p>
 
 <p>如果你定义了容器的重复部分，你可以使用<code>repeat()</code>方法来生成多个相同值：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="k">repeat</span><span class="p">(</span><span class="m">3</span><span class="o">,</span> <span class="m">20px</span> <span class="p">[</span><span class="n">col</span><span class="o">-</span><span class="n">start</span><span class="p">])</span> <span class="m">5</span><span class="o">%</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: repeat(3, 20px [col-start]) 5%;
+}
+{% endcodeblock %}</p>
 
 <p>它等价于：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">20px</span> <span class="p">[</span><span class="n">col</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="m">20px</span> <span class="p">[</span><span class="n">col</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="m">20px</span> <span class="p">[</span><span class="n">col</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="m">5</span><span class="o">%</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: 20px [col-start] 20px [col-start] 20px [col-start] 5%;
+}
+{% endcodeblock %}</p>
 
 <p><code>fr</code>单元允许你将网格容器中的自由空间设置为一个份数，举个例子，下面的例子将把网格容器的每个子项设置为三分之一。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">1</span><span class="n">fr</span> <span class="m">1</span><span class="n">fr</span> <span class="m">1</span><span class="n">fr</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: 1fr 1fr 1fr;
+}
+{% endcodeblock %}</p>
 
 <p>自由空间是在固定子项确定后开始计算的，在下面的例子中自由空间是<code>fr</code>单位的总和但不包括<code>50px</code>：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">1</span><span class="n">fr</span> <span class="m">50px</span> <span class="m">1</span><span class="n">fr</span> <span class="m">1</span><span class="n">fr</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: 1fr 50px 1fr 1fr;
+}
+{% endcodeblock %}</p>
 
 <h4>grid-template-areas</h4>
 
@@ -524,75 +455,47 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">areas</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">.</span> <span class="o">|</span> <span class="k">none</span> <span class="o">|</span> <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>                   <span class="s2">&quot;...&quot;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-areas: &ldquo;&lt;grid-area-name> | . | none | &hellip;&rdquo;</p>
+
+<pre><code>                   "..."
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>举个例子：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="n">header</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="nc">.item-b</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="n">main</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="nc">.item-c</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="n">sidebar</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="nc">.item-d</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">area</span><span class="o">:</span> <span class="n">footer</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">50px</span> <span class="m">50px</span> <span class="m">50px</span> <span class="m">50px</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="k">auto</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">areas</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">header</span> <span class="n">header</span> <span class="n">header</span> <span class="n">header</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>                   <span class="s2">&quot;main main . sidebar&quot;</span>
-</span><span class='line'>                   <span class="s2">&quot;footer footer footer footer&quot;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  grid-area: header;
+}
+.item-b{
+  grid-area: main;
+}
+.item-c{
+  grid-area: sidebar;
+}
+.item-d{
+  grid-area: footer;
+}</p>
+
+<p>.container{
+  grid-template-columns: 50px 50px 50px 50px;
+  grid-template-rows: auto;
+  grid-template-areas: &ldquo;header header header header&rdquo;</p>
+
+<pre><code>                   "main main . sidebar"
+                   "footer footer footer footer"
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>这将创建一个 4 乘以 3 的网格，第一行由<code>header</code>区域组成，中间一行由 2 个<code>main</code>区域和一个空单元和一个<code>sidebar</code>区域组成，最后一行由<code>footer</code>区域组成。</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-template-areas.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-template-areas.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-template-areas.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-template-areas.png</a> %}</p>
 
 <p>在你定义的每一行都需要拥有相同的单元格。</p>
 
@@ -613,33 +516,25 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">gap</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">line</span><span class="o">-</span><span class="k">size</span><span class="o">&gt;</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">gap</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">line</span><span class="o">-</span><span class="k">size</span><span class="o">&gt;</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-column-gap: &lt;line-size>;
+  grid-row-gap: &lt;line-size>;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">100px</span> <span class="m">50px</span> <span class="m">100px</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="m">80px</span> <span class="k">auto</span> <span class="m">80px</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">gap</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">gap</span><span class="o">:</span> <span class="m">15px</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: 100px 50px 100px;
+  grid-template-rows: 80px auto 80px;
+  grid-column-gap: 10px;
+  grid-row-gap: 15px;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-column-row-gap.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-column-row-gap.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-column-row-gap.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-column-row-gap.png</a> %}</p>
 
 <p>只会创建行和列的沟槽，不包括边缘。</p>
 
@@ -654,27 +549,21 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">gap</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">-</span><span class="n">gap</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">-</span><span class="n">gap</span><span class="o">&gt;</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-gap: &lt;grid-column-gap> &lt;grid-row-gap>;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">100px</span> <span class="m">50px</span> <span class="m">100px</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="m">80px</span> <span class="k">auto</span> <span class="m">80px</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">gap</span><span class="o">:</span> <span class="m">10px</span> <span class="m">15px</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: 100px 50px 100px;
+  grid-template-rows: 80px auto 80px;
+  grid-gap: 10px 15px;
+}
+{% endcodeblock %}</p>
 
 <p>如果没有写<code>grid-row-gap</code>，那么它的值将和<code>grid-column-gap</code>的一样。</p>
 
@@ -692,55 +581,45 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="n">start</span> <span class="o">|</span> <span class="n">end</span> <span class="o">|</span> <span class="k">center</span> <span class="o">|</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-items: start | end | center | stretch;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="n">start</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-items: start;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-start.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-start.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="n">end</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-items: end;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-end.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-end.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-items: center;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-center.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-center.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-items: stretch;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-stretch.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-items-stretch.png</a> %}</p>
 
 <p>可以通过<code>justify-self</code>属性把这个行为设置到单独的网格子项。</p>
 
@@ -758,55 +637,45 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="n">start</span> <span class="o">|</span> <span class="n">end</span> <span class="o">|</span> <span class="k">center</span> <span class="o">|</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-items: start | end | center | stretch;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="n">start</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-items: start;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-start.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-start.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="n">end</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-items: end;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-end.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-end.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-items: center;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-center.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-center.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="n">items</span><span class="o">:</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-items: stretch;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-stretch.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-items-stretch.png</a> %}</p>
 
 <p>可以通过<code>align-self</code>属性把这个行为设置到单独的网格子项。</p>
 
@@ -827,85 +696,69 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">start</span> <span class="o">|</span> <span class="n">end</span> <span class="o">|</span> <span class="k">center</span> <span class="o">|</span> <span class="n">stretch</span> <span class="o">|</span> <span class="n">space</span><span class="o">-</span><span class="n">around</span> <span class="o">|</span> <span class="n">space</span><span class="o">-</span><span class="n">between</span> <span class="o">|</span> <span class="n">space</span><span class="o">-</span><span class="n">evenly</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-content: start | end | center | stretch | space-around | space-between | space-evenly;
+}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">start</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-content: start;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-start.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-start.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">end</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-content: end;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-end.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-end.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-content: center;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-center.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-center.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-content: stretch;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-stretch.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-stretch.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">space</span><span class="o">-</span><span class="n">around</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-content: space-around;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-around.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-around.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-around.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-around.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">space</span><span class="o">-</span><span class="n">between</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-content: space-between;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-between.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-between.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-between.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-between.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="k">justify</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">space</span><span class="o">-</span><span class="n">evenly</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  justify-content: space-evenly;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-evenly.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-evenly.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-evenly.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-justify-content-space-evenly.png</a> %}</p>
 
 <h4>align-content</h4>
 
@@ -924,83 +777,67 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">start</span> <span class="o">|</span> <span class="n">end</span> <span class="o">|</span> <span class="k">center</span> <span class="o">|</span> <span class="n">stretch</span> <span class="o">|</span> <span class="n">space</span><span class="o">-</span><span class="n">around</span> <span class="o">|</span> <span class="n">space</span><span class="o">-</span><span class="n">between</span> <span class="o">|</span> <span class="n">space</span><span class="o">-</span><span class="n">evenly</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-content: start | end | center | stretch | space-around | space-between | space-evenly;
+}
+{% endcodeblock %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">start</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-content: start;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-start.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-start.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-start.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">end</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-content: end;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-end.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-end.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-end.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-content: center;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-center.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-center.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-center.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">stretch</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-content: stretch;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-stretch.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-stretch.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-stretch.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">space</span><span class="o">-</span><span class="n">around</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-content: space-around;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-around.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-around.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-around.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-around.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">space</span><span class="o">-</span><span class="n">between</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-content: space-between;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-between.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-between.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-between.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-between.png</a> %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">align</span><span class="o">-</span><span class="k">content</span><span class="o">:</span> <span class="n">space</span><span class="o">-</span><span class="n">evenly</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  align-content: space-evenly;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-evenly.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-evenly.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-evenly.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-align-content-space-evenly.png</a> %}</p>
 
 <h4>grid-auto-columns</h4>
 
@@ -1012,65 +849,50 @@
 
 <p>&lt;track-size> &ndash; 可以是一个长度，百分比或者是一个网格中自由空间的份数（通过使用<code>fr</code>单位）。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">track</span><span class="o">-</span><span class="k">size</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">track</span><span class="o">-</span><span class="k">size</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">hellip</span><span class="p">;;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-auto-columns: &lt;track-size> &hellip;;
+  grid-auto-rows: &lt;track-size> &hellip;;
+}
+{% endcodeblock %}</p>
 
 <p>为了说明隐式网格轨迹如何被创建，思考一下这个：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">60px</span> <span class="m">60px</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="m">90px</span> <span class="m">90px</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-template-columns: 60px 60px;
+  grid-template-rows: 90px 90px
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto.png</a> %}</p>
 
 <p>这里创建了 2 x 2 的网格。</p>
 
 <p>但现在想象你使用<code>grid-column</code>和<code>grid-row</code>来定位你的网格子项，就像这样：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">:</span> <span class="m">1</span> <span class="o">/</span> <span class="m">2</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">:</span> <span class="m">2</span> <span class="o">/</span> <span class="m">3</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="nc">.item-b</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">:</span> <span class="m">5</span> <span class="o">/</span> <span class="m">6</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">:</span> <span class="m">2</span> <span class="o">/</span> <span class="m">3</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+.item-b{
+  grid-column: 5 / 6;
+  grid-row: 2 / 3;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/implicit-tracks.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/implicit-tracks.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/implicit-tracks.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/implicit-tracks.png</a> %}</p>
 
 <p>我们告诉<code>.item-b</code>在第 5 列网格线开始第 6 列网格线结束，但我们还没有定义第 5 或者第 6 列。因为我们引用的线不存在，0 宽度的隐式网格轨迹将被创建来填充这些空缺。我们可以使用<code>grid-auto-columns</code>和<code>grid-auto-rows</code>来指定这些隐式网格轨迹的宽度：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">60px</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-auto-columns: 60px;
+}
+{% endcodeblock %}</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/implicit-tracks-with-widths.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/implicit-tracks-with-widths.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/implicit-tracks-with-widths.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/implicit-tracks-with-widths.png</a> %}</p>
 
 <h4>grid-auto-flow</h4>
 
@@ -1085,13 +907,11 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span>
-</span><span class='line'>  <span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">flow</span><span class="o">:</span> <span class="n">row</span> <span class="o">|</span> <span class="n">column</span> <span class="o">|</span> <span class="n">row</span> <span class="n">dense</span> <span class="o">|</span> <span class="n">column</span> <span class="n">dense</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{
+  grid-auto-flow: row | column | row dense | column dense
+}
+{% endcodeblock %}</p>
 
 <p>注意<code>dense</code>可能让你的网格子项出现错乱。</p>
 
@@ -1099,109 +919,71 @@
 
 <p>考虑一下这个 HTML：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;section</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div class=&quot;item-a&quot;<span class="ni">&amp;gt;</span>item-a<span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>div class=&quot;item-b&quot;<span class="ni">&amp;gt;</span>item-b<span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>div class=&quot;item-c&quot;<span class="ni">&amp;gt;</span>item-c<span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>div class=&quot;item-d&quot;<span class="ni">&amp;gt;</span>item-d<span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>div class=&quot;item-e&quot;<span class="ni">&amp;gt;</span>item-e<span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;/section&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:html %}
+<section class="container"></p>
+
+<pre><code>&lt;div class="item-a"&gt;item-a&lt;/div&gt;
+&lt;div class="item-b"&gt;item-b&lt;/div&gt;
+&lt;div class="item-c"&gt;item-c&lt;/div&gt;
+&lt;div class="item-d"&gt;item-d&lt;/div&gt;
+&lt;div class="item-e"&gt;item-e&lt;/div&gt;
+</code></pre>
+
+<p></section>
+{% endcodeblock %}</p>
 
 <p>你定义一个 5 列 2 行的网格，并设置<code>grid-auto-flow</code>为<code>row</code>（这也是默认值）：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">display</span><span class="o">:</span> <span class="n">grid</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">60px</span> <span class="m">60px</span> <span class="m">60px</span> <span class="m">60px</span> <span class="m">60px</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="m">30px</span> <span class="m">30px</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">flow</span><span class="o">:</span> <span class="n">row</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{</p>
+
+<pre><code>display: grid;
+grid-template-columns: 60px 60px 60px 60px 60px;
+grid-template-rows: 30px 30px;
+grid-auto-flow: row;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>当在网格中放置子项时，你只能为其中 2 个指定斑点：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.item-a</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">:</span> <span class="m">1</span> <span class="o">/</span> <span class="m">3</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span><span class='line'><span class="nc">.item-e</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">grid</span><span class="o">-</span><span class="n">column</span><span class="o">:</span> <span class="m">5</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">row</span><span class="o">:</span> <span class="m">1</span> <span class="o">/</span> <span class="m">3</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.item-a{</p>
+
+<pre><code>grid-column: 1;
+grid-row: 1 / 3;
+</code></pre>
+
+<p>}
+.item-e{</p>
+
+<pre><code>grid-column: 5;
+grid-row: 1 / 3;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>因为我们设置<code>grid-auto-flow</code>为<code>row</code>，我们的网格看起来就像这样，注意这三个我们没有放置的子项（<code>item-b</code>，<code>item-c</code>，<code>item-d</code>) 将如何以行的方式流动的：</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto-flow-row.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto-flow-row.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto-flow-row.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto-flow-row.png</a> %}</p>
 
 <p>如果我们将<code>grid-auto-flow</code>设为<code>column</code>，<code>item-b</code>，<code>item-c</code>和<code>item-d</code>以列的方式向下流动：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">display</span><span class="o">:</span> <span class="n">grid</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">60px</span> <span class="m">60px</span> <span class="m">60px</span> <span class="m">60px</span> <span class="m">60px</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="m">30px</span> <span class="m">30px</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">flow</span><span class="o">:</span> <span class="n">column</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto-flow-column.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto-flow-column.png</a>"></p>
+<pre><code>display: grid;
+grid-template-columns: 60px 60px 60px 60px 60px;
+grid-template-rows: 30px 30px;
+grid-auto-flow: column;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
+
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto-flow-column.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-auto-flow-column.png</a> %}</p>
 
 <h4>grid</h4>
 
@@ -1215,131 +997,87 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">grid</span><span class="o">:</span> <span class="k">none</span> <span class="o">|</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="o">/</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="o">|</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">flow</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">rows</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="p">[</span><span class="o">/</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">columns</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;]];</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{</p>
+
+<pre><code>grid: none | &lt;grid-template-rows&gt; / &lt;grid-template-columns&gt; | &lt;grid-auto-flow&gt; [&lt;grid-auto-rows&gt; [/ &lt;grid-auto-columns&gt;]];
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>举例：</p>
 
 <p>下面 2 段代码是相等的：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">grid</span><span class="o">:</span> <span class="m">200px</span> <span class="k">auto</span> <span class="o">/</span> <span class="m">1</span><span class="n">fr</span> <span class="k">auto</span> <span class="m">1</span><span class="n">fr</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="m">200px</span> <span class="k">auto</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="m">1</span><span class="n">fr</span> <span class="k">auto</span> <span class="m">1</span><span class="n">fr</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">areas</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<pre><code>grid: 200px auto / 1fr auto 1fr;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
+
+<p>{% codeblock lang:css %}
+.container{</p>
+
+<pre><code>grid-template-rows: 200px auto;
+grid-template-columns: 1fr auto 1fr;
+grid-template-areas: none;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>下面这 2 段代码也是等价的：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">grid</span><span class="o">:</span> <span class="n">column</span> <span class="m">1</span><span class="n">fr</span> <span class="o">/</span> <span class="k">auto</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">flow</span><span class="o">:</span> <span class="n">column</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="m">1</span><span class="n">fr</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="k">auto</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="k">auto</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<pre><code>grid: column 1fr / auto;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
+
+<p>{% codeblock lang:css %}
+.container{</p>
+
+<pre><code>grid-auto-flow: column;
+grid-auto-rows: 1fr;
+grid-auto-columns: auto;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>它也可以接收一个更复杂但又相当方便的语法来一次性设置所有属性，你可以指定<code>grid-template-areas</code>，<code>grid-auto-rows</code>和<code>grid-auto-columns</code>，并且所有其他紫属性被设置为它们的默认值。你需要做的是指定网格线的名称和网格轨迹的大小来生成它们的网格区域。最简单的表述方法就是举一个例子：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">grid</span><span class="o">:</span> <span class="p">[</span><span class="n">row1</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="s2">&quot;header header header&quot;</span> <span class="m">1</span><span class="n">fr</span> <span class="p">[</span><span class="n">row1</span><span class="o">-</span><span class="n">end</span><span class="p">]</span>
-</span><span class='line'>      <span class="p">[</span><span class="n">row2</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="s2">&quot;footer footer footer&quot;</span> <span class="m">25px</span> <span class="p">[</span><span class="n">row2</span><span class="o">-</span><span class="n">end</span><span class="p">]</span>
-</span><span class='line'>      <span class="o">/</span> <span class="k">auto</span> <span class="m">50px</span> <span class="k">auto</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{</p>
+
+<pre><code>grid: [row1-start] "header header header" 1fr [row1-end]
+      [row2-start] "footer footer footer" 25px [row2-end]
+      / auto 50px auto;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>上面跟下面是等价的：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.container</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">areas</span><span class="o">:</span> <span class="s2">&quot;header header header&quot;</span>
-</span><span class='line'>                     <span class="s2">&quot;footer footer footer&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">rows</span><span class="o">:</span> <span class="p">[</span><span class="n">row1</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="m">1</span><span class="n">fr</span> <span class="p">[</span><span class="n">row1</span><span class="o">-</span><span class="n">end</span> <span class="n">row2</span><span class="o">-</span><span class="n">start</span><span class="p">]</span> <span class="m">25px</span> <span class="p">[</span><span class="n">row2</span><span class="o">-</span><span class="n">end</span><span class="p">];</span>
-</span><span class='line'><span class="n">grid</span><span class="o">-</span><span class="n">template</span><span class="o">-</span><span class="n">columns</span><span class="o">:</span> <span class="k">auto</span> <span class="m">50px</span> <span class="k">auto</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+.container{</p>
+
+<pre><code>grid-template-areas: "header header header"
+                     "footer footer footer";
+grid-template-rows: [row1-start] 1fr [row1-end row2-start] 25px [row2-end];
+grid-template-columns: auto 50px auto;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 ]]></content>
   </entry>
   
@@ -1348,7 +1086,7 @@
     <link href="http://zhaozhiming.github.io/blog/2017/01/08/complete-guide-grid-zhcn-part1/"/>
     <updated>2017-01-08T19:30:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2017/01/08/complete-guide-grid-zhcn-part1</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2017/01/css_grid.png" width="400" height="350"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2017/01/css_grid.png 400 350 %}</p>
 
 <p>CSS 的 flex 特性刚推出不久，现在 grid 特性又快要出来了，感谢这些新特性，让前端开发者不用像以前那么痛苦地做页面布局了。为了更好的理解这篇博文，决定把它翻译出来。</p>
 
@@ -1418,81 +1156,57 @@
 
 <p>网格容器是指这个元素使用了<code>display: grid</code>，它是所有网格元素的直接父级，在这个例子<code>container</code>的元素就是网格容器。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;item item-1&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;item item-2&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;item item-3&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:html %}</p>
+
+<div class="container">
+  <div class="item item-1"></div>
+  <div class="item item-2"></div>
+  <div class="item item-3"></div>
+</div>
+
+
+<p>{% endcodeblock %}</p>
 
 <h4>网格子项</h4>
 
 <p>网格子项是指网格容器的子元素（比如其后代），在下面的例子中<code>item</code>的元素是网格子项，但<code>sub-item</code>的元素不是。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;item&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;item&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">&quot;sub-item&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;item&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:html %}</p>
+
+<div class="container">
+  <div class="item"></div>
+  <div class="item">
+    <p class="sub-item"></p>
+  </div>
+  <div class="item"></div>
+</div>
+
+
+<p>{% endcodeblock %}</p>
 
 <h4>网格线</h4>
 
 <p>分隔的线组成了网格的结构。它们可以是垂直的（“列网格线”）或者水平的（“行网格线”），也可以在行或列的任一边。下面的例子中黄色的线是一个列网格线的例子。</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-line.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-line.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-line.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-line.png</a> %}</p>
 
 <h4>网格轨迹</h4>
 
 <p>网格轨迹是指两根毗邻线中间的位置，你可以认为是网格的行或者列，下面例子的中网格轨迹是第二和第三行网格线中间的位置。</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-track.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-track.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-track.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-track.png</a> %}</p>
 
 <h4>网格单元</h4>
 
 <p>网格单元是指两根毗邻的行网格线和列网格线中间的位置，它是一个单独的网格“单元”，下面的例子中网格单元是指第 1 和 2 根行网格线和第 2 和 3 根列网格线中间的位置。</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-cell.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-cell.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-cell.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-cell.png</a> %}</p>
 
 <h4>网格区域</h4>
 
 <p>网格区域是指 4 根网格线包围的空间，一个网格空间可能由任意数量的网格单元构成。下面的例子中网格区域是指在第 1 和 3 的行网格线和第 1 和 3 列网格线中间的位置。</p>
 
-<p><img class="<a" src="href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-area.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-area.png</a>"></p>
+<p>{% img <a href="https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-area.png">https://cdn.css-tricks.com/wp-content/uploads/2016/03/grid-area.png</a> %}</p>
 ]]></content>
   </entry>
   

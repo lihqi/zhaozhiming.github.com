@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: enzyme | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/enzyme/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-01-16T14:47:17+08:00</updated>
+  <updated>2018-02-13T09:24:19+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2017/11/08/run-react-test-with-react-version-16/"/>
     <updated>2017-11-08T20:36:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2017/11/08/run-react-test-with-react-version-16</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2017/11/react-test.png" width="400" height="300"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2017/11/react-test.png 400 300 %}</p>
 
 <p>React 升级到版本 16 之后，各方面都有不少改进，最重要的是完全向后兼容，功能代码几乎不用怎么修改就可以使用新版本。但是测试代码就不一定了，如果你是使用 <code>enzyme</code> 跑测试的话，以前的测试可能会跑不起来，那么需要如何修改呢？下面我们就来看一下吧。</p>
 
@@ -31,51 +31,29 @@
 
 <p>可以暂时不管该测试对应的功能代码是怎么样的，因为校验的结果是组件快照。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// Demo.js</span>
-</span><span class='line'><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">react</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kr">export</span> <span class="k">default</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="nx">World</span><span class="o">&lt;</span><span class="err">/div&gt;;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="c1">// Demo.test.js</span>
-</span><span class='line'><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">react</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
-</span><span class='line'><span class="kr">import</span> <span class="p">{</span> <span class="nx">shallow</span> <span class="p">}</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">enzyme</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
-</span><span class='line'><span class="kr">import</span> <span class="nx">toJson</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">enzyme</span><span class="o">-</span><span class="nx">to</span><span class="o">-</span><span class="nx">json</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
-</span><span class='line'><span class="kr">import</span> <span class="nx">Demo</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="o">/</span><span class="nx">Demo</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">Demo</span> <span class="nx">Component</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">it</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">should</span> <span class="nx">render</span> <span class="nx">correctly</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">Demo</span> <span class="o">/&amp;</span><span class="nx">gt</span><span class="p">;);</span>
-</span><span class='line'><span class="nx">expect</span><span class="p">(</span><span class="nx">toJson</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">)).</span><span class="nx">toMatchSnapshot</span><span class="p">();</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">});</span>
-</span><span class='line'><span class="p">});</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+// Demo.js
+import React from &lsquo;react&rsquo;;</p>
+
+<p>export default () => <div>Hello World</div>;</p>
+
+<p>// Demo.test.js
+import React from &lsquo;react&rsquo;;
+import { shallow } from &lsquo;enzyme&rsquo;;
+import toJson from &lsquo;enzyme-to-json&rsquo;;
+import Demo from &lsquo;./Demo&rsquo;;</p>
+
+<p>describe(&lsquo;Demo Component&rsquo;, () => {
+  it(&lsquo;should render correctly&rsquo;, () => {</p>
+
+<pre><code>const wrapper = shallow(&lt;Demo /&gt;);
+expect(toJson(wrapper)).toMatchSnapshot();
+</code></pre>
+
+<p>  });
+});</p>
+
+<p>{% endcodeblock %}</p>
 
 <h2>React16 之前</h2>
 
@@ -90,25 +68,17 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>PASS  src/Demo.test.js
-</span><span class='line'>  Demo Component&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;✓ should render correctly <span class="o">(</span>12ms<span class="o">)</span>
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;Test Suites: 1 passed, 1 total
-</span><span class='line'>Tests:       1 passed, 1 total
-</span><span class='line'>Snapshots:   1 passed, 1 total
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:bash %}
+PASS  src/Demo.test.js
+  Demo Component</p>
+
+<pre><code>✓ should render correctly (12ms)
+</code></pre>
+
+<p>Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   1 passed, 1 total
+{% endcodeblock %}</p>
 
 <h2>React16 之后</h2>
 
@@ -120,31 +90,20 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>FAIL  src/Demo.test.js
-</span><span class='line'>  ● Test suite failed to run&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;Cannot find module <span class="s1">&#39;react-dom/lib/ReactTestUtils&#39;</span> from <span class="s1">&#39;index.js&#39;</span>
-</span><span class='line'>
-</span><span class='line'>  at Resolver.resolveModule <span class="o">(</span>node_modules/jest-resolve/build/index.js:179:17<span class="o">)</span>
-</span><span class='line'>  at Object.&amp;lt;anonymous&amp;gt; <span class="o">(</span>node_modules/react-addons-test-utils/index.js:1:107<span class="o">)</span>
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;Test Suites: 1 failed, 1 total
-</span><span class='line'>Tests:       0 total
-</span><span class='line'>Snapshots:   0 total
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:bash %}
+FAIL  src/Demo.test.js
+  ● Test suite failed to run</p>
+
+<pre><code>Cannot find module 'react-dom/lib/ReactTestUtils' from 'index.js'
+
+  at Resolver.resolveModule (node_modules/jest-resolve/build/index.js:179:17)
+  at Object.&lt;anonymous&gt; (node_modules/react-addons-test-utils/index.js:1:107)
+</code></pre>
+
+<p>Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+{% endcodeblock %}</p>
 
 <h2>enzyme 的版本升级</h2>
 
@@ -157,15 +116,12 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">Enzyme</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">enzyme</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
-</span><span class='line'><span class="kr">import</span> <span class="nx">Adapter</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">enzyme</span><span class="o">-</span><span class="nx">adapter</span><span class="o">-</span><span class="nx">react</span><span class="o">-</span><span class="mi">16</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Enzyme</span><span class="p">.</span><span class="nx">configure</span><span class="p">({</span> <span class="nx">adapter</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Adapter</span><span class="p">()</span> <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+import Enzyme from &lsquo;enzyme&rsquo;;
+import Adapter from &lsquo;enzyme-adapter-react-16&rsquo;;</p>
+
+<p>Enzyme.configure({ adapter: new Adapter() });
+{% endcodeblock %}</p>
 
 <p>OK！原来的测试通过了！</p>
 
@@ -213,35 +169,22 @@
 
 <p>虽然测试现在已经跑通了，但是你可能会遇到下面这个警告：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>console.error node_modules/fbjs/lib/warning.js:33&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;Warning: React depends on requestAnimationFrame. Make sure that you load a polyfill in older browsers. http://fb.me/react-polyfills
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt; PASS  src/Demo.test.js
-</span><span class='line'>  Demo Component&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;✓ should render correctly <span class="o">(</span>8ms<span class="o">)</span>
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;Test Suites: 1 passed, 1 total
-</span><span class='line'>Tests:       1 passed, 1 total
-</span><span class='line'>Snapshots:   1 passed, 1 total
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:bash %}
+console.error node_modules/fbjs/lib/warning.js:33</p>
+
+<pre><code>Warning: React depends on requestAnimationFrame. Make sure that you load a polyfill in older browsers. http://fb.me/react-polyfills
+</code></pre>
+
+<p> PASS  src/Demo.test.js
+  Demo Component</p>
+
+<pre><code>✓ should render correctly (8ms)
+</code></pre>
+
+<p>Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   1 passed, 1 total
+{% endcodeblock %}</p>
 
 <p>原因是测试用到的<code>jsdom</code> 包还没有提供<code>requestAnimationFrame</code>，所以会报这个警告。</p>
 
@@ -254,7 +197,7 @@
     <link href="http://zhaozhiming.github.io/blog/2016/03/29/use-ava-and-enzyme-to-test-react-component-part3/"/>
     <updated>2016-03-29T20:42:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2016/03/29/use-ava-and-enzyme-to-test-react-component-part3</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2016/03/react.png"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2016/03/react.png %}</p>
 
 <p><strong>React组件的测试要点</strong>：React组件要怎么测试，有哪些需要注意的地方，今天我们通过一些例子来说明。</p>
 
@@ -267,85 +210,47 @@
 
 <p>React中存在逻辑的地方有一部分是在render方法中，React通过props或state的值可以render出不同的页面，所以我们可以通过设置不同的props值来测试是否能render出我们期望的页面。比如有下面这样的一个组件：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">class</span> <span class="nx">Footer</span> <span class="kr">extends</span> <span class="nx">Component</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">renderFooterButtons</span><span class="p">(</span><span class="nx">completedCount</span><span class="p">,</span> <span class="nx">clearCompleted</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="c1">// 测试点1</span>
-</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nx">completedCount</span> <span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">return</span> <span class="p">(</span>
-</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">button</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;clear-completed&quot;</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span> <span class="p">()</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="nx">clearCompleted</span><span class="p">()</span> <span class="p">}</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="nx">Clear</span> <span class="nx">completed</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/button&amp;gt;</span>
-</span><span class='line'>  <span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kr">const</span> <span class="p">{</span> <span class="nx">todos</span><span class="p">,</span> <span class="nx">actions</span><span class="p">,</span> <span class="nx">onShow</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span>
-</span><span class='line'><span class="kr">const</span> <span class="p">{</span> <span class="nx">clearCompleted</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">actions</span><span class="p">;</span>
-</span><span class='line'><span class="kr">const</span> <span class="nx">activeCount</span> <span class="o">=</span> <span class="nx">todos</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">count</span><span class="p">,</span> <span class="nx">todo</span><span class="p">)</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="nx">todo</span><span class="p">.</span><span class="nx">completed</span> <span class="o">?</span> <span class="nx">count</span> <span class="o">:</span> <span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</span><span class='line'><span class="kr">const</span> <span class="nx">completedCount</span> <span class="o">=</span> <span class="nx">todos</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">activeCount</span><span class="p">;</span>
-</span><span class='line'><span class="k">return</span> <span class="p">(</span>
-</span><span class='line'>  <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">footer</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;footer&quot;</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span>
-</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;todo-count&quot;</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">strong</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;{</span><span class="nx">activeCount</span><span class="p">}</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/strong&amp;gt; item left&amp;lt;/span&amp;gt;</span>
-</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">ul</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;filters&quot;</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span>
-</span><span class='line'>      <span class="c1">// 测试点2</span>
-</span><span class='line'>      <span class="p">{[</span><span class="nx">SHOW_ALL</span><span class="p">,</span> <span class="nx">SHOW_ACTIVE</span><span class="p">,</span> <span class="nx">SHOW_COMPLETED</span><span class="p">].</span><span class="nx">map</span><span class="p">(</span><span class="nx">filter</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span>
-</span><span class='line'>        <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">li</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">filter</span><span class="p">}</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span>
-</span><span class='line'>          <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">a</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classnames</span><span class="p">({</span> <span class="nx">selected</span><span class="o">:</span> <span class="nx">filter</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">filter</span> <span class="p">})}</span>
-</span><span class='line'>            <span class="nx">style</span><span class="o">=</span>
-</span><span class='line'>            <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span> <span class="p">()</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="nx">onShow</span><span class="p">(</span><span class="nx">filter</span><span class="p">)</span> <span class="p">}</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;{</span><span class="nx">FILTER_TITLES</span><span class="p">[</span><span class="nx">filter</span><span class="p">]}</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/a&amp;gt;</span>
-</span><span class='line'>        <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/li&amp;gt;</span>
-</span><span class='line'>      <span class="p">)}</span>
-</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/ul&amp;gt;</span>
-</span><span class='line'>    <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">renderFooterButtons</span><span class="p">(</span><span class="nx">completedCount</span><span class="p">,</span> <span class="nx">clearCompleted</span><span class="p">)}</span>
-</span><span class='line'>  <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/footer&amp;gt;</span>
-</span><span class='line'><span class="p">);</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+class Footer extends Component {
+  renderFooterButtons(completedCount, clearCompleted) {</p>
+
+<pre><code>// 测试点1
+if (completedCount &gt; 0) {
+  return (
+    &lt;button className="clear-completed" onClick={ () =&gt; clearCompleted() }&gt;Clear completed&lt;/button&gt;
+  );
+}
+</code></pre>
+
+<p>  }</p>
+
+<p>  render() {</p>
+
+<pre><code>const { todos, actions, onShow } = this.props;
+const { clearCompleted } = actions;
+const activeCount = todos.reduce((count, todo) =&gt; todo.completed ? count : count + 1, 0);
+const completedCount = todos.length - activeCount;
+return (
+  &lt;footer className="footer"&gt;
+    &lt;span className="todo-count"&gt;&lt;strong&gt;{activeCount}&lt;/strong&gt; item left&lt;/span&gt;
+    &lt;ul className="filters"&gt;
+      // 测试点2
+      {[SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED].map(filter =&gt;
+        &lt;li key={filter}&gt;
+          &lt;a className={classnames({ selected: filter === this.props.filter })}
+            style={{ cursor: 'pointer' }}
+            onClick={ () =&gt; onShow(filter) }&gt;{FILTER_TITLES[filter]}&lt;/a&gt;
+        &lt;/li&gt;
+      )}
+    &lt;/ul&gt;
+    {this.renderFooterButtons(completedCount, clearCompleted)}
+  &lt;/footer&gt;
+);
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <p>可以看到这个组件其实是比较简单的，在一个<code>footer</code>标签里面有个<code>span</code>和一个<code>ul</code>，<code>ul</code>里面有一些<code>li</code>，最下面是个<code>button</code>。</p>
 
@@ -354,51 +259,30 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">props</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">todos</span><span class="o">:</span> <span class="p">[],</span> <span class="c1">// 空的数组</span>
-</span><span class='line'>  <span class="nx">actions</span><span class="o">:</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">clearCompleted</span><span class="o">:</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">spy</span><span class="p">(),</span> <span class="c1">// mock方法</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">},</span>
-</span><span class='line'>  <span class="nx">onShow</span><span class="o">:</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">spy</span><span class="p">(),</span> <span class="c1">// mock方法</span>
-</span><span class='line'>  <span class="nx">filter</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">SHOW_ALL</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span>
-</span><span class='line'><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">test</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="k">do</span> <span class="nx">not</span> <span class="nx">render</span> <span class="nx">button</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Footer</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">t</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">button</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">test</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">render</span> <span class="nx">button</span> <span class="nx">correctly</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Footer</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span> <span class="nx">todos</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">completed</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}]</span> <span class="p">});</span>
-</span><span class='line'>  <span class="nx">t</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">button</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+const props = {
+  todos: [], // 空的数组
+  actions: {</p>
+
+<pre><code>clearCompleted: sinon.spy(), // mock方法
+</code></pre>
+
+<p>  },
+  onShow: sinon.spy(), // mock方法
+  filter: &lsquo;SHOW_ALL&rsquo;,
+};</p>
+
+<p>test(&lsquo;do not render button&rsquo;, t => {
+  const wrapper = shallow(<Footer {...props} />);
+  t.is(wrapper.find(&lsquo;button&rsquo;).length, 0);
+});</p>
+
+<p>test(&lsquo;render button correctly&rsquo;, t => {
+  const wrapper = shallow(<Footer {...props} />);
+  wrapper.setProps({ todos: [{ completed: true }] });
+  t.is(wrapper.find(&lsquo;button&rsquo;).length, 1);
+});
+{% endcodeblock %}</p>
 
 <p>要让completedCount不大于0，只要给个空的todos集合就可以了，如果要大于0的话，则需要在todos里面添加一个<code>completed</code>为true的对象，这里需要搞清楚completedCount的声明逻辑。</p>
 
@@ -407,21 +291,15 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">test</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">render</span> <span class="mi">3</span> <span class="nx">li</span> <span class="nx">correctly</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Footer</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span> <span class="nx">todos</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">completed</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}]</span> <span class="p">});</span>
-</span><span class='line'>  <span class="nx">t</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">li</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">t</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">a</span><span class="p">.</span><span class="nx">selected</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">t</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">a</span><span class="p">.</span><span class="nx">selected</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">text</span><span class="p">(),</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">All</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+test(&lsquo;render 3 li correctly&rsquo;, t => {
+  const wrapper = shallow(<Footer {...props} />);
+  wrapper.setProps({ todos: [{ completed: true }] });
+  t.is(wrapper.find(&lsquo;li&rsquo;).length, 3);
+  t.is(wrapper.find(&lsquo;a.selected&rsquo;).length, 1);
+  t.is(wrapper.find(&lsquo;a.selected&rsquo;).text(), &lsquo;All&rsquo;);
+});
+{% endcodeblock %}</p>
 
 <p>可以看到通过enzyme的text方法可以很方便地得到<code>a</code>标签的文本内容。</p>
 
@@ -431,101 +309,55 @@
 
 <p>除了在render方法中有逻辑以外，在组件的事件中也会存在逻辑，要测试这部分代码，我们需要模拟触发组件的事件。请看下面这个组件：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">class</span> <span class="nx">TodoInput</span> <span class="kr">extends</span> <span class="nx">Component</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kr">super</span><span class="p">(</span><span class="nx">props</span><span class="p">,</span> <span class="nx">context</span><span class="p">);</span>
-</span><span class='line'><span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">text</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">text</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="nx">handleChange</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="nx">text</span><span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span> <span class="p">});</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="nx">handleBlur</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">newTodo</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">onSave</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">trim</span><span class="p">());</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="p">(</span>
-</span><span class='line'>  <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">input</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span>
-</span><span class='line'>    <span class="nx">classnames</span><span class="p">({</span>
-</span><span class='line'>      <span class="nx">edit</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">editing</span><span class="p">,</span>
-</span><span class='line'>      <span class="s1">&#39;new-todo&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">newTodo</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">})}</span>
-</span><span class='line'>    <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span>
-</span><span class='line'>    <span class="nx">placeholder</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">placeholder</span><span class="p">}</span>
-</span><span class='line'>    <span class="nx">autoFocus</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
-</span><span class='line'>    <span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">text</span><span class="p">}</span>
-</span><span class='line'>    <span class="nx">onBlur</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleBlur</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)}</span>
-</span><span class='line'>    <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleChange</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)}</span>
-</span><span class='line'>  <span class="o">/&amp;</span><span class="nx">gt</span><span class="p">;</span>
-</span><span class='line'><span class="p">);</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+class TodoInput extends Component {
+  constructor(props, context) {</p>
+
+<pre><code>super(props, context);
+this.state = {
+  text: this.props.text || '',
+};
+</code></pre>
+
+<p>  }</p>
+
+<p>  handleChange(e) {</p>
+
+<pre><code>this.setState({ text: e.target.value });
+</code></pre>
+
+<p>  }</p>
+
+<p>  handleBlur(e) {</p>
+
+<pre><code>if (!this.props.newTodo) {
+  this.props.onSave(e.target.value.trim());
+}
+</code></pre>
+
+<p>  }</p>
+
+<p>  render() {</p>
+
+<pre><code>return (
+  &lt;input className={
+    classnames({
+      edit: this.props.editing,
+      'new-todo': this.props.newTodo,
+    })}
+    type="text"
+    placeholder={this.props.placeholder}
+    autoFocus="true"
+    value={this.state.text}
+    onBlur={this.handleBlur.bind(this)}
+    onChange={this.handleChange.bind(this)}
+  /&gt;
+);
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <p>可以看到这个组件的render方法里面没有什么逻辑，只有一个<code>input</code>标签，但是在标签中存在了<code>change</code>和<code>blur</code>事件，组件的逻辑隐藏在对应的事件方法中。</p>
 
@@ -534,33 +366,21 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">props</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">text</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span>
-</span><span class='line'>  <span class="nx">placeholder</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">foo</span> <span class="nx">placeholder</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span>
-</span><span class='line'>  <span class="nx">editing</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">newTodo</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">onSave</span><span class="o">:</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">spy</span><span class="p">(),</span>
-</span><span class='line'><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">test</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">input</span> <span class="nx">change</span> <span class="nx">value</span> <span class="nx">correctly</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">TodoInput</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">input</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">simulate</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">change</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">{</span> <span class="nx">target</span><span class="o">:</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">bar</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;</span> <span class="p">}</span> <span class="p">});</span>
-</span><span class='line'>  <span class="nx">t</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">text</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;),</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">bar</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+const props = {
+  text: &lsquo;foo&rsquo;,
+  placeholder: &lsquo;foo placeholder&rsquo;,
+  editing: false,
+  newTodo: false,
+  onSave: sinon.spy(),
+};</p>
+
+<p>test(&lsquo;input change value correctly&rsquo;, t => {
+  const wrapper = shallow(<TodoInput {...props} />);
+  wrapper.find(&lsquo;input&rsquo;).simulate(&lsquo;change&rsquo;, { target: { value: &lsquo;bar&rsquo; } });
+  t.is(wrapper.state(&lsquo;text&rsquo;), &lsquo;bar&rsquo;);
+});
+{% endcodeblock %}</p>
 
 <p>通过调用<code>simulate</code>方法对<code>change</code>事件进行模拟，然后调用<code>state</code>方法对组件的state进行校验。</p>
 
@@ -569,15 +389,12 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">test</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">input</span> <span class="nx">blur</span> <span class="nx">correctly</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">TodoInput</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">input</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">simulate</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">blur</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">{</span> <span class="nx">target</span><span class="o">:</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">bar</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;</span> <span class="p">}</span> <span class="p">});</span>
-</span><span class='line'>  <span class="nx">t</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">onSave</span><span class="p">.</span><span class="nx">callCount</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+test(&lsquo;input blur correctly&rsquo;, t => {
+  const wrapper = shallow(<TodoInput {...props} />);
+  wrapper.find(&lsquo;input&rsquo;).simulate(&lsquo;blur&rsquo;, { target: { value: &lsquo;bar&rsquo; } });
+  t.is(props.onSave.callCount, 1);
+{% endcodeblock %}</p>
 
 <p>模拟事件触发的方法差不多，都是传入事件名和所需的方法对象就可以了，这里校验<code>onSave</code>是否被调用了1次。</p>
 
@@ -590,7 +407,7 @@
     <link href="http://zhaozhiming.github.io/blog/2016/03/29/use-ava-and-enzyme-to-test-react-component-part2/"/>
     <updated>2016-03-29T20:42:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2016/03/29/use-ava-and-enzyme-to-test-react-component-part2</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2016/03/airbnb.png" width="400" height="300"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2016/03/airbnb.png 400 300 %}</p>
 
 <p>Enzyme是<a href="http://www.airbnb.com/">Airbnb</a>公司推出的一个针对React组件的测试工具。Airbnb我觉得是国外继Google和Facebook之后技术实力十分强大的一家科技公司，有很多开源项目获得广大开发人员的认可，Enzyme就是其中的一个。</p>
 
@@ -606,24 +423,19 @@
 <p>Enzyme对Facebook的测试套件做了封装，并提供了一套API来让开发者做React单元测试的时候更加方便，下面的例子可以对比使用了Enzyme前后的区别。</p>
 
 <p>使用Enzyme前：<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="nx">setup</span><span class="p">({</span><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;</span><span class="nx">props</span><span class="p">});</span>
-</span><span class='line'><span class="kr">const</span> <span class="nx">ul</span> <span class="o">=</span> <span class="nx">output</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
-</span><span class='line'><span class="kr">const</span> <span class="nx">li</span> <span class="o">=</span> <span class="nx">ul</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
-</span><span class='line'><span class="kr">const</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">li</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
-</span><span class='line'><span class="nx">express</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">size</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock lang:js %}
+const output = setup({&hellip;props});
+const ul = output.props.children;
+const li = ul.props.children;
+const a = li.props.children;
+express(a.size).to.be.equal(1);
+{% endcodeblock %}</p>
 
 <p>使用Enzyme后：<br/>
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Foo</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">express</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">a</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">length</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock lang:js %}
+const wrapper = shallow(<Foo {...props} />);
+express(wrapper.find(&lsquo;a&rsquo;).length).to.be.equal(1);
+{% endcodeblock %}</p>
 
 <p>最明显的变化是测试代码变少了，原来需要逐层查找DOM，现在只需要一个<code>find()</code>方法就可以搞定。</p>
 
@@ -631,29 +443,19 @@
 
 <p>Enzyme针对这两种渲染方式都提供了各自一套API方法，但其实这2套API的方法差不多相同，只有个别方法不一样。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">selector</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">ShallowWrapper</span>
-</span><span class='line'><span class="p">.</span><span class="nx">children</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">ShallowWrapper</span>
-</span><span class='line'><span class="p">.</span><span class="nx">parent</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">ShallowWrapper</span>
-</span><span class='line'><span class="p">.</span><span class="nx">closest</span><span class="p">(</span><span class="nx">selector</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">ShallowWrapper</span>
-</span><span class='line'><span class="p">.</span><span class="nx">unmount</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">ShallowWrapper</span>
-</span><span class='line'><span class="p">.</span><span class="nx">text</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">String</span>
-</span><span class='line'><span class="p">.</span><span class="nx">state</span><span class="p">([</span><span class="nx">key</span><span class="p">])</span> <span class="o">=&gt;</span> <span class="nx">Any</span>
-</span><span class='line'><span class="p">.</span><span class="nx">simulate</span><span class="p">(</span><span class="nx">event</span><span class="p">[,</span> <span class="nx">data</span><span class="p">])</span> <span class="o">=&gt;</span> <span class="nx">ShallowWrapper</span>
-</span><span class='line'><span class="p">.</span><span class="nx">setState</span><span class="p">(</span><span class="nx">nextState</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">ShallowWrapper</span>
-</span><span class='line'><span class="p">.</span><span class="nx">setProps</span><span class="p">(</span><span class="nx">nextProps</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">ShallowWrapper</span>
-</span><span class='line'><span class="p">.</span><span class="nx">debug</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">String</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+.find(selector) => ShallowWrapper
+.children() => ShallowWrapper
+.parent() => ShallowWrapper
+.closest(selector) => ShallowWrapper
+.unmount() => ShallowWrapper
+.text() => String
+.state([key]) => Any
+.simulate(event[, data]) => ShallowWrapper
+.setState(nextState) => ShallowWrapper
+.setProps(nextProps) => ShallowWrapper
+.debug() => String
+{% endcodeblock %}</p>
 
 <p>这里只列出了一小部分API，不但可以通过find方法查找DOM元素，还可以模拟DOM的事件，比如Click，Change等。</p>
 
@@ -666,23 +468,16 @@
 
 <p>find方法可以让你方便的查找到DOM元素，支持通过class名称查找，html标签查找，id查找，甚至是自定义组件的查找等。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">MyComponent</span> <span class="o">/&gt;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;)).</span><span class="nx">to</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">length</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="c1">// compound selector</span>
-</span><span class='line'><span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">div</span><span class="p">.</span><span class="nx">some</span><span class="o">-</span><span class="kr">class</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;)).</span><span class="nx">to</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">length</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-</span><span class='line'><span class="c1">// CSS id selector</span>
-</span><span class='line'><span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="err">#</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;)).</span><span class="nx">to</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">length</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="c1">// Component</span>
-</span><span class='line'><span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">Foo</span><span class="p">)).</span><span class="nx">to</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">length</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+const wrapper = shallow(<MyComponent />);
+expect(wrapper.find(&lsquo;.foo&rsquo;)).to.have.length(1);
+// compound selector
+expect(wrapper.find(&lsquo;div.some-class&rsquo;)).to.have.length(3);
+// CSS id selector
+expect(wrapper.find(&lsquo;#foo&rsquo;)).to.have.length(1);
+// Component
+expect(wrapper.find(Foo)).to.have.length(1);
+{% endcodeblock %}</p>
 
 <ul>
 <li>simulate方法</li>
@@ -691,13 +486,11 @@
 
 <p>simulate方法让你可以模拟DOM元素的事件，传入参数是事件名和事件参数。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">MyComponent</span> <span class="o">/&gt;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">a</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">simulate</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
-</span><span class='line'><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">a</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;).</span><span class="nx">simulate</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">change</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">{</span> <span class="nx">target</span><span class="o">:</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;</span> <span class="p">}</span> <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+const wrapper = shallow(<MyComponent />);
+wrapper.find(&lsquo;a&rsquo;).simulate(&lsquo;click&rsquo;);
+wrapper.find(&lsquo;a&rsquo;).simulate(&lsquo;change&rsquo;, { target: { value: &lsquo;foo&rsquo; } });
+{% endcodeblock %}</p>
 
 <ul>
 <li>debug方法</li>
@@ -706,29 +499,18 @@
 
 <p>debug方法可以让你打印出组件的DOM信息，方便测试遇到问题进行调试。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Book</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;Huckleberry Finn&quot;</span> <span class="o">/&gt;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">debug</span><span class="p">());</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Outputs</span> <span class="nx">to</span> <span class="nx">console</span><span class="o">:&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
-</span><span class='line'> <span class="o">&lt;</span><span class="nx">h1</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;title&quot;</span><span class="o">&gt;</span><span class="nx">Huckleberry</span> <span class="nx">Finn</span><span class="o">&lt;</span><span class="err">/h1&gt;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/div&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+const wrapper = shallow(<Book title="Huckleberry Finn" />);
+console.log(wrapper.debug());</p>
+
+<p>Outputs to console:</p>
+
+<div>
+ <h1 className="title">Huckleberry Finn</h1>
+</div>
+
+
+<p>{% endcodeblock %}</p>
 
 <ul>
 <li>props和state等方法</li>
@@ -744,7 +526,7 @@
     <link href="http://zhaozhiming.github.io/blog/2016/03/28/use-ava-and-enzyme-to-test-react-component-part1/"/>
     <updated>2016-03-28T20:20:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2016/03/28/use-ava-and-enzyme-to-test-react-component-part1</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2016/03/ava.png" width="400" height="300"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2016/03/ava.png 400 300 %}</p>
 
 <p>React的出现让页面的测试发生了变化，原来一些耗时耗性能的自动化测试可以转化成快速的单元测试，今天介绍一下如何做React的单元测试，以及AVA和Enzyme的使用。</p>
 
@@ -763,17 +545,13 @@
 
 <h2>AVA的语法</h2>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">test</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">ava</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">test</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">my</span> <span class="nx">first</span> <span class="nx">test</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">t</span><span class="p">.</span><span class="nx">same</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+import test from &lsquo;ava&rsquo;;</p>
+
+<p>test(&lsquo;my first test&rsquo;, t => {
+  t.same([1, 2], [1, 2]);
+});
+{% endcodeblock %}</p>
 
 <p>test方法可以带一个字符串的标题和一个回调函数，这个回调函数就是你的测试代码，使用过其他测试框架的开发人员可以很快熟悉它的API并写出自己的测试。</p>
 
@@ -781,93 +559,58 @@
 
 <p>AVA的配置也十分简单，虽然Mocha的配置也不复杂，但相对于后者AVA的配置特点是灵活和集中，你可以用多种方式来配置AVA，就拿配置Babel来说，你可以将Babel配置一起写在<code>package.json</code>里面，也可以将Babel配置写在原来的Babel配置文件中，而在<code>package.json</code>文件里面写上<code>babel: inherit</code>的配置就可以了。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="err">&amp;ldquo;babel&amp;rdquo;:</span> <span class="err">{&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">&lt;pre&gt;&lt;code&gt;</span><span class="nt">&quot;presets&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span class='line'>  <span class="s2">&quot;es2015&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s2">&quot;stage-0&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s2">&quot;react&quot;</span>
-</span><span class='line'><span class="p">]</span>
-</span><span class='line'><span class="err">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">&lt;p&gt;</span>  <span class="p">}</span><span class="err">,</span>
-</span><span class='line'>  <span class="err">&amp;ldquo;ava&amp;rdquo;:</span> <span class="p">{</span><span class="err">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">&lt;pre&gt;&lt;code&gt;</span><span class="nt">&quot;babel&quot;</span><span class="p">:</span> <span class="s2">&quot;inherit&quot;</span><span class="p">,</span>
-</span><span class='line'><span class="err">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">&lt;p&gt;</span>  <span class="p">}</span><span class="err">,</span>
-</span><span class='line'><span class="err">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:json %}
+{
+  &ldquo;babel&rdquo;: {</p>
+
+<pre><code>"presets": [
+  "es2015",
+  "stage-0",
+  "react"
+]
+</code></pre>
+
+<p>  },
+  &ldquo;ava&rdquo;: {</p>
+
+<pre><code>"babel": "inherit",
+</code></pre>
+
+<p>  },
+}
+{% endcodeblock %}</p>
 
 <h2>AVA的断言</h2>
 
 <p>AVA内置了断言库，几个常用的断言方法已经可以满足大部分的断言需求，无需再用其他的断言库。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">pass</span><span class="p">([</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">fail</span><span class="p">([</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">notOk</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="kc">true</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="kc">false</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">not</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">same</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">notSame</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="kr">throws</span><span class="p">(</span><span class="kd">function</span><span class="o">|</span><span class="nx">promise</span><span class="p">,</span> <span class="p">[</span><span class="nx">error</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">]])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">notThrows</span><span class="p">(</span><span class="kd">function</span><span class="o">|</span><span class="nx">promise</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">regex</span><span class="p">(</span><span class="nx">contents</span><span class="p">,</span> <span class="nx">regex</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span><span class='line'><span class="p">.</span><span class="nx">ifError</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="p">[</span><span class="nx">message</span><span class="p">])</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+.pass([message])
+.fail([message])
+.ok(value, [message])
+.notOk(value, [message])
+.true(value, [message])
+.false(value, [message])
+.is(value, expected, [message])
+.not(value, expected, [message])
+.same(value, expected, [message])
+.notSame(value, expected, [message])
+.throws(function|promise, [error, [message]])
+.notThrows(function|promise, [message])
+.regex(contents, regex, [message])
+.ifError(error, [message])
+{% endcodeblock %}</p>
 
 <p>当然你也可以集成其他的第三方断言库，比如<a href="http://chaijs.com/">chai</a>，但这样的话你可能就使用不到测试方法中<code>t</code>这个测试对象了。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="p">{</span> <span class="nx">exppect</span> <span class="p">}</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">chai</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
-</span><span class='line'><span class="kr">import</span> <span class="nx">test</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">ava</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">test</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">my</span> <span class="nx">first</span> <span class="nx">test</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">expect</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]).</span><span class="nx">to</span><span class="p">.</span><span class="nx">deep</span><span class="p">.</span><span class="nx">equal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+import { exppect } from &lsquo;chai&rsquo;;
+import test from &lsquo;ava&rsquo;;</p>
+
+<p>test(&lsquo;my first test&rsquo;, t => {
+  expect([1, 2]).to.deep.equal([1, 2]);
+});
+{% endcodeblock %}</p>
 
 <h2>AVA的多种支持</h2>
 
@@ -876,51 +619,39 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">test</span><span class="p">(</span><span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nx">somePromise</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">result</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">t</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="s1">&#39;unicorn&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+test(t => {
+  return somePromise().then(result => {</p>
+
+<pre><code>t.is(result, 'unicorn');
+</code></pre>
+
+<p>  });
+});
+{% endcodeblock %}</p>
 
 <ul>
 <li>支持Async</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">test</span><span class="p">(</span><span class="nx">async</span> <span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kr">const</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">promiseFn</span><span class="p">();</span>
-</span><span class='line'>  <span class="nx">t</span><span class="p">.</span><span class="kc">true</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+test(async t => {
+  const value = await promiseFn();
+  t.true(value);
+});
+{% endcodeblock %}</p>
 
 <ul>
 <li>支持Callback</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">test</span><span class="p">.</span><span class="nx">cb</span><span class="p">(</span><span class="nx">t</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">data</span><span class="p">.</span><span class="nx">txt</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">end</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+test.cb(t => {
+  fs.readFile(&lsquo;data.txt&rsquo;, t.end);
+});
+{% endcodeblock %}</p>
 
 <p>现在有了async和promise一般不推荐再使用callback，AVA的callback支持是为了方便测试使用了callback的遗留代码。<br/>
 <strong>注意，测试callback需要调用<code>t.end</code>方法来结束测试。</strong></p>

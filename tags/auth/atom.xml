@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: auth | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/auth/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-01-16T14:47:17+08:00</updated>
+  <updated>2018-02-13T09:24:19+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/09/13/ceph-authentication-theory/"/>
     <updated>2014-09-13T09:11:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/09/13/ceph-authentication-theory</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-9/rados-arch.png"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2014-9/rados-arch.png %}</p>
 
 <p>为识别用户和防范攻击，ceph提供了cephx来进行用户和后台进程认证。</p>
 
@@ -35,15 +35,15 @@
 
 <p>使用cephx时，管理员需要先创建user。在下面的图表中，client.admin用户调用<code>ceph auth get-or-create-key</code>的命令来生成用户名和密钥，ceph的auth子系统来生成用户名和密钥，保存一份密钥在monitor并将用户的密钥传回给client.admin用户。这使得客户端和monitor共享了一份密钥。</p>
 
-<p><img src="/images/post/2014-9/rados-auth-1.png"></p>
+<p>{% img /images/post/2014-9/rados-auth-1.png %}</p>
 
 <p>为了能通过monitor的认证，客户端将用户名传给monitor，然后monitor产生一个session key并且通过密钥将其加密，并使之与用户名关联。然后monitor将加密session key回传给客户端，客户端再通过共享密钥进行解密，从而获取到seesion key。session key标示当前用户的当前回话。然后客户端再发起请求要求一个代表用户会话密钥的ticket，monitor产生ticket并通过用户密钥进行加密，并将其回传给客户端。客户端对ticket进行解密，以后客户端向OSD或MDS发起请求时，就用它来对请求进行签名。</p>
 
-<p><img src="/images/post/2014-9/rados-auth-2.png"></p>
+<p>{% img /images/post/2014-9/rados-auth-2.png %}</p>
 
 <p>cephx协议验证客户端和Ceph服务器之间的通信。在初始化认证之后，在客户端和服务器间的每一条信息，都会使用ticket进行签名，这样monitor，OSD和MDS服务就可以使用他们的共享密钥进行验证。</p>
 
-<p><img src="/images/post/2014-9/rados-auth-3.png"></p>
+<p>{% img /images/post/2014-9/rados-auth-3.png %}</p>
 
 <p>认证提供的保护是在ceph客户端和服务器之间。认证不能超过客户端，比如用户从一台远程服务器上访问cpeh客户端，ceph的认证就不能适用于远程主机和客户端了。</p>
 
@@ -54,9 +54,9 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>ceph auth get-or-create client.admin mon &amp;lsquo;allow &lt;em&gt;&amp;rsquo; mds &amp;lsquo;allow &lt;/em&gt;&amp;rsquo; osd &amp;lsquo;allow *&amp;rsquo; -o /etc/ceph/ceph.client.admin.keyring
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+ceph auth get-or-create client.admin mon &lsquo;allow <em>&rsquo; mds &lsquo;allow </em>&rsquo; osd &lsquo;allow *&rsquo; -o /etc/ceph/ceph.client.admin.keyring
+{% endcodeblock %}</p>
 
 <p><code>注意：这个操作会覆盖原有的ceph.client.admin.keyring文件，请谨慎操作。</code></p>
 
@@ -65,49 +65,47 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>ceph-authtool &amp;mdash;create-keyring /tmp/ceph.mon.keyring &amp;mdash;gen-key -n mon. &amp;mdash;cap mon &amp;lsquo;allow *&amp;rsquo;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+ceph-authtool &mdash;create-keyring /tmp/ceph.mon.keyring &mdash;gen-key -n mon. &mdash;cap mon &lsquo;allow *&rsquo;
+{% endcodeblock %}</p>
 
 <ul>
 <li>复制monitor的keyring文件到每个monitor的data目录</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>cp /tmp/ceph.mon.keyring /var/lib/ceph/mon/ceph-a/keyring
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+cp /tmp/ceph.mon.keyring /var/lib/ceph/mon/ceph-a/keyring
+{% endcodeblock %}</p>
 
 <ul>
 <li>为每个OSD产生keyring，id是OSD的编号</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>ceph auth get-or-create osd.<span class="o">{</span><span class="nv">$id</span><span class="o">}</span> mon &amp;lsquo;allow rwx&amp;rsquo; osd &amp;lsquo;allow *&amp;rsquo; -o /var/lib/ceph/osd/ceph-<span class="o">{</span><span class="nv">$id</span><span class="o">}</span>/keyring
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+ceph auth get-or-create osd.{$id} mon &lsquo;allow rwx&rsquo; osd &lsquo;allow *&rsquo; -o /var/lib/ceph/osd/ceph-{$id}/keyring
+{% endcodeblock %}</p>
 
 <ul>
 <li>为每个MDS产生keyring，id是MDS编号</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>ceph auth get-or-create mds.<span class="o">{</span><span class="nv">$id</span><span class="o">}</span> mon &amp;lsquo;allow rwx&amp;rsquo; osd &amp;lsquo;allow &lt;em&gt;&amp;rsquo; mds &amp;lsquo;allow &lt;/em&gt;&amp;rsquo; -o /var/lib/ceph/mds/ceph-<span class="o">{</span><span class="nv">$id</span><span class="o">}</span>/keyring
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+ceph auth get-or-create mds.{$id} mon &lsquo;allow rwx&rsquo; osd &lsquo;allow <em>&rsquo; mds &lsquo;allow </em>&rsquo; -o /var/lib/ceph/mds/ceph-{$id}/keyring
+{% endcodeblock %}</p>
 
 <ul>
 <li>在ceph.conf的global中增加认证开关</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="na">auth cluster required</span> <span class="o">=</span> <span class="s">cephx</span>
-</span><span class='line'><span class="na">auth service required</span> <span class="o">=</span> <span class="s">cephx</span>
-</span><span class='line'><span class="na">auth client required</span> <span class="o">=</span> <span class="s">cephx</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:properties %}
+auth cluster required = cephx
+auth service required = cephx
+auth client required = cephx
+{% endcodeblock %}</p>
 
 <ul>
 <li>重启存储服务</li>
@@ -132,68 +130,61 @@
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo ceph-authtool &amp;mdash;create-keyring /etc/ceph/ceph.client.radosgw.keyring
-</span><span class='line'>sudo chmod +r /etc/ceph/ceph.client.radosgw.keyring
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+sudo ceph-authtool &mdash;create-keyring /etc/ceph/ceph.client.radosgw.keyring
+sudo chmod +r /etc/ceph/ceph.client.radosgw.keyring
+{% endcodeblock %}</p>
 
 <ul>
 <li>使用ceph-authtool在keyring文件中生成随机密码</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.gateway &amp;mdash;gen-key
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+sudo ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.gateway &mdash;gen-key
+{% endcodeblock %}</p>
 
 <ul>
 <li>在keyring中增加存储集群的操作权限；</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo ceph-authtool -n client.radosgw.gateway &amp;mdash;cap osd &amp;lsquo;allow rwx&amp;rsquo; &amp;mdash;cap mon &amp;lsquo;allow rwx&amp;rsquo; /etc/ceph/ceph.client.radosgw.keyring
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+sudo ceph-authtool -n client.radosgw.gateway &mdash;cap osd &lsquo;allow rwx&rsquo; &mdash;cap mon &lsquo;allow rwx&rsquo; /etc/ceph/ceph.client.radosgw.keyring
+{% endcodeblock %}</p>
 
 <ul>
 <li>将gateway的key添加到存储集群（-k不知道是什么参数）</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.gateway -i /etc/ceph/ceph.client.radosgw.keyring
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+sudo ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.gateway -i /etc/ceph/ceph.client.radosgw.keyring
+{% endcodeblock %}</p>
 
 <ul>
 <li>将生成的keyring文件上传到gateway的机器</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo scp /etc/ceph/ceph.client.radosgw.keyring  ceph@<span class="o">{</span>hostname<span class="o">}</span>:/home/ceph
-</span><span class='line'>ssh <span class="o">{</span>hostname<span class="o">}</span>
-</span><span class='line'>sudo mv ceph.client.radosgw.keyring /etc/ceph/ceph.client.radosgw.keyring
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+sudo scp /etc/ceph/ceph.client.radosgw.keyring  ceph@{hostname}:/home/ceph
+ssh {hostname}
+sudo mv ceph.client.radosgw.keyring /etc/ceph/ceph.client.radosgw.keyring
+{% endcodeblock %}</p>
 
 <ul>
 <li>在ceph.conf中配置gateway的keyring文件路径</li>
 </ul>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="err">[client.radosgw.{instance-name}]</span>
-</span><span class='line'><span class="na">host</span> <span class="o">=</span> <span class="s">{host-name}</span>
-</span><span class='line'><span class="na">keyring</span> <span class="o">=</span> <span class="s">/etc/ceph/ceph.client.radosgw.keyring</span>
-</span><span class='line'><span class="na">rgw socket path</span> <span class="o">=</span> <span class="s">/var/run/ceph/ceph.radosgw.{instance-name}.fastcgi.sock</span>
-</span><span class='line'><span class="na">log file</span> <span class="o">=</span> <span class="s">/var/log/ceph/client.radosgw.{instance-name}.log</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:properties %}
+[client.radosgw.{instance-name}]
+host = {host-name}
+keyring = /etc/ceph/ceph.client.radosgw.keyring
+rgw socket path = /var/run/ceph/ceph.radosgw.{instance-name}.fastcgi.sock
+log file = /var/log/ceph/client.radosgw.{instance-name}.log
+{% endcodeblock %}</p>
 ]]></content>
   </entry>
   
