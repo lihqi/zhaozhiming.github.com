@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 内存管理 | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/nei-cun-guan-li/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-02-13T09:24:19+08:00</updated>
+  <updated>2018-04-12T23:11:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2017/06/20/a-crash-course-in-memory-management-zh/"/>
     <updated>2017-06-20T19:29:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2017/06/20/a-crash-course-in-memory-management-zh</id>
-    <content type="html"><![CDATA[<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_07.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_07.png</a> 400 350 %}</p>
+    <content type="html"><![CDATA[<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_07.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_07.png</a>" width="400" height="350"></p>
 
 <p>我一直很佩服那些能将复杂原理讲得通俗易懂的人，<a href="http://code-cartoons.com/">Lin Clark 女神</a> 就是其中一个，拜读完她新发布的系列文章“通俗漫画介绍 SharedArrayBuffers”之后，深深为之折服，文章不仅一如既往地通俗易懂，作者亲自画的图更是和文章相得益彰。看完萌生出了翻译该系列文章的想法，不过本人英文能力有限，如果觉得翻译地不好的还请看英文原版，英文版也是很容易理解的。</p>
 
@@ -44,23 +44,23 @@
 
 <p>如果你想给学生们留一些东西，你可以把东西放到盒子里面。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_01.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_01.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_01.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_01.png</a>" width="400" height="350"></p>
 
 <p>在每个盒子旁边都有一个数字，这就是内存地址，这用来让你告诉别人留给他们的东西在哪个位置。</p>
 
 <p>每个盒子都有相同的大小，能容纳一定量的信息。盒子的容量指定给了机器，这个容量就叫字长。字长一般是 32 位或者 64 位，但为了让它容易演示，我会使用 8 位的字长。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_02.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_02.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_02.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_02.png</a>" width="400" height="350"></p>
 
 <p>如果我们想要把数字 2 放到其中的一个盒子里，我们可以很容易地做到，因为数字很容易<a href="https://www.khanacademy.org/math/algebra-home/alg-intro-to-algebra/algebra-alternate-number-bases/v/decimal-to-binary">表现成二进制</a>。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_03.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_03.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_03.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_03.png</a>" width="400" height="350"></p>
 
 <p>如果我们想要放一个不是数字的东西呢？比如字母 H ？</p>
 
 <p>我们需要一个方法将其展示成数字，为了做到这一点，我们需要编码格式，比如 <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a>，然后我们需要一个东西将其转换成数字。比如一个编码环，这样我们就可以存储它了。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_04.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_04.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_04.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_04.png</a>" width="400" height="350"></p>
 
 <p>当我们想要从盒子中取出它时，我们需要一个解码器将其转换回字符 H 。</p>
 
@@ -70,23 +70,23 @@
 
 <p>JS 引擎作为一个中间人的角色来代替你打交道，它替你管理着内存。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_05.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_05.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_05.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_05.png</a>" width="400" height="350"></p>
 
 <p>让我们写一些 JS 代码，比如 React，需要创建一个变量。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_06.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_06.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_06.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_06.png</a>" width="400" height="350"></p>
 
 <p>JS 引擎做的事情就是运行通过编码器转换成二进制表示的值。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_07.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_07.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_07.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_07.png</a>" width="400" height="350"></p>
 
 <p>然后它找到可以存放二进制表示值的空间，这个过程叫做分配内存。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_08.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_08.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_08.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_08.png</a>" width="400" height="350"></p>
 
 <p>然后，引擎会跟踪这个变量是否仍然在程序中被引用，如果变量不在被使用，内存将被回收，这样 JS 引擎就可以存放新的值了。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_09.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_09.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_09.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_09.png</a>" width="400" height="350"></p>
 
 <p>观察内存中的变量（包括字符串，对象和其他类型的值），当它们不再有用的时候清除它们的过程，叫做垃圾回收。</p>
 
@@ -100,17 +100,17 @@
 
 <p>C 语言没有像 JavaScript 那样有一个抽象层来管理内存，相反，你可以直接操作内存，你可以从内存中加载数据，你也可以直接在内存中存储数据。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_10.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_10.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_10.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_10.png</a>" width="400" height="350"></p>
 
 <p>当你编译 C 或者其他语言成 WebAssembly 时，你使用的工具会添加一些辅助代码到你的 WebAssembly，例如添加编码和解码二进制字节的代码。这个代码叫做运行时环境。运行时代码会做一些像 JS 引擎在 JS 中做的事情。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_11.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_11.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_11.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_11.png</a>" width="400" height="350"></p>
 
 <p>但对于一个手动管理内存语言来说，运行期不包括垃圾回收。</p>
 
 <p>这并不意味着你什么事情都要自己做，即使是在手动管理内存语言里，你也会常受到语言运行期的帮助，拿 C 语言来说，运行期会跟踪自由列表中打开的内存地址。</p>
 
-<p>{% img <a href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_12.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_12.png</a> 400 350 %}</p>
+<p><img class="<a" src="href="https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_12.png">https://2r4s9p1yi1fa2jd7j43zph8r-wpengine.netdna-ssl.com/files/2017/06/01_12.png</a>" width="400" height="350"></p>
 
 <p>你可以使用<code>malloc</code>方法（内存分配）来让运行期找到哪些内存地址可以来存放你的数据，这将从自由列表中取出这些地址，当你处理完这些数据，你必须使用<code>free</code>方法来释放内存，然后这些地址将重新回到自由列表中。</p>
 

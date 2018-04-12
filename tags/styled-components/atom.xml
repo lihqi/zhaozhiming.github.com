@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: styled-components | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/styled-components/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-02-13T09:24:19+08:00</updated>
+  <updated>2018-04-12T23:11:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2017/06/18/styled-component-beyond-the-expected/"/>
     <updated>2017-06-18T11:32:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2017/06/18/styled-component-beyond-the-expected</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2017/06/styled-components.png 400 350 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2017/06/styled-components.png" width="400" height="350"></p>
 
 <p>Css 在 React 中的写法一直在持续改进，从原生的 Css 到 <a href="https://github.com/css-modules/css-modules">CSS Modules</a>，再到 Css In Js，目标是让开发者更高效地写组件的样式。</p>
 
@@ -31,11 +31,11 @@
 
 <p>使用过 React 的同学可能比较清楚，如果要在一个组件通过 JS 来定义 css 样式，就必须在 React 组件里面通过<code>style</code>属性来写。</p>
 
-<p>{% raw %}
+<p>
 <code>js
 const Home = () =&gt; &lt;div style={{ marginLeft: 10 }}&gt;Hello World&lt;/div&gt;;
 </code>
-{% endraw %}</p>
+</p>
 
 <p>这种方式有很多<code>缺点</code>：</p>
 
@@ -47,55 +47,85 @@ const Home = () =&gt; &lt;div style={{ marginLeft: 10 }}&gt;Hello World&lt;/div&
 
 <p><code>styled-components</code> 最吸引开发者的是使用了 ES6 的字符串模板方式来定义 css 样式，这样使得 css 的写法与原生的 css 写法基本一致，克服了上述的缺点。</p>
 
-<p>{% codeblock lang:js %}
-const Button = styled.a`
-  display: inline-block;
-  border-radius: 3px;
-  padding: 0.5rem 0;
-  margin: 0.5rem 1rem;
-  width: 11rem;
-  background: transparent;
-  color: white;
-  border: 2px solid white;</p>
-
-<p>  &amp; hover: {</p>
-
-<pre><code>color: blue;
-</code></pre>
-
-<p>  }</p>
-
-<p>  &amp; before: {</p>
-
-<pre><code>...
-</code></pre>
-
-<p>  }
-`
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">Button</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">a</span><span class="err">`</span>
+</span><span class='line'>  <span class="nx">display</span><span class="o">:</span> <span class="nx">inline</span><span class="o">-</span><span class="nx">block</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">border</span><span class="o">-</span><span class="nx">radius</span><span class="o">:</span> <span class="mi">3</span><span class="nx">px</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">padding</span><span class="o">:</span> <span class="mf">0.5</span><span class="nx">rem</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">margin</span><span class="o">:</span> <span class="mf">0.5</span><span class="nx">rem</span> <span class="mi">1</span><span class="nx">rem</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">width</span><span class="o">:</span> <span class="mi">11</span><span class="nx">rem</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">background</span><span class="o">:</span> <span class="nx">transparent</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">color</span><span class="o">:</span> <span class="nx">white</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">border</span><span class="o">:</span> <span class="mi">2</span><span class="nx">px</span> <span class="nx">solid</span> <span class="nx">white</span><span class="p">;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="o">&amp;</span><span class="nx">amp</span><span class="p">;</span> <span class="nx">hover</span><span class="o">:</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">color</span><span class="o">:</span> <span class="nx">blue</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="o">&amp;</span><span class="nx">amp</span><span class="p">;</span> <span class="nx">before</span><span class="o">:</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="p">...</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'><span class="err">`</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>那么 <code>styled-components</code> 的底层原理是什么？为什么通过 ES6 的字符串模板可以实现这种功能？感兴趣的同学可以看下下面<code>推荐阅读</code>的文章<code>styled-components-magic-explained</code>。</p>
 
 <p>这里列举几个例子简单感受一下：</p>
 
-<p>{% codeblock lang:js %}
-// 我们有个方法来打印方法参数
-const logArgs = (&hellip;args) => console.log(&hellip;args)</p>
-
-<p>const favoriteFood = &lsquo;pizza&rsquo;
-// 用正常的方法调用，输出结果跟预期一样，是一句完整的句子。
-logArgs(<code>I like ${favoriteFood}.</code>) // &ndash;> I like pizza.
-// 而用字符串模板的方式来调用方法，则会变成这样：句子会被变量分隔成 2 个字符串，变量值变成数组后面的参数。
-logArgs<code>I like ${favoriteFood}.</code> // &ndash;> [&ldquo;I like &rdquo;, &ldquo;.&rdquo;] &ldquo;pizza&rdquo;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// 我们有个方法来打印方法参数</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">logArgs</span> <span class="o">=</span> <span class="p">(</span><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;</span><span class="nx">args</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;</span><span class="nx">args</span><span class="p">)</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kr">const</span> <span class="nx">favoriteFood</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">pizza</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// 用正常的方法调用，输出结果跟预期一样，是一句完整的句子。</span>
+</span><span class='line'><span class="nx">logArgs</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">I</span> <span class="nx">like</span> <span class="nx">$</span><span class="p">{</span><span class="nx">favoriteFood</span><span class="p">}.</span><span class="o">&lt;</span><span class="sr">/code&gt;) /</span><span class="o">/</span> <span class="o">&amp;</span><span class="nx">ndash</span><span class="p">;</span><span class="o">&gt;</span> <span class="nx">I</span> <span class="nx">like</span> <span class="nx">pizza</span><span class="p">.</span>
+</span><span class='line'><span class="c1">// 而用字符串模板的方式来调用方法，则会变成这样：句子会被变量分隔成 2 个字符串，变量值变成数组后面的参数。</span>
+</span><span class='line'><span class="nx">logArgs</span><span class="o">&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">I</span> <span class="nx">like</span> <span class="nx">$</span><span class="p">{</span><span class="nx">favoriteFood</span><span class="p">}.</span><span class="o">&lt;</span><span class="sr">/code&gt; /</span><span class="o">/</span> <span class="o">&amp;</span><span class="nx">ndash</span><span class="p">;</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">I</span> <span class="nx">like</span> <span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;.</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;]</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">pizza</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>生成一个随机的 class 名称</h2>
 
 <p>开始看到 <code>styled-components</code> 时我天真地以为它的样式是通过内联的方式放入到组件里面，其实不是，它的样式最终还是封装成一个 class 然后再放到组件里面。</p>
 
-<p>{% img /images/post/2017/06/styled-components-class1.png %}
-{% img /images/post/2017/06/styled-components-class2.png %}
-{% img /images/post/2017/06/styled-components-class3.png %}</p>
+<p><img src="/images/post/2017/06/styled-components-class1.png">
+<img src="/images/post/2017/06/styled-components-class2.png">
+<img src="/images/post/2017/06/styled-components-class3.png"></p>
 
 <p>这样不仅避免了内联样式的局限性，而且class 的名称是一个随机的字符串，这样也完美解决了 Css 的一个大难题：样式名称重复的问题。</p>
 
@@ -103,25 +133,35 @@ logArgs<code>I like ${favoriteFood}.</code> // &ndash;> [&ldquo;I like &rdquo;, 
 
 <p>使用 JS 来写 css 的好处，就是可以利用 JS 的语法来封装 CSS 对象，比如可以使用<code>if</code>语句来判断需要使用哪个样式值。</p>
 
-<p>{% codeblock lang:js %}
-// 这里利用了 <code>styled-components</code> 的特性
-const Button = styled.div<code>
-  color: ${props =&gt; props.isActive ? 'blue': 'red'};
-</code>;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// 这里利用了 &lt;code&gt;styled-components&lt;/code&gt; 的特性</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">Button</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="o">&lt;</span><span class="nx">code</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="nx">color</span><span class="o">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">props</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">isActive</span> <span class="o">?</span> <span class="s1">&#39;blue&#39;</span><span class="o">:</span> <span class="s1">&#39;red&#39;</span><span class="p">};</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>或者通过一个方法来返回一个样式对象，通过参数来动态定义样式。</p>
 
-<p>{% codeblock lang:js %}
-const Button = (color) => {
-  return styled.div`</p>
-
-<pre><code>color: ${color};
-</code></pre>
-
-<p>  `;
-};
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">Button</span> <span class="o">=</span> <span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="err">`</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">color</span><span class="o">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">color</span><span class="p">};</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="err">`</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这个是不是很眼熟？有点像<code>sass</code>等 css 预处理器中的方法？没错！通过 JS 的特性就可以让你在 JS 中做预处理器中做的事情。</p>
 
@@ -133,100 +173,169 @@ const Button = (color) => {
 
 <p><code>styled-components</code> 里面还有一个比较特别的特性是<code>theme</code>，它利用了 React 的<code>context</code>特性来传递其中的参数，可以让样式对象直接从最上层的组件传递到最下层的组件。</p>
 
-<p>{% codeblock lang:js %}
-// 首先定义一个<code>theme</code>样式对象
-const styleGuide = {
-  cloudy: &lsquo;#F2F4F7&rsquo;,
-  darkGray: &lsquo;#4A637C&rsquo;,
-  gray: &lsquo;#7A8D9F&rsquo;,
-  // &hellip;more colors or mixins
-};</p>
-
-<p>return (
-  // 将<code>theme</code>对象传递给上层组件<code>ThemeProvider</code>（这也是 <code>styled-components</code> 的一个 API），这样下层组件就可以通过"props.theme.gray"来引用其中的样式了
-  <ThemeProvider theme={styleGuide}></p>
-
-<pre><code>&lt;App&gt;
-  &lt;Switch&gt;
-    &lt;AuthRoute auth={auth} exact path="/" component={DashboardView} /&gt;
-    &lt;AuthRoute auth={auth} path="/profile" component={DashboardView} /&gt;
-    &lt;Route path="/login" component={LoginView} /&gt;
-    &lt;Route path="/logout" component={LogoutView} /&gt;
-    {/* ...more routes */}
-    &lt;Route component={NotFoundView} /&gt;
-  &lt;/Switch&gt;
-&lt;/App&gt;
-</code></pre>
-
-<p>  </ThemeProvider>
-);</p>
-
-<p>// Define our button, but with the use of props.theme this time
-const Button = styled.button<code>
-  font-size: 1em;
-  margin: 1em;
-  padding: 0.25em 1em;
-  border-radius: 3px;
-  /* Color the border and text with theme properties */
-  color: ${props =&gt; props.theme.darkGray};
-  border: 2px solid ${props =&gt; props.theme.darkGray};
-</code>;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// 首先定义一个&lt;code&gt;theme&lt;/code&gt;样式对象</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">styleGuide</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">cloudy</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="err">#</span><span class="nx">F2F4F7</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span>
+</span><span class='line'>  <span class="nx">darkGray</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="err">#</span><span class="mi">4</span><span class="nx">A637C</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span>
+</span><span class='line'>  <span class="nx">gray</span><span class="o">:</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="err">#</span><span class="mi">7</span><span class="nx">A8D9F</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span>
+</span><span class='line'>  <span class="c1">// &amp;hellip;more colors or mixins</span>
+</span><span class='line'><span class="p">};</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="k">return</span> <span class="p">(</span>
+</span><span class='line'>  <span class="c1">// 将&lt;code&gt;theme&lt;/code&gt;对象传递给上层组件&lt;code&gt;ThemeProvider&lt;/code&gt;（这也是 &lt;code&gt;styled-components&lt;/code&gt; 的一个 API），这样下层组件就可以通过&quot;props.theme.gray&quot;来引用其中的样式了</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="nx">ThemeProvider</span> <span class="nx">theme</span><span class="o">=</span><span class="p">{</span><span class="nx">styleGuide</span><span class="p">}</span><span class="o">&gt;&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">App</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">Switch</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">AuthRoute</span> <span class="nx">auth</span><span class="o">=</span><span class="p">{</span><span class="nx">auth</span><span class="p">}</span> <span class="nx">exact</span> <span class="nx">path</span><span class="o">=</span><span class="s2">&quot;/&quot;</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">DashboardView</span><span class="p">}</span> <span class="o">/&amp;</span><span class="nx">gt</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">AuthRoute</span> <span class="nx">auth</span><span class="o">=</span><span class="p">{</span><span class="nx">auth</span><span class="p">}</span> <span class="nx">path</span><span class="o">=</span><span class="s2">&quot;/profile&quot;</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">DashboardView</span><span class="p">}</span> <span class="o">/&amp;</span><span class="nx">gt</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">Route</span> <span class="nx">path</span><span class="o">=</span><span class="s2">&quot;/login&quot;</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">LoginView</span><span class="p">}</span> <span class="o">/&amp;</span><span class="nx">gt</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">Route</span> <span class="nx">path</span><span class="o">=</span><span class="s2">&quot;/logout&quot;</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">LogoutView</span><span class="p">}</span> <span class="o">/&amp;</span><span class="nx">gt</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">{</span><span class="cm">/* ...more routes */</span><span class="p">}</span>
+</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">Route</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">NotFoundView</span><span class="p">}</span> <span class="o">/&amp;</span><span class="nx">gt</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/Switch&amp;gt;</span>
+</span><span class='line'><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/App&amp;gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="o">&lt;</span><span class="err">/ThemeProvider&gt;</span>
+</span><span class='line'><span class="p">);</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="c1">// Define our button, but with the use of props.theme this time</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">Button</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">button</span><span class="o">&lt;</span><span class="nx">code</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="nx">font</span><span class="o">-</span><span class="nx">size</span><span class="o">:</span> <span class="mi">1</span><span class="nx">em</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">margin</span><span class="o">:</span> <span class="mi">1</span><span class="nx">em</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">padding</span><span class="o">:</span> <span class="mf">0.25</span><span class="nx">em</span> <span class="mi">1</span><span class="nx">em</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">border</span><span class="o">-</span><span class="nx">radius</span><span class="o">:</span> <span class="mi">3</span><span class="nx">px</span><span class="p">;</span>
+</span><span class='line'>  <span class="cm">/* Color the border and text with theme properties */</span>
+</span><span class='line'>  <span class="nx">color</span><span class="o">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">props</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">.</span><span class="nx">darkGray</span><span class="p">};</span>
+</span><span class='line'>  <span class="nx">border</span><span class="o">:</span> <span class="mi">2</span><span class="nx">px</span> <span class="nx">solid</span> <span class="nx">$</span><span class="p">{</span><span class="nx">props</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">.</span><span class="nx">darkGray</span><span class="p">};</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>可以对样式对象下面的子元素进行样式定义</h2>
 
 <p>在使用原生 css 的时候，经常会这样写样式。</p>
 
-<p>{% codeblock lang:css %}
-.foo h1 {
-  font-size: 16px;
-}</p>
-
-<p>.foo h2 {
-  color: red;
-}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.foo</span> <span class="nt">h1</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">font-size</span><span class="o">:</span> <span class="m">16px</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span><span class="nc">.foo</span> <span class="nt">h2</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">color</span><span class="o">:</span> <span class="nb">red</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>很多 <code>styled-components</code> 新手（比如我）会为每个 h1 和 h2 定义一个样式对象，这样其实多写了很多代码，也没有必要，其实可以通过这种方式来定义子元素的样式。</p>
 
-<p>{% codeblock lang:css %}
-const FooDiv = styled.div`
-  &amp; h1 {</p>
-
-<pre><code>font-size: 16px;
-</code></pre>
-
-<p>  }</p>
-
-<p>  &amp; h2 {</p>
-
-<pre><code>color: red;
-</code></pre>
-
-<p>  }
-`;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nt">const</span> <span class="nt">FooDiv</span> <span class="o">=</span> <span class="nt">styled</span><span class="nc">.div</span><span class="err">`</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nt">amp</span><span class="o">;</span> <span class="nt">h1</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">font-size</span><span class="o">:</span> <span class="m">16px</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span>  <span class="o">&amp;</span><span class="nt">amp</span><span class="o">;</span> <span class="nt">h2</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">color</span><span class="o">:</span> <span class="nb">red</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'><span class="err">`</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>独立样式文件</h2>
 
 <p>在一般的 React 组件中，样式和组件文件是分离的（比如 App.js 和 style.css），使用了 <code>styled-components</code> 后其实也可以沿用这种方式来组织文件，定义一个<code>style.js</code>文件来写样式对象，然后在组件文件中引入该样式文件。</p>
 
-<p>{% codeblock lang:js %}
-// style.js
-import styled from &lsquo;styled-components&rsquo;;</p>
-
-<p>export const AppDiv = styled.div<code>
-  display: flex;
-  justify-content: space-between;
-</code>;</p>
-
-<p>// App.js
-import React from &lsquo;react&rsquo;;
-import * as css from &lsquo;./style&rsquo;;</p>
-
-<p>const App = () => &lt;css.AppDiv>Hello World&lt;/css.AppDiv>;
-export default App;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// style.js</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">styled</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">styled</span><span class="o">-</span><span class="nx">components</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppDiv</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="o">&lt;</span><span class="nx">code</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="nx">display</span><span class="o">:</span> <span class="nx">flex</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">justify</span><span class="o">-</span><span class="nx">content</span><span class="o">:</span> <span class="nx">space</span><span class="o">-</span><span class="nx">between</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="c1">// App.js</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">react</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">css</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="o">/</span><span class="nx">style</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kr">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">css</span><span class="p">.</span><span class="nx">AppDiv</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="nx">World</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/css.AppDiv&gt;;</span>
+</span><span class='line'><span class="kr">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>缺点</h2>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: calamari | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/calamari/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-02-13T09:24:19+08:00</updated>
+  <updated>2018-04-12T23:11:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/10/28/install-ceph-calamari-on-ubuntu/"/>
     <updated>2014-10-28T15:56:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/10/28/install-ceph-calamari-on-ubuntu</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-10/calamari.png %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-10/calamari.png"></p>
 
 <p>Calamari是<a href="http://ceph.com/">Ceph</a>的一个监控和管理工具，它提供了一些定义好的REST API。Calamari包括服务端和客户端，服务端是使用Python的web框架<a href="https://www.djangoproject.com/">Django</a>开发的，提供了供客户端调用的REST API接口。客户端使用了<a href="http://nodejs.org/">NodeJS</a>,<a href="https://angularjs.org/">AngularJS</a>,<a href="http://getbootstrap.com/">Bootstrap3</a>，每个模块可以独立部署更新，其界面十分简洁清晰，几乎涵盖了所有监控要求。</p>
 
@@ -44,79 +44,133 @@
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ mkdir calamari-node
-$ cd calamari-node
-$ git clone <a href="https://github.com/ceph/calamari.git">https://github.com/ceph/calamari.git</a>
-$ git clone <a href="https://github.com/ceph/Diamond.git">https://github.com/ceph/Diamond.git</a>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mkdir calamari-node
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/ceph/calamari.git&quot;</span>&gt;https://github.com/ceph/calamari.git&lt;/a&gt;
+</span><span class='line'><span class="nv">$ </span>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/ceph/Diamond.git&quot;</span>&gt;https://github.com/ceph/Diamond.git&lt;/a&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>使用vagrant生成server安装文件</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ cd calamari/vagrant/precise-build</p>
-
-<h1>首先要保证你的vagrant已经导入名字为precise的box</h1>
-
-<p>$ vagrant up
-&hellip;
-&hellip;
-Copying salt minion config to vm.
-Checking if salt-minion is installed
-salt-minion was not found.
-Checking if salt-call is installed
-salt-call was not found.
-Bootstrapping Salt&hellip; (this may take a while)
-Salt successfully configured and installed!
-run_overstate set to false. Not running state.overstate.
-run_highstate set to false. Not running state.highstate.</p>
-
-<p>$ vagrant ssh
-$ sudo salt-call state.highstate
-&hellip;
-&hellip;</p>
-
-<h2>Summary</h2>
-
-<p>Succeeded: 11</p>
-
-<h2>Failed: 0</h2>
-
-<p>Total: 11
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari/vagrant/precise-build&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;首先要保证你的vagrant已经导入名字为precise的box&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>vagrant up
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>Copying salt minion config to vm.
+</span><span class='line'>Checking <span class="k">if </span>salt-minion is installed
+</span><span class='line'>salt-minion was not found.
+</span><span class='line'>Checking <span class="k">if </span>salt-call is installed
+</span><span class='line'>salt-call was not found.
+</span><span class='line'>Bootstrapping Salt&amp;hellip; <span class="o">(</span>this may take a <span class="k">while</span><span class="o">)</span>
+</span><span class='line'>Salt successfully configured and installed!
+</span><span class='line'>run_overstate <span class="nb">set </span>to false. Not running state.overstate.
+</span><span class='line'>run_highstate <span class="nb">set </span>to false. Not running state.highstate.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>vagrant ssh
+</span><span class='line'><span class="nv">$ </span>sudo salt-call state.highstate
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>&amp;hellip;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h2&gt;Summary&lt;/h2&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Succeeded: 11&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h2&gt;Failed: 0&lt;/h2&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Total: 11
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>这里的虚拟机将我们创建的根目录<code>calamari-node</code>和虚拟机中的<code>/git</code>目录关联起来了，我们可以通过在查看这2个目录中的任意一个来查看安装文件是否已经生成。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}</p>
-
-<h1>查看calamari-node目录</h1>
-
-<p>$ cd calamari-node
-$ ls -l
-drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
-drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
--rw-r&mdash;r&mdash;  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
--rw-r&mdash;r&mdash;  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
--rw-r&mdash;r&mdash;  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb</p>
-
-<h1>查看虚拟机的/git目录</h1>
-
-<p>$ cd calamari-node/calamari/vagrant/precise-build
-$ vagrant ssh
-$ cd /git
-$ ls -l
-drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
-drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
--rw-r&mdash;r&mdash;  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
--rw-r&mdash;r&mdash;  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
--rw-r&mdash;r&mdash;  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查看calamari-node目录&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>ls -l
+</span><span class='line'>drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
+</span><span class='line'>drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查看虚拟机的/git目录&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span><span class="nb">cd </span>calamari-node/calamari/vagrant/precise-build
+</span><span class='line'><span class="nv">$ </span>vagrant ssh
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /git
+</span><span class='line'><span class="nv">$ </span>ls -l
+</span><span class='line'>drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
+</span><span class='line'>drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>从上面可以看到安装文件已经生成好了，2个deb文件分别是server和监控服务的安装文件，tar.gz文件是安装服务所需的依赖包安装文件集合，如果是连网安装的话，这个tar.gz文件不需要用到。</li>
@@ -130,62 +184,97 @@ drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ cd calamari-node
-$ git clone <a href="https://github.com/ceph/calamari-clients.git">https://github.com/ceph/calamari-clients.git</a>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/ceph/calamari-clients.git&quot;</span>&gt;https://github.com/ceph/calamari-clients.git&lt;/a&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>使用vagrant生成client安装文件</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ cd calamari-client/vagrant/precise-build/
-$ vagrant up
-&hellip;
-&hellip;
-Copying salt minion config to vm.
-Checking if salt-minion is installed
-salt-minion was not found.
-Checking if salt-call is installed
-salt-call was not found.
-Bootstrapping Salt&hellip; (this may take a while)
-Salt successfully configured and installed!
-run_overstate set to false. Not running state.overstate.
-run_highstate set to false. Not running state.highstate.</p>
-
-<p>$ vagrant ssh
-$ sudo salt-call state.highstate
-&hellip;
-&hellip;</p>
-
-<h2>Summary</h2>
-
-<p>Succeeded: 13</p>
-
-<h2>Failed: 0</h2>
-
-<p>Total: 13
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-client/vagrant/precise-build/
+</span><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>Copying salt minion config to vm.
+</span><span class='line'>Checking <span class="k">if </span>salt-minion is installed
+</span><span class='line'>salt-minion was not found.
+</span><span class='line'>Checking <span class="k">if </span>salt-call is installed
+</span><span class='line'>salt-call was not found.
+</span><span class='line'>Bootstrapping Salt&amp;hellip; <span class="o">(</span>this may take a <span class="k">while</span><span class="o">)</span>
+</span><span class='line'>Salt successfully configured and installed!
+</span><span class='line'>run_overstate <span class="nb">set </span>to false. Not running state.overstate.
+</span><span class='line'>run_highstate <span class="nb">set </span>to false. Not running state.highstate.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>vagrant ssh
+</span><span class='line'><span class="nv">$ </span>sudo salt-call state.highstate
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>&amp;hellip;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h2&gt;Summary&lt;/h2&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Succeeded: 13&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h2&gt;Failed: 0&lt;/h2&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Total: 13
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>查看生成的安装文件，可以看到有1个deb文件和一个tar.gz文件，ubuntu的话直接使用deb文件进行安装就可以了，tar.gz文件不需要。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ cd calamari-node
-$ ls -l
-drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
-drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
-drwxr-xr-x  22 zhaozhiming  staff      748 Oct 20 16:46 calamari-clients
--rw-r&mdash;r&mdash;  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
--rw-r&mdash;r&mdash;  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
--rw-r&mdash;r&mdash;  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb
--rw-r&mdash;r&mdash;   1 zhaozhiming  staff  1711253 Oct 21 12:38 calamari-clients-build-output.tar.gz
--rw-r&mdash;r&mdash;   1 zhaozhiming  staff  1705364 Oct 21 12:38 calamari-clients_1.2.1.1-29-g3790c24_all.deb
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>ls -l
+</span><span class='line'>drwxr-xr-x  28 zhaozhiming  staff   952 Oct 20 16:16 Diamond
+</span><span class='line'>drwxr-xr-x  32 zhaozhiming  staff  1088 Oct 20 16:14 calamari
+</span><span class='line'>drwxr-xr-x  22 zhaozhiming  staff      748 Oct 20 16:46 calamari-clients
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  18883769 Oct 21 15:58 calamari-repo-precise.tar.gz
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff  16417474 Oct 21 15:58 calamari-server_1.2.1-68-gfdeb0f7_amd64.deb
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;  1 zhaozhiming  staff    307478 Oct 21 15:58 diamond_3.4.67_all.deb
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;   1 zhaozhiming  staff  1711253 Oct 21 12:38 calamari-clients-build-output.tar.gz
+</span><span class='line'>-rw-r&amp;mdash;r&amp;mdash;   1 zhaozhiming  staff  1705364 Oct 21 12:38 calamari-clients_1.2.1.1-29-g3790c24_all.deb
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>安装Calamari</h2>
 
@@ -194,119 +283,163 @@ drwxr-xr-x  22 zhaozhiming  staff      748 Oct 20 16:46 calamari-clients
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ cd calamari-node
-$ touch Vagrantfile
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>calamari-node
+</span><span class='line'><span class="nv">$ </span>touch Vagrantfile
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>Vagrantfile文件内容如下，注意要使用绑定好的IP。</li>
 </ul>
 
 
-<p>{% codeblock lang:ruby %}</p>
-
-<h1>&ndash;<em>&ndash; mode: ruby &ndash;</em>&ndash;</h1>
-
-<h1>vi: set ft=ruby :</h1>
-
-<h1>Vagrantfile API/syntax version. Don&rsquo;t touch unless you know what you&rsquo;re doing!</h1>
-
-<p>VAGRANTFILE_API_VERSION = &ldquo;2&rdquo;</p>
-
-<p>Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = &ldquo;precise64&rdquo;</p>
-
-<p>  config.vm.define &ldquo;manager&rdquo; do |manager|</p>
-
-<pre><code>manager.vm.hostname = "manager-env"
-manager.vm.network :private_network, ip: "192.168.26.10"
-manager.vm.provider :virtualbox do |vb|
-  vb.memory = 512
-end
-</code></pre>
-
-<p>  end
-end
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;h1&gt;&amp;ndash;&lt;em&gt;&amp;ndash; mode: ruby &amp;ndash;&lt;/em</span><span class="o">&gt;&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;h1&gt;vi: set ft=ruby :&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="no">Vagrantfile</span> <span class="no">API</span><span class="o">/</span><span class="n">syntax</span> <span class="n">version</span><span class="o">.</span> <span class="no">Don</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">t</span> <span class="n">touch</span> <span class="k">unless</span> <span class="n">you</span> <span class="n">know</span> <span class="n">what</span> <span class="n">you</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">re</span> <span class="n">doing!</span><span class="o">&lt;</span><span class="sr">/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;VAGRANTFILE_API_VERSION = &amp;ldquo;2&amp;rdquo;&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="no">VAGRANTFILE_API_VERSION</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">precise64</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  config.vm.define &amp;ldquo;manager&amp;rdquo; do |manager|&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">manager</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="s2">&quot;manager-env&quot;</span>
+</span><span class='line'><span class="n">manager</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:private_network</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.26.10&quot;</span>
+</span><span class='line'><span class="n">manager</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">vb</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="mi">512</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>启动虚拟机并登陆</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ vagrant up
-$ vagrant ssh
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'><span class="nv">$ </span>vagrant ssh
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>在虚拟机上安装salt</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo apt-get install python-software-properties
-$ sudo add-apt-repository ppa:saltstack/salt
-$ sudo apt-get update
-$ sudo apt-get install salt-master
-$ sudo apt-get install salt-minion
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get install python-software-properties
+</span><span class='line'><span class="nv">$ </span>sudo add-apt-repository ppa:saltstack/salt
+</span><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get install salt-master
+</span><span class='line'><span class="nv">$ </span>sudo apt-get install salt-minion
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>在虚拟机上安装所需依赖包</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo apt-get update &amp;&amp; sudo apt-get install -y apache2 libapache2-mod-wsgi libcairo2 supervisor python-cairo libpq5 postgresql
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get update &amp;amp;&amp;amp; sudo apt-get install -y apache2 libapache2-mod-wsgi libcairo2 supervisor python-cairo libpq5 postgresql
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>安装calamari</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ cd /vagrant
-$ sudo dpkg -i calamari-server<em>.deb calamari-clients</em>.deb
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /vagrant
+</span><span class='line'><span class="nv">$ </span>sudo dpkg -i calamari-server&lt;em&gt;.deb calamari-clients&lt;/em&gt;.deb
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>初始化calamari服务，这里会要求你输入用户名、邮箱、密码，这个用户名密码是在浏览器访问calamari服务需要的。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo calamari-ctl initialize
-[INFO] Loading configuration..
-[INFO] Starting/enabling salt&hellip;
-[INFO] Starting/enabling postgres&hellip;
-[INFO] Initializing database&hellip;
-[INFO] Initializing web interface&hellip;
-[INFO] You will now be prompted for login details for the administrative user account. This is the account you will use to log into the web interface once setup is complete.
-Username (leave blank to use &lsquo;root&rsquo;):
-Email address: <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x6b;&#97;&#114;&#97;&#x6e;&#x2e;&#115;&#x69;&#110;&#x67;&#104;&#64;&#99;&#x73;&#99;&#46;&#102;&#105;">&#107;&#97;&#x72;&#x61;&#x6e;&#x2e;&#x73;&#x69;&#x6e;&#103;&#104;&#x40;&#99;&#x73;&#99;&#46;&#x66;&#x69;</a>
-Password:
-Password (again):
-Superuser created successfully.
-[INFO] Starting/enabling services&hellip;
-[INFO] Restarting services&hellip; &ndash; See more at: <a href="http://ceph.com/category/calamari/#sthash.qUtbU0mX.dpuf">http://ceph.com/category/calamari/#sthash.qUtbU0mX.dpuf</a>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo calamari-ctl initialize
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Loading configuration..
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Starting/enabling salt&amp;hellip;
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Starting/enabling postgres&amp;hellip;
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Initializing database&amp;hellip;
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Initializing web interface&amp;hellip;
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> You will now be prompted <span class="k">for </span>login details <span class="k">for </span>the administrative user account. This is the account you will use to log into the web interface once setup is complete.
+</span><span class='line'>Username <span class="o">(</span>leave blank to use &amp;lsquo;root&amp;rsquo;<span class="o">)</span>:
+</span><span class='line'>Email address: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;&amp;#109;&amp;#97;&amp;#x69;&amp;#108;&amp;#x74;&amp;#x6f;&amp;#x3a;&amp;#x6b;&amp;#97;&amp;#114;&amp;#97;&amp;#x6e;&amp;#46;&amp;#x73;&amp;#105;&amp;#x6e;&amp;#x67;&amp;#104;&amp;#x40;&amp;#x63;&amp;#115;&amp;#x63;&amp;#46;&amp;#102;&amp;#x69;&quot;</span>&gt;&amp;#x6b;&amp;#x61;&amp;#x72;&amp;#x61;&amp;#x6e;&amp;#46;&amp;#x73;&amp;#x69;&amp;#x6e;&amp;#x67;&amp;#104;&amp;#64;&amp;#99;&amp;#x73;&amp;#x63;&amp;#x2e;&amp;#102;&amp;#105;&lt;/a&gt;
+</span><span class='line'>Password:
+</span><span class='line'>Password <span class="o">(</span>again<span class="o">)</span>:
+</span><span class='line'>Superuser created successfully.
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Starting/enabling services&amp;hellip;
+</span><span class='line'><span class="o">[</span>INFO<span class="o">]</span> Restarting services&amp;hellip; &amp;ndash; See more at: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://ceph.com/category/calamari/#sthash.qUtbU0mX.dpuf&quot;</span>&gt;http://ceph.com/category/calamari/#sthash.qUtbU0mX.dpuf&lt;/a&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>登陆浏览器，输入虚拟机的ip(比如<a href="http://192.168.26.10">http://192.168.26.10</a>)，可以看到如下页面。</li>
 </ul>
 
 
-<p>{% img /images/post/2014-10/calamari-login.png %}</p>
+<p><img src="/images/post/2014-10/calamari-login.png"></p>
 
 <ul>
 <li>输入刚才设置的用户名密码后，可以看到calamari提示你进行ceph集群配置。</li>
 </ul>
 
 
-<p>{% img /images/post/2014-10/calamari-first.png %}</p>
+<p><img src="/images/post/2014-10/calamari-first.png"></p>
 
 <h2>Ceph集群配置监控服务</h2>
 
@@ -317,62 +450,72 @@ Superuser created successfully.
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo dpkg -i diamond_3.4.67_all.deb #deb文件是之前生成server安装文件时一起生成的，需要将其先考到ceph集群机器上
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo dpkg -i diamond_3.4.67_all.deb <span class="c">#deb文件是之前生成server安装文件时一起生成的，需要将其先考到ceph集群机器上</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>创建默认的监控配置文件</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo mv /etc/diamond/diamond.conf.example /etc/diamond/diamond.conf
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo mv /etc/diamond/diamond.conf.example /etc/diamond/diamond.conf
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>安装salt-minion服务</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo apt-get install python-software-properties
-$ sudo add-apt-repository ppa:saltstack/salt
-$ sudo apt-get update
-$ sudo apt-get install salt-minion
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get install python-software-properties
+</span><span class='line'><span class="nv">$ </span>sudo add-apt-repository ppa:saltstack/salt
+</span><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get install salt-minion
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>在<code>/etc/hosts</code>文件中增加calamari服务器的映射关系</li>
 </ul>
 
 
-<p>{% codeblock /etc/hosts lang:sh %}
-&hellip;
-&hellip;
-192.168.26.10 ceph-calamari
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/etc/hosts </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&amp;hellip;
+</span><span class='line'>&amp;hellip;
+</span><span class='line'>192.168.26.10 ceph-calamari
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>修改salt-minion的配置文件<code>/etc/salt/minion</code>，将master指向calamari服务器</li>
 </ul>
 
 
-<p>{% codeblock /etc/salt/minion lang:sh %}
-&hellip;
-master: ceph-calamari
-&hellip;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/etc/salt/minion </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&amp;hellip;
+</span><span class='line'>master: ceph-calamari
+</span><span class='line'>&amp;hellip;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>重启服务</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo service salt-minion restart<br/>
-$ sudo service diamond restart
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service salt-minion restart&lt;br/&gt;
+</span><span class='line'><span class="nv">$ </span>sudo service diamond restart
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>在所有的ceph集群机器上重复以上的步骤。</li>
@@ -386,73 +529,106 @@ $ sudo service diamond restart
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo salt-key -L
-Accepted Keys:
-Unaccepted Keys:
-ceph-mon0
-ceph-mon1
-ceph-mon2
-ceph-osd0
-ceph-osd1
-ceph-osd2
-Rejected Keys:
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo salt-key -L
+</span><span class='line'>Accepted Keys:
+</span><span class='line'>Unaccepted Keys:
+</span><span class='line'>ceph-mon0
+</span><span class='line'>ceph-mon1
+</span><span class='line'>ceph-mon2
+</span><span class='line'>ceph-osd0
+</span><span class='line'>ceph-osd1
+</span><span class='line'>ceph-osd2
+</span><span class='line'>Rejected Keys:
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>添加ceph集群机器到calamari</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo salt-key -A
-The following keys are going to be accepted:
-Unaccepted Keys:
-ceph-mon0
-ceph-mon1
-ceph-mon2
-ceph-osd0
-ceph-osd1
-ceph-osd2
-Proceed? [n/Y] y
-Key for minion ceph-mon0 accepted.
-Key for minion ceph-mon1 accepted.
-Key for minion ceph-mon2 accepted.
-Key for minion ceph-osd0 accepted.
-Key for minion ceph-osd1 accepted.
-Key for minion ceph-osd2 accepted.
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo salt-key -A
+</span><span class='line'>The following keys are going to be accepted:
+</span><span class='line'>Unaccepted Keys:
+</span><span class='line'>ceph-mon0
+</span><span class='line'>ceph-mon1
+</span><span class='line'>ceph-mon2
+</span><span class='line'>ceph-osd0
+</span><span class='line'>ceph-osd1
+</span><span class='line'>ceph-osd2
+</span><span class='line'>Proceed? <span class="o">[</span>n/Y<span class="o">]</span> y
+</span><span class='line'>Key <span class="k">for </span>minion ceph-mon0 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-mon1 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-mon2 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-osd0 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-osd1 accepted.
+</span><span class='line'>Key <span class="k">for </span>minion ceph-osd2 accepted.
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>再次查看salt-key，可以看到所有节点都已添加。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-$ sudo salt-key -L
-Accepted Keys:
-ceph-mon0
-ceph-mon1
-ceph-mon2
-ceph-osd0
-ceph-osd1
-ceph-osd2
-Unaccepted Keys:
-Rejected Keys:
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo salt-key -L
+</span><span class='line'>Accepted Keys:
+</span><span class='line'>ceph-mon0
+</span><span class='line'>ceph-mon1
+</span><span class='line'>ceph-mon2
+</span><span class='line'>ceph-osd0
+</span><span class='line'>ceph-osd1
+</span><span class='line'>ceph-osd2
+</span><span class='line'>Unaccepted Keys:
+</span><span class='line'>Rejected Keys:
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>在浏览器中再次登陆calamari服务，可以看到已经能监控ceph集群的信息。</li>
 </ul>
 
 
-<p>{% img /images/post/2014-10/calamari.png %}</p>
+<p><img src="/images/post/2014-10/calamari.png"></p>
 
-<p>{% img /images/post/2014-10/calamari-page1.png %}</p>
+<p><img src="/images/post/2014-10/calamari-page1.png"></p>
 
-<p>{% img /images/post/2014-10/calamari-page2.png %}</p>
+<p><img src="/images/post/2014-10/calamari-page2.png"></p>
 
-<p>{% img /images/post/2014-10/calamari-page3.png %}</p>
+<p><img src="/images/post/2014-10/calamari-page3.png"></p>
 
 <h2>参考资料</h2>
 

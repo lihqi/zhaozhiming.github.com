@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: webpack | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/webpack/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-02-13T09:24:19+08:00</updated>
+  <updated>2018-04-12T23:11:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2018/01/08/create-react-app-override-webpack-config/"/>
     <updated>2018-01-08T20:04:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2018/01/08/create-react-app-override-webpack-config</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2018/01/cra.png 400 300 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2018/01/cra.png" width="400" height="300"></p>
 
 <p><a href="https://github.com/facebookincubator/create-react-app">Create React App</a>（以下简称 CRA）是创建 React 应用的一个脚手架，它与其他脚手架不同的一个地方就是将一些复杂工具（比如 webpack）的配置封装了起来，让使用者不用关心这些工具的具体配置，从而降低了工具的使用难度。</p>
 
@@ -43,36 +43,59 @@
 
 <p>使用 CRA 创建完项目以后，项目在<code>package.json</code>里面提供了这样一个命令：</p>
 
-<p>{% codeblock lang:json %}
-{
-  &hellip;
-  &ldquo;scripts&rdquo;: {</p>
-
-<pre><code>"eject": "react-scripts eject"
-</code></pre>
-
-<p>  },
-  &hellip;
-}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="err">&amp;hellip;</span>
+</span><span class='line'>  <span class="err">&amp;ldquo;scripts&amp;rdquo;:</span> <span class="err">{&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;pre&gt;&lt;code&gt;</span><span class="nt">&quot;eject&quot;</span><span class="p">:</span> <span class="s2">&quot;react-scripts eject&quot;</span>
+</span><span class='line'><span class="err">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;p&gt;</span>  <span class="p">}</span><span class="err">,</span>
+</span><span class='line'>  <span class="err">&amp;hellip;</span>
+</span><span class='line'><span class="err">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>执行完这个命令——<code>yarn run eject</code>后会将封装在 CRA 中的配置全部<code>反编译</code>到当前项目，这样用户就可以完全取得 webpack 文件的控制权，想怎么修改就怎么修改了。</p>
 
-<p>{% codeblock lang:sh %}</p>
-
-<h1>eject 后项目根目录下会出现 config 文件夹，里面就包含了 webpack 配置</h1>
-
-<p>config
-├── env.js
-├── jest
-│   ├── cssTransform.js
-│   └── fileTransform.js
-├── paths.js
-├── polyfills.js
-├── webpack.config.dev.js // 开发环境配置
-├── webpack.config.prod.js // 生产环境配置
-└── webpackDevServer.config.js
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;eject 后项目根目录下会出现 config 文件夹，里面就包含了 webpack 配置&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;config
+</span><span class='line'>├── env.js
+</span><span class='line'>├── jest
+</span><span class='line'>│   ├── cssTransform.js
+</span><span class='line'>│   └── fileTransform.js
+</span><span class='line'>├── paths.js
+</span><span class='line'>├── polyfills.js
+</span><span class='line'>├── webpack.config.dev.js // 开发环境配置
+</span><span class='line'>├── webpack.config.prod.js // 生产环境配置
+</span><span class='line'>└── webpackDevServer.config.js
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>CRA 与其他脚手架不同的另一个地方，就是可以通过升级其中的<code>react-scripts</code>包来升级 CRA 的特性。比如用老版本 CRA 创建了一个项目，这个项目不具备 <a href="https://developers.google.com/web/progressive-web-apps/">PWA</a> 功能，但只要项目升级了<code>react-scripts</code>包的版本就可以具备 PWA 的功能，项目本身的代码不需要做任何修改。</p>
 
@@ -82,16 +105,25 @@
 
 <p><a href="https://github.com/facebookincubator/create-react-app/tree/8cae659ec5a066eff8ea270346dc8c1ef064f9aa/packages/react-scripts">react-scripts</a> 是 CRA 的一个核心包，一些脚本和工具的默认配置都集成在里面，使用 CRA 创建项目默认就是使用这个包，但是 CRA 还提供了另外一种方式来创建 CRA 项目，即使用自定义 scripts 包的方式。</p>
 
-<p>{% codeblock lang:sh %}</p>
-
-<h1>默认方式</h1>
-
-<p>$ create-react-app foo</p>
-
-<h1>自定义 scripts 包方式</h1>
-
-<p>$ create-react-app foo &mdash;scripts-version 自定义包
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;默认方式&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>create-react-app foo&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;自定义 scripts 包方式&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$ </span>create-react-app foo &amp;mdash;scripts-version 自定义包
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p><code>自定义包</code>可以是下面几种形式：</p>
 
@@ -112,14 +144,19 @@
 
 <p>在 CRA 创建的项目中安装了<code>react-app-rewired</code>后，可以通过创建一个<code>config-overrides.js</code> 文件来对 webpack 配置进行扩展。</p>
 
-<p>{% codeblock lang:js %}
-/<em> config-overrides.js </em>/</p>
-
-<p>module.exports = function override(config, env) {
-  //do stuff with the webpack config&hellip;
-  return config;
-}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="err">/&lt;em&gt; config-overrides.js &lt;/em&gt;/&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">override</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">env</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">//do stuff with the webpack config&amp;hellip;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p><code>override</code>方法的第一个参数<code>config</code>就是 webpack 的配置，在这个方法里面，我们可以对 <code>config</code> 进行扩展，比如安装其他 loader 或者 plugins，最后再将这个 <code>config</code> 对象返回回去。</p>
 
@@ -142,27 +179,39 @@
 
 <p>具体源码如下：</p>
 
-<p>{% codeblock lang:js %}
-const overrides = require(&lsquo;../config-overrides&rsquo;);
-const webpackConfigPath = paths.scriptVersion + &ldquo;/config/webpack.config.prod&rdquo;;</p>
-
-<p>// load original config
-const webpackConfig = require(webpackConfigPath);
-// override config in memory
-require.cache[require.resolve(webpackConfigPath)].exports =
-  overrides.webpack(webpackConfig, process.env.NODE_ENV);
-// run original script
-require(paths.scriptVersion + &lsquo;/scripts/build&rsquo;);
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">overrides</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;..</span><span class="o">/</span><span class="nx">config</span><span class="o">-</span><span class="nx">overrides</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">webpackConfigPath</span> <span class="o">=</span> <span class="nx">paths</span><span class="p">.</span><span class="nx">scriptVersion</span> <span class="o">+</span> <span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="err">/config/webpack.config.prod&amp;rdquo;;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="c1">// load original config</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">webpackConfig</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">webpackConfigPath</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// override config in memory</span>
+</span><span class='line'><span class="nx">require</span><span class="p">.</span><span class="nx">cache</span><span class="p">[</span><span class="nx">require</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">webpackConfigPath</span><span class="p">)].</span><span class="nx">exports</span> <span class="o">=</span>
+</span><span class='line'>  <span class="nx">overrides</span><span class="p">.</span><span class="nx">webpack</span><span class="p">(</span><span class="nx">webpackConfig</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// run original script</span>
+</span><span class='line'><span class="nx">require</span><span class="p">(</span><span class="nx">paths</span><span class="p">.</span><span class="nx">scriptVersion</span> <span class="o">+</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="err">/scripts/build&amp;rsquo;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>知道了原理之后，我们也可以修改自定义 scripts 包的脚本文件，还是以<code>build.js</code>为例，在获取基本 webpack 配置对象和使用 webpack 对象之间加入以下代码：</p>
 
-<p>{% codeblock lang:js %}
-// override config
-const override = require(paths.configOverrides);
-const overrideFn = override || ((config, env) => config);
-const overrideConfig = overrideFn(config, process.env.NODE_ENV);
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// override config</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">override</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">paths</span><span class="p">.</span><span class="nx">configOverrides</span><span class="p">);</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">overrideFn</span> <span class="o">=</span> <span class="nx">override</span> <span class="o">||</span> <span class="p">((</span><span class="nx">config</span><span class="p">,</span> <span class="nx">env</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">config</span><span class="p">);</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">overrideConfig</span> <span class="o">=</span> <span class="nx">overrideFn</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p><code>overrideConfig</code>就是修改后的 webpack 对象，最后修改调用了 webpack 对象的代码，将原来的 webpack 对象替换成修改后的 webpack 对象。</p>
 

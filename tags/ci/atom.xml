@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: CI | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/ci/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-02-13T09:24:19+08:00</updated>
+  <updated>2018-04-12T23:11:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/11/30/gitlab-ci-runner-create-and-config/"/>
     <updated>2015-11-30T22:13:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/11/30/gitlab-ci-runner-create-and-config</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-11/gitlab-ci-runner.png 400 350 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-11/gitlab-ci-runner.png" width="400" height="350"></p>
 
 <p><a href="https://gitlab.com/">gitlab</a>不仅是一个代码托管的开源框架，同时它还集成了CI的功能，可以方便地为gitlab上的项目添加CI功能。</p>
 
@@ -47,26 +47,43 @@
 
 <p>执行<code>gitlab-ci-multi-runner help</code>可以看到所有命令的简介，在每个命令加<code>--help</code>可以看到更加具体的参数，比如<code>gitlab-ci-multi-runner start --help</code>，命令的执行顺序为：<code>register(注册runner)--&gt;install(安装服务)--&gt;start(运行服务)</code>。</p>
 
-<p>{% codeblock lang:sh %}
-COMMANDS:
-   run          run multi runner service
-   register     register a new runner
-   install      install service
-   uninstall    uninstall service
-   start        start service
-   stop         stop service
-   restart      restart service
-   run-single   start single runner
-   unregister   unregister specific runner
-   verify       verify all registered runners
-   help, h      Shows a list of commands or help for one command</p>
-
-<p>GLOBAL OPTIONS:
-   &mdash;debug                      debug mode [$DEBUG]
-   &mdash;log-level, -l &ldquo;info&rdquo;       Log level (options: debug, info, warn, error, fatal, panic)
-   &mdash;help, -h                   show help
-   &mdash;version, -v                print the version
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>COMMANDS:
+</span><span class='line'>   run          run multi runner service
+</span><span class='line'>   register     register a new runner
+</span><span class='line'>   install      install service
+</span><span class='line'>   uninstall    uninstall service
+</span><span class='line'>   start        start service
+</span><span class='line'>   stop         stop service
+</span><span class='line'>   restart      restart service
+</span><span class='line'>   run-single   start single runner
+</span><span class='line'>   unregister   unregister specific runner
+</span><span class='line'>   verify       verify all registered runners
+</span><span class='line'>   <span class="nb">help</span>, h      Shows a list of commands or <span class="nb">help </span><span class="k">for </span>one <span class="nb">command</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;GLOBAL OPTIONS:
+</span><span class='line'>   &amp;mdash;debug                      debug mode <span class="o">[</span><span class="nv">$DEBUG</span><span class="o">]</span>
+</span><span class='line'>   &amp;mdash;log-level, -l &amp;ldquo;info&amp;rdquo;       Log level <span class="o">(</span>options: debug, info, warn, error, fatal, panic<span class="o">)</span>
+</span><span class='line'>   &amp;mdash;help, -h                   show <span class="nb">help</span>
+</span><span class='line'>   &amp;mdash;version, -v                print the version
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>gitlab CI配置</h2>
 
@@ -76,15 +93,21 @@ COMMANDS:
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-How to setup a new project specific runner
-Install GitLab Runner software. Checkout the GitLab Runner section to install it
-Specify following URL during runner setup:
-<a href="http://gitlab.your.company/ci">http://gitlab.your.company/ci</a>
-Use the following registration token during setup:
-7c92da80317b5f5e1fe1c62a1b0767
-Start runner!
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>How to setup a new project specific runner
+</span><span class='line'>Install GitLab Runner software. Checkout the GitLab Runner section to install it
+</span><span class='line'>Specify following URL during runner setup:
+</span><span class='line'>&lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://gitlab.your.company/ci&quot;</span>&gt;http://gitlab.your.company/ci&lt;/a&gt;
+</span><span class='line'>Use the following registration token during setup:
+</span><span class='line'>7c92da80317b5f5e1fe1c62a1b0767
+</span><span class='line'>Start runner!
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>在runner的服务器上注册runner，执行命令<code>gitlab-ci-multi-runner register</code>，下面是执行命令后的交互信息。<br/>
@@ -92,54 +115,92 @@ Start runner!
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-root@cloudeye:~# gitlab-ci-multi-runner register
-Please enter the gitlab-ci coordinator URL (e.g. <a href="https://gitlab.com/ci">https://gitlab.com/ci</a>): ## 输入你CI服务器的地址
-<a href="http://gitlab.your.company/ci">http://gitlab.your.company/ci</a>
-Please enter the gitlab-ci token for this runner: ## 输入你CI项目的token
-7c92da80317b5f5e1fe1c62a1b0767
-Please enter the gitlab-ci description for this runner: ## 描述信息，只是表述不是很重要
-Please enter the gitlab-ci tags for this runner (comma separated): ## runner的标签
-dev
-INFO[0032] fc6e1ee6 Registering runner&hellip; succeeded
-Please enter the executor: docker-ssh, ssh, shell, parallels, docker: ## runner的执行方式，有5种，这里我选择了docker
-docker
-Please enter the Docker image (eg. ruby:2.1): ## docker镜像
-node:0.12.7
-If you want to enable mysql please enter version (X.Y) or enter latest? ## 不需要的话直接空格就可以了</p>
-
-<p>If you want to enable postgres please enter version (X.Y) or enter latest? ## 不需要的话直接空格就可以了</p>
-
-<p>If you want to enable redis please enter version (X.Y) or enter latest? ## 不需要的话直接空格就可以了</p>
-
-<p>If you want to enable mongo please enter version (X.Y) or enter latest? ## 不需要的话直接空格就可以了</p>
-
-<p>INFO[0043] Runner registered successfully. Feel free to start it, but if it&rsquo;s running already the config should be automatically reloaded!
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>root@cloudeye:~# gitlab-ci-multi-runner register
+</span><span class='line'>Please enter the gitlab-ci coordinator URL <span class="o">(</span>e.g. &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://gitlab.com/ci&quot;</span>&gt;https://gitlab.com/ci&lt;/a&gt;<span class="o">)</span>: <span class="c">## 输入你CI服务器的地址</span>
+</span><span class='line'>&lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://gitlab.your.company/ci&quot;</span>&gt;http://gitlab.your.company/ci&lt;/a&gt;
+</span><span class='line'>Please enter the gitlab-ci token <span class="k">for </span>this runner: <span class="c">## 输入你CI项目的token</span>
+</span><span class='line'>7c92da80317b5f5e1fe1c62a1b0767
+</span><span class='line'>Please enter the gitlab-ci description <span class="k">for </span>this runner: <span class="c">## 描述信息，只是表述不是很重要</span>
+</span><span class='line'>Please enter the gitlab-ci tags <span class="k">for </span>this runner <span class="o">(</span>comma separated<span class="o">)</span>: <span class="c">## runner的标签</span>
+</span><span class='line'>dev
+</span><span class='line'>INFO<span class="o">[</span>0032<span class="o">]</span> fc6e1ee6 Registering runner&amp;hellip; succeeded
+</span><span class='line'>Please enter the executor: docker-ssh, ssh, shell, parallels, docker: <span class="c">## runner的执行方式，有5种，这里我选择了docker</span>
+</span><span class='line'>docker
+</span><span class='line'>Please enter the Docker image <span class="o">(</span>eg. ruby:2.1<span class="o">)</span>: <span class="c">## docker镜像</span>
+</span><span class='line'>node:0.12.7
+</span><span class='line'>If you want to <span class="nb">enable </span>mysql please enter version <span class="o">(</span>X.Y<span class="o">)</span> or enter latest? <span class="c">## 不需要的话直接空格就可以了&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;If you want to <span class="nb">enable </span>postgres please enter version <span class="o">(</span>X.Y<span class="o">)</span> or enter latest? <span class="c">## 不需要的话直接空格就可以了&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;If you want to <span class="nb">enable </span>redis please enter version <span class="o">(</span>X.Y<span class="o">)</span> or enter latest? <span class="c">## 不需要的话直接空格就可以了&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;If you want to <span class="nb">enable </span>mongo please enter version <span class="o">(</span>X.Y<span class="o">)</span> or enter latest? <span class="c">## 不需要的话直接空格就可以了&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;INFO<span class="o">[</span>0043<span class="o">]</span> Runner registered successfully. Feel free to start it, but <span class="k">if </span>it&amp;rsquo;s running already the config should be automatically reloaded!
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>注册完成后，打开runner的配置文件：<code>vi /etc/gitlab-runner/config.toml</code>，可以看到配置文件里面增加了刚才注册的相关信息，更多参数的信息可以看<a href="https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/configuration/advanced-configuration.md">官方文档</a>。</li>
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-root@cloudeye:~# gitlab-ci-multi-runner register
-concurrent = 2</p>
-
-<p>[[runners]]
-  url = &ldquo;<a href="http://gitlab.your.company/ci">http://gitlab.your.company/ci</a>&rdquo;
-  token = &ldquo;79bf814ac37a52427345b01e135a78&rdquo;
-  name = &ldquo;your-project&rdquo;
-  executor = &ldquo;docker&rdquo;
-  [runners.docker]</p>
-
-<pre><code>image = "node:0.12.7"
-privileged = false
-disable_cache = true
-volumes = ["/cache:/cache:rw"]
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>root@cloudeye:~# gitlab-ci-multi-runner register
+</span><span class='line'><span class="nv">concurrent</span> <span class="o">=</span> 2&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[[</span>runners<span class="o">]]</span>
+</span><span class='line'>  <span class="nv">url</span> <span class="o">=</span> &amp;ldquo;&lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://gitlab.your.company/ci&quot;</span>&gt;http://gitlab.your.company/ci&lt;/a&gt;&amp;rdquo;
+</span><span class='line'>  <span class="nv">token</span> <span class="o">=</span> &amp;ldquo;79bf814ac37a52427345b01e135a78&amp;rdquo;
+</span><span class='line'>  <span class="nv">name</span> <span class="o">=</span> &amp;ldquo;your-project&amp;rdquo;
+</span><span class='line'>  <span class="nv">executor</span> <span class="o">=</span> &amp;ldquo;docker&amp;rdquo;
+</span><span class='line'>  <span class="o">[</span>runners.docker<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;image <span class="o">=</span> <span class="s2">&quot;node:0.12.7&quot;</span>
+</span><span class='line'><span class="nv">privileged</span> <span class="o">=</span> <span class="nb">false</span>
+</span><span class='line'><span class="nv">disable_cache</span> <span class="o">=</span> <span class="nb">true</span>
+</span><span class='line'><span class="nv">volumes</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;/cache:/cache:rw&quot;</span><span class="o">]</span>
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>安装服务，执行命令<code>gitlab-ci-multi-runner install -n "服务名"</code>，后面的服务名是自己定义的名称，用来后面启动命名使用，与其相对的命令是<code>uninstall</code>。</li>
@@ -148,15 +209,21 @@ volumes = ["/cache:/cache:rw"]
 </ul>
 
 
-<p>{% codeblock lang:sh %}
-root@cloudeye:~# gitlab-ci-multi-runner verify
-INFO[0000] 79bf814a Veryfing runner&hellip; is alive
-INFO[0000] 207a4b34 Veryfing runner&hellip; is alive
-INFO[0000] 20f849f7 Veryfing runner&hellip; is alive
-INFO[0000] 6e07e13a Veryfing runner&hellip; is alive
-INFO[0000] 23be6deb Veryfing runner&hellip; is alive
-INFO[0000] 4e348964 Veryfing runner&hellip; is alive
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>root@cloudeye:~# gitlab-ci-multi-runner verify
+</span><span class='line'>INFO<span class="o">[</span>0000<span class="o">]</span> 79bf814a Veryfing runner&amp;hellip; is alive
+</span><span class='line'>INFO<span class="o">[</span>0000<span class="o">]</span> 207a4b34 Veryfing runner&amp;hellip; is alive
+</span><span class='line'>INFO<span class="o">[</span>0000<span class="o">]</span> 20f849f7 Veryfing runner&amp;hellip; is alive
+</span><span class='line'>INFO<span class="o">[</span>0000<span class="o">]</span> 6e07e13a Veryfing runner&amp;hellip; is alive
+</span><span class='line'>INFO<span class="o">[</span>0000<span class="o">]</span> 23be6deb Veryfing runner&amp;hellip; is alive
+</span><span class='line'>INFO<span class="o">[</span>0000<span class="o">]</span> 4e348964 Veryfing runner&amp;hellip; is alive
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>启动服务后，可以在刚才的CI runners页面看到已经有runner出现了。</li>
@@ -167,16 +234,25 @@ INFO[0000] 4e348964 Veryfing runner&hellip; is alive
 
 <p>配置好了runner，要让CI跑起来，还需要在项目根目录放一个<code>.gitlab-ci.yaml</code>文件，在这个文件里面可以定制CI的任务，下面是简单的示例文件，更多的用法可以看<a href="http://doc.gitlab.com/ci/yaml/README.html">官方文档</a>。</p>
 
-<p>{% codeblock lang:yaml %}
-efore_script:
-  &ndash; bundle_install
-job1:
-  script:</p>
-
-<pre><code>- execute-script-for-job1
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">efore_script</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="nl">&amp;ndash</span><span class="l-Scalar-Plain">; bundle_install</span>
+</span><span class='line'><span class="l-Scalar-Plain">job1</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">script:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- execute-script-for-job1</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

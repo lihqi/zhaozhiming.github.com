@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: redux | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/redux/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-02-13T09:24:19+08:00</updated>
+  <updated>2018-04-12T23:11:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/12/19/use-mocha-and-chai-and-sinon-to-test-react-and-redux-webapp/"/>
     <updated>2015-12-19T19:29:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/12/19/use-mocha-and-chai-and-sinon-to-test-react-and-redux-webapp</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-12/front_end_test.png %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-12/front_end_test.png"></p>
 
 <p>今天来介绍一下如何使用Mocha + Chai + Sinon测试基于Redux + React的web应用，以及介绍一些在使用过程中遇到的问题和解决方法。</p>
 
@@ -31,48 +31,73 @@
 
 <p><a href="https://mochajs.org">Mocha</a>是一个JS的测试框架，类似于Java中的Junit、Python中的nose。Mocha的使用非常简单，使用<code>describe</code>和<code>it</code>就可以写单元测试，下面是代码示例。</p>
 
-<p>{% codeblock lang:js %}
-import {expect} from &lsquo;chai&rsquo;;</p>
-
-<p>describe(&lsquo;Array&rsquo;, function() {
-  describe(&lsquo;#indexOf()&rsquo;, function () {</p>
-
-<pre><code>it('should return -1 when the value is not present', function () {
-  expect([1,2,3].indexOf(5)).to.be.equal(-1);
-  expect([1,2,3].indexOf(0)).to.be.equal(-1);
-});
-</code></pre>
-
-<p>  });
-});
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="p">{</span><span class="nx">expect</span><span class="p">}</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">chai</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nb">Array</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="err">#</span><span class="nx">indexOf</span><span class="p">()</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return -1 when the value is not present&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">expect</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="mi">5</span><span class="p">)).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">expect</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="mi">0</span><span class="p">)).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Chai</h2>
 
 <p><a href="http://chaijs.com">Chai</a>是一个单元测试的验证框架，它有3种不同形式的校验：expect、should和assert。expect和should的方式让写出来的测试代码更像自然语言，让业务人员也可以看懂，而assert方式是传统单元测试断言的方式，如果以前习惯写Java的单元测试会对这种方式比较熟悉。</p>
 
-<p>{% img /images/post/2015-12/chai.png %}</p>
+<p><img src="/images/post/2015-12/chai.png"></p>
 
 <h2>Sinon</h2>
 
 <p><a href="http://sinonjs.org/">Sinon</a>是一个mock框架，类似Java的mockito。它可以对任何对象进行mock，更重要的是它提供了一些对mock对象的校验方法。</p>
 
-<p>{% codeblock lang:js %}
-// 创建mock对象
-const callback = sinon.spy();
-// 调用测试方法
-const proxy = once(callback);</p>
-
-<p>// 校验mock对象是否被调用;
-assert(callback.called);
-// 校验被调用了多少次
-assert(callback.calledOnce);
-assert.equals(callback.callCount, 1);
-// 校验被哪个对象调用
- assert(callback.calledOn(obj));
-// 校验被调用时传入了哪些参数
-assert(callback.calledWith(1, 2, 3));
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// 创建mock对象</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">spy</span><span class="p">();</span>
+</span><span class='line'><span class="c1">// 调用测试方法</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">proxy</span> <span class="o">=</span> <span class="nx">once</span><span class="p">(</span><span class="nx">callback</span><span class="p">);</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="c1">// 校验mock对象是否被调用;</span>
+</span><span class='line'><span class="nx">assert</span><span class="p">(</span><span class="nx">callback</span><span class="p">.</span><span class="nx">called</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// 校验被调用了多少次</span>
+</span><span class='line'><span class="nx">assert</span><span class="p">(</span><span class="nx">callback</span><span class="p">.</span><span class="nx">calledOnce</span><span class="p">);</span>
+</span><span class='line'><span class="nx">assert</span><span class="p">.</span><span class="nx">equals</span><span class="p">(</span><span class="nx">callback</span><span class="p">.</span><span class="nx">callCount</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// 校验被哪个对象调用</span>
+</span><span class='line'> <span class="nx">assert</span><span class="p">(</span><span class="nx">callback</span><span class="p">.</span><span class="nx">calledOn</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span>
+</span><span class='line'><span class="c1">// 校验被调用时传入了哪些参数</span>
+</span><span class='line'><span class="nx">assert</span><span class="p">(</span><span class="nx">callback</span><span class="p">.</span><span class="nx">calledWith</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Redux + React</h2>
 
@@ -84,30 +109,45 @@ assert(callback.calledWith(1, 2, 3));
 
 <p>action的代码可能是这样的，接收从component传过来的一个参数，返回一个带有type属性的一个对象。</p>
 
-<p>{% codeblock lang:js %}
-export function addTodo(text) {
-  return {type: ADD_TODO, text};
-}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">export</span> <span class="kd">function</span> <span class="nx">addTodo</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span><span class="nx">type</span><span class="o">:</span> <span class="nx">ADD_TODO</span><span class="p">,</span> <span class="nx">text</span><span class="p">};</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>actions的测试比较简单，就是返回一个对象，测试代码可以这样写：</p>
 
-<p>{% codeblock lang:js %}
-import {expect} from &lsquo;chai&rsquo;;
-import * as actions from &lsquo;actions/todos&rsquo;;</p>
-
-<p>describe(&lsquo;todo actions&rsquo;, () => {
-  it(&lsquo;add todo should create ADD_TODO action&rsquo;, () => {</p>
-
-<pre><code>expect(actions.addTodo('Use Redux')).to.deep.equal({
-  type: 'add_todo',
-  text: 'Use Redux',
-});
-</code></pre>
-
-<p>  });
-});
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="p">{</span><span class="nx">expect</span><span class="p">}</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">chai</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">actions</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">actions</span><span class="o">/</span><span class="nx">todos</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">todo</span> <span class="nx">actions</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">it</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">add</span> <span class="nx">todo</span> <span class="nx">should</span> <span class="nx">create</span> <span class="nx">ADD_TODO</span> <span class="nx">action</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">expect</span><span class="p">(</span><span class="nx">actions</span><span class="p">.</span><span class="nx">addTodo</span><span class="p">(</span><span class="s1">&#39;Use Redux&#39;</span><span class="p">)).</span><span class="nx">to</span><span class="p">.</span><span class="nx">deep</span><span class="p">.</span><span class="nx">equal</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;add_todo&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;Use Redux&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这里使用了chai的expect校验方式，传入一个字符串，验证是否返回正确的对象，这里使用了<code>to.deep.equal</code>这个校验方法，可以校验对象的属性是否相等，而对于number、bool等基本类型的校验可以使用<code>to.be.equal</code>这个校验方法。</p>
 
@@ -115,42 +155,69 @@ import * as actions from &lsquo;actions/todos&rsquo;;</p>
 
 <p>reducers代码如下，在原来的state基础上加上一个新的todo对象。</p>
 
-<p>{% codeblock lang:js %}
-export default function todos(state = initState, action) {
-  switch (action.type) {
-  case ADD_TODO:</p>
-
-<pre><code>return [
-  ...state,
-  {
-    text: action.text,
-    completed: false,
-    id: new Date().getTime(),
-  },
-];
-</code></pre>
-
-<p>  }
-}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">todos</span><span class="p">(</span><span class="nx">state</span> <span class="o">=</span> <span class="nx">initState</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">switch</span> <span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">case</span> <span class="nx">ADD_TODO</span><span class="o">:&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">...</span><span class="nx">state</span><span class="p">,</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">text</span><span class="o">:</span> <span class="nx">action</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">completed</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">id</span><span class="o">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">(),</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'><span class="p">];</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>测试代码可以这样写：</p>
 
-<p>{% codeblock lang:js %}
-describe(&lsquo;reducers&rsquo;, () => {
-  describe(&lsquo;todos&rsquo;, () => {</p>
-
-<pre><code>it('should add todo correctly', () =&gt; {
-  const state = todos({}, {type: ADD_TODO, text: 'foo'});
-  expect(state.length).to.be.equal(1);
-  expect(state[0].text).to.be.equal('foo');
-  expect(state[0].completed).to.be.equal(false);
-});
-</code></pre>
-
-<p>  });
-});
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">reducers</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">todos</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should add todo correctly&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">todos</span><span class="p">({},</span> <span class="p">{</span><span class="nx">type</span><span class="o">:</span> <span class="nx">ADD_TODO</span><span class="p">,</span> <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">});</span>
+</span><span class='line'>  <span class="nx">expect</span><span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">expect</span><span class="p">(</span><span class="nx">state</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">expect</span><span class="p">(</span><span class="nx">state</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">completed</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>测试时传入一个空的state对象和一个action对象，验证返回的state是否增加了一个todo对象。</p>
 
@@ -158,94 +225,159 @@ describe(&lsquo;reducers&rsquo;, () => {
 
 <p>components的测试比较复杂，除了测试render后的页面，还需要测试一些component的DOM方法，比如click，change，doubleclick等。下面是一个Header组件，它有<code>h1</code>和另外一个自定义组件<code>TodoInput</code>，其中还有一个<code>handleSave</code>的自定义方法，所以我们要测试的就主要是render和这个方法。</p>
 
-<p>{% codeblock lang:js %}
-import React, { PropTypes, Component } from &lsquo;react&rsquo;;
-import TodoInput from &lsquo;./TodoInput&rsquo;;
-class Header extends Component {
-  handleSave(text) {</p>
-
-<pre><code>if (text &amp;&amp; text.length !== 0) {
-  this.props.actions.addTodo(text);
-}
-</code></pre>
-
-<p>  }
-  render() {</p>
-
-<pre><code>return (
-  &lt;header className="header"&gt;
-    &lt;h1&gt;Todo List&lt;/h1&gt;
-    &lt;TodoInput newTodo placeholder="请录入..." onSave={(text) =&gt; this.handleSave(text)}/&gt;
-  &lt;/header&gt;
-);
-</code></pre>
-
-<p>  }
-}
-Header.propTypes = {
-  actions: PropTypes.object.isRequired,
-};
-export default Header;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">PropTypes</span><span class="p">,</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">react</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">TodoInput</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="o">/</span><span class="nx">TodoInput</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">class</span> <span class="nx">Header</span> <span class="kr">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">handleSave</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="p">(</span><span class="nx">text</span> <span class="o">&amp;</span><span class="nx">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="nx">amp</span><span class="p">;</span> <span class="nx">text</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">actions</span><span class="p">.</span><span class="nx">addTodo</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="p">(</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">header</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">h1</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="nx">Todo</span> <span class="nx">List</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/h1&amp;gt;</span>
+</span><span class='line'>    <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">TodoInput</span> <span class="nx">newTodo</span> <span class="nx">placeholder</span><span class="o">=</span><span class="s2">&quot;请录入...&quot;</span> <span class="nx">onSave</span><span class="o">=</span><span class="p">{(</span><span class="nx">text</span><span class="p">)</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="k">this</span><span class="p">.</span><span class="nx">handleSave</span><span class="p">(</span><span class="nx">text</span><span class="p">)}</span><span class="o">/&amp;</span><span class="nx">gt</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="err">/header&amp;gt;</span>
+</span><span class='line'><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">Header</span><span class="p">.</span><span class="nx">propTypes</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">actions</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">object</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="kr">export</span> <span class="k">default</span> <span class="nx">Header</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>测试React的component，需要用到react的一个测试组件<a href="https://facebook.github.io/react/docs/test-utils.html">Test Utils</a>，在写测试代码之前，需要先构造组件render的页面，渲染页面的props参数和render页面的对象，这些在后面的测试中非常有用。</p>
 
-<p>{% codeblock lang:js %}
-import sinon from &lsquo;sinon&rsquo;;
-import {expect} from &lsquo;chai&rsquo;;
-import React from &lsquo;react&rsquo;;
-import TestUtils from &lsquo;react-addons-test-utils&rsquo;;
-import Header from &lsquo;components/Header&rsquo;;
-import TodoInput from &lsquo;components/TodoInput&rsquo;;
-function setup() {
-  const actions = {addTodo: sinon.spy()};
-  const props = {actions: actions};
-  const renderer = TestUtils.createRenderer();
-  renderer.render(<Header {...props} />);
-  const output = renderer.getRenderOutput();
-  return {props, output, renderer};
-}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">sinon</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">sinon</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="p">{</span><span class="nx">expect</span><span class="p">}</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">chai</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">react</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">TestUtils</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">react</span><span class="o">-</span><span class="nx">addons</span><span class="o">-</span><span class="nx">test</span><span class="o">-</span><span class="nx">utils</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">Header</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">components</span><span class="o">/</span><span class="nx">Header</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">TodoInput</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">components</span><span class="o">/</span><span class="nx">TodoInput</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kd">function</span> <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">actions</span> <span class="o">=</span> <span class="p">{</span><span class="nx">addTodo</span><span class="o">:</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">spy</span><span class="p">()};</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">props</span> <span class="o">=</span> <span class="p">{</span><span class="nx">actions</span><span class="o">:</span> <span class="nx">actions</span><span class="p">};</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="nx">TestUtils</span><span class="p">.</span><span class="nx">createRenderer</span><span class="p">();</span>
+</span><span class='line'>  <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Header</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">);</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">getRenderOutput</span><span class="p">();</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span><span class="nx">props</span><span class="p">,</span> <span class="nx">output</span><span class="p">,</span> <span class="nx">renderer</span><span class="p">};</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>构造完这些对象后，我们先对render方法进行测试。</p>
 
-<p>{% codeblock lang:js %}
-describe(&lsquo;Header&rsquo;, () => {
-   it(&lsquo;should render correctly&rsquo;, () => {</p>
-
-<pre><code> const { output } = setup();
-
- expect(output.type).to.be.equal('header');
- expect(output.props.className).to.be.equal('header');
-
- const [ h1, input ] = output.props.children;
-
- expect(h1.type).to.be.equal('h1');
- expect(h1.props.children).to.be.equal('Todo List');
-
- expect(input.type).to.be.equal(TodoInput);
- expect(input.props.newTodo).to.be.equal(true);
- expect(input.props.placeholder).to.be.equal('请录入...');
-</code></pre>
-
-<p>   });
-});
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">Header</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>   <span class="nx">it</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">should</span> <span class="nx">render</span> <span class="nx">correctly</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span> <span class="kr">const</span> <span class="p">{</span> <span class="nx">output</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">setup</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'> <span class="nx">expect</span><span class="p">(</span><span class="nx">output</span><span class="p">.</span><span class="nx">type</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">&#39;header&#39;</span><span class="p">);</span>
+</span><span class='line'> <span class="nx">expect</span><span class="p">(</span><span class="nx">output</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">className</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">&#39;header&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'> <span class="kr">const</span> <span class="p">[</span> <span class="nx">h1</span><span class="p">,</span> <span class="nx">input</span> <span class="p">]</span> <span class="o">=</span> <span class="nx">output</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'> <span class="nx">expect</span><span class="p">(</span><span class="nx">h1</span><span class="p">.</span><span class="nx">type</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">);</span>
+</span><span class='line'> <span class="nx">expect</span><span class="p">(</span><span class="nx">h1</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">&#39;Todo List&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'> <span class="nx">expect</span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">type</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">TodoInput</span><span class="p">);</span>
+</span><span class='line'> <span class="nx">expect</span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">newTodo</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'> <span class="nx">expect</span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">placeholder</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">&#39;请录入...&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>   <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>首先测试component的第一层——header，验证其type和className，然后通过children获取其下层组件<code>h1</code>和<code>TodoInput</code>，再对这2个组件进行校验。</p>
 
 <p>接着测试TodoInput的onSave方法，它实际调用的是<code>handleSave</code>方法，方法会判断参数text的长度是否为0来决定是否调用actions的addTodo方法。</p>
 
-<p>{% codeblock lang:js %}
-it(&lsquo;should call addTodo if length of text is greater than 0&rsquo;, () => {
-  const { output, props } = setup();
-  const input = output.props.children[1];
-  input.props.onSave(&lsquo;&rsquo;);
-  expect(props.actions.addTodo.callCount).to.be.equal(0);
-  input.props.onSave(&lsquo;Use Redux&rsquo;);
-  expect(props.actions.addTodo.callCount).to.be.equal(1);
-});
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">it</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">should</span> <span class="nx">call</span> <span class="nx">addTodo</span> <span class="k">if</span> <span class="nx">length</span> <span class="nx">of</span> <span class="nx">text</span> <span class="nx">is</span> <span class="nx">greater</span> <span class="nx">than</span> <span class="mi">0</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="p">{</span> <span class="nx">output</span><span class="p">,</span> <span class="nx">props</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">setup</span><span class="p">();</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">input</span> <span class="o">=</span> <span class="nx">output</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>  <span class="nx">input</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">onSave</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
+</span><span class='line'>  <span class="nx">expect</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">actions</span><span class="p">.</span><span class="nx">addTodo</span><span class="p">.</span><span class="nx">callCount</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">input</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">onSave</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">Use</span> <span class="nx">Redux</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
+</span><span class='line'>  <span class="nx">expect</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">actions</span><span class="p">.</span><span class="nx">addTodo</span><span class="p">.</span><span class="nx">callCount</span><span class="p">).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这里使用sinon把action的addTodo方法mock掉了，然后再验证该方法是否有调用。</p>
 
@@ -253,17 +385,26 @@ it(&lsquo;should call addTodo if length of text is greater than 0&rsquo;, () => 
 
 <p>在写React的components时可能会加上自己定义的一些css文件（或者是less和sass等），这在mocha运行测试时会报错，报无法解析css语法的错误。我们可以通过编写自定义的mocha css编译器来解决这个问题。</p>
 
-<p>{% codeblock css-null-compiler.js lang:js %}
-function noop() {
-  return null;
-}</p>
-
-<p>require.extensions[&lsquo;.styl&rsquo;] = noop;
-// you can add whatever you wanna handle
-require.extensions[&lsquo;.scss&rsquo;] = noop;
-require.extensions[&lsquo;.css&rsquo;] = noop;
-// ..etc
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>css-null-compiler.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">noop</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">require</span><span class="p">.</span><span class="nx">extensions</span><span class="p">[</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="nx">styl</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;]</span> <span class="o">=</span> <span class="nx">noop</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// you can add whatever you wanna handle</span>
+</span><span class='line'><span class="nx">require</span><span class="p">.</span><span class="nx">extensions</span><span class="p">[</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="nx">scss</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;]</span> <span class="o">=</span> <span class="nx">noop</span><span class="p">;</span>
+</span><span class='line'><span class="nx">require</span><span class="p">.</span><span class="nx">extensions</span><span class="p">[</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="nx">css</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;]</span> <span class="o">=</span> <span class="nx">noop</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// ..etc</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>然后在运行mocha时加上刚写的编译器：<code>mocha /your/test.spec.js --compilers css:css-null-compiler.js</code>。</p>
 
@@ -271,15 +412,17 @@ require.extensions[&lsquo;.css&rsquo;] = noop;
 
 <p>在使用webpack时我们会通过别名（alias）的方法来简化我们import其他文件时的路径，比如原来import时需要这样写：</p>
 
-<p>{% codeblock css-null-compiler.js lang:js %}
-import Header from &lsquo;../../src/components/Header&rsquo;;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>css-null-compiler.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">Header</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">components</span><span class="o">/</span><span class="nx">Header</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>使用了alias之后可以这样：</p>
 
-<p>{% codeblock css-null-compiler.js lang:js %}
-import Header from &lsquo;src/components/Header&rsquo;;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>css-null-compiler.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">Header</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">src</span><span class="o">/</span><span class="nx">components</span><span class="o">/</span><span class="nx">Header</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>但是这种路径在测试的时候就会报找不到文件路径的错误，因为直接使用Mocha运行测试时并没有设置路径别名。</p>
 
@@ -287,31 +430,54 @@ import Header from &lsquo;src/components/Header&rsquo;;
 
 <p>首先在mocha的before方法中通过mock-require来替换别名路径，然后在mocha的beforeEach中用proxyquire来调用被测试的module，具体代码如下：</p>
 
-<p>{% codeblock css-null-compiler.js lang:js %}
-import proxyquire from &lsquo;proxyquire&rsquo;;
-import mockrequire from &lsquo;mock-require&rsquo;;</p>
-
-<p>before(() => {
-  // mock the alias path, point to the actual path
-  mockrequire(&lsquo;actions/youractions&rsquo;, &lsquo;your/actual/action/path/from/your/test/file&rsquo;);
-  // or mock with a function
-  mockrequire(&lsquo;actions/youractions&rsquo;, {actionMethod: () => {&hellip;}));</p>
-
-<p>let app;
-beforeEach(() => {
-  app = proxyquire(&lsquo;./app&rsquo;, {});
-});</p>
-
-<p>//test code
-describe(&lsquo;xxx&rsquo;, () => {
-  it(&lsquo;xxxx&rsquo;, () => {</p>
-
-<pre><code>...
-</code></pre>
-
-<p>  });
-});
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>css-null-compiler.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">proxyquire</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">proxyquire</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">mockrequire</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">mock</span><span class="o">-</span><span class="nx">require</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">before</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// mock the alias path, point to the actual path</span>
+</span><span class='line'>  <span class="nx">mockrequire</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">actions</span><span class="o">/</span><span class="nx">youractions</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">your</span><span class="o">/</span><span class="nx">actual</span><span class="o">/</span><span class="nx">action</span><span class="o">/</span><span class="nx">path</span><span class="o">/</span><span class="nx">from</span><span class="o">/</span><span class="nx">your</span><span class="o">/</span><span class="nx">test</span><span class="o">/</span><span class="nx">file</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
+</span><span class='line'>  <span class="c1">// or mock with a function</span>
+</span><span class='line'>  <span class="nx">mockrequire</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">actions</span><span class="o">/</span><span class="nx">youractions</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">{</span><span class="nx">actionMethod</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;}));</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kd">let</span> <span class="nx">app</span><span class="p">;</span>
+</span><span class='line'><span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">app</span> <span class="o">=</span> <span class="nx">proxyquire</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="o">/</span><span class="nx">app</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">{});</span>
+</span><span class='line'><span class="p">});</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="c1">//test code</span>
+</span><span class='line'><span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">xxx</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">it</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">xxxx</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="p">...</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>React的组件中使用了DOM变量</h2>
 
@@ -321,50 +487,89 @@ describe(&lsquo;xxx&rsquo;, () => {
 
 <p>所以我们使用第二种方法，使用<a href="https://github.com/tmpvar/jsdom">jsdom</a>来模拟DOM结构，首先我们要创建一个js文件来模拟DOM。</p>
 
-<p>{% codeblock dom.js lang:js %}
-import jsdom from &lsquo;jsdom&rsquo;;
-import mockrequire from &lsquo;mock-require&rsquo;;
-// setup the simplest document possible
-const doc = jsdom.jsdom(&lsquo;&lt;!doctype html><html><body></body></html>&rsquo;);
-// get the window object out of the document
-const win = doc.defaultView;
-// set globals for mocha that make access to document and window feel
-// natural in the test environment
-global.document = doc;
-global.window = win;
-// from mocha-jsdom <a href="https://github.com/rstacruz/mocha-jsdom/blob/master/index.js#L80">https://github.com/rstacruz/mocha-jsdom/blob/master/index.js#L80</a>
-function propagateToGlobal(window) {
-  for (const key in window) {</p>
-
-<pre><code>if (!window.hasOwnProperty(key)) continue;
-if (key in global) continue;
-global[key] = window[key];
-</code></pre>
-
-<p>  }
-  window.matchMedia = window.matchMedia || function matchMedia() {</p>
-
-<pre><code>return {
-  matches: false,
-  addListener: () =&gt; {},
-  removeListener: () =&gt; {},
-};
-</code></pre>
-
-<p>  };
-}</p>
-
-<p>propagateToGlobal(win);</p>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>dom.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">jsdom</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">jsdom</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">mockrequire</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">mock</span><span class="o">-</span><span class="nx">require</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="c1">// setup the simplest document possible</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">doc</span> <span class="o">=</span> <span class="nx">jsdom</span><span class="p">.</span><span class="nx">jsdom</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="o">!</span><span class="nx">doctype</span> <span class="nx">html</span><span class="o">&gt;&lt;</span><span class="nx">html</span><span class="o">&gt;&lt;</span><span class="nx">body</span><span class="o">&gt;&lt;</span><span class="err">/body&gt;&lt;/html&gt;&amp;rsquo;);</span>
+</span><span class='line'><span class="c1">// get the window object out of the document</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">win</span> <span class="o">=</span> <span class="nx">doc</span><span class="p">.</span><span class="nx">defaultView</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// set globals for mocha that make access to document and window feel</span>
+</span><span class='line'><span class="c1">// natural in the test environment</span>
+</span><span class='line'><span class="nx">global</span><span class="p">.</span><span class="nb">document</span> <span class="o">=</span> <span class="nx">doc</span><span class="p">;</span>
+</span><span class='line'><span class="nx">global</span><span class="p">.</span><span class="nb">window</span> <span class="o">=</span> <span class="nx">win</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// from mocha-jsdom &lt;a href=&quot;https://github.com/rstacruz/mocha-jsdom/blob/master/index.js#L80&quot;&gt;https://github.com/rstacruz/mocha-jsdom/blob/master/index.js#L80&lt;/a&gt;</span>
+</span><span class='line'><span class="kd">function</span> <span class="nx">propagateToGlobal</span><span class="p">(</span><span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">key</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">window</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="k">continue</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nx">key</span> <span class="k">in</span> <span class="nx">global</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+</span><span class='line'><span class="nx">global</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">window</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">}</span>
+</span><span class='line'>  <span class="nb">window</span><span class="p">.</span><span class="nx">matchMedia</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">matchMedia</span> <span class="o">||</span> <span class="kd">function</span> <span class="nx">matchMedia</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">matches</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">addListener</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="p">{},</span>
+</span><span class='line'>  <span class="nx">removeListener</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="p">{},</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">};</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">propagateToGlobal</span><span class="p">(</span><span class="nx">win</span><span class="p">);</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>然后在<code>mocha.opts</code>文件中加入对这个文件的引用，<code>mocha.opts</code>文件是mocha的配置文件，一般放在test目录下面，通过配置该文件可以在调用mocha命令时少写一些参数。</p>
 
-<p>{% codeblock dom.js lang:js %}
-&mdash;require test/dom.js
-&mdash;reporter dot
-&mdash;ui bdd
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>dom.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="o">&amp;</span><span class="nx">mdash</span><span class="p">;</span><span class="nx">require</span> <span class="nx">test</span><span class="o">/</span><span class="nx">dom</span><span class="p">.</span><span class="nx">js</span>
+</span><span class='line'><span class="o">&amp;</span><span class="nx">mdash</span><span class="p">;</span><span class="nx">reporter</span> <span class="nx">dot</span>
+</span><span class='line'><span class="o">&amp;</span><span class="nx">mdash</span><span class="p">;</span><span class="nx">ui</span> <span class="nx">bdd</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这样以后在运行mocha时就会自动加载<code>dom.js</code>文件了。</p>
 ]]></content>

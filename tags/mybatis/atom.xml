@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: mybatis | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/mybatis/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-02-13T09:24:19+08:00</updated>
+  <updated>2018-04-12T23:11:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/11/15/spring4-and-mybatis/"/>
     <updated>2014-11-15T21:09:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/11/15/spring4-and-mybatis</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-11/mybatis-spring.png %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-11/mybatis-spring.png"></p>
 
 <p><a href="http://spring.io/">Spring4</a>已经不支持Ibatis了，但Ibatis的升级版<a href="http://mybatis.github.io/mybatis-3/zh/index.html">Mybatis</a>封装了支持Spring4的组件<a href="http://mybatis.github.io/spring/zh/">mybatis-spring</a>，通过使用它们可以让你在Spring4中轻松地使用Mybatis。</p>
 
@@ -31,15 +31,22 @@
 
 <p>要在工程中引入Mybatis的组件，需要现在gradle的构建文件中增加Mybatis的依赖包。</p>
 
-<p>{% codeblock build.gradle lang:groovy %}
-dependencies {</p>
-
-<pre><code>compile 'org.mybatis:mybatis:3.2.8'
-compile 'org.mybatis:mybatis-spring:1.2.2'
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;compile &#39;org.mybatis:mybatis:3.2.8&#39;</span>
+</span><span class='line'><span class="s">compile &#39;org.mybatis:mybatis-spring:1.2.2&#39;</span>
+</span><span class='line'><span class="s">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>在spring中配置Mybatis</h2>
 
@@ -50,23 +57,42 @@ compile 'org.mybatis:mybatis-spring:1.2.2'
 </ul>
 
 
-<p>{% codeblock spring.xml lang:xml %}</p>
-
-<pre><code>&lt;bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource " destroy-method="close"&gt;
-    &lt;property name="driverClass" value="com.mysql.jdbc.Driver"/&gt;
-    &lt;property name="jdbcUrl" value="jdbc:mysql://192.168.36.10:3306/pebms"/&gt;
-    &lt;property name="user" value="root"/&gt;
-    &lt;property name="password" value="root"/&gt;
-    &lt;property name="acquireIncrement" value="1"/&gt;
-    &lt;property name="initialPoolSize" value="5"/&gt;
-    &lt;property name="maxPoolSize" value="20"/&gt;
-    &lt;property name="minPoolSize" value="5"/&gt;
-    &lt;property name="maxStatements" value="100"/&gt;
-    &lt;property name="testConnectionOnCheckout" value="true"/&gt;
-&lt;/bean&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource &quot; destroy-method=&quot;close&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://192.168.36.10:3306/pebms&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;user&quot; value=&quot;root&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;password&quot; value=&quot;root&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;acquireIncrement&quot; value=&quot;1&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;initialPoolSize&quot; value=&quot;5&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxPoolSize&quot; value=&quot;20&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;minPoolSize&quot; value=&quot;5&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;maxStatements&quot; value=&quot;100&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;testConnectionOnCheckout&quot; value=&quot;true&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>接着定义Mybatis的SessionFactory。
@@ -81,83 +107,142 @@ compile 'org.mybatis:mybatis-spring:1.2.2'
 </ul>
 
 
-<p>{% codeblock spring.xml lang:xml %}</p>
-
-<pre><code>&lt;bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"&gt;
-    &lt;property name="dataSource" ref="dataSource" /&gt;
-    &lt;property name="transactionFactory"&gt;
-        &lt;bean class="org.apache.ibatis.transaction.managed.ManagedTransactionFactory" /&gt;
-    &lt;/property&gt;
-    &lt;property name="configLocation" value="classpath:sql-map-config.xml"/&gt;
-    &lt;property name="mapperLocations" value="classpath:sql-mapping/farmer.xml" /&gt;
-&lt;/bean&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>bean id=&quot;sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;transactionFactory&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>bean class=&quot;org.apache.ibatis.transaction.managed.ManagedTransactionFactory&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/property<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;configLocation&quot; value=&quot;classpath:sql-map-config.xml&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;mapperLocations&quot; value=&quot;classpath:sql-mapping/farmer.xml&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>sql-map-config.xml简单示例如下，设置了缓存，延迟加载，超时时间等属性，更多的配置可以参照<a href="http://mybatis.github.io/mybatis-3/zh/configuration.html#setting">这里</a>。</li>
 </ul>
 
 
-<p>{% codeblock sql-map-config.xml lang:xml %}
-&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
-&lt;!DOCTYPE configuration PUBLIC &ldquo;&ndash;//mybatis.org//DTD Config 3.0//EN&rdquo; &ldquo;<a href="http://mybatis.org/dtd/mybatis-3-config.dtd">http://mybatis.org/dtd/mybatis-3-config.dtd</a>&rdquo;>
-<configuration></p>
-
-<pre><code>&lt;settings&gt;
-    &lt;setting name="cacheEnabled" value="true" /&gt;
-    &lt;setting name="lazyLoadingEnabled" value="true" /&gt;
-    &lt;setting name="multipleResultSetsEnabled" value="true" /&gt;
-    &lt;setting name="useColumnLabel" value="true" /&gt;
-    &lt;setting name="defaultExecutorType" value="REUSE" /&gt;
-    &lt;setting name="defaultStatementTimeout" value="25000" /&gt;
-&lt;/settings&gt;
-</code></pre>
-
-<p></configuration>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>sql-map-config.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;ldquo;</span>1.0<span class="ni">&amp;rdquo;</span> encoding=<span class="ni">&amp;ldquo;</span>UTF-8<span class="ni">&amp;rdquo;</span>?&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE configuration PUBLIC <span class="ni">&amp;ldquo;&amp;ndash;</span>//mybatis.org//DTD Config 3.0//EN<span class="ni">&amp;rdquo;</span> <span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span><span class="nt">&gt;</span>http://mybatis.org/dtd/mybatis-3-config.dtd<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>&gt;
+</span><span class='line'><span class="nt">&lt;configuration&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>settings<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;cacheEnabled&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;multipleResultSetsEnabled&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;useColumnLabel&quot; value=&quot;true&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;defaultExecutorType&quot; value=&quot;REUSE&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>setting name=&quot;defaultStatementTimeout&quot; value=&quot;25000&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/settings<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/configuration&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>sql的映射文件简单示例如下。</li>
 </ul>
 
 
-<p>{% codeblock farmer.xml lang:xml %}
-&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo; ?>
-&lt;!DOCTYPE mapper PUBLIC &ldquo;&ndash;//mybatis.org//DTD Mapper 3.0//EN&rdquo; &ldquo;<a href="http://mybatis.org/dtd/mybatis-3-mapper.dtd">http://mybatis.org/dtd/mybatis-3-mapper.dtd</a>&rdquo; >
-<mapper namespace="com.farmer.baton.repo.FarmerMapper"></p>
-
-<pre><code>&lt;insert id="add-new-farmer" parameterType="com.farmer.baton.model.Farmer"&gt;
-  insert into farmers(id, name, age) values (
-    #{id},
-    #{name},
-    #{age}
-  )
-&lt;/insert&gt;
-</code></pre>
-
-<p></mapper>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>farmer.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;ldquo;</span>1.0<span class="ni">&amp;rdquo;</span> encoding=<span class="ni">&amp;ldquo;</span>UTF-8<span class="ni">&amp;rdquo;</span> ?&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE mapper PUBLIC <span class="ni">&amp;ldquo;&amp;ndash;</span>//mybatis.org//DTD Mapper 3.0//EN<span class="ni">&amp;rdquo;</span> <span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span><span class="nt">&gt;</span>http://mybatis.org/dtd/mybatis-3-mapper.dtd<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span> &gt;
+</span><span class='line'><span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">&quot;com.farmer.baton.repo.FarmerMapper&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>insert id=&quot;add-new-farmer&quot; parameterType=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  insert into farmers(id, name, age) values (
+</span><span class='line'>    #{id},
+</span><span class='line'>    #{name},
+</span><span class='line'>    #{age}
+</span><span class='line'>  )
+</span><span class='line'><span class="ni">&amp;lt;</span>/insert<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/mapper&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>继续在spring.xml文件里进行Mybatis的配置，定义Mybatis的DAO(数据库访问对象)和事务控制，这里配置了DAO的包路径。</li>
 </ul>
 
 
-<p>{% codeblock spring.xml lang:xml %}</p>
-
-<pre><code>&lt;bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"&gt;
-    &lt;property name="basePackage" value="com.farmer.baton.repo" /&gt;
-    &lt;property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /&gt;
-&lt;/bean&gt;
-
-&lt;bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"&gt;
-    &lt;property name="dataSource" ref="dataSource" /&gt;
-&lt;/bean&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;basePackage&quot; value=&quot;com.farmer.baton.repo&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;sqlSessionFactory&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/bean<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Mybatis responsitory编写</h2>
 
@@ -168,48 +253,82 @@ compile 'org.mybatis:mybatis-spring:1.2.2'
 </ul>
 
 
-<p>{% codeblock FarmerRepository.java lang:java %}
-package com.farmer.baton.repo;</p>
-
-<p>import com.farmer.baton.model.Farmer;</p>
-
-<p>import java.util.List;</p>
-
-<p>public interface FarmerRepository {</p>
-
-<pre><code>List&lt;Farmer&gt; findAll();
-</code></pre>
-
-<p>}</p>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">farmer</span><span class="o">.</span><span class="na">baton</span><span class="o">.</span><span class="na">repo</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">com.farmer.baton.model.Farmer</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">FarmerRepository</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmer</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">findAll</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>在xml映射文件里面实现findAll方法，这里要注意方法的签名必须和映射文件的sql的id一致，包括方法名和id一致，方法参数类型和sql的parameterType一致，方法返回类型和sql的resultType或resultMap类型一致。</li>
 </ul>
 
 
-<p>{% codeblock farmer.xml lang:xml %}
-&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo; ?>
-&lt;!DOCTYPE mapper PUBLIC &ldquo;&ndash;//mybatis.org//DTD Mapper 3.0//EN&rdquo; &ldquo;<a href="http://mybatis.org/dtd/mybatis-3-mapper.dtd">http://mybatis.org/dtd/mybatis-3-mapper.dtd</a>&rdquo; >
-<mapper namespace="com.farmer.baton.repo.FarmerRepository"></p>
-
-<pre><code>&lt;resultMap id="baseResultMap" type="com.farmer.baton.model.Farmer"&gt;
-    &lt;id column="id" property="id"/&gt;
-    &lt;result column="name" property="name"/&gt;
-    &lt;result column="age" property="age"/&gt;
-&lt;/resultMap&gt;
-
-&lt;select id="findAll" resultMap="baseResultMap"&gt;
-    select id as id,
-    name as name,
-    age as age
-    from farmers
-&lt;/select&gt;
-</code></pre>
-
-<p></mapper>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>farmer.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;ldquo;</span>1.0<span class="ni">&amp;rdquo;</span> encoding=<span class="ni">&amp;ldquo;</span>UTF-8<span class="ni">&amp;rdquo;</span> ?&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE mapper PUBLIC <span class="ni">&amp;ldquo;&amp;ndash;</span>//mybatis.org//DTD Mapper 3.0//EN<span class="ni">&amp;rdquo;</span> <span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span><span class="nt">&gt;</span>http://mybatis.org/dtd/mybatis-3-mapper.dtd<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span> &gt;
+</span><span class='line'><span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">&quot;com.farmer.baton.repo.FarmerRepository&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>resultMap id=&quot;baseResultMap&quot; type=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>id column=&quot;id&quot; property=&quot;id&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;name&quot; property=&quot;name&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;age&quot; property=&quot;age&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/resultMap<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>select id=&quot;findAll&quot; resultMap=&quot;baseResultMap&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    select id as id,
+</span><span class='line'>    name as name,
+</span><span class='line'>    age as age
+</span><span class='line'>    from farmers
+</span><span class='line'><span class="ni">&amp;lt;</span>/select<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/mapper&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>写好Repository和映射SQL就可以了，程序在调用Repository方法的时候就会自动执行到相关的SQL。</li>
@@ -223,38 +342,62 @@ package com.farmer.baton.repo;</p>
 </ul>
 
 
-<p>{% codeblock spring.xml lang:xml %}
-&lt;beans xmlns:tx=&ldquo;<a href="http://www.springframework.org/schema/tx">http://www.springframework.org/schema/tx</a>&rdquo;</p>
-
-<pre><code>    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"&gt;
-...
-&lt;tx:annotation-driven/&gt;
-...
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>beans xmlns:tx=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/tx&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/tx<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>...
+</span><span class='line'><span class="ni">&amp;lt;</span>tx:annotation-driven/<span class="ni">&amp;gt;</span>
+</span><span class='line'>...
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>然后在调用Repository的方面前面加上Transactional标签，如下所示:</li>
 </ul>
 
 
-<p>{% codeblock FarmerService.java lang:java %}
-@Service
-public class FarmerService {</p>
-
-<pre><code>@Autowired
-private FarmerRepository farmerRepository;
-
-@Transactional
-public void updateTwoFarmers(Farmer farmer1, Farmer farmer2) {
-    farmerRepository.updateZhangsan(farmer1);
-    farmerRepository.updateWangwu(farmer2);
-}
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerService.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Service</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FarmerService</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Autowired</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">FarmerRepository</span> <span class="n">farmerRepository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Transactional</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">updateTwoFarmers</span><span class="o">(</span><span class="n">Farmer</span> <span class="n">farmer1</span><span class="o">,</span> <span class="n">Farmer</span> <span class="n">farmer2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">farmerRepository</span><span class="o">.</span><span class="na">updateZhangsan</span><span class="o">(</span><span class="n">farmer1</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">farmerRepository</span><span class="o">.</span><span class="na">updateWangwu</span><span class="o">(</span><span class="n">farmer2</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Mybatis语法</h2>
 
@@ -265,103 +408,195 @@ public void updateTwoFarmers(Farmer farmer1, Farmer farmer2) {
 </ul>
 
 
-<p>{% codeblock lang:xml %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>insert id=&quot;add-new-farmer&quot; parameterType=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  insert into farmers(id, name, age) values
+</span><span class='line'>  <span class="ni">&amp;lt;</span>foreach collection=&quot;farmers&quot; item=&quot;farmer&quot; separator=&quot;,&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  (
+</span><span class='line'>    #{id},
+</span><span class='line'>    #{name},
+</span><span class='line'>    #{age}
+</span><span class='line'>  )
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/foreach<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/insert<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<pre><code>&lt;insert id="add-new-farmer" parameterType="com.farmer.baton.model.Farmer"&gt;
-  insert into farmers(id, name, age) values 
-  &lt;foreach collection="farmers" item="farmer" separator=","&gt;    
-  (
-    #{id},
-    #{name},
-    #{age}
-  )
-  &lt;/foreach&gt;
-&lt;/insert&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock FarmerRepository lang:java %}</p>
-
-<pre><code>void addFarmers(@Param("farmers") List&lt;Farmer&gt; farmers);
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerRepository </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kt">void</span> <span class="n">addFarmers</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;farmers&quot;</span><span class="o">)</span> <span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmer</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">farmers</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>多参数SQL映射</li>
 </ul>
 
 
-<p>{% codeblock lang:xml %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>resultMap id=&quot;farmer&quot; type=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>id column=&quot;id&quot; property=&quot;id&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;name&quot; property=&quot;name&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;age&quot; property=&quot;age&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/resultMap<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>select id=&quot;selectFarmersByNameAndAge&quot; parameterType=&quot;map&quot; resultMap=&quot;farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  select id as id,
+</span><span class='line'>    name as name,
+</span><span class='line'>    age as age
+</span><span class='line'>    from farmers
+</span><span class='line'>    where name = #{name}
+</span><span class='line'>    and age = #{age}
+</span><span class='line'><span class="ni">&amp;lt;</span>/select<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<pre><code>&lt;resultMap id="farmer" type="com.farmer.baton.model.Farmer"&gt;
-    &lt;id column="id" property="id"/&gt;
-    &lt;result column="name" property="name"/&gt;
-    &lt;result column="age" property="age"/&gt;
-&lt;/resultMap&gt;
-
-&lt;select id="selectFarmersByNameAndAge" parameterType="map" resultMap="farmer"&gt;
-  select id as id,
-    name as name,
-    age as age
-    from farmers
-    where name = #{name}
-    and age = #{age}
-&lt;/select&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock FarmerRepository.java lang:java %}</p>
-
-<pre><code>List&lt;Farmer&gt; selectFarmersByNameAndAge(@Param("name") String name, @Param("age") int age);
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmer</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">selectFarmersByNameAndAge</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="nd">@Param</span><span class="o">(</span><span class="s">&quot;age&quot;</span><span class="o">)</span> <span class="kt">int</span> <span class="n">age</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ul>
 <li>返回对象属性包含List</li>
 </ul>
 
 
-<p>{% codeblock lang:xml %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>resultMap id=&quot;farmer&quot; type=&quot;com.farmer.baton.model.Farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>id column=&quot;id&quot; property=&quot;id&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;name&quot; property=&quot;name&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>result column=&quot;age&quot; property=&quot;age&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>collection property=&quot;farmland&quot; ofType=&quot;com.farmer.baton.model.Farmland&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>result column=&quot;size&quot; property=&quot;size&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/collection<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/resultMap<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>select id=&quot;selectFarmersAndFarmlands&quot; resultMap=&quot;farmer&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  select id as id,
+</span><span class='line'>    name as name,
+</span><span class='line'>    age as age
+</span><span class='line'>    from farmers a
+</span><span class='line'>    left outer join farmerlands b on a.id = b.farmer_id
+</span><span class='line'><span class="ni">&amp;lt;</span>/select<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<pre><code>&lt;resultMap id="farmer" type="com.farmer.baton.model.Farmer"&gt;
-    &lt;id column="id" property="id"/&gt;
-    &lt;result column="name" property="name"/&gt;
-    &lt;result column="age" property="age"/&gt;
-    &lt;collection property="farmland" ofType="com.farmer.baton.model.Farmland"&gt;
-        &lt;result column="size" property="size"/&gt;
-    &lt;/collection&gt;
-&lt;/resultMap&gt;
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>FarmerRepository.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmer</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">selectFarmersAndFarmlands</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-&lt;select id="selectFarmersAndFarmlands" resultMap="farmer"&gt;
-  select id as id,
-    name as name,
-    age as age
-    from farmers a 
-    left outer join farmerlands b on a.id = b.farmer_id
-&lt;/select&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock FarmerRepository.java lang:java %}</p>
-
-<pre><code>List&lt;Farmer&gt; selectFarmersAndFarmlands();
-</code></pre>
-
-<p>{% endcodeblock %}</p>
-
-<p>{% codeblock Farmer.java lang:java %}</p>
-
-<pre><code>private String name;
-private int age;
-private List&lt;Farmland&gt; farmlands;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Farmer.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'><span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Farmland</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">farmlands</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>具体的Demo可以参考我的github工程<a href="https://github.com/zhaozhiming/spring4-mybatis">spring4-mybatis</a>。</p>
 ]]></content>

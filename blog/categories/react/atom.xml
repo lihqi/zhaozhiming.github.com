@@ -4,7 +4,7 @@
   <title><![CDATA[Category: react | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/blog/categories/react/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-02-13T09:24:19+08:00</updated>
+  <updated>2018-04-12T23:11:35+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2017/11/08/run-react-test-with-react-version-16/"/>
     <updated>2017-11-08T20:36:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2017/11/08/run-react-test-with-react-version-16</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2017/11/react-test.png 400 300 %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2017/11/react-test.png" width="400" height="300"></p>
 
 <p>React 升级到版本 16 之后，各方面都有不少改进，最重要的是完全向后兼容，功能代码几乎不用怎么修改就可以使用新版本。但是测试代码就不一定了，如果你是使用 <code>enzyme</code> 跑测试的话，以前的测试可能会跑不起来，那么需要如何修改呢？下面我们就来看一下吧。</p>
 
@@ -31,29 +31,51 @@
 
 <p>可以暂时不管该测试对应的功能代码是怎么样的，因为校验的结果是组件快照。</p>
 
-<p>{% codeblock lang:js %}
-// Demo.js
-import React from &lsquo;react&rsquo;;</p>
-
-<p>export default () => <div>Hello World</div>;</p>
-
-<p>// Demo.test.js
-import React from &lsquo;react&rsquo;;
-import { shallow } from &lsquo;enzyme&rsquo;;
-import toJson from &lsquo;enzyme-to-json&rsquo;;
-import Demo from &lsquo;./Demo&rsquo;;</p>
-
-<p>describe(&lsquo;Demo Component&rsquo;, () => {
-  it(&lsquo;should render correctly&rsquo;, () => {</p>
-
-<pre><code>const wrapper = shallow(&lt;Demo /&gt;);
-expect(toJson(wrapper)).toMatchSnapshot();
-</code></pre>
-
-<p>  });
-});</p>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// Demo.js</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">react</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="kr">export</span> <span class="k">default</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="nx">World</span><span class="o">&lt;</span><span class="err">/div&gt;;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="c1">// Demo.test.js</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">react</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="p">{</span> <span class="nx">shallow</span> <span class="p">}</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">enzyme</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">toJson</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">enzyme</span><span class="o">-</span><span class="nx">to</span><span class="o">-</span><span class="nx">json</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">Demo</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="o">/</span><span class="nx">Demo</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">Demo</span> <span class="nx">Component</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">it</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">should</span> <span class="nx">render</span> <span class="nx">correctly</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kr">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">Demo</span> <span class="o">/&amp;</span><span class="nx">gt</span><span class="p">;);</span>
+</span><span class='line'><span class="nx">expect</span><span class="p">(</span><span class="nx">toJson</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">)).</span><span class="nx">toMatchSnapshot</span><span class="p">();</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>React16 之前</h2>
 
@@ -68,17 +90,25 @@ expect(toJson(wrapper)).toMatchSnapshot();
 </ul>
 
 
-<p>{% codeblock lang:bash %}
-PASS  src/Demo.test.js
-  Demo Component</p>
-
-<pre><code>✓ should render correctly (12ms)
-</code></pre>
-
-<p>Test Suites: 1 passed, 1 total
-Tests:       1 passed, 1 total
-Snapshots:   1 passed, 1 total
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>PASS  src/Demo.test.js
+</span><span class='line'>  Demo Component&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;✓ should render correctly <span class="o">(</span>12ms<span class="o">)</span>
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Test Suites: 1 passed, 1 total
+</span><span class='line'>Tests:       1 passed, 1 total
+</span><span class='line'>Snapshots:   1 passed, 1 total
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>React16 之后</h2>
 
@@ -90,20 +120,31 @@ Snapshots:   1 passed, 1 total
 </ul>
 
 
-<p>{% codeblock lang:bash %}
-FAIL  src/Demo.test.js
-  ● Test suite failed to run</p>
-
-<pre><code>Cannot find module 'react-dom/lib/ReactTestUtils' from 'index.js'
-
-  at Resolver.resolveModule (node_modules/jest-resolve/build/index.js:179:17)
-  at Object.&lt;anonymous&gt; (node_modules/react-addons-test-utils/index.js:1:107)
-</code></pre>
-
-<p>Test Suites: 1 failed, 1 total
-Tests:       0 total
-Snapshots:   0 total
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>FAIL  src/Demo.test.js
+</span><span class='line'>  ● Test suite failed to run&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;Cannot find module <span class="s1">&#39;react-dom/lib/ReactTestUtils&#39;</span> from <span class="s1">&#39;index.js&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  at Resolver.resolveModule <span class="o">(</span>node_modules/jest-resolve/build/index.js:179:17<span class="o">)</span>
+</span><span class='line'>  at Object.&amp;lt;anonymous&amp;gt; <span class="o">(</span>node_modules/react-addons-test-utils/index.js:1:107<span class="o">)</span>
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Test Suites: 1 failed, 1 total
+</span><span class='line'>Tests:       0 total
+</span><span class='line'>Snapshots:   0 total
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>enzyme 的版本升级</h2>
 
@@ -116,12 +157,15 @@ Snapshots:   0 total
 </ul>
 
 
-<p>{% codeblock lang:js %}
-import Enzyme from &lsquo;enzyme&rsquo;;
-import Adapter from &lsquo;enzyme-adapter-react-16&rsquo;;</p>
-
-<p>Enzyme.configure({ adapter: new Adapter() });
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">Enzyme</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">enzyme</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span>
+</span><span class='line'><span class="kr">import</span> <span class="nx">Adapter</span> <span class="nx">from</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">enzyme</span><span class="o">-</span><span class="nx">adapter</span><span class="o">-</span><span class="nx">react</span><span class="o">-</span><span class="mi">16</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;;</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Enzyme</span><span class="p">.</span><span class="nx">configure</span><span class="p">({</span> <span class="nx">adapter</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Adapter</span><span class="p">()</span> <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>OK！原来的测试通过了！</p>
 
@@ -169,22 +213,35 @@ import Adapter from &lsquo;enzyme-adapter-react-16&rsquo;;</p>
 
 <p>虽然测试现在已经跑通了，但是你可能会遇到下面这个警告：</p>
 
-<p>{% codeblock lang:bash %}
-console.error node_modules/fbjs/lib/warning.js:33</p>
-
-<pre><code>Warning: React depends on requestAnimationFrame. Make sure that you load a polyfill in older browsers. http://fb.me/react-polyfills
-</code></pre>
-
-<p> PASS  src/Demo.test.js
-  Demo Component</p>
-
-<pre><code>✓ should render correctly (8ms)
-</code></pre>
-
-<p>Test Suites: 1 passed, 1 total
-Tests:       1 passed, 1 total
-Snapshots:   1 passed, 1 total
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>console.error node_modules/fbjs/lib/warning.js:33&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;Warning: React depends on requestAnimationFrame. Make sure that you load a polyfill in older browsers. http://fb.me/react-polyfills
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt; PASS  src/Demo.test.js
+</span><span class='line'>  Demo Component&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;✓ should render correctly <span class="o">(</span>8ms<span class="o">)</span>
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Test Suites: 1 passed, 1 total
+</span><span class='line'>Tests:       1 passed, 1 total
+</span><span class='line'>Snapshots:   1 passed, 1 total
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>原因是测试用到的<code>jsdom</code> 包还没有提供<code>requestAnimationFrame</code>，所以会报这个警告。</p>
 
