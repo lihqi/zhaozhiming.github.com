@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: requirejs | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/requirejs/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-04-12T23:33:42+08:00</updated>
+  <updated>2018-04-18T08:44:40+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/12/19/requirejs-simple-use/"/>
     <updated>2014-12-19T11:05:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/12/19/requirejs-simple-use</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2014-12/requirejs.png"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2014-12/requirejs.png %}</p>
 
 <p>在没有<a href="http://requirejs.org/">RequireJS</a>以前，我们的html页面都需要配置很多js文件，有了RequireJS以后，我们只需要简单的一个RequireJS的文件就可以了。</p>
 
@@ -29,189 +29,106 @@
 
 <p>先看下我们的工程目录，主要引入了Jqury、AngularJS和RequireJS这几个js文件，login.html、main.js和login.js是我们自己的文件。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&amp;mdash;webapp
-</span><span class='line'>  |&amp;mdash;resources&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;|--scripts
-</span><span class='line'>  |--vendor
-</span><span class='line'>    |--jquery.js
-</span><span class='line'>    |--angularjs.js
-</span><span class='line'>    |--requirejs.js
-</span><span class='line'>  |--login.js
-</span><span class='line'>  |--main.js
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;  |&amp;mdash;WEB-INF
-</span><span class='line'>  |&amp;mdash;login.html
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+&mdash;webapp
+  |&mdash;resources</p>
+
+<pre><code>|--scripts
+  |--vendor
+    |--jquery.js
+    |--angularjs.js
+    |--requirejs.js
+  |--login.js
+  |--main.js  
+</code></pre>
+
+<p>  |&mdash;WEB-INF
+  |&mdash;login.html
+{% endcodeblock %}</p>
 
 <h2>在html页面中加入RequireJS</h2>
 
 <p>首先在html页面我们先引入requirejs，可以看到script标签中有个data-main属性，这个是RequireJS的属性标签，指向我们工程里面的main.js文件，注意这里不需要写<code>.js</code>后缀。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>index.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE html&gt;
-</span><span class='line'><span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span> <span class="na">ng-app=</span><span class="s">&quot;app&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;head&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>meta charset=&quot;UTF-8&quot;<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>title<span class="ni">&amp;gt;</span>My App<span class="ni">&amp;lt;</span>/title<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>script src=&quot;resources/scripts/vendor/require.js&quot; data-main=&quot;resources/srcipts/main&quot;<span class="ni">&amp;gt;&amp;lt;</span>/script<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;/head&gt;</span>
-</span><span class='line'><span class="nt">&lt;body&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;LoginForm&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_check&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">&quot;display: block;&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;div&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;h1&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;ui-icon add&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>用户登录
-</span><span class='line'>                <span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;error&quot;</span> <span class="na">style=</span><span class="s">&quot;display: none; color: #c9302c&quot;</span> <span class="na">align=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;h3&gt;</span>认证失败，请重新登录<span class="nt">&lt;/h3&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;logout&quot;</span> <span class="na">style=</span><span class="s">&quot;display: none; color: #02547f&quot;</span> <span class="na">align=</span><span class="s">&quot;center&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;h3&gt;</span>已成功登出<span class="nt">&lt;/h3&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="nt">&lt;ul&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;li&gt;&lt;label&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;span&gt;</span>用户名<span class="nt">&lt;/span&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;j_username&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;/label&gt;&lt;/li&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;li&gt;&lt;label&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;span&gt;</span>密码<span class="nt">&lt;/span&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="na">name=</span><span class="s">&quot;j_password&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;/label&gt;&lt;/li&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/ul&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;div&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">name=</span><span class="s">&quot;logon&quot;</span> <span class="na">value=</span><span class="s">&quot;Logon&quot;</span><span class="nt">&gt;</span>登录<span class="nt">&lt;/button&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/form&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;/body&gt;</span>
-</span><span class='line'><span class="nt">&lt;/html&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock index.html lang:html %}
+&lt;!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head></p>
+
+<pre><code>&lt;meta charset="UTF-8"&gt;
+&lt;title&gt;My App&lt;/title&gt;
+&lt;script src="resources/scripts/vendor/require.js" data-main="resources/srcipts/main"&gt;&lt;/script&gt;
+</code></pre>
+
+<p></head>
+<body></p>
+
+<div>
+    <form name="LoginForm" method="post" action="j_spring_security_check">
+        <div style="display: block;">
+            <div>
+                <h1>
+                    <span class="ui-icon add"></span>用户登录
+                </h1>
+            </div>
+            <div class="content">
+                <div id="error" style="display: none; color: #c9302c" align="center">
+                    <h3>认证失败，请重新登录</h3>
+                </div>
+                <div id="logout" style="display: none; color: #02547f" align="center">
+                    <h3>已成功登出</h3>
+                </div>
+
+                <ul>
+                    <li><label>
+                        <span>用户名</span>
+                        <input type="text" name="j_username">
+                    </label></li>
+                    <li><label>
+                        <span>密码</span>
+                        <input type="password" name="j_password">
+                    </label></li>
+                </ul>
+            </div>
+            <div>
+                <button type="submit" name="logon" value="Logon">登录</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<p></body>
+</html>
+{% endcodeblock %}</p>
 
 <h2>main.js</h2>
 
 <p>下面是我们的main.js。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>main.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">require</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
-</span><span class='line'>   <span class="nx">paths</span><span class="o">:</span><span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span>  <span class="nx">angular</span><span class="o">:</span> <span class="s1">&#39;vendor/angular&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">jquery</span><span class="o">:</span> <span class="s1">&#39;vendor/jquery&#39;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>   <span class="p">},</span>
-</span><span class='line'>   <span class="nx">shim</span><span class="o">:</span><span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span>  <span class="nx">angular</span><span class="o">:</span><span class="p">{</span>
-</span><span class='line'>     <span class="nx">deps</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;jquery&#39;</span><span class="p">],</span>
-</span><span class='line'>     <span class="nx">exports</span><span class="o">:</span> <span class="s1">&#39;angular&#39;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>   <span class="p">}</span> <span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">});</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">require</span><span class="p">([</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">angular</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">login</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">angular</span><span class="p">)</span> <span class="p">{</span>  <span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock main.js lang:js %}
+require.config({
+   paths:{</p>
+
+<pre><code>  angular: 'vendor/angular',
+  jquery: 'vendor/jquery'
+</code></pre>
+
+<p>   },
+   shim:{</p>
+
+<pre><code>  angular:{
+     deps: ['jquery'],
+     exports: 'angular'
+  }
+</code></pre>
+
+<p>   } <br/>
+});</p>
+
+<p>require([&lsquo;angular&rsquo;, &lsquo;login&rsquo;], function(angular) {  <br/>
+});
+{% endcodeblock %}</p>
 
 <ul>
 <li><code>paths</code>里面指定了jqury和angularjs对应的js文件路径，同样不需要写js后缀，并给他们起了对应的别名。</li>
@@ -226,46 +143,27 @@
 
 <p>比如下面的js文件使用了jquery的功能，我们可以在<code>define</code>后面添加<code>angular</code>这个名称，因为前面在<code>shim</code>属性里面已经定义了<code>angular</code>依赖<code>jquery</code>，所以使用<code>angular</code>也可以用到<code>jquery</code>的功能。(当然我们也可以单独添加<code>jquery</code>，但这样就使用不到<code>angular</code>的功能了)</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>login.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">define</span><span class="p">([</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">angular</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">angular</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">function</span> <span class="nx">getParameterByName</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\[]/</span><span class="p">,</span> <span class="s2">&quot;\\[&quot;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\]]/</span><span class="p">,</span> <span class="s2">&quot;\\]&quot;</span><span class="p">);</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">regex</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;[\\?&amp;amp;]&quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;=([^&amp;amp;#]*)&quot;</span><span class="p">),</span>
-</span><span class='line'>        <span class="nx">results</span> <span class="o">=</span> <span class="nx">regex</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">results</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="s2">&quot;&quot;</span> <span class="o">:</span> <span class="nb">decodeURIComponent</span><span class="p">(</span><span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\+/g</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">));</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="nx">getParameterByName</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#error&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="nx">getParameterByName</span><span class="p">(</span><span class="s2">&quot;logout&quot;</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#logout&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock login.js lang:js %}
+define([&lsquo;angular&rsquo;], function(angular) {</p>
+
+<pre><code>function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&amp;]" + name + "=([^&amp;#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+if(getParameterByName("error")) {
+    $("#error").show();
+}
+
+if(getParameterByName("logout")) {
+    $("#logout").show();
+}   
+</code></pre>
+
+<p>});
+{% endcodeblock %}</p>
 ]]></content>
   </entry>
   

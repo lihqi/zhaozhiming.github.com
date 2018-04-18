@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: docusaurus | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/docusaurus/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-04-12T23:33:42+08:00</updated>
+  <updated>2018-04-18T08:44:40+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2018/01/30/docusaurus-vs-gatsby/"/>
     <updated>2018-01-30T20:01:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2018/01/30/docusaurus-vs-gatsby</id>
-    <content type="html"><![CDATA[<p><img src="/images/post/2018/01/vs.jpg" width="400" height="350"></p>
+    <content type="html"><![CDATA[<p>{% img /images/post/2018/01/vs.jpg 400 350 %}</p>
 
 <p>最近 Facebook 推出了一个文档工具 <a href="http://docusaurus.io/">Docusaurus</a>，既可以用来做产品网站，也可以用来写博客，还提供很多很有用的功能，最重要的是它是基于 React 实现的。</p>
 
@@ -33,7 +33,9 @@
 
 <p>首先我们先了解一下什么是 CMS，下面是维基百科的定义：</p>
 
-<p><blockquote><p>内容管理系统（英语：content management system，缩写为 CMS）是指在一个合作模式下，用于管理工作流程的一套制度。该系统可应用于手工操作中，也可以应用到电脑或网络里。作为一种中央储存器（central repository），内容管理系统可将相关内容集中储存并具有群组管理、版本控制等功能。版本控制是内容管理系统的一个主要优势。</p><footer><strong>维基百科</strong></footer></blockquote></p>
+<p>{% blockquote 维基百科 %}
+内容管理系统（英语：content management system，缩写为 CMS）是指在一个合作模式下，用于管理工作流程的一套制度。该系统可应用于手工操作中，也可以应用到电脑或网络里。作为一种中央储存器（central repository），内容管理系统可将相关内容集中储存并具有群组管理、版本控制等功能。版本控制是内容管理系统的一个主要优势。
+{% endblockquote %}</p>
 
 <p>看完是不是对什么是 CMS 更懵了？没关系，我们接着往下看。</p>
 
@@ -83,85 +85,54 @@
 
 <p><code>Docusaurus</code>是集成度比较高的一个产品，所以用户可扩展的东西并不多，比如首页和博客文章页面的布局用户是无法进行大幅度改动的，但可以进行一些小范围的修改。比如在<code>siteConfig.js</code>里面有个属性是<code>colors</code>，里面可以让用户自定义网站的<code>主颜色</code>和<code>次要颜色</code>。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>  <span class="err">/&lt;em&gt; colors for website &lt;/em&gt;/</span>
-</span><span class='line'>  <span class="nx">colors</span><span class="o">:</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">primaryColor</span><span class="o">:</span> <span class="s1">&#39;#2E8555&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="nx">secondaryColor</span><span class="o">:</span> <span class="s1">&#39;#205C3B&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">},</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+  /<em> colors for website </em>/
+  colors: {</p>
+
+<pre><code>primaryColor: '#2E8555',
+secondaryColor: '#205C3B',
+</code></pre>
+
+<p>  },
+{% endcodeblock %}</p>
 
 <p>另外<code>Docusaurus</code>提供了一个<code>custom.css</code>文件，让用户可以在里面通过覆盖原来的 class 来达到改变样式的目的。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="o">/&lt;</span><span class="nt">em</span><span class="o">&gt;</span> <span class="nt">your</span> <span class="nt">custom</span> <span class="nt">css</span> <span class="o">&lt;/</span><span class="nt">em</span><span class="o">&gt;/&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span><span class="k">@media</span> <span class="nt">only</span> <span class="nt">screen</span> <span class="nt">and</span> <span class="o">(</span><span class="nt">min-device-width</span><span class="o">:</span> <span class="nt">360px</span><span class="o">)</span> <span class="nt">and</span> <span class="o">(</span><span class="nt">max-device-width</span><span class="o">:</span> <span class="nt">736px</span><span class="o">)</span> <span class="p">{}</span><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span><span class="k">@media</span> <span class="nt">only</span> <span class="nt">screen</span> <span class="nt">and</span> <span class="o">(</span><span class="nt">min-width</span><span class="o">:</span> <span class="nt">1024px</span><span class="o">)</span> <span class="p">{}</span><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span><span class="k">@media</span> <span class="nt">only</span> <span class="nt">screen</span> <span class="nt">and</span> <span class="o">(</span><span class="nt">max-width</span><span class="o">:</span> <span class="nt">1023px</span><span class="o">)</span> <span class="p">{}</span><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span><span class="k">@media</span> <span class="nt">only</span> <span class="nt">screen</span> <span class="nt">and</span> <span class="o">(</span><span class="nt">min-width</span><span class="o">:</span> <span class="nt">1400px</span><span class="o">)</span> <span class="p">{}</span><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span><span class="k">@media</span> <span class="nt">only</span> <span class="nt">screen</span> <span class="nt">and</span> <span class="o">(</span><span class="nt">min-width</span><span class="o">:</span> <span class="nt">1500px</span><span class="o">)</span> <span class="p">{}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:css %}
+/<em> your custom css </em>/</p>
+
+<p>@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {}</p>
+
+<p>@media only screen and (min-width: 1024px) {}</p>
+
+<p>@media only screen and (max-width: 1023px) {}</p>
+
+<p>@media only screen and (min-width: 1400px) {}</p>
+
+<p>@media only screen and (min-width: 1500px) {}
+{% endcodeblock %}</p>
 
 <p><code>Gatsby</code>在这一点上比<code>Docusaurus</code>要好很多，因为<code>Gatsyb</code>上所有页面文件用户都可以随意修改，包括页面的内容和样式。</p>
 
 <p><code>Gatsby</code>的 src 目录结构如下：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>.
-</span><span class='line'>├── components
-</span><span class='line'>│   ├── Bio.js
-</span><span class='line'>│   └── profile-pic.jpg
-</span><span class='line'>├── layouts
-</span><span class='line'>│   └── index.js
-</span><span class='line'>├── pages
-</span><span class='line'>│   ├── hello-world
-</span><span class='line'>│   │   ├── index.md
-</span><span class='line'>│   │   └── salty_egg.jpg
-</span><span class='line'>│   ├── index.js
-</span><span class='line'>│   └── my-second-post
-</span><span class='line'>│       └── index.md
-</span><span class='line'>└── templates
-</span><span class='line'>    └── blog-post.js
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:sh %}
+.
+├── components
+│   ├── Bio.js
+│   └── profile-pic.jpg
+├── layouts
+│   └── index.js
+├── pages
+│   ├── hello-world
+│   │   ├── index.md
+│   │   └── salty_egg.jpg
+│   ├── index.js
+│   └── my-second-post
+│       └── index.md
+└── templates
+    └── blog-post.js
+{% endcodeblock %}</p>
 
 <ul>
 <li>layouts/index.js: 这是网站页面整体布局的文件，可以在这里定义页面头部，底部和侧边栏，然后通过<code>this.props.children</code>来渲染子页面。有 2 种子页面，一种是网站首页页面，另一种是博客文章的页面。</li>
@@ -184,27 +155,20 @@
 
 <p><code>Docusaurus</code>本身集成了 <a href="https://www.algolia.com/">algolia</a> 来做站内文档检索功能，用户只需要在<code>siteConfig.js</code>中配置好<code>algolia</code>的选项就好了。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>  <span class="nx">algolia</span><span class="o">:</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">apiKey</span><span class="o">:</span>
-</span><span class='line'>  <span class="s2">&quot;your api key&quot;</span><span class="p">,</span>
-</span><span class='line'><span class="nx">indexName</span><span class="o">:</span> <span class="s2">&quot;your index name&quot;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">},</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+  algolia: {</p>
+
+<pre><code>apiKey:
+  "your api key",
+indexName: "your index name"
+</code></pre>
+
+<p>  },
+{% endcodeblock %}</p>
 
 <p>这是集成了<code>algolia</code>检索功能的截图：</p>
 
-<p><img src="/images/post/2018/01/algolia.png"></p>
+<p>{% img /images/post/2018/01/algolia.png %}</p>
 
 <p><code>Gatsby</code>本身不具备站内检索功能，但它可以通过<code>GraphQL</code>进行文章查询，所以我觉得可以通过<code>GraphQL</code>来实现站内检索的功能，但这个需要用户自己去实现了。</p>
 
@@ -230,33 +194,21 @@
 
 <p>而之前我们说了，<code>Gatsby</code>是一个拥有丰富插件的框架，它就提供了这样一个<a href="https://www.gatsbyjs.org/packages/gatsby-source-contentful/">插件</a> 来让网站和 <code>contentful</code>进行集成，配置内容如下：</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// In your gatsby-config.js</span>
-</span><span class='line'><span class="nx">plugins</span><span class="o">:</span> <span class="p">[</span>
-</span><span class='line'>  <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">resolve</span><span class="o">:</span> <span class="err">`</span><span class="nx">gatsby</span><span class="o">-</span><span class="nx">source</span><span class="o">-</span><span class="nx">contentful</span><span class="err">`</span><span class="p">,</span>
-</span><span class='line'><span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">spaceId</span><span class="o">:</span> <span class="err">`</span><span class="nx">your_space_id</span><span class="err">`</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">accessToken</span><span class="o">:</span> <span class="err">`</span><span class="nx">your_access_token</span><span class="err">`</span><span class="p">,</span>
-</span><span class='line'><span class="p">},</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">},</span>
-</span><span class='line'><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:js %}
+// In your gatsby-config.js
+plugins: [
+  {</p>
+
+<pre><code>resolve: `gatsby-source-contentful`,
+options: {
+  spaceId: `your_space_id`,
+  accessToken: `your_access_token`,
+},
+</code></pre>
+
+<p>  },
+];
+{% endcodeblock %}</p>
 
 <p>而<code>Docusaurus</code>不具备这方面的功能。</p>
 
