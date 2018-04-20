@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: jenkins | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/jenkins/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-04-18T08:44:40+08:00</updated>
+  <updated>2018-04-20T20:32:31+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -31,51 +31,76 @@
 
 <p>再来是修改项目的pom文件，需要增加一些信息，这样发布的时候才可以正确显示你的插件内容。首先是你的源码控制管理配置，增加配置如下：</p>
 
-<p>{% codeblock pom.xml lang:xml %}
-  <scm></p>
-
-<pre><code>&lt;connection&gt;scm:git:ssh://github.com/jenkinsci/MYPLLUGINNAME.git&lt;/connection&gt;
-&lt;developerConnection&gt;scm:git:ssh://git@github.com/jenkinsci/MYPLUGINNAME.git&lt;/developerConnection&gt;
-&lt;url&gt;https://github.com/jenkinsci/MYPLUGINNAME&lt;/url&gt;
-</code></pre>
-
-<p>  </scm>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>pom.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;scm&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>connection<span class="ni">&amp;gt;</span>scm:git:ssh://github.com/jenkinsci/MYPLLUGINNAME.git<span class="ni">&amp;lt;</span>/connection<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>developerConnection<span class="ni">&amp;gt;</span>scm:git:ssh://git@github.com/jenkinsci/MYPLUGINNAME.git<span class="ni">&amp;lt;</span>/developerConnection<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>url<span class="ni">&amp;gt;</span>https://github.com/jenkinsci/MYPLUGINNAME<span class="ni">&amp;lt;</span>/url<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/scm&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>插件的WIKI页面（后面会说明如何添加WIKI）：</p>
 
-<p>{% codeblock pom.xml lang:xml %}
-<project>
-  &hellip;
-  <url><a href="http://wiki.jenkins-ci.org/display/JENKINS/My+Plugin">http://wiki.jenkins-ci.org/display/JENKINS/My+Plugin</a></url>
-</project>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>pom.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;project&gt;</span>
+</span><span class='line'>  <span class="ni">&amp;hellip;</span>
+</span><span class='line'>  <span class="nt">&lt;url&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://wiki.jenkins-ci.org/display/JENKINS/My+Plugin&quot;</span><span class="nt">&gt;</span>http://wiki.jenkins-ci.org/display/JENKINS/My+Plugin<span class="nt">&lt;/a&gt;&lt;/url&gt;</span>
+</span><span class='line'><span class="nt">&lt;/project&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>还有维护人员信息：</p>
 
-<p>{% codeblock pom.xml lang:xml %}
-<project>
-  &hellip;
-  <developers></p>
-
-<pre><code>&lt;developer&gt;
-  &lt;id&gt;devguy&lt;/id&gt;
-  &lt;name&gt;Developer Guy&lt;/name&gt;
-  &lt;email&gt;devguy@developerguy.blah&lt;/email&gt;
-&lt;/developer&gt;
-</code></pre>
-
-<p>  </developers>
-</project>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>pom.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;project&gt;</span>
+</span><span class='line'>  <span class="ni">&amp;hellip;</span>
+</span><span class='line'>  <span class="nt">&lt;developers&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>developer<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>devguy<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>name<span class="ni">&amp;gt;</span>Developer Guy<span class="ni">&amp;lt;</span>/name<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>email<span class="ni">&amp;gt;</span>devguy@developerguy.blah<span class="ni">&amp;lt;</span>/email<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/developer<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/developers&gt;</span>
+</span><span class='line'><span class="nt">&lt;/project&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>发布插件</h3>
 
 <p>最简单的方式就是执行以下命令：</p>
 
-<p>{% codeblock lang:sh %}
- mvn release:prepare release:perform
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'> mvn release:prepare release:perform
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>如果发布成功（窗口提示BUILD SUCCESS 字样）就表示你的插件已经发布到jenkins的更新中心了，不过一般要等个一到半天更新中心才会更新。</p>
 
@@ -85,9 +110,9 @@
 
 <p><strong>发布出错回滚。</strong>如果在插件发布的过程中出错，重新再执行上面的命令是不行的，会报版本已存在的错误，需要先执行一下下面的命令来清除出错的发布信息。</p>
 
-<p>{% codeblock lang:sh %}
- mvn release:clean
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'> mvn release:clean
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p><strong>Github 无法push。</strong>发布的过程中会使用git将你的代码push到github上，有时候会报权限不允许的问题（Permission denied），那可能是你的github配置有问题，可以参考<a href="https://help.github.com/articles/generating-ssh-keys">这里</a>来设置你的SSH或者<a href="https://help.github.com/articles/error-permission-denied-publickey">这里</a>看看是否其他问题。</p>
 
@@ -98,10 +123,11 @@
 <p>首先要在jenkins官网上申请一个帐号，申请成功之后你就可以在插件主页上添加你的插件页面了。去到插件主页面（<a href="https://wiki.jenkins-ci.org/display/JENKINS/Plugins">https://wiki.jenkins-ci.org/display/JENKINS/Plugins</a>），点击右上角的Add链接，选择page选项，就可以进入页面编写了。<br/>
 在WIKI页面中写上你的插件名称，内容要加上下面的语句：</p>
 
-<p>{% codeblock lang:html %}
- {jenkins-plugin-info:pluginId=your-artifact}
-{excerpt}  your plugin description  {excerpt}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'> {jenkins-plugin-info:pluginId=your-artifact}
+</span><span class='line'>{excerpt}  your plugin description  {excerpt}
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>your-artifact要写你的插件id，这样页面就会自动去加载插件的相关信息。excerpt里面的是你插件描述，会显示在插件主页上。</p>
 
@@ -147,22 +173,32 @@
 
 <p>Action是插件用来在Job或Build页面增加功能的一种主要方式，是Jenkins最常用的一个扩展点。从下图中可以看出什么是Action，就是页面左边菜单栏的一个菜单项，还可以在右边的主页面显示相应的功能。</p>
 
-<p>{% img <a href="https://wiki.jenkins-ci.org/download/thumbnails/58001011/actions.png">https://wiki.jenkins-ci.org/download/thumbnails/58001011/actions.png</a> %}</p>
+<p><img class="<a" src="href="https://wiki.jenkins-ci.org/download/thumbnails/58001011/actions.png">https://wiki.jenkins-ci.org/download/thumbnails/58001011/actions.png</a>"></p>
 
 <p>每个继承了Action这个扩展点的插件都要实现3个方法，方法如下：</p>
 
-<p>{% codeblock Action.java lang:java %}
-public interface Action extends hudson.model.ModelObject {</p>
-
-<pre><code>java.lang.String getIconFileName();
-
-java.lang.String getDisplayName();
-
-java.lang.String getUrlName();
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Action.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Action</span> <span class="kd">extends</span> <span class="n">hudson</span><span class="o">.</span><span class="na">model</span><span class="o">.</span><span class="na">ModelObject</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span> <span class="n">getIconFileName</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span> <span class="nf">getDisplayName</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span> <span class="nf">getUrlName</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>第一个是菜单项图片，第二个是菜单名称，第三个是菜单链接。</p>
 
@@ -178,17 +214,25 @@ java.lang.String getUrlName();
 
 <p>Jelly页面的简单例子就不介绍了，官网上都有，这里简单介绍一下Jelly页面相关的一些标签。与JSTL类似，Jelly也有自己的一些标签，如下：</p>
 
-<p>{% codeblock lang:html %}
-&lt;j:jelly
-   xmlns:j=&ldquo;jelly:core&rdquo;
-   xmlns:st=&ldquo;jelly:stapler&rdquo;
-   xmlns:d=&ldquo;jelly:define&rdquo;
-   xmlns:l=&ldquo;/lib/layout&rdquo;
-   xmlns:t=&ldquo;/lib/hudson&rdquo;
-   xmlns:f=&ldquo;/lib/form&rdquo;
-   xmlns:i=&ldquo;jelly:fmt&rdquo;
-   xmlns:p=&ldquo;/lib/hudson/project&rdquo;>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="ni">&amp;lt;</span>j:jelly
+</span><span class='line'>   xmlns:j=<span class="ni">&amp;ldquo;</span>jelly:core<span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:st=<span class="ni">&amp;ldquo;</span>jelly:stapler<span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:d=<span class="ni">&amp;ldquo;</span>jelly:define<span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:l=<span class="ni">&amp;ldquo;</span>/lib/layout<span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:t=<span class="ni">&amp;ldquo;</span>/lib/hudson<span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:f=<span class="ni">&amp;ldquo;</span>/lib/form<span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:i=<span class="ni">&amp;ldquo;</span>jelly:fmt<span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:p=<span class="ni">&amp;ldquo;</span>/lib/hudson/project<span class="ni">&amp;rdquo;</span>&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>比如想使用jelly:core标签，就可以在页面中直接使用 j:XX来调用标签的相关功能，其他标签同样按照这个方式来使用。其中jelly:core是常用的功能，比如设置变量，循环，判断等功能。jelly:layout是分层相关的标签，/lib/hudson是jenkins相关的功能，比如设置Job页面图标，Build页面图标等。更多标签相关的内容可以参考<a href="https://jenkins-ci.org/maven-site/jenkins-core/jelly-taglib-ref.html">这里</a>。</p>
 
@@ -198,21 +242,32 @@ java.lang.String getUrlName();
 
 <p><strong>如何在Jelly页面中使用配置文件？</strong>首先要在Jelly页面所在的文件夹中放置配置文件，比如 页面在这里dir/myAction.jelly，那么页面对应的配置文件就应该在dir/myAction.properties。注意，配置文件名字需要和页面名字相同，这样页面才可以找到对应的配置文件。比如有个Jelly页面如下：</p>
 
-<p>{% codeblock demo.jelly lang:html %}</p>
-
-<pre><code>&lt;?jelly escape-by-default='true'?&gt;
-&lt;j:jelly xmlns:j="jelly:core"&gt;
-    &lt;th&gt;${\%allBuildsColumnHeader}&lt;/th&gt;
-&lt;/j:jelly&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>demo.jelly </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>?jelly escape-by-default=&#39;true&#39;?<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>j:jelly xmlns:j=&quot;jelly:core&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>th<span class="ni">&amp;gt;</span>${\%allBuildsColumnHeader}<span class="ni">&amp;lt;</span>/th<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/j:jelly<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>其对应的配置文件内容如下：</p>
 
-<p>{% codeblock lang:properties %}
-allBuildsColumnHeader=mean time to repair for all history
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="na">allBuildsColumnHeader</span><span class="o">=</span><span class="s">mean time to repair for all history</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这样配置了以后，展示Jelly 页面时就可以自动调用配置文件里面的内容了。</p>
 
@@ -220,32 +275,52 @@ allBuildsColumnHeader=mean time to repair for all history
 
 <p>如果Java 文件中想要使用配置文件里面的值，需要先执行mvn pacakge命令，执行之后，以上面的例子为例，在target目录下会产生generated-sources/localizer/jenkins/plugins/myplugin/Messages.java这个Java文件，如果配置文件里面有这样的一个配置项：</p>
 
-<p>{% codeblock lang:properties %}
-allBuildsColumnHeader=mean time to repair for all history
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="na">allBuildsColumnHeader</span><span class="o">=</span><span class="s">mean time to repair for all history</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>那么Messages.java里面就会产生这样的2个方法：</p>
 
-<p>{% codeblock Message.java lang:java %}
-   /**</p>
-
-<pre><code> * mean time to repair for all history
- * 
- */
-public static String allBuildsColumnHeader() {
-    return holder.format("allBuildsColumnHeader");
-}
-
-/**
- * mean time to repair for all history
- * 
- */
-public static Localizable _allBuildsColumnHeader() {
-    return new Localizable(holder, "allBuildsColumnHeader");
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Message.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>   <span class="cm">/**&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">&lt;pre&gt;&lt;code&gt; * mean time to repair for all history</span>
+</span><span class='line'><span class="cm"> * </span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">allBuildsColumnHeader</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">holder</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;allBuildsColumnHeader&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * mean time to repair for all history</span>
+</span><span class='line'><span class="cm"> * </span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="n">Localizable</span> <span class="nf">_allBuildsColumnHeader</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nf">Localizable</span><span class="o">(</span><span class="n">holder</span><span class="o">,</span> <span class="s">&quot;allBuildsColumnHeader&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这样在Java文件中就可以直接调用这2个方法了，一般是调用第一个方法。</p>
 
@@ -314,10 +389,10 @@ public static Localizable _allBuildsColumnHeader() {
 
 <p>使用IDEA还需要添加一个针对jelly页面的插件，这个插件可以对jelly文件进行语法提示和高亮显示，插件地址点击<a href="http://plugins.intellij.net/plugin/?id=1885">这里</a>，效果见图2。<br/>
 图1:<br/>
-{% img /images/post/29152926-97e25c38b1754deca8843030a113cb3e.png 图1 %}</p>
+<img src="/images/post/29152926-97e25c38b1754deca8843030a113cb3e.png" title="图1" ></p>
 
 <p>图2:<br/>
-{% img /images/post/29152950-1f91f25eac354a75a44e34287f75cbba.png 图2 %}</p>
+<img src="/images/post/29152950-1f91f25eac354a75a44e34287f75cbba.png" title="图2" ></p>
 
 <h3>Jetty(可选)</h3>
 
@@ -333,23 +408,38 @@ public static Localizable _allBuildsColumnHeader() {
 </ol>
 
 
-<p>{% codeblock jenkins.xml lang:xml %}
-<Configure class="org.eclipse.jetty.webapp.WebAppContext">
-  <Set name="contextPath">/jenkins</Set>
-  <Set name="war"><SystemProperty name="jetty.home" default="."/>/webapps/jenkins.war</Set>
-  <Get name="securityHandler"></p>
-
-<pre><code>&lt;Set name="loginService"&gt;
-  &lt;New class="org.eclipse.jetty.security.HashLoginService"&gt;
-    &lt;Set name="name"&gt;Jenkins Realm&lt;/Set&gt;
-    &lt;Set name="config"&gt;&lt;SystemProperty name="jetty.home" default="."/&gt;/etc/realm.properties&lt;/Set&gt;
-  &lt;/New&gt;
-&lt;/Set&gt;
-</code></pre>
-
-<p>  </Get>
-</Configure>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>jenkins.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;Configure</span> <span class="na">class=</span><span class="s">&quot;org.eclipse.jetty.webapp.WebAppContext&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Set</span> <span class="na">name=</span><span class="s">&quot;contextPath&quot;</span><span class="nt">&gt;</span>/jenkins<span class="nt">&lt;/Set&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Set</span> <span class="na">name=</span><span class="s">&quot;war&quot;</span><span class="nt">&gt;&lt;SystemProperty</span> <span class="na">name=</span><span class="s">&quot;jetty.home&quot;</span> <span class="na">default=</span><span class="s">&quot;.&quot;</span><span class="nt">/&gt;</span>/webapps/jenkins.war<span class="nt">&lt;/Set&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Get</span> <span class="na">name=</span><span class="s">&quot;securityHandler&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>Set name=&quot;loginService&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>New class=&quot;org.eclipse.jetty.security.HashLoginService&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>Set name=&quot;name&quot;<span class="ni">&amp;gt;</span>Jenkins Realm<span class="ni">&amp;lt;</span>/Set<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>Set name=&quot;config&quot;<span class="ni">&amp;gt;&amp;lt;</span>SystemProperty name=&quot;jetty.home&quot; default=&quot;.&quot;/<span class="ni">&amp;gt;</span>/etc/realm.properties<span class="ni">&amp;lt;</span>/Set<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/New<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/Set<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/Get&gt;</span>
+</span><span class='line'><span class="nt">&lt;/Configure&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>注意：如果用hpi:run启动的服务，jenkins地址是：localhost:8080，而使用真实Jetty启动的服务，地址是：localhost:8080/jenkins。<br/>
 到这里你的jenkins插件开发环境已经搭建好了，我们在下一篇blog再继续介绍具体的插件开发，谢谢！</p>
@@ -375,43 +465,80 @@ public static Localizable _allBuildsColumnHeader() {
 <!--more-->
 
 
-<p>{% codeblock build.xml lang:xml %}
-<taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml"></p>
-
-<pre><code>    &lt;classpath path="${env.SONAR-ANT-TASK.JAR}"/&gt;
-&lt;/taskdef&gt;
-
-&lt;target name="sonar"&gt;
-    &lt;sonar:sonar key="${sonar.project.key}" version="${sonar.project.version}" xmlns:sonar="antlib:org.sonar.ant"&gt;
-        &lt;sources&gt;
-            &lt;path location="${src.dir}" /&gt;
-        &lt;/sources&gt;
-
-        &lt;property key="sonar.projectName" value="jacoco_demo" /&gt;
-        &lt;property key="sonar.sourceEncoding" value="UTF-8" /&gt;
-        &lt;property key="sonar.dynamicAnalysis" value="reuseReports" /&gt;
-        &lt;property key="sonar.surefire.reportsPath" value="${junit.dir}" /&gt;
-        &lt;property key="sonar.core.codeCoveragePlugin" value="jacoco" /&gt;
-        &lt;property key="sonar.jacoco.reportPath" value="${basedir}/ut.exec" /&gt;
-        &lt;property key="sonar.jacoco.itReportPath" value="${basedir}/uat.exec" /&gt;
-
-        &lt;tests&gt;
-            &lt;path location="${src.test.dir}" /&gt;
-        &lt;/tests&gt;
-
-        &lt;binaries&gt;
-            &lt;path location="${build.src.class}" /&gt;
-            &lt;path location="${build.test.class}" /&gt;
-        &lt;/binaries&gt;
-
-        &lt;libraries&gt;
-            &lt;path location="${build.lib.dir}" /&gt;
-        &lt;/libraries&gt;
-    &lt;/sonar:sonar&gt;
-&lt;/target&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;taskdef</span> <span class="na">uri=</span><span class="s">&quot;antlib:org.sonar.ant&quot;</span> <span class="na">resource=</span><span class="s">&quot;org/sonar/ant/antlib.xml&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>classpath path=&quot;${env.SONAR-ANT-TASK.JAR}&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/taskdef<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>target name=&quot;sonar&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>sonar:sonar key=&quot;${sonar.project.key}&quot; version=&quot;${sonar.project.version}&quot; xmlns:sonar=&quot;antlib:org.sonar.ant&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>sources<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${src.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/sources<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.projectName&quot; value=&quot;jacoco_demo&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.sourceEncoding&quot; value=&quot;UTF-8&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.dynamicAnalysis&quot; value=&quot;reuseReports&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.surefire.reportsPath&quot; value=&quot;${junit.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.core.codeCoveragePlugin&quot; value=&quot;jacoco&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.jacoco.reportPath&quot; value=&quot;${basedir}/ut.exec&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>property key=&quot;sonar.jacoco.itReportPath&quot; value=&quot;${basedir}/uat.exec&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>tests<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${src.test.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/tests<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>binaries<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${build.src.class}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${build.test.class}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/binaries<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>libraries<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>path location=&quot;${build.lib.dir}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/libraries<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/sonar:sonar<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/target<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>参数解释：</p>
 
@@ -427,8 +554,8 @@ public static Localizable _allBuildsColumnHeader() {
 <p>更多参数可以参考这里：<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Unit+Tests">单元测试</a>，<a href="http://docs.codehaus.org/display/SONAR/Code+Coverage+by+Integration+Tests">集成测试</a><br/>
 在sonar 3.3的版本会自动将单元测试和集成测试的覆盖率合并，最后附上sonar上的覆盖率显示：</p>
 
-<p>{% img /images/post/2012112914305954.png %}<br/>
-{% img /images/post/2012112914311753.png %}</p>
+<p><img src="/images/post/2012112914305954.png"><br/>
+<img src="/images/post/2012112914311753.png"></p>
 ]]></content>
   </entry>
   
@@ -445,9 +572,9 @@ public static Localizable _allBuildsColumnHeader() {
 
 
 <p>
-{% codeblock lang:sh %}
--javaagent:[yourpath/]jacocoagent.jar=includes=com.xxx.xxx.*,output=tcpserver,address=xxx.xxx.xxx.xxx,port=xxxxx
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>-javaagent:<span class="o">[</span>yourpath/<span class="o">]</span>jacocoagent.jar<span class="o">=</span><span class="nv">includes</span><span class="o">=</span>com.xxx.xxx.*,output<span class="o">=</span>tcpserver,address<span class="o">=</span>xxx.xxx.xxx.xxx,port<span class="o">=</span>xxxxx
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>参数解释：</p>
 
@@ -462,14 +589,22 @@ public static Localizable _allBuildsColumnHeader() {
 <p>更多参数可以参考<a href="http://www.eclemma.org/jacoco/trunk/doc/agent.html">java agent</a>。<br/>
 配置完应用服务的JAVA_OPTIONS之后，启动服务器，然后可以开始跑你的集成测试，跑完之后，实际上jacocoagent已经将覆盖率数据记录下来了，我们可以使用下面的ant任务来dump出覆盖率文件：</p>
 
-<p>{% codeblock build.xml lang:xml %}
-　 <target name="downloadUatCoverageData"></p>
-
-<pre><code>    &lt;jacoco:dump address="xxx.xxx.xxx.xxx" port="xxxx" reset="true" destfile="${basedir}/uat.exec" append="false"/&gt;
-&lt;/target&gt;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　 <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;downloadUatCoverageData&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>jacoco:dump address=&quot;xxx.xxx.xxx.xxx&quot; port=&quot;xxxx&quot; reset=&quot;true&quot; destfile=&quot;${basedir}/uat.exec&quot; append=&quot;false&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/target<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这里的address和port是刚才在JAVA_OPTIONS里面写的address和port的值，destfile是指生成的覆盖率文件路径。</p>
 
@@ -485,16 +620,24 @@ public static Localizable _allBuildsColumnHeader() {
 
 <p>得到集成测试的覆盖率文件之后，结合之前取到的单元测试覆盖率文件，我们可以将2个文件合并，得到综合的覆盖率文件，命令如下：</p>
 
-<p>{% codeblock build.xml lang:xml %}
-　<target name="mergeCoverage"></p>
-
-<pre><code>    &lt;jacoco:merge destfile="merged.exec"&gt;
-        &lt;fileset dir="${basedir}" includes="*.exec"/&gt;
-    &lt;/jacoco:merge&gt;
-</code></pre>
-
-<p>   </target>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>　<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;mergeCoverage&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>    <span class="ni">&amp;lt;</span>jacoco:merge destfile=&quot;merged.exec&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>fileset dir=&quot;${basedir}&quot; includes=&quot;*.exec&quot;/<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/jacoco:merge<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="nt">&lt;/target&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

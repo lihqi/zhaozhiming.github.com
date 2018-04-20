@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: bat | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/bat/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-04-18T08:44:40+08:00</updated>
+  <updated>2018-04-20T20:32:31+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -27,17 +27,17 @@
 
 <p>
 下面是通过端口号查找进程的命令：<br/>
-{% codeblock lang:bat %}
-netstat -ano | findstr 8888 //我的tomcat端口给我改成8888了。
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bat'><span class='line'>netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span> <span class="n">//我的tomcat端口给我改成8888了。</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>查出来的结果好像这样：TCP    0.0.0.0:8888           0.0.0.0:0              LISTENING       1844<br/>
 其中最后一项是进程号（PID），要怎么取到PID并杀掉进程呢？</p>
 
 <p>可以使用for语句来操作，for默认是以空格或tab为分割，即上面的结果会分割成5个部分，而pid正好是第5部分的内容，所以命令可以这样写：<br/>
-{% codeblock lang:bat %}
-for /f &ldquo;tokens=5&rdquo; %%i in (&ldquo;netstat -ano | findstr 8888&rdquo;) do taskkill /f /pid %%i /t
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bat'><span class='line'><span class="k">for</span> <span class="n">/f</span> &amp;ldquo;tokens<span class="o">=</span><span class="m">5</span>&amp;rdquo; <span class="nv">%%i</span> in (&amp;ldquo;netstat -ano <span class="p">|</span> <span class="n">findstr</span> <span class="m">8888</span>&amp;rdquo;) <span class="k">do</span> taskkill <span class="n">/f</span> <span class="n">/pid</span> <span class="nv">%%i</span> <span class="n">/t</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>taskkill命令是杀进程的，/f表示强制进行，/t表示将其子进程一并杀掉。</p>
 

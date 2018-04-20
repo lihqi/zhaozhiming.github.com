@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: jenkins plugins | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/jenkins-plugins/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-04-18T08:44:40+08:00</updated>
+  <updated>2018-04-20T20:32:31+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -29,57 +29,100 @@
 
 <h5>1、首先修改Maven的配置，将Maven的连接库修改为jenkins plugins的资源库，方便相关pom组件从jenkins上下载，修改的是 %USERPROFILE%/.m2/settings.xml文件。</h5>
 
-<p>{% codeblock settings.xml lang:xml %}
-<settings>
-  <pluginGroups></p>
-
-<pre><code>&lt;pluginGroup&gt;org.jenkins-ci.tools&lt;/pluginGroup&gt;
-</code></pre>
-
-<p>  </pluginGroups></p>
-
-<p>  <profiles></p>
-
-<pre><code>&lt;!-- Give access to Jenkins plugins --&gt;
-&lt;profile&gt;
-  &lt;id&gt;jenkins&lt;/id&gt;
-  &lt;activation&gt;
-    &lt;activeByDefault&gt;true&lt;/activeByDefault&gt; &lt;!-- change this to false, if you don't like to have it on per default --&gt;
-  &lt;/activation&gt;
-  &lt;repositories&gt;
-    &lt;repository&gt;
-      &lt;id&gt;repo.jenkins-ci.org&lt;/id&gt;
-      &lt;url&gt;http://repo.jenkins-ci.org/public/&lt;/url&gt;
-    &lt;/repository&gt;
-  &lt;/repositories&gt;
-  &lt;pluginRepositories&gt;
-    &lt;pluginRepository&gt;
-      &lt;id&gt;repo.jenkins-ci.org&lt;/id&gt;
-      &lt;url&gt;http://repo.jenkins-ci.org/public/&lt;/url&gt;
-    &lt;/pluginRepository&gt;
-  &lt;/pluginRepositories&gt;
-&lt;/profile&gt;
-</code></pre>
-
-<p>  </profiles>
-  <mirrors></p>
-
-<pre><code>&lt;mirror&gt;
-  &lt;id&gt;repo.jenkins-ci.org&lt;/id&gt;
-  &lt;url&gt;http://repo.jenkins-ci.org/public/&lt;/url&gt;
-  &lt;mirrorOf&gt;m.g.o-public&lt;/mirrorOf&gt;
-&lt;/mirror&gt;
-</code></pre>
-
-<p>  </mirrors>
-</settings>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>settings.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;settings&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;pluginGroups&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>pluginGroup<span class="ni">&amp;gt;</span>org.jenkins-ci.tools<span class="ni">&amp;lt;</span>/pluginGroup<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/pluginGroups&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;profiles&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>!-- Give access to Jenkins plugins --<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>profile<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>jenkins<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>activation<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>activeByDefault<span class="ni">&amp;gt;</span>true<span class="ni">&amp;lt;</span>/activeByDefault<span class="ni">&amp;gt;</span> <span class="ni">&amp;lt;</span>!-- change this to false, if you don&#39;t like to have it on per default --<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/activation<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>repositories<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>repository<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>repo.jenkins-ci.org<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>url<span class="ni">&amp;gt;</span>http://repo.jenkins-ci.org/public/<span class="ni">&amp;lt;</span>/url<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/repository<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/repositories<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>pluginRepositories<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>pluginRepository<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>repo.jenkins-ci.org<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>url<span class="ni">&amp;gt;</span>http://repo.jenkins-ci.org/public/<span class="ni">&amp;lt;</span>/url<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/pluginRepository<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/pluginRepositories<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/profile<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;mirrors&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>mirror<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>repo.jenkins-ci.org<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>url<span class="ni">&amp;gt;</span>http://repo.jenkins-ci.org/public/<span class="ni">&amp;lt;</span>/url<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>mirrorOf<span class="ni">&amp;gt;</span>m.g.o-public<span class="ni">&amp;lt;</span>/mirrorOf<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/mirror<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/mirrors&gt;</span>
+</span><span class='line'><span class="nt">&lt;/settings&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h5>2、打开CMD，进入一个想要放插件工程的目录，执行以下命令。</h5>
 
-<p>{% codeblock lang:sh %}
-mvn -U org.jenkins-ci.tools:maven-hpi-plugin:create -DgroupId={your.gound.id} -DartifactId={your.plugin.id}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>mvn -U org.jenkins-ci.tools:maven-hpi-plugin:create -DgroupId<span class="o">={</span>your.gound.id<span class="o">}</span> -DartifactId<span class="o">={</span>your.plugin.id<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>命令中的 your.groud.id 和 your.plugin.id 填你插件的具体对应的值。</p>
 
@@ -91,17 +134,17 @@ mvn -U org.jenkins-ci.tools:maven-hpi-plugin:create -DgroupId={your.gound.id} -D
 
 <p>创建好工程之后，执行下面的命令可以在 target 子目录下产生一个 hpi 文件，该文件就是我们的插件文件，可以直接上传到 jenkins 的服务器。</p>
 
-<p>{% codeblock lang:sh %}
-mvn package
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>mvn package
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h5>4、启动本地服务</h5>
 
 <p>在第三步产生的 hpi 文件要上传到一个部署好的jenkins服务器才可以看到效果，我们也可以通过以下命令启动一个包含插件的本地jenkins服务。</p>
 
-<p>{% codeblock lang:sh %}
-mvn hpi:run
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>mvn hpi:run
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>执行完命令之后，在浏览器打开localhost:8080，就可以访问本地的Jenkins服务了，这里默认用的是 jetty6的 web 容器。</p>
 

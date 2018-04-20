@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: mongodb | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/mongodb/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-04-18T08:44:40+08:00</updated>
+  <updated>2018-04-20T20:32:31+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2015/02/26/hello-mongodb/"/>
     <updated>2015-02-26T16:42:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2015/02/26/hello-mongodb</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2015-2/mongodb.jpeg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2015-2/mongodb.jpeg"></p>
 
 <p><a href="http://www.mongodb.org/">MongoDB</a>是一个<a href="http://en.wikipedia.org/wiki/NoSQL">NoSQL</a>(Not only SQL)数据库，使用C++语言编写，当前最新版本为3.0(beta)。</p>
 
@@ -31,15 +31,15 @@
 
 <p>在MongoDB官网上有各个OS的安装指导，但在docker横行的时代，使用docker来安装无疑是最方便的，这里是<a href="https://registry.hub.docker.com/_/mongo/">MongoDB的docker镜像地址</a>，使用非常简单，执行以下命令，docker就会自动下载镜像并启动MongoDB容器了。</p>
 
-<p>{% codeblock lang:sh %}
-docker run &mdash;name somename -d -p 27017:27017 mongo:tag
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>docker run &amp;mdash;name somename -d -p 27017:27017 mongo:tag
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>客户端</h2>
 
 <p>对比了几个MongoDB的GUI客户端，发现一个比较好用的客户端<a href="http://robomongo.org/">Robomongo</a>，而且是跨平台的，安装完成后点击添加连接，输入ip和端口号就可以连接到你的MongoDB服务器了。</p>
 
-<p>{% img /images/post/2015-2/robomongo.png %}</p>
+<p><img src="/images/post/2015-2/robomongo.png"></p>
 
 <p>PS:因为我是OS系统，用boot2docker来启动docker的，所以我的ip不是<code>localhost</code>，而是<code>192.168.59.103</code>。</p>
 
@@ -60,92 +60,164 @@ docker run &mdash;name somename -d -p 27017:27017 mongo:tag
 
 <h4>简单命令</h4>
 
-<p>{% codeblock lang:sh %}</p>
-
-<h1>创建一个聚集集合（table）</h1>
-
-<p>db.createCollection(“collName”, {size: 20, capped: 5, max: 100});</p>
-
-<h1>查询集合所有记录</h1>
-
-<p>db.userInfo.find();
-相当于: select * from userInfo;</p>
-
-<h1>查询age = 22的记录</h1>
-
-<p>db.userInfo.find({&ldquo;age&rdquo;: 22});
-相当于: select * from userInfo where age = 22;</p>
-
-<h1>查询name中包含 mongo的数据</h1>
-
-<p>db.userInfo.find({name: /mongo/});
-相当于: select * from userInfo where name like ‘%mongo%’;</p>
-
-<h1>查询name = zhangsan, age = 22的数据</h1>
-
-<p>db.userInfo.find({name: &lsquo;zhangsan&rsquo;, age: 22});
-相当于: select * from userInfo where name = ‘zhangsan’ and age = ‘22’;</p>
-
-<h1>更新记录</h1>
-
-<p>db.users.update({age: 25}, {$set: {name: &lsquo;changeName&rsquo;}}, false, true);
-相当于: update users set name = ‘changeName’ where age = 25;</p>
-
-<h1>删除</h1>
-
-<p>db.users.remove({age: 132});
-相当于: delete from users where age = 132;
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;创建一个聚集集合（table）&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.createCollection<span class="o">(</span>“collName”, <span class="o">{</span>size: 20, capped: 5, max: 100<span class="o">})</span>;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查询集合所有记录&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.userInfo.find<span class="o">()</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查询age <span class="o">=</span> 22的记录&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.userInfo.find<span class="o">({</span>&amp;ldquo;age&amp;rdquo;: 22<span class="o">})</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo where <span class="nv">age</span> <span class="o">=</span> 22;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查询name中包含 mongo的数据&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.userInfo.find<span class="o">({</span>name: /mongo/<span class="o">})</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo where name like ‘%mongo%’;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;查询name <span class="o">=</span> zhangsan, <span class="nv">age</span> <span class="o">=</span> 22的数据&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.userInfo.find<span class="o">({</span>name: &amp;lsquo;zhangsan&amp;rsquo;, age: 22<span class="o">})</span>;
+</span><span class='line'>相当于: <span class="k">select</span> * from userInfo where <span class="nv">name</span> <span class="o">=</span> ‘zhangsan’ and <span class="nv">age</span> <span class="o">=</span> ‘22’;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;更新记录&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.users.update<span class="o">({</span>age: 25<span class="o">}</span>, <span class="o">{</span><span class="nv">$set</span>: <span class="o">{</span>name: &amp;lsquo;changeName&amp;rsquo;<span class="o">}}</span>, <span class="nb">false</span>, <span class="nb">true</span><span class="o">)</span>;
+</span><span class='line'>相当于: update users <span class="nb">set </span><span class="nv">name</span> <span class="o">=</span> ‘changeName’ where <span class="nv">age</span> <span class="o">=</span> 25;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;删除&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;db.users.remove<span class="o">({</span>age: 132<span class="o">})</span>;
+</span><span class='line'>相当于: delete from users where <span class="nv">age</span> <span class="o">=</span> 132;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Java示例</h2>
 
 <p>使用Java来操作MongoDB也比较简单，首先要下载Java驱动，在Maven库上可以查询到，下面是驱动的Gradle定义。</p>
 
-<p>{% codeblock lang:sh %}
-org.mongodb:mongo-java-driver:3.0.0-beta2
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>org.mongodb:mongo-java-driver:3.0.0-beta2
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>驱动最新的版本是3.0，语法上跟2.x有一些差别，具体示例可以参考<a href="http://docs.mongodb.org/ecosystem/tutorial/getting-started-with-3.0-java-driver/">MongoDB官网的Java示例</a>。</p>
 
 <h4>简单示例</h4>
 
-<p>{% codeblock MyMongoDB.java lang:java %}
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import org.bson.Document;</p>
-
-<p>public class MyMongoDb {</p>
-
-<pre><code>public static void main(String[] args) {
-    MongoClient mongo = new MongoClient("192.168.59.103", 27017);
-
-    // 根据名称查找数据库
-    MongoDatabase mydb = mongo.getDatabase("mydb");
-    // 根据名称查找集合
-    MongoCollection&lt;Document&gt; collection = mydb.getCollection("collectName");
-
-    // 查询该集合的所有记录
-    FindIterable&lt;Document&gt; documents = collection.find();
-    for (Document document : documents) {
-        System.out.println(document.toString());
-    }
-
-    // 插入一条记录
-    Document t = new Document("name", "time")
-            .append("age", 100)
-            .append("sex", true)
-            .append("address", new BasicDBObject("name", "china").append("province", "Sichuan"));
-    collection.insertOne(t);
-
-    // 更新一条记录
-    collection.updateOne(new Document("name", "time"), new Document("$set", new Document("age", 101)));
-}
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyMongoDB.java </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.BasicDBObject</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.MongoClient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.client.FindIterable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.client.MongoCollection</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.mongodb.client.MongoDatabase</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.bson.Document</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyMongoDb</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="n">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">MongoClient</span> <span class="n">mongo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MongoClient</span><span class="o">(</span><span class="s">&quot;192.168.59.103&quot;</span><span class="o">,</span> <span class="mi">27017</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 根据名称查找数据库</span>
+</span><span class='line'>    <span class="n">MongoDatabase</span> <span class="n">mydb</span> <span class="o">=</span> <span class="n">mongo</span><span class="o">.</span><span class="na">getDatabase</span><span class="o">(</span><span class="s">&quot;mydb&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="c1">// 根据名称查找集合</span>
+</span><span class='line'>    <span class="n">MongoCollection</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Document</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">mydb</span><span class="o">.</span><span class="na">getCollection</span><span class="o">(</span><span class="s">&quot;collectName&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 查询该集合的所有记录</span>
+</span><span class='line'>    <span class="n">FindIterable</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Document</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">documents</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="na">find</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">for</span> <span class="o">(</span><span class="n">Document</span> <span class="n">document</span> <span class="o">:</span> <span class="n">documents</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">document</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 插入一条记录</span>
+</span><span class='line'>    <span class="n">Document</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="s">&quot;time&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;age&quot;</span><span class="o">,</span> <span class="mi">100</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;sex&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
+</span><span class='line'>            <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;address&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">BasicDBObject</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="s">&quot;china&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;province&quot;</span><span class="o">,</span> <span class="s">&quot;Sichuan&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">collection</span><span class="o">.</span><span class="na">insertOne</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// 更新一条记录</span>
+</span><span class='line'>    <span class="n">collection</span><span class="o">.</span><span class="na">updateOne</span><span class="o">(</span><span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="s">&quot;time&quot;</span><span class="o">),</span> <span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;$set&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Document</span><span class="o">(</span><span class="s">&quot;age&quot;</span><span class="o">,</span> <span class="mi">101</span><span class="o">)));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>数据库设计原则</h2>
 
@@ -156,14 +228,14 @@ import org.bson.Document;</p>
 </ul>
 
 
-<p>{% img /images/post/2015-2/mongo-references.png %}</p>
+<p><img src="/images/post/2015-2/mongo-references.png"></p>
 
 <ul>
 <li>内嵌比较特殊，是把对象的关联对象放到一个集合(表)中，这个恰恰是关系系数据库做不到的。</li>
 </ul>
 
 
-<p>{% img /images/post/2015-2/mongo-embedded.png %}</p>
+<p><img src="/images/post/2015-2/mongo-embedded.png"></p>
 
 <p>那问题来了，什么时候使用引用，什么时候使用内嵌呢？下面是官方给的一些建议，总结如下:</p>
 

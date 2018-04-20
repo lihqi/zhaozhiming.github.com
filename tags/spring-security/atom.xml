@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: spring-security | Hacker and Geeker's Way]]></title>
   <link href="http://zhaozhiming.github.io/tags/spring-security/atom.xml" rel="self"/>
   <link href="http://zhaozhiming.github.io/"/>
-  <updated>2018-04-18T08:44:40+08:00</updated>
+  <updated>2018-04-20T20:32:31+08:00</updated>
   <id>http://zhaozhiming.github.io/</id>
   <author>
     <name><![CDATA[赵芝明]]></name>
@@ -18,7 +18,7 @@
     <link href="http://zhaozhiming.github.io/blog/2014/12/18/use-spring-security-to-ldap-authentication/"/>
     <updated>2014-12-18T08:56:00+08:00</updated>
     <id>http://zhaozhiming.github.io/blog/2014/12/18/use-spring-security-to-ldap-authentication</id>
-    <content type="html"><![CDATA[<p>{% img /images/post/2014-12/spring-security.jpeg %}</p>
+    <content type="html"><![CDATA[<p><img src="/images/post/2014-12/spring-security.jpeg"></p>
 
 <p>这里介绍一下如何是用Spring Security来做LDAP的认证，LDAP服务器只存放了用户的用户名和密码，没有角色等其他权限，所以这里介绍的是最简单的用户名密码认证。</p>
 
@@ -29,94 +29,166 @@
 
 <p>下面是gradle的脚本配置，需要下载spring-security和ldap相关的JAR包。</p>
 
-<p>{% codeblock build.gradle lang:groovy %}
-String springSecurityVersion = &ldquo;3.2.5.RELEASE&rdquo;</p>
-
-<p>dependencies {</p>
-
-<pre><code>...//other spring jars
-
-//security
-compile "org.springframework.security:spring-security-core:" + springSecurityVersion
-compile "org.springframework.security:spring-security-web:" + springSecurityVersion
-compile "org.springframework.security:spring-security-config:" + springSecurityVersion
-compile "org.springframework.security:spring-security-ldap:" + springSecurityVersion
-compile "org.springframework.ldap:spring-ldap-core:2.0.2.RELEASE"
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>build.gradle </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">String</span> <span class="n">springSecurityVersion</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mf">3.2</span><span class="o">.</span><span class="mi">5</span><span class="o">.</span><span class="na">RELEASE</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;&lt;</span><span class="s">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;p&gt;dependencies {&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;...</span><span class="c1">//other spring jars</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//security</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-core:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-web:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-config:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.security:spring-security-ldap:&quot;</span> <span class="o">+</span> <span class="n">springSecurityVersion</span>
+</span><span class='line'><span class="n">compile</span> <span class="s2">&quot;org.springframework.ldap:spring-ldap-core:2.0.2.RELEASE&quot;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="s">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>配置web.xml</h2>
 
 <p>在web.xml配置<code>filter</code>，修改内容如下。</p>
 
-<p>{% codeblock web.xml lang:xml %}
-<filter>
-   &lt;filter-name>springSecurityFilterChain&lt;/filter-name>
-  &lt;filter-class>org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class>
-</filter>
-&lt;filter-mapping>
-   &lt;filter-name>springSecurityFilterChain&lt;/filter-name>
-   &lt;url-pattern>/*&lt;/url-pattern>
-&lt;/filter-mapping></p>
-
-<p><listener>
-   &lt;listener-class>org.springframework.web.context.ContextLoaderListener&lt;/listener-class>
-</listener></p>
-
-<p>&lt;context-param>
-   &lt;param-name>contextConfigLocation&lt;/param-name>
-   &lt;param-value>classpath:spring-security.xml&lt;/param-value>
-&lt;/context-param>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>web.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;filter&gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>filter-name&gt;springSecurityFilterChain<span class="ni">&amp;lt;</span>/filter-name&gt;
+</span><span class='line'>  <span class="ni">&amp;lt;</span>filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy<span class="ni">&amp;lt;</span>/filter-class&gt;
+</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>filter-mapping&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>filter-name&gt;springSecurityFilterChain<span class="ni">&amp;lt;</span>/filter-name&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>url-pattern&gt;/*<span class="ni">&amp;lt;</span>/url-pattern&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>/filter-mapping&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;listener&gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>listener-class&gt;org.springframework.web.context.ContextLoaderListener<span class="ni">&amp;lt;</span>/listener-class&gt;
+</span><span class='line'><span class="nt">&lt;/listener&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span><span class="ni">&amp;lt;</span>context-param&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>param-name&gt;contextConfigLocation<span class="ni">&amp;lt;</span>/param-name&gt;
+</span><span class='line'>   <span class="ni">&amp;lt;</span>param-value&gt;classpath:spring-security.xml<span class="ni">&amp;lt;</span>/param-value&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>/context-param&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>创建spring-security.xml</h2>
 
 <p>在web.xml里面指定了Application启动时需要加载spring-security.xml文件，我们的LDAP认证主要就配置在这个文件里面。</p>
 
-<p>{% codeblock spring-security.xml lang:xml %}
-&lt;beans xmlns=&ldquo;<a href="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</a>&rdquo;
-   xmlns:s=&ldquo;<a href="http://www.springframework.org/schema/security">http://www.springframework.org/schema/security</a>&rdquo; xmlns:context=&ldquo;<a href="http://www.springframework.org/schema/context">http://www.springframework.org/schema/context</a>&rdquo;
-   xmlns:xsi=&ldquo;<a href="http://www.w3.org/2001/XMLSchema-instance">http://www.w3.org/2001/XMLSchema-instance</a>&rdquo;
-   xsi:schemaLocation=&ldquo;<a href="http://www.springframework.org/schema/beans">http://www.springframework.org/schema/beans</a> <a href="http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</a></p>
-
-<pre><code>   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd"&gt;
-</code></pre>
-
-<p>   &lt;context:property-placeholder location=&ldquo;classpath:app.properties&rdquo; />  //1</p>
-
-<p>   &lt;s:http pattern=&ldquo;/resources/**&rdquo; security=&ldquo;none&rdquo; />  //2
-   &lt;s:http pattern=&ldquo;/login.html&rdquo; security=&ldquo;none&rdquo; />    //2</p>
-
-<p>   &lt;s:http use-expressions=&ldquo;true&rdquo;></p>
-
-<pre><code>  &lt;s:intercept-url pattern="/**" access="isAuthenticated()" /&gt;  //3
-  &lt;s:form-login login-page="/login.html"                        //4
-     authentication-failure-url="/login.html?error=true"        //5   
-     username-parameter="j_username" password-parameter="j_password"/&gt; //6
-  &lt;s:anonymous /&gt;
-  &lt;s:logout logout-success-url="/login.html?logout=true" /&gt;  //7
-</code></pre>
-
-<p>   &lt;/s:http></p>
-
-<p>   &lt;s:ldap-server url=&ldquo;${ldap_server}&rdquo; manager-dn=&ldquo;${ldap_user}&rdquo;//8</p>
-
-<pre><code>  manager-password="${ldap_password}" /&gt;
-</code></pre>
-
-<p>   &lt;s:authentication-manager></p>
-
-<pre><code>  &lt;s:ldap-authentication-provider
-     user-dn-pattern="${ldap_user_dn_pattern}" /&gt;  //9
-</code></pre>
-
-<p>   &lt;/s:authentication-manager></p>
-
-<p></beans>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>spring-security.xml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>beans xmlns=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:s=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/security&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/security<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span> xmlns:context=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/context&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/context<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xmlns:xsi=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="nt">&gt;</span>http://www.w3.org/2001/XMLSchema-instance<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>
+</span><span class='line'>   xsi:schemaLocation=<span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans<span class="nt">&lt;/a&gt;</span> <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.springframework.org/schema/beans/spring-beans-4.0.xsd&quot;</span><span class="nt">&gt;</span>http://www.springframework.org/schema/beans/spring-beans-4.0.xsd<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+</span><span class='line'>http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>context:property-placeholder location=<span class="ni">&amp;ldquo;</span>classpath:app.properties<span class="ni">&amp;rdquo;</span> /&gt;  //1<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:http pattern=<span class="ni">&amp;ldquo;</span>/resources/**<span class="ni">&amp;rdquo;</span> security=<span class="ni">&amp;ldquo;</span>none<span class="ni">&amp;rdquo;</span> /&gt;  //2
+</span><span class='line'>   <span class="ni">&amp;lt;</span>s:http pattern=<span class="ni">&amp;ldquo;</span>/login.html<span class="ni">&amp;rdquo;</span> security=<span class="ni">&amp;ldquo;</span>none<span class="ni">&amp;rdquo;</span> /&gt;    //2<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:http use-expressions=<span class="ni">&amp;ldquo;</span>true<span class="ni">&amp;rdquo;</span>&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>  <span class="ni">&amp;lt;</span>s:intercept-url pattern=&quot;/**&quot; access=&quot;isAuthenticated()&quot; /<span class="ni">&amp;gt;</span>  //3
+</span><span class='line'>  <span class="ni">&amp;lt;</span>s:form-login login-page=&quot;/login.html&quot;                        //4
+</span><span class='line'>     authentication-failure-url=&quot;/login.html?error=true&quot;        //5
+</span><span class='line'>     username-parameter=&quot;j_username&quot; password-parameter=&quot;j_password&quot;/<span class="ni">&amp;gt;</span> //6
+</span><span class='line'>  <span class="ni">&amp;lt;</span>s:anonymous /<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>s:logout logout-success-url=&quot;/login.html?logout=true&quot; /<span class="ni">&amp;gt;</span>  //7
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>/s:http&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:ldap-server url=<span class="ni">&amp;ldquo;</span>${ldap_server}<span class="ni">&amp;rdquo;</span> manager-dn=<span class="ni">&amp;ldquo;</span>${ldap_user}<span class="ni">&amp;rdquo;</span>//8<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>  manager-password=&quot;${ldap_password}&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>s:authentication-manager&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>  <span class="ni">&amp;lt;</span>s:ldap-authentication-provider
+</span><span class='line'>     user-dn-pattern=&quot;${ldap_user_dn_pattern}&quot; /<span class="ni">&amp;gt;</span>  //9
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>   <span class="ni">&amp;lt;</span>/s:authentication-manager&gt;<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/beans&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <ol>
 <li>指定properties文件，下面的ldap信息都是从properties文件里面取得。</li>
@@ -133,89 +205,155 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 
 <p>下面是app.properties的内容。</p>
 
-<p>{% codeblock app.properties lang:properties %}</p>
-
-<h1>Ldap</h1>
-
-<p>ldap_server=ldap://your.ldap.server.com.:12356
-ldap_user=cn=yourname,cn=Users,dc=ldap,dc=server,dc=com
-ldap_password=123456
-ldap_user_dn_pattern=uid={0},ou=staff,ou=people,o=ldap.server.com
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>app.properties </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="err">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;h1&gt;Ldap&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">&lt;p&gt;ldap_server</span><span class="o">=</span><span class="s">ldap://your.ldap.server.com.:12356</span>
+</span><span class='line'><span class="na">ldap_user</span><span class="o">=</span><span class="s">cn=yourname,cn=Users,dc=ldap,dc=server,dc=com</span>
+</span><span class='line'><span class="na">ldap_password</span><span class="o">=</span><span class="s">123456</span>
+</span><span class='line'><span class="na">ldap_user_dn_pattern</span><span class="o">=</span><span class="s">uid={0},ou=staff,ou=people,o=ldap.server.com</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>创建登陆页面</h2>
 
 <p>创建用户登陆的Form，method为<code>post</code>，action为<code>j_spring_security_check</code>，用户录入框的name为<code>j_username</code>，密码录入框的name为<code>j_password</code>，这2个值与之前spring-security.xml里面配置的要保持一致。</p>
 
-<p>{% codeblock login.html lang:html %}
-<form name="LoginForm" method="post" action="j_spring_security_check"></p>
-
-<pre><code>&lt;div style="display: block;"&gt;
-    &lt;div&gt;
-        &lt;h1&gt;
-            &lt;span class="ui-icon add"&gt;&lt;/span&gt;用户登录
-        &lt;/h1&gt;
-    &lt;/div&gt;
-    &lt;div class="content"&gt;
-        &lt;div id="error" style="display: none; color: #c9302c" align="center"&gt;
-            &lt;h3&gt;认证失败，请重新登录&lt;/h3&gt;
-        &lt;/div&gt;
-        &lt;div id="logout" style="display: none; color: #02547f" align="center"&gt;
-            &lt;h3&gt;已成功登出&lt;/h3&gt;
-        &lt;/div&gt;
-
-        &lt;ul&gt;
-            &lt;li&gt;&lt;label&gt;
-                &lt;span&gt;用户名&lt;/span&gt;
-                &lt;input type="text" name="j_username"&gt;
-            &lt;/label&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;label&gt;
-                &lt;span&gt;密码&lt;/span&gt;
-                &lt;input type="password" name="j_password"&gt;
-            &lt;/label&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-    &lt;/div&gt;
-    &lt;div&gt;
-        &lt;button type="submit" name="logon" value="Logon"&gt;登录&lt;/button&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-
-<p></form>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>login.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;LoginForm&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_check&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>div style=&quot;display: block;&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>h1<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>span class=&quot;ui-icon add&quot;<span class="ni">&amp;gt;&amp;lt;</span>/span<span class="ni">&amp;gt;</span>用户登录
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/h1<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div class=&quot;content&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>div id=&quot;error&quot; style=&quot;display: none; color: #c9302c&quot; align=&quot;center&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>h3<span class="ni">&amp;gt;</span>认证失败，请重新登录<span class="ni">&amp;lt;</span>/h3<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>div id=&quot;logout&quot; style=&quot;display: none; color: #02547f&quot; align=&quot;center&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>h3<span class="ni">&amp;gt;</span>已成功登出<span class="ni">&amp;lt;</span>/h3<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>ul<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>li<span class="ni">&amp;gt;&amp;lt;</span>label<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>span<span class="ni">&amp;gt;</span>用户名<span class="ni">&amp;lt;</span>/span<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>input type=&quot;text&quot; name=&quot;j_username&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/label<span class="ni">&amp;gt;&amp;lt;</span>/li<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>li<span class="ni">&amp;gt;&amp;lt;</span>label<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>span<span class="ni">&amp;gt;</span>密码<span class="ni">&amp;lt;</span>/span<span class="ni">&amp;gt;</span>
+</span><span class='line'>                <span class="ni">&amp;lt;</span>input type=&quot;password&quot; name=&quot;j_password&quot;<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/label<span class="ni">&amp;gt;&amp;lt;</span>/li<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/ul<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>div<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>button type=&quot;submit&quot; name=&quot;logon&quot; value=&quot;Logon&quot;<span class="ni">&amp;gt;</span>登录<span class="ni">&amp;lt;</span>/button<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/div<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>相关的js代码如下:
-{% codeblock lang:js %}
-function getParameterByName(name) {</p>
-
-<pre><code>name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-var regex = new RegExp("[\\?&amp;]" + name + "=([^&amp;#]*)"),
-    results = regex.exec(location.search);
-return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-</code></pre>
-
-<p>}</p>
-
-<p>if(getParameterByName(&ldquo;error&rdquo;)) {</p>
-
-<pre><code>$("#error").show();
-</code></pre>
-
-<p>}</p>
-
-<p>if(getParameterByName(&ldquo;logout&rdquo;)) {</p>
-
-<pre><code>$("#logout").show();
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">getParameterByName</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\[]/</span><span class="p">,</span> <span class="s2">&quot;\\[&quot;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\]]/</span><span class="p">,</span> <span class="s2">&quot;\\]&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">regex</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;[\\?&amp;amp;]&quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;=([^&amp;amp;#]*)&quot;</span><span class="p">),</span>
+</span><span class='line'>    <span class="nx">results</span> <span class="o">=</span> <span class="nx">regex</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">);</span>
+</span><span class='line'><span class="k">return</span> <span class="nx">results</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="s2">&quot;&quot;</span> <span class="o">:</span> <span class="nb">decodeURIComponent</span><span class="p">(</span><span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\+/g</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">));</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="k">if</span><span class="p">(</span><span class="nx">getParameterByName</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">error</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;))</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#error&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="k">if</span><span class="p">(</span><span class="nx">getParameterByName</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">logout</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;))</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#logout&quot;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>如果需要的话，可以配置自己的logout页面，只需要一个Form就可以了，方法为<code>post</code>，action为<code>j_spring_security_logout</code>，只要提交了这个Form就可以成功登出了。</p>
 
-<p>{% codeblock logout.html lang:html %}
-<form action="j_spring_security_logout" method="post" id="logoutForm"></form>
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>logout.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;j_spring_security_logout&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">id=</span><span class="s">&quot;logoutForm&quot;</span><span class="nt">&gt;&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>更多Spring Security的信息请查阅: <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/">Spring Security Reference</a>。</p>
 ]]></content>
