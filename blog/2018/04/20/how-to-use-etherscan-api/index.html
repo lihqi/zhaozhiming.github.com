@@ -154,14 +154,14 @@
 
 <h4>获取单个账号金额</h4>
 
-<p><strong>API 示例</strong></p>
+<p><em>API 示例</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>https://api.etherscan.io/api?module<span class="o">=</span>account&amp;action<span class="o">=</span>balance&amp;address<span class="o">=</span>0xddbd2b932c763ba5b1b7ae3b362eac3e8d40121a&amp;tag<span class="o">=</span>latest&amp;apikey<span class="o">=</span>YourApiKeyToken
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>参数说明</strong></p>
+<p><em>参数说明</em></p>
 
 <ul>
 <li>module：对应的模块名称，这里是账户模块，所以是<code>moudle=account</code></li>
@@ -172,9 +172,9 @@
 </ul>
 
 
-<p>其中<code>module、action、apikey</code>是每个 API 都需要的参数，其他的参数因不同 API 而不同。</p>
+<p>其中<code>module、action、apikey</code>是每个 API 都有的参数，其他的参数则因不同 API 而不同。</p>
 
-<p><strong>返回结果</strong></p>
+<p><em>返回结果</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">{</span><span class="s2">&quot;status&quot;</span>:<span class="s2">&quot;1&quot;</span>,<span class="s2">&quot;message&quot;</span>:<span class="s2">&quot;OK&quot;</span>,<span class="s2">&quot;result&quot;</span>:<span class="s2">&quot;670456215218885498951364&quot;</span><span class="o">}</span>
@@ -183,20 +183,20 @@
 
 <h4>获取多个账号金额</h4>
 
-<p><strong>API 示例</strong></p>
+<p><em>API 示例</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>https://api.etherscan.io/api?module<span class="o">=</span>account&amp;action<span class="o">=</span>balancemulti&amp;address<span class="o">=</span>0xddbd2b932c763ba5b1b7ae3b362eac3e8d40121a,0x63a9975ba31b0b9626b34300f7f627147df1f526,0x198ef1ec325a96cc354c7266a038be8b5c558f67&amp;tag<span class="o">=</span>latest&amp;apikey<span class="o">=</span>YourApiKeyToken
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>参数说明</strong></p>
+<p><em>参数说明</em></p>
 
 <p>（前面有讲过的参数就不讲了，下同）</p>
 
 <p>与单个账号金额 API 相比，参数<code>address</code>用<code>,</code>号分隔多个账号，最多可支持 20 个账号的金额查询。</p>
 
-<p><strong>返回结果</strong></p>
+<p><em>返回结果</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -239,14 +239,14 @@
 
 <h4>获取&#8221;正常&#8221;交易记录</h4>
 
-<p><strong>API 示例</strong></p>
+<p><em>API 示例</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>https://api.etherscan.io/api?module<span class="o">=</span>account&amp;action<span class="o">=</span>txlist&amp;address<span class="o">=</span>0xddbd2b932c763ba5b1b7ae3b362eac3e8d40121a&amp;startblock<span class="o">=</span>0&amp;endblock<span class="o">=</span>99999999&amp;page<span class="o">=</span>1&amp;offset<span class="o">=</span>10&amp;sort<span class="o">=</span>asc&amp;apikey<span class="o">=</span>YourApiKeyToken
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>参数说明</strong></p>
+<p><em>参数说明</em></p>
 
 <ul>
 <li>action：为<code>txlist</code>，表示列出交易记录。</li>
@@ -259,7 +259,7 @@
 </ul>
 
 
-<p><strong>返回结果</strong></p>
+<p><em>返回结果</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -318,14 +318,14 @@
 
 <h4>获取&#8221;内部&#8221;交易记录</h4>
 
-<p><strong>API 示例</strong></p>
+<p><em>API 示例</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>https://api.etherscan.io/api?module<span class="o">=</span>account&amp;action<span class="o">=</span>txlistinternal&amp;address<span class="o">=</span>0x2c1ba59d6f58433fb1eaee7d20b26ed83bda51a3&amp;startblock<span class="o">=</span>0&amp;endblock<span class="o">=</span>2702578&amp;page<span class="o">=</span>1&amp;offset<span class="o">=</span>10&amp;sort<span class="o">=</span>asc&amp;apikey<span class="o">=</span>YourApiKeyToken
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>参数说明</strong></p>
+<p><em>参数说明</em></p>
 
 <p>参数与上一个 API 基本相同，只有<code>action</code>是<code>txlistinternal</code>这一点不同，这 2 种交易的区别是什么呢？简单的理解就是“正常”的交易是会记录到区块链上的，而“内部”交易是指不会记录到区块链上的记录，比如交易失败的记录。</p>
 
@@ -336,7 +336,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>返回结果</strong></p>
+<p><em>返回结果</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -387,14 +387,14 @@
 
 <h4>获取 ERC20 代币交易事件记录</h4>
 
-<p><strong>API 示例</strong></p>
+<p><em>API 示例</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>https://api.etherscan.io/api?module<span class="o">=</span>account&amp;action<span class="o">=</span>tokentx&amp;contractaddress<span class="o">=</span>0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2&amp;address<span class="o">=</span>0x4e83362442b8d1bec281594cea3050c8eb01311c&amp;page<span class="o">=</span>1&amp;offset<span class="o">=</span>100&amp;sort<span class="o">=</span>asc&amp;apikey<span class="o">=</span>YourApiKeyToken
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>参数说明</strong></p>
+<p><em>参数说明</em></p>
 
 <ul>
 <li>action: 值为<code>token</code>，表示和代币相关。</li>
@@ -403,7 +403,7 @@
 </ul>
 
 
-<p><strong>返回结果</strong></p>
+<p><em>返回结果</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -464,22 +464,22 @@
 
 <h4>获取已开采的区块列表</h4>
 
-<p><strong>API 示例</strong></p>
+<p><em>API 示例</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>https://api.etherscan.io/api?module<span class="o">=</span>account&amp;action<span class="o">=</span>getminedblocks&amp;address<span class="o">=</span>0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b&amp;blocktype<span class="o">=</span>blocks&amp;page<span class="o">=</span>1&amp;offset<span class="o">=</span>10&amp;apikey<span class="o">=</span>YourApiKeyToken
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>参数说明</strong></p>
+<p><em>参数说明</em></p>
 
 <ul>
 <li>action: 值为<code>getminedblocks</code>。</li>
-<li>blocktype：可以选区块<code>blocks</code>和叔块<code>uncles</code>，不了解叔块的可以查看<a href="https://www.bixuncn.com/baike/block/1141.html">这里</a>。</li>
+<li>blocktype：区块类型，可以选区块<code>blocks</code>和叔块<code>uncles</code>，不了解叔块的可以查看<a href="https://www.bixuncn.com/baike/block/1141.html">这里</a>。</li>
 </ul>
 
 
-<p><strong>返回结果</strong></p>
+<p><em>返回结果</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -512,14 +512,14 @@
 
 <h4>获取智能合约接口</h4>
 
-<p><strong>API 示例</strong></p>
+<p><em>API 示例</em></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>https://api.etherscan.io/api?module<span class="o">=</span>contract&amp;action<span class="o">=</span>getabi&amp;address<span class="o">=</span>0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413&amp;apikey<span class="o">=</span>YourApiKeyToken
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>参数说明</strong></p>
+<p><em>参数说明</em></p>
 
 <ul>
 <li>module: 值为<code>contract</code>。</li>
@@ -528,9 +528,9 @@
 </ul>
 
 
-<p>其实智能合约的 abi 就是一个 json 对象，通过这个对象我们可以调用其接口方法，后面会写一篇文章介绍如何操作 abi 对象，敬请期待。</p>
+<p>智能合约的 abi 就是一个 json 对象，通过这个对象我们可以调用其接口方法，后面会写一篇文章介绍如何操作 abi 对象，敬请期待。</p>
 
-<p><strong>返回结果</strong></p>
+<p><em>返回结果</em></p>
 
 <p>返回结果内容比较长，这里省略，就是一个 json 对象，感兴趣的可以自行调用该 API 看结果。</p>
 
@@ -538,13 +538,13 @@
 
 <p>账号和智能合约的 API 已经能满足大部分的业务需求了，其他模块的 API 感觉没什么太大的作用，这里就不介绍了，感兴趣的读者可以自行查阅。</p>
 
-<p>这里再说下 API 的使用限制，刚才提到每个 API 都有一个<code>apkkey</code>参数，如果 API 没加上这个参数的话，每个 API 的请求次数不能超过 5 次每秒。</p>
+<p>这里再说下 API 的使用限制，刚才提到每个 API 都有一个<code>apikey</code>参数，如果 API 没加上这个参数的话，每个 API 的请求次数不能超过 5 次每秒。</p>
 
 <h2>总结</h2>
 
 <p><code>Etherscan</code>提供的这些 API 有些是和以太坊提供的 API 有重复的，比如说获取账号金额，获取事件日志记录等，但有一些 API 给我们带来了很大的便利性，比如获取账号交易记录，有了这个 API 就不用使用几个原生 API 进行各种数据拼接了。</p>
 
-<p>另外<code>Etherscan</code>的这套 API 在 Rinkeby 测试网络也有一套一模一样的，区别只是前面的 url 不同，Rinkeby 的是：<code>api-rinkeby.etherscan.io</code>，感兴趣的同学也可以去试试。</p>
+<p>另外<code>Etherscan</code>的这套 API 在 Rinkeby 测试网络也有一套一模一样的，区别只是前面的 url 不同，Rinkeby 的是：<code>api-rinkeby.etherscan.io</code>，感兴趣的同学可以去试试。</p>
 </div>
 
 <div class="meta">
