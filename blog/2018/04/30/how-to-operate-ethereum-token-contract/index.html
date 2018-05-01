@@ -1,0 +1,432 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>使用 Ehters.js 进行以太坊代币相关操作 - Hacker and Geeker's Way</title>
+    <meta name="author" content="赵芝明">
+    
+	<meta name="description" content="使用 Ehters.js 进行以太坊代币相关操作">
+	<meta name="keywords" content="ethereum,ethers.js,token,contract">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Hacker and Geeker's Way" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='/stylesheets/slackey.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/fjalla_one.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/amethysta.css' rel='stylesheet' type='text/css'>
+    <link href='/stylesheets/css_grid.css' rel='stylesheet' type='text/css'>
+	  <script src="https://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    <link href="https://cdn.staticfile.org/semantic-ui/0.10.0/css/semantic.min.css" rel="stylesheet" type="text/css">
+
+<script src="https://cdn.staticfile.org/semantic-ui/0.10.0/javascript/semantic.min.js"></script>
+<script src="/javascripts/monthly_archive.js"></script>
+
+    
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-100485541-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Hacker and Geeker's Way
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/zhaozhiming" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  <!-- Twitter -->
+  <li>
+  <a href="http://www.twitter.com/kingzzm" class="twitter" title="Twitter"></a>
+  </li>
+  
+  
+  <!-- LinkedIn -->
+  <li>
+  <a href="http://www.linkedin.com/in/zhaozhiming" class="linkedin" title="LinkedIn"></a>
+  </li>
+  
+  
+  
+  
+  
+  <!-- Stackoverflow -->
+  <li>
+  <a href="http://stackoverflow.com/users//1954315/zhaozhiming" class="stackoverflow" title="Stackoverflow"></a>
+  </li>
+  
+  
+  <!-- wechat -->
+  <li class="wechat">
+  <a href="#" class="wechat" title="Wechat">
+    <i class="wechat-qr"></i>
+  </a>
+  </li>
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+	<div id="toload">
+		<div id="content">
+			<div class="inner">
+	<article class="post">
+	<h2 class="title">使用 Ehters.js 进行以太坊代币相关操作</h2>
+	<div class="entry-content"><p><img src="/images/post/2018/04/erc20.png" width="400" height="300"></p>
+
+<p>在<a href="http://zhaozhiming.github.io/blog/2018/04/25/how-to-use-ethers-dot-js/">上一篇文章</a> 中介绍了 <a href="https://github.com/ethers-io/ethers.js">Ethers.js</a> 这个工具库，但在介绍智能合约时觉得这一部分涉及的内容会比较多，感觉重新写一篇文章来介绍会更好，所以我们今天就来看下怎么使用 Ethers.js 来进行以太坊代币（以下简称 token）的操作。</p>
+
+<!--more-->
+
+
+<p>首先要说明一下，这里介绍的 token 都是基于<code>ERC20</code>标准，其他标准的 token 暂时不涉及。</p>
+
+<p>在使用 Ethers.js 的 API 之前，我们需要先获取 token 的两个信息：</p>
+
+<ul>
+<li>token 的智能合约地址</li>
+<li>token 的智能合约接口</li>
+</ul>
+
+
+<p>找 token 智能合约地址的方法在<a href="http://zhaozhiming.github.io/blog/2018/04/18/how-to-earn-eth-and-token-in-rinkeby/">之前的文章</a> 里面有介绍过，大家可以参考一下。</p>
+
+<h2>获取 token 的智能合约接口</h2>
+
+<p>除了 token 的地址外，还需要 token 的接口，它的全称是<code>Application Binary Interface</code>，简称<code>ABI</code>，更多信息可以参考<a href="https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI">以太坊的文档</a>，我们现在只需要知道它是一个 json 对象就可以了。</p>
+
+<p>那要如何获取 abi 呢？下面介绍两种方法。</p>
+
+<h3>直接从 etherscan 上面查找</h3>
+
+<p>第一种方法是直接在 etherscan 网站上查找，一些相对靠谱的 token 会将自己的智能合约源码公开并放到 etherscan 上，我们可以通过下面的方式来查找到 abi 对象。</p>
+
+<ul>
+<li>以 EOS 为例，首先通过之前提到的找 token 地址的方法进到 token 的 etherscan 页面，然后点击上面的<code>Contract</code>链接</li>
+</ul>
+
+
+<p><img src="/images/post/2018/04/eosabi1.png" width="800" height="600"></p>
+
+<ul>
+<li>进到智能合约页面后，再点击下方的<code>Code</code>标签</li>
+</ul>
+
+
+<p><img src="/images/post/2018/04/eosabi2.png" width="800" height="600"></p>
+
+<ul>
+<li>进入<code>Code</code>页面后，可以看到里面有一栏叫<code>Contract ABI</code>，这个就是我们想要的 abi 对象了，可以点击右边的<code>Copy</code>按钮将其复制到剪切板，也可以点击<code>Export ABI</code>来导出文件。</li>
+</ul>
+
+
+<p><img src="/images/post/2018/04/eosabi3.png" width="800" height="600"></p>
+
+<h3>通过 etherscan API 获取</h3>
+
+<p>另外一种方式是通过 <a href="https://etherscan.io/apis">etherscan 提供的 API</a> 来获取，执行命令如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>// 后面的 address 为 token 的地址
+</span><span class='line'>curl https://api.etherscan.io/api?module<span class="o">=</span>contract&amp;action<span class="o">=</span>getabi&amp;address<span class="o">=</span>0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>返回结果是和第一种方法一样的，可以看出这种方式更加简单快捷。</p>
+
+<h2>创建智能合约对象</h2>
+
+<p>接着咱们再来看 Ethers.js 的 API，在文档中创建智能合约的方法如下所示：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="k">new</span> <span class="nx">ethers</span><span class="p">.</span><span class="nx">Contract</span><span class="p">(</span><span class="nx">addressOrName</span> <span class="p">,</span> <span class="kr">interface</span> <span class="p">,</span> <span class="nx">providerOrSigner</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>第一个参数是智能合约的地址</li>
+<li>第二个参数是智能合约的接口，即 abi</li>
+<li>第三个参数可以是一个钱包对象，也可以是一个 provider 对象</li>
+</ul>
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">import</span> <span class="nx">ethers</span> <span class="nx">from</span> <span class="s1">&#39;ethers&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// abi json 对象</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">abi</span> <span class="o">=</span> <span class="p">[...];</span>
+</span><span class='line'><span class="c1">// 智能合约地址</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">address</span> <span class="o">=</span> <span class="s1">&#39;0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// 创建一个连接主网络的 provider</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">provider</span> <span class="o">=</span> <span class="nx">ethers</span><span class="p">.</span><span class="nx">providers</span><span class="p">.</span><span class="nx">getDefaultProvider</span><span class="p">();</span>
+</span><span class='line'><span class="c1">// 创建智能合约</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">contract</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ethers</span><span class="p">.</span><span class="nx">Contract</span><span class="p">(</span><span class="nx">address</span><span class="p">,</span> <span class="nx">abi</span><span class="p">,</span> <span class="nx">provider</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>获取钱包 token 金额</h2>
+
+<p>创建了智能合约之后，我们来看下怎么使用它。基于<code>ERC20</code>标准的 token 都需要实现一套接口，这套接口一般会有下面几个方法：</p>
+
+<ul>
+<li>name：返回 token 名称</li>
+<li>symbol：返回 token 的符号，比如<code>EOS</code></li>
+<li>totalSupply：返回 token 的总供应量</li>
+<li>balanceOf：返回账户的金额</li>
+<li>transfer：对 token 进行交易</li>
+</ul>
+
+
+<p>我们可以使用<code>ERC20</code>的接口来获取钱包的 token 金额，代码如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">address</span> <span class="o">=</span> <span class="s1">&#39;0x788692Ff1D0A38f6cCFf95BC597022049CAE15A4&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">balance</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">contract</span><span class="p">.</span><span class="nx">balanceOf</span><span class="p">(</span><span class="nx">address</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意，这里获取的不是钱包 eth 的金额，而是 token 的金额。比如代码中的钱包里面有 1 个 eth 和 10 个 eos，那么返回的 balance 就是 10。</p>
+
+<h2>token 转账</h2>
+
+<p>token 的转账也是基于<code>ERC20</code>的标准接口来实现。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kr">const</span> <span class="nx">address</span> <span class="o">=</span> <span class="s1">&#39;0x788692Ff1D0A38f6cCFf95BC597022049CAE15A4&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">await</span> <span class="nx">contract</span><span class="p">.</span><span class="nx">transfer</span><span class="p">(</span><span class="nx">address</span><span class="p">,</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">parseEther</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在这里我们转账了 5 个 token 给示例中的钱包地址。</p>
+
+<h2>查询 token 交易记录</h2>
+
+<p>我们再来看下钱包中 token 的交易记录如何获取，同样这里介绍两种方式。</p>
+
+<h3>通过事件日志 API 进行查询</h3>
+
+<p>第一种方式比较麻烦，就是通过 etherscan 事件日志的 API 来进行交易记录查询。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>curl https://api.etherscan.io/api?module<span class="o">=</span>logs&amp;action<span class="o">=</span>getLogs
+</span><span class='line'>    &amp;fromBlock<span class="o">=</span>0
+</span><span class='line'>    &amp;toBlock<span class="o">=</span>latest
+</span><span class='line'>    &amp;address<span class="o">=</span>『智能合约地址』
+</span><span class='line'>    &amp;topic1<span class="o">=</span>『转出的钱包地址，需要把钱包地址变成 64 位，前面补零』
+</span><span class='line'>    &amp;topic2<span class="o">=</span>『转入的钱包地址，需要把钱包地址变成 64 位，前面补零』
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意，其中<code>topic1</code>和<code>topic2</code>这 2 个参数不能同时写同一个钱包地址，因为不存在钱包自己转账给自己的交易，所以如果想获取到钱包所有的 token 交易记录（包括转出和转入），那么必须通过 2 次调用才能得到。</p>
+
+<p>比如钱包地址是<code>0x788692Ff1D0A38f6cCFf95BC597022049CAE15A4</code>，token 智能合约地址是<code>0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0</code>，那么命令如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>// 得到转出记录
+</span><span class='line'>curl https://api.etherscan.io/api?module<span class="o">=</span>logs&amp;action<span class="o">=</span>getLogs
+</span><span class='line'>    &amp;fromBlock<span class="o">=</span>0
+</span><span class='line'>    &amp;toBlock<span class="o">=</span>latest
+</span><span class='line'>    &amp;address<span class="o">=</span>0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0
+</span><span class='line'>    &amp;topic1<span class="o">=</span>0x0000000000000000000000788692Ff1D0A38f6cCFf95BC597022049CAE15A4
+</span><span class='line'>// 得到转入记录
+</span><span class='line'>curl https://api.etherscan.io/api?module<span class="o">=</span>logs&amp;action<span class="o">=</span>getLogs
+</span><span class='line'>    &amp;fromBlock<span class="o">=</span>0
+</span><span class='line'>    &amp;toBlock<span class="o">=</span>latest
+</span><span class='line'>    &amp;address<span class="o">=</span>0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0
+</span><span class='line'>    &amp;topic2<span class="o">=</span>0x0000000000000000000000788692Ff1D0A38f6cCFf95BC597022049CAE15A4
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意：<code>topic1</code>和<code>topic2</code>的地址都通过前面补零变成了 64 位， 这样才能正常调用 API，取到 2 部分的结果后再将它们合并就形成了完整的钱包 token 交易记录了。</p>
+
+<h3>通过 token 交易记录 API 查询</h3>
+
+<p>另一种方式也是通过 etherscan 的 API，通过这个 API 我们可以一次性取得钱包的的 token 所有交易记录。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>curl http://api.etherscan.io/api?module<span class="o">=</span>account&amp;action<span class="o">=</span>tokentx
+</span><span class='line'>    &amp;startblock<span class="o">=</span>0
+</span><span class='line'>    &amp;endblock<span class="o">=</span>latest
+</span><span class='line'>    &amp;contractaddress<span class="o">=</span>0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0
+</span><span class='line'>    &amp;address<span class="o">=</span>0x788692Ff1D0A38f6cCFf95BC597022049CAE15A4
+</span><span class='line'>    &amp;sort<span class="o">=</span>asc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以明显看出，与第一种方式相比这种方式更加简单易用。</p>
+
+<h2>总结</h2>
+
+<p>在 token 的操作中，最主要的还是要能获取到 token 的 abi，有些 token 虽然公布了其智能合约的代码，但是里面的代码可能包含错误，从而导致创建智能合约对象报错，这样就没办法去操作这种 token 了，所以在发布这种 token 到生产环境之前需要多测试一下。</p>
+</div>
+
+<div class="meta">
+</div>
+</article>
+  <section id="appreciates">
+    <center>
+	    <h2>赞赏</h2>
+	    <h4>如果文章对您有所帮助，可以转点 ETH 给我喝咖啡😌，钱包二维码：</h4>
+      <span>0x0C9b27c89A61aadb0aEC24CA8949910Cbf77Aa73</span>
+      <img src="/images/my_eth_qrcode.png" alt="qrcode" width="250" >
+    </center>
+  </section>
+	
+		<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+	
+	
+	<section id="comment">
+	    <h2 class="title">Comments</h2>
+	    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+	</section>
+	
+</div>
+
+	    </div>
+	    <footer id="footer">
+	    <div style="display:inline">
+    Copyright &copy; 2018
+
+    赵芝明
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+	    </footer>
+	    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'zhaozhiming';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://zhaozhiming.github.io/blog/2018/04/30/how-to-operate-ethereum-token-contract/';
+        var disqus_url = 'http://zhaozhiming.github.io/blog/2018/04/30/how-to-operate-ethereum-token-contract/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'https://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+	</div>
+	
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>
